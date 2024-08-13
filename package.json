@@ -1,13 +1,34 @@
 {
-  "name": "hailen-app",
+  "name": "my-electron-app",
+  "version": "1.0.0",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
+  "main": "src/Main/index.ts",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "start": "concurrently \"vite\" \"wait-on http://localhost:3000 && cross-env NODE_ENV=development yarn electron\"",
+    "build": "vite build && tsc",
+    "electron": "electron ./dist/Main/index.js"
+  },
+  "build": {
+    "appId": "com.github.hailen-client",
+    "productName": "Hailen-Client",
+    "copyright": "Copyright © 2024 Hailen",
+    "mac": {
+      "category": "public.app-category.utilities"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "files": [
+      "dist/**/*",
+      "src/Main/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets",
+      "output": "output"
+    }
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -18,12 +39,17 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "electron": "^31.3.1",
     "eslint": "^9.8.0",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.9",
     "globals": "^15.9.0",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.0",
-    "vite": "^5.4.0"
-  }
+    "vite": "^5.4.0",
+    "wait-on": "^7.2.0"
+  },
+  "license": "MIT"
 }
