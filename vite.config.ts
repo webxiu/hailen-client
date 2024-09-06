@@ -5,6 +5,12 @@ import { resolve } from "path";
 export default defineConfig({
   base: "./",
   plugins: [react()],
+  resolve: {
+    alias: {
+      "~": resolve("./"),
+      "@": resolve("./src"),
+    },
+  },
   build: {
     outDir: "./dist", // 输出目录
     assetsDir: "assets", // 静态资源目录
