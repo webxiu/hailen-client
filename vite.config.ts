@@ -1,45 +1,64 @@
-import { defineConfig } from "vite";
+import { UserConfig, defineConfig } from "vite";
+
 import react from "@vitejs/plugin-react";
 import { resolve } from "path";
+import vue from "@vitejs/plugin-vue";
+import { createHtmlPlugin } from "vite-plugin-html";
 
-export default defineConfig({
-  base: "./",
-  plugins: [react()],
-  resolve: {
-    alias: {
-      "~": resolve("./"),
-      "@": resolve("./src"),
+export default defineConfig(({ mode }): UserConfig => {
+  const isVue = mode === "vue";
+  const isReact = mode === "react";
+
+  const mConfig = {
+    vue: {
+      input: resolve(__dirname, "src/vue/main.ts"),
+      outDir: "dist-vue",
+      port: 8500,
+      id: "app",
+      scriptEntry: "/src/vue/main.ts",
     },
-  },
-  build: {
-    outDir: "./dist", // 输出目录
-    assetsDir: "assets", // 静态资源目录
-    emptyOutDir: true,
-    rollupOptions: {
-      input: {
-        index: resolve(__dirname, "./index.html"),
-        preload: resolve(__dirname, "src/Main/preload.ts"),
-        main: resolve(__dirname, "src/Main/index.ts"),
-      },
-      external: ["electron", "fs", "os", "path", "url"],
-      output: {
-        entryFileNames: (chunkInfo) => {
-          if (chunkInfo.name === "preload") {
-            return "preload.cjs"; // 为特殊文件自定义名称
-          }
-          return "[name].js"; // 其他文件使用默认名称
+    react: {
+      input: resolve(__dirname, "src/react/main.tsx"),
+      outDir: "dist-react",
+      port: 8600,
+      id: "root",
+      scriptEntry: "/src/react/main.tsx",
+    },
+  }[mode as keyof typeof mConfig];
+
+  return {
+    base: "/", // 部署在根目录下 , ./vue/  ./react/ 部署在子目录下
+    plugins: [
+      vue(),
+      isReact ? react() : null,
+      createHtmlPlugin({
+        inject: {
+          // 动态控制 script 标签的保留或移除
+          tags: [
+            {
+              tag: "div",
+              attrs: {
+                id: mConfig.id,
+              },
+              injectTo: "body", // 或 'head'
+            },
+            {
+              tag: "script",
+              attrs: { type: "module", src: mConfig.scriptEntry },
+              injectTo: "body",
+            },
+          ],
         },
-        globals: {
-          electron: "electron",
-          fs: "fs",
-          os: "os",
-          path: "path",
-          url: "url",
-        },
+      }),
+    ],
+    build: {
+      outDir: mConfig.outDir,
+      rollupOptions: {
+        // input: { [mode]: mConfig.input },
       },
     },
-  },
-  server: {
-    port: 3000,
-  },
+    server: {
+      port: mConfig.port,
+    },
+  };
 });
