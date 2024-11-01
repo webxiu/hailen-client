@@ -1,0 +1,5 @@
+#!/usr/bin/env node
+
+// import { start } from './scripts/index.js';
+// start();
+require('./scripts/index.js');
