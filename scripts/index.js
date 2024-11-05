@@ -7,19 +7,13 @@
  * @app   开发环境启动客户端
  */
 
-// import Command from "./command.js";
-// import minimist from "minimist";
 const Command = require("./command.js");
 const minimist = require("minimist");
-
 const command = new Command();
 
-
-// export function start() {
 const argvs = minimist(process.argv.slice(2))["_"].filter(
   (item) => command[item] && typeof command[item] === "function"
 );
 for (const argvItem of argvs) {
   command[argvItem]();
 }
-// }

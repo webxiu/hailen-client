@@ -12,6 +12,7 @@ const pkg = require("../package.json");
 const shell = require("shelljs");
 const { build } = require("vite");
 const { resolve } = require("path");
+const Core = require('./core');
 
 class Command extends EventEmitter {
   constructor() {
@@ -23,9 +24,9 @@ class Command extends EventEmitter {
       },
       {
         set: (target, props, value) => {
-          console.log('99999', target._MainProcessDone)
           const isOk = Reflect.set(target, props, value);
           if (target._MainProcessDone && target._RenderProcessDone) {
+            console.log('完成了:', target._MainProcessDone, target._RenderProcessDone)
             this.emit("openApp");
             this.emit("builddone");
           }
@@ -63,28 +64,33 @@ class Command extends EventEmitter {
 
   /** Readme */
   async RenderProcess() {
-    console.log('666', 666)
-    if (!this.AutoOpenApp._RenderProcessDone) this.AutoOpenApp._RenderProcessDone = true;
+    let command = `concurrently "npm run build:vue" "npm run build:react"`
+    if (process.env.NODE_ENV === 'development') {
+      command = `concurrently "npm run dev:vue" "npm run dev:react"`
+    }
 
-    // const compiler = webpack(RenderProcessWebpackConfig);
-    // compiler.hooks &&
-    //   compiler.hooks.done.tapAsync({ name: 'CompiledRenderProcessOnce' }, (compilation, callback) => {
-    //     if (!this.AutoOpenApp._RenderProcessDone) this.AutoOpenApp._RenderProcessDone = true;
-    //     callback();
-    //   });
-    // if (Core.isPro()) return compiler.run(Core.RenderProcessPro);
-    // const userDevServer = config.devServer || {};
-    // const devServerOptions = {
-    //   hot: true,
-    //   open: false,
-    //   hotOnly: true,
-    //   noInfo: true,
-    //   stats: 'errors-only',
-    //   clientLogLevel: 'error',
-    //   overlay: { errors: true, warnings: true },
-    //   ...userDevServer
-    // };
 
+    console.log('启动渲染进程:', command)
+    const tsc = childProcess.exec(command);
+    tsc.stdout.on('data', (data) => {
+      console.log(`输出: ${data}`);
+      // 检查输出中是否包含特定的启动完成消息
+      if (data.includes('Server is running') || data.includes('Listening on')) {
+        resolve(); // 服务已启动，解析 Promise
+      }
+    });
+    tsc.stdout.on('close', (data) => {
+      console.log('===渲染进程, 打包完成', data)
+      if (Core.isPro()) {
+        if (!this.AutoOpenApp._RenderProcessDone) this.AutoOpenApp._RenderProcessDone = true;
+      } else {
+        console.error('主进程退出:', data);
+      }
+    });
+    if (!Core.isPro()) {
+      console.log('===渲染进程, 启动服务',)
+      if (!this.AutoOpenApp._RenderProcessDone) this.AutoOpenApp._RenderProcessDone = true;
+    }
     this.portIsOccupied(config.port, (err, checkPort) => {
       // new WebpackDevServer(compiler, devServerOptions).listen(checkPort + 1);
     });
@@ -105,57 +111,41 @@ class Command extends EventEmitter {
 
     // 使用 TypeScript 编译器编译代码，并指定输出目录
     // const dir = `tsc ${resolve(process.cwd(), "src/Main/index.ts")} --outFile ${resolve(process.cwd(), "dist/mainProcess2.js")} --module commonjs`
-    const dir = `tsc ${resolve(process.cwd(), "src/Main/index.ts")} --outDir ${resolve(process.cwd(), "dist")} --rootDir ${resolve(process.cwd(), "src/Main")} --module commonjs`
-    console.log('dir', dir)
+    // const dir = `tsc ${resolve(process.cwd(), "src/Main/index.ts")} --outDir ${resolve(process.cwd(), "dist")} --rootDir ${resolve(process.cwd(), "src/Main")} --module commonjs`
+    const dir = `tsc --watch  E:/project/electron/hailen-client/src/Main --outDir E:/project/electron/hailen-client/dist --module commonjs`
+    console.log('主进程命令:', dir)
     const tsc = childProcess.exec(dir);
 
     tsc.stdout.on('data', (data) => {
-      console.log(1210, data);
+      console.log(2110, data);
     });
 
     tsc.stderr.on('data', (data) => {
-      console.error(1211, data);
+      console.error(2112, data);
     });
     tsc.stderr.on('error', (data) => {
-      console.error('错误', data);
+      console.error('2113错误', data);
     });
 
     tsc.on('close', (code) => {
-      console.log(`==== finished with code ${code}`);
+      console.log(`====主进程完成:`, code);
       if (code === 0) {
-        console.log('Compilation successful, output in ./dist');
-        // 继续执行其他操作，例如构建 Electron 应用
-        // this.builder(); // 如果需要，可以继续执行 builder 
         if (!this.AutoOpenApp._MainProcessDone) this.AutoOpenApp._MainProcessDone = true;
-
       } else {
-        console.error('==== failed.');
+        console.error('主进程退出:', code);
       }
     });
+  }
 
-    // try {
-    //   console.log("Building...", __dirname, resolve(process.cwd(), "src"));
-    //   await build({
-    //     root: resolve(process.cwd(), "src"), // 指定项目根目录
-    //     build: {
-    //       outDir: resolve(process.cwd(), "dist"), // 输出目录
-    //       sourcemap: true, // 启用源映射文件生成
-    //       rollupOptions: {
-    //         input: {
-    //           main: resolve(process.cwd(), "src/Main/index.ts"), // 入口文件
-    //         },
-    //         output: {
-    //           entryFileNames: "mainProcess.js", // 设置输出文件名格式
-    //           assetFileNames: "[name][extname]", // 直接输出到 dist 目录
-    //           // dir: resolve(__dirname, 'dist'), // 指定输出目录
-    //         },
-    //       },
-    //     },
-    //   });
-    //   console.log("Build completed successfully!");
-    // } catch (error) {
-    //   console.error("Build failed:", error);
-    // }
+  /** Readme */
+  start() {
+    process.env.NODE_ENV = "development";
+    this.once('openApp', () => {
+      this.app();
+      if (config.tslint) this.childProcessExec(`tsc -w`);
+    });
+    this.MainProcess();
+    this.RenderProcess();
   }
 
   /** Readme */
@@ -171,6 +161,7 @@ class Command extends EventEmitter {
 
   /** Readme */
   builder() {
+    console.log('====开始打包:', process.platform)
     switch (process.platform) {
       case "win32":
         shell.exec("electron-builder --win --ia32");
@@ -187,18 +178,7 @@ class Command extends EventEmitter {
     }
   }
 
-  /** Readme */
-  start() {
-    process.env.NODE_ENV = "development";
 
-    this.once('openApp', () => {
-      console.log('77777', 77777)
-      this.app();
-      if (config.tslint) this.childProcessExec(`tsc -w`);
-    });
-    this.MainProcess();
-    this.RenderProcess();
-  }
 
   /** Readme */
   help() {
@@ -217,10 +197,9 @@ class Command extends EventEmitter {
 
   /** Readme */
   app() {
-    console.log('888888888888', 888888888888)
     if (config.nodemon) {
       this.childProcessExec(
-        `nodemon -e js,ts,tsx -w dist -w package.json -w index.js --exec electron . --inspect`
+        `nodemon -e js,ts,tsx -w dist -w package.json -w src/Main -w index.js --exec electron . --inspect`
       );
     } else {
       this.childProcessExec(`electron . --inspect`);
@@ -229,12 +208,12 @@ class Command extends EventEmitter {
 
   /** Extends */
   autoVersion() {
-    require("../run/auto-version");
+    // require("../run/auto-version");
   }
 
   /** Extends */
   autoService() {
-    require("../run/auto-service");
+    // require("../run/auto-service");
   }
 }
 

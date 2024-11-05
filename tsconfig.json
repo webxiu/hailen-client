@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "rootDir": "./src", // 修改为 src 目录
     "target": "esnext", // 编译目标
     "module": "esnext", // 使用 ES 模块
     "lib": ["dom", "esnext"], // 使用 DOM 和 ESNext 库
@@ -24,6 +25,8 @@
   ],
   "exclude": [
     "node_modules",
-    "dist" // 排除构建输出目录
+    "dist", // 排除构建输出目录
+    "dist-vue",
+    "dist-react"
   ]
 }

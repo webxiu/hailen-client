@@ -1,9 +1,9 @@
 import { UserConfig, defineConfig } from "vite";
 
+import { createHtmlPlugin } from "vite-plugin-html";
 import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 import vue from "@vitejs/plugin-vue";
-import { createHtmlPlugin } from "vite-plugin-html";
 
 export default defineConfig(({ mode }): UserConfig => {
   const isVue = mode === "vue";
@@ -27,7 +27,7 @@ export default defineConfig(({ mode }): UserConfig => {
   }[mode as keyof typeof mConfig];
 
   return {
-    base: "/", // 部署在根目录下 , ./vue/  ./react/ 部署在子目录下
+    base: "./", // 部署在根目录下 , ./vue/  ./react/ 部署在子目录下
     plugins: [
       vue(),
       isReact ? react() : null,
@@ -37,9 +37,7 @@ export default defineConfig(({ mode }): UserConfig => {
           tags: [
             {
               tag: "div",
-              attrs: {
-                id: mConfig.id,
-              },
+              attrs: { id: mConfig.id },
               injectTo: "body", // 或 'head'
             },
             {

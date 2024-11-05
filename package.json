@@ -6,16 +6,16 @@
   "main": "index.js",
   "scripts": {
     "start": "node electron-cli-service start",
-    "start2": "electron .",
+    "build": "node electron-cli-service build",
+    "dev": "concurrently \"npm run dev:vue\" \"npm run dev:react\"",
+    "build2": "concurrently \"npm run build:vue\" \"npm run build:react\"",
     "dev:vue": "vite --config vite.config.ts --mode vue",
     "dev:react": "vite --config vite.config.ts --mode react",
     "build:vue": "vite build --config vite.config.ts --mode vue",
     "build:react": "vite build --config vite.config.ts --mode react",
-    "dev": "concurrently \"npm run dev:vue\" \"npm run dev:react\"",
-    "build": "concurrently \"npm run build:vue\" \"npm run build:react\"",
     "lint": "eslint ."
   },
-  "author": "",
+  "author": "Hailen",
   "license": "ISC",
   "dependencies": {
     "react": "^18.3.1",
@@ -31,6 +31,7 @@
     "@vitejs/plugin-vue": "^5.1.2",
     "concurrently": "^9.0.1",
     "electron": "^33.0.2",
+    "electron-builder": "^25.1.8",
     "eslint": "^9.9.0",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.9",
@@ -43,5 +44,69 @@
     "vite": "^5.4.1",
     "vite-plugin-html": "^3.2.2",
     "vue-tsc": "^2.0.29"
+  },
+  "build": {
+    "publish": [
+      {
+        "provider": "generic",
+        "url": ""
+      }
+    ],
+    "asar": true,
+    "asarUnpack": [
+      "public",
+      "node_modules/@spk"
+    ],
+    "appId": "com.electron-admin",
+    "productName": "海阔天空",
+    "files": [
+      "dist/**/*",
+      "dist-vue/**/*",  
+      "dist-react/**/*",  
+      "public",
+      "index.js",
+      "config.js",
+      "!**/*.{lib,obj,pdb,cc,h,tlog,map,exp,gypi,vcxproj,filters,cpp,c,ts}"
+    ],
+    "nodeGypRebuild": false,
+    "extraFiles": [
+      "server",
+      "language",
+      "dist-vue",
+      "dist-react"
+    ],
+    "win": {
+      "requestedExecutionLevel": "asInvoker",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "zip"
+        }
+      ],
+      "icon": "public/assets/favicon/png/favicon_ch@5x.png"
+    },
+    "mac": {
+      "icon": "public/assets/favicon/icons/favicon@5x.icns"
+    },
+    "linux": {
+      "icon": "public/assets/favicon/icons/favicon@5x.icns",
+      "category": "AudioVideo",
+      "target": "deb",
+      "executableName": "海阔天空"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": true,
+      "installerLanguages": "zh-CN"
+    },
+    "directories": {
+      "output": "output"
+    }
   }
 }
