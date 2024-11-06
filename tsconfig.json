@@ -12,6 +12,7 @@
     "forceConsistentCasingInFileNames": true, // 强制文件名一致性
     "moduleResolution": "node", // 使用 Node 模块解析策略
     "baseUrl": ".", // 基础路径
+    "typeRoots": ["node_modules/@types", "typings"],
     "paths": {
       "@/*": ["src/*"] // 设置路径别名
     },
@@ -21,7 +22,11 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
-    "src/**/*.vue" // 包含 Vue 文件
+    "src/**/*.vue", // 包含 Vue 文件
+    "typings"
+    // "src/Main/**/*",
+    // "src/react/**/*",
+    // "src/vue/**/*",
   ],
   "exclude": [
     "node_modules",

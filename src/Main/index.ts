@@ -23,8 +23,9 @@ function createWindow() {
     autoHideMenuBar: true,
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false,
-      preload: path.join(__dirname, "preload.js"),
+      contextIsolation: true,
+      // preload: "./preload/index.js",
+      preload: "E:/project/electron/hailen-client/dist/preload/index.js",
     },
   });
   // 注册热键
@@ -70,7 +71,7 @@ function createWindow() {
       },
     },
   ];
-  console.log("__dirname", __dirname);
+  console.log("__dirname:", __dirname);
   console.log("process.cwd()", process.cwd());
   //系统托盘图标目录
   const trayIcon = path.resolve(

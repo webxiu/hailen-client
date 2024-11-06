@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/Main",
+    "module": "commonjs",
+    "target": "esnext",
+    "strict": true,
+    "esModuleInterop": true
+  },
+  "include": [
+    "src/Main/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

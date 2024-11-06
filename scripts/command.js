@@ -96,28 +96,20 @@ class Command extends EventEmitter {
     });
   }
 
+
+
+
   /** Readme */
   async MainProcess() {
-    // const compiler = webpack(MainProcessWebpackConfig);
-    // compiler.hooks.done.tapAsync({ name: 'CompiledMainProcessOnce' }, (compilation, callback) => {
-    //   if (!this.AutoOpenApp._MainProcessDone) this.AutoOpenApp._MainProcessDone = true;
-    //   callback();
-    // });
-    // if (Core.isPro()) return compiler.run(Core.MainProcessPro);
-    // const watchOptions = { ignored: /(node_modules|Render|package\.json)/ };
-
-    // compiler.watch(watchOptions, Core.MainProcessDev);
-
-
     // 使用 TypeScript 编译器编译代码，并指定输出目录
     // const dir = `tsc ${resolve(process.cwd(), "src/Main/index.ts")} --outFile ${resolve(process.cwd(), "dist/mainProcess2.js")} --module commonjs`
-    // const dir = `tsc ${resolve(process.cwd(), "src/Main/index.ts")} --outDir ${resolve(process.cwd(), "dist")} --rootDir ${resolve(process.cwd(), "src/Main")} --module commonjs`
-    const dir = `tsc --watch  E:/project/electron/hailen-client/src/Main --outDir E:/project/electron/hailen-client/dist --module commonjs`
+    const dir = `tsc --project ${resolve(process.cwd(), "tsconfig.main.json")} --outDir ${resolve(process.cwd(), "dist")} --rootDir ${resolve(process.cwd(), "src/Main")} --module commonjs --target esnext --strict --esModuleInterop --watch`
     console.log('主进程命令:', dir)
     const tsc = childProcess.exec(dir);
 
     tsc.stdout.on('data', (data) => {
-      console.log(2110, data);
+      console.log('==================>2110', data, '_MainProcessDone:', this.AutoOpenApp._MainProcessDone);
+      if (!this.AutoOpenApp._MainProcessDone) this.AutoOpenApp._MainProcessDone = true;
     });
 
     tsc.stderr.on('data', (data) => {
@@ -146,6 +138,17 @@ class Command extends EventEmitter {
     });
     this.MainProcess();
     this.RenderProcess();
+  }
+
+  /** Readme */
+  app() {
+    if (config.nodemon) {
+      this.childProcessExec(
+        `nodemon -e js,ts,tsx -w dist -w package.json -w src/Main -w index.js --exec electron . --inspect`
+      );
+    } else {
+      this.childProcessExec(`electron . --inspect`);
+    }
   }
 
   /** Readme */
@@ -195,16 +198,6 @@ class Command extends EventEmitter {
     shell.exec(`taskkill /f /t /im ${pkg.build.productName}.exe`);
   }
 
-  /** Readme */
-  app() {
-    if (config.nodemon) {
-      this.childProcessExec(
-        `nodemon -e js,ts,tsx -w dist -w package.json -w src/Main -w index.js --exec electron . --inspect`
-      );
-    } else {
-      this.childProcessExec(`electron . --inspect`);
-    }
-  }
 
   /** Extends */
   autoVersion() {
