@@ -12,6 +12,7 @@ dist/
 dist-vue/
 dist-react/
 dist
+output
 dist-ssr
 *.local
 

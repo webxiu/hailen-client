@@ -1,5 +1,11 @@
+// import { EventEmitter } from "events";
+// import childProcess from "child_process";
+// import config from "./config.js";
+// import net from "net";
+// import pkg from "../package.json"
+// import shell from "shelljs";
 const { EventEmitter } = require("events");
-const { exec } = require("child_process");
+const childProcess = require("child_process");
 const config = require("./config.js");
 const net = require("net");
 const pkg = require("../package.json");
@@ -19,8 +25,8 @@ class Command extends EventEmitter {
       {
         set: (target, props, value) => {
           const isOk = Reflect.set(target, props, value);
-          console.log("==完成了main:", target._MainProcessDone, "render:", target._RenderProcessDone);
           if (target._MainProcessDone && target._RenderProcessDone) {
+            console.log("完成了:", target._MainProcessDone, target._RenderProcessDone);
             this.emit("openApp");
             this.emit("builddone");
           }
@@ -49,67 +55,77 @@ class Command extends EventEmitter {
   /** Readme */
   childProcessExec(runPath) {
     console.log("runPath", runPath);
-    const _childProcess = exec(runPath);
+    const _childProcess = childProcess.exec(runPath);
     _childProcess.stdout.on("data", console.info);
     _childProcess.stdout.on("error", console.info);
     _childProcess.stderr.on("data", console.info);
     _childProcess.stderr.on("error", console.info);
   }
 
-  runExec(command, callback) {
-    const cp = exec(command);
-    cp.stdout.on("data", (data) => callback({ type: "data", data }));
-    cp.stdout.on("close", (data) => callback({ type: "close", data }));
-    cp.on("close", (data) => callback({ type: "cp_close", data }));
-    cp.stdout.on("error", console.info);
-    cp.stderr.on("data", console.info);
-    cp.stderr.on("error", console.info);
-  }
-
   /** Readme */
   async RenderProcess() {
-    const command = {
-      production: `concurrently "npm run build:vue" "npm run build:react"`,
-      development: `concurrently "npm run dev:vue" "npm run dev:react"`,
-    }[process.env.NODE_ENV];
-    console.log("启动渲染进程:", command);
+    let command = `concurrently "npm run build:vue" "npm run build:react"`;
+    if (process.env.NODE_ENV === "development") {
+      command = `concurrently "npm run dev:vue" "npm run dev:react"`;
+    }
 
-    this.runExec(command, ({ type, data }) => {
-      console.log("===监听渲染进程", data);
-      if (Core.isPro()) {
-        if (data === 0) {
-          if (!this.AutoOpenApp._RenderProcessDone) this.AutoOpenApp._RenderProcessDone = true;
-        }
-      } else {
-        if (["data", "close"].includes(type) && !Core.isPro() && data.includes(":8500")) {
-          if (!this.AutoOpenApp._RenderProcessDone) this.AutoOpenApp._RenderProcessDone = true;
-        }
+    console.log("启动渲染进程:", command);
+    const tsc = childProcess.exec(command);
+    tsc.stdout.on("data", (data) => {
+      console.log(`输出: ${data}`);
+      // 检查输出中是否包含特定的启动完成消息
+      if (data.includes("Server is running") || data.includes("Listening on")) {
+        resolve(); // 服务已启动，解析 Promise
       }
+    });
+    tsc.stdout.on("close", (data) => {
+      console.log("===渲染进程, 打包完成", data);
+      if (Core.isPro()) {
+        if (!this.AutoOpenApp._RenderProcessDone) this.AutoOpenApp._RenderProcessDone = true;
+      } else {
+        console.error("主进程退出:", data);
+      }
+    });
+    if (!Core.isPro()) {
+      console.log("===渲染进程, 启动服务");
+      if (!this.AutoOpenApp._RenderProcessDone) this.AutoOpenApp._RenderProcessDone = true;
+    }
+    this.portIsOccupied(config.port, (err, checkPort) => {
+      // new WebpackDevServer(compiler, devServerOptions).listen(checkPort + 1);
     });
   }
 
   /** Readme */
   async MainProcess() {
+    // 使用 TypeScript 编译器编译代码，并指定输出目录
     // const dir = `tsc ${resolve(process.cwd(), "src/Main/index.ts")} --outFile ${resolve(process.cwd(), "dist/mainProcess2.js")} --module commonjs`
-    const project = resolve(process.cwd(), "tsconfig.main.json");
-    const outDir = resolve(process.cwd(), "dist");
-    const rootDir = resolve(process.cwd(), "src/Main");
-    const command = `tsc --project ${project} --outDir ${outDir} --rootDir ${rootDir} --module commonjs --target esnext --strict --esModuleInterop --watch`;
-    console.log("启动主进程:", command);
+    const dir = `tsc --project ${resolve(process.cwd(), "tsconfig.main.json")} --outDir ${resolve(process.cwd(), "dist")} --rootDir ${resolve(
+      process.cwd(),
+      "src/Main"
+    )} --module commonjs --target esnext --strict --esModuleInterop --watch`;
+    console.log("主进程命令:", dir);
+    const tsc = childProcess.exec(dir);
 
-    if (Core.isPro) {
+    tsc.stdout.on("data", (data) => {
+      console.log("==================>2110", data, "_MainProcessDone:", this.AutoOpenApp._MainProcessDone);
       if (!this.AutoOpenApp._MainProcessDone) this.AutoOpenApp._MainProcessDone = true;
-    } else {
-      this.runExec(command, ({ type, data }) => {
-        console.log("=====监听主进程", type, data);
-        if (["data"].includes(type) && data.includes("Watching for file changes")) {
-          if (!this.AutoOpenApp._MainProcessDone) this.AutoOpenApp._MainProcessDone = true;
-        }
-        if (["cp_close"].includes(type) && data === 0) {
-          if (!this.AutoOpenApp._MainProcessDone) this.AutoOpenApp._MainProcessDone = true;
-        }
-      });
-    }
+    });
+
+    tsc.stderr.on("data", (data) => {
+      console.error(2112, data);
+    });
+    tsc.stderr.on("error", (data) => {
+      console.error("2113错误", data);
+    });
+
+    tsc.on("close", (code) => {
+      console.log(`====主进程完成:`, code);
+      if (code === 0) {
+        if (!this.AutoOpenApp._MainProcessDone) this.AutoOpenApp._MainProcessDone = true;
+      } else {
+        console.error("主进程退出:", code);
+      }
+    });
   }
 
   /** Readme */
