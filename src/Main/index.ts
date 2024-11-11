@@ -1,16 +1,6 @@
 import * as path from "node:path";
 
-import {
-  BrowserWindow,
-  Menu,
-  Tray,
-  app,
-  globalShortcut,
-  ipcMain,
-  nativeImage,
-  protocol,
-  shell,
-} from "electron";
+import { BrowserWindow, Menu, Tray, app, globalShortcut, ipcMain, nativeImage, protocol, shell } from "electron";
 
 interface WindowProp {
   devUrl: string;
@@ -27,10 +17,7 @@ function resolve(dir: string) {
 
 function createWindow(param: WindowProp) {
   const { devUrl, prodUrl, options = {} } = param;
-  const faviconPath = path.resolve(
-    process.cwd(),
-    process.env.NODE_ENV === "production" ? faviconProPath : faviconDevPath
-  );
+  const faviconPath = path.resolve(process.cwd(), process.env.NODE_ENV === "production" ? faviconProPath : faviconDevPath);
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
@@ -39,8 +26,7 @@ function createWindow(param: WindowProp) {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: true,
-      // preload: "./preload/index.js",
-      preload: "E:/project/electron/hailen-client/dist/preload/index.js",
+      preload: path.resolve(__dirname, "./preload/index.js"),
     },
     ...options,
   });
@@ -89,17 +75,9 @@ function createWindow(param: WindowProp) {
   ];
 
   //系统托盘图标目录
-  let trayIcon = path.resolve(
-    __dirname,
-    "../public/favicon/png",
-    "favicon_ch@2x.png"
-  );
+  let trayIcon = path.resolve(__dirname, "../public/favicon/png", "favicon_ch@2x.png");
   if (process.platform === "darwin") {
-    trayIcon = path.resolve(
-      __dirname,
-      "../public/favicon/png",
-      "favicon_ch@2x.png"
-    );
+    trayIcon = path.resolve(__dirname, "../public/favicon/png", "favicon_ch@2x.png");
   }
 
   //图标的上下文菜单
