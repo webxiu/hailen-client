@@ -7,20 +7,22 @@ const shell = require("shelljs");
 const { build } = require("vite");
 const { resolve } = require("path");
 const Core = require("./core");
+const waitOn = require("wait-on");
+const fs = require('fs-extra');
+const path = require('path');
 
 class Command extends EventEmitter {
   constructor() {
     super();
     this.AutoOpenApp = new Proxy(
       {
-        _RenderProcessDone: false,
-        _MainProcessDone: false,
+        RenderProcessDone: false,
+        MainProcessDone: false,
       },
       {
         set: (target, props, value) => {
           const isOk = Reflect.set(target, props, value);
-          console.log("==完成了main:", target._MainProcessDone, "render:", target._RenderProcessDone);
-          if (target._MainProcessDone && target._RenderProcessDone) {
+          if (target.MainProcessDone && target.RenderProcessDone) {
             this.emit("openApp");
             this.emit("builddone");
           }
@@ -78,11 +80,11 @@ class Command extends EventEmitter {
       console.log("===监听渲染进程", data);
       if (Core.isPro()) {
         if (data === 0) {
-          if (!this.AutoOpenApp._RenderProcessDone) this.AutoOpenApp._RenderProcessDone = true;
+          if (!this.AutoOpenApp.RenderProcessDone) this.AutoOpenApp.RenderProcessDone = true;
         }
       } else {
-        if (["data", "close"].includes(type) && !Core.isPro() && data.includes(":8500")) {
-          if (!this.AutoOpenApp._RenderProcessDone) this.AutoOpenApp._RenderProcessDone = true;
+        if (["data", "close"].includes(type) && !Core.isPro() && data.includes("8500")) {
+          if (!this.AutoOpenApp.RenderProcessDone) this.AutoOpenApp.RenderProcessDone = true;
         }
       }
     });
@@ -94,20 +96,29 @@ class Command extends EventEmitter {
     const project = resolve(process.cwd(), "tsconfig.main.json");
     const outDir = resolve(process.cwd(), "dist");
     const rootDir = resolve(process.cwd(), "src/Main");
-    const command = `tsc --project ${project} --outDir ${outDir} --rootDir ${rootDir} --module commonjs --target esnext --strict --esModuleInterop --watch`;
+    const command = `tsc --project ${project} --rootDir ${rootDir} --outDir ${outDir} --module commonjs --target esnext --strict --esModuleInterop --watch`;
     console.log("启动主进程:", command);
 
-    if (Core.isPro) {
-      if (!this.AutoOpenApp._MainProcessDone) this.AutoOpenApp._MainProcessDone = true;
+    if (Core.isPro()) {
+      if (!this.AutoOpenApp.MainProcessDone) this.AutoOpenApp.MainProcessDone = true;
     } else {
-      this.runExec(command, ({ type, data }) => {
-        console.log("=====监听主进程", type, data);
-        if (["data"].includes(type) && data.includes("Watching for file changes")) {
-          if (!this.AutoOpenApp._MainProcessDone) this.AutoOpenApp._MainProcessDone = true;
+      waitOn({ resources: ["tcp:8500", "tcp:8600"], timeout: 30000, }, (err) => {
+        if (err) {
+          console.error("等待端口时错误:", err);
+          process.exit(1);
         }
-        if (["cp_close"].includes(type) && data === 0) {
-          if (!this.AutoOpenApp._MainProcessDone) this.AutoOpenApp._MainProcessDone = true;
-        }
+        if (!this.AutoOpenApp.RenderProcessDone) this.AutoOpenApp.RenderProcessDone = true;
+
+        this.runExec(command, ({ type, data }) => {
+          console.log("=====监听主进程", type, data);
+          if (["data"].includes(type) && data.includes("Watching for file changes")
+          ) {
+            if (!this.AutoOpenApp.MainProcessDone) this.AutoOpenApp.MainProcessDone = true;
+          }
+          if (["cp_close"].includes(type) && data === 0) {
+            if (!this.AutoOpenApp.MainProcessDone) this.AutoOpenApp.MainProcessDone = true;
+          }
+        });
       });
     }
   }
@@ -126,7 +137,9 @@ class Command extends EventEmitter {
   /** Readme */
   app() {
     if (config.nodemon) {
-      this.childProcessExec(`nodemon -e js,ts,tsx -w dist -w package.json -w src/Main -w index.js --exec electron . --inspect`);
+      this.childProcessExec(
+        `nodemon -e js,ts,tsx -w dist -w package.json -w src/Main -w index.js --exec electron . --inspect`
+      );
     } else {
       this.childProcessExec(`electron . --inspect`);
     }
@@ -139,13 +152,14 @@ class Command extends EventEmitter {
     this.MainProcess();
     this.RenderProcess();
     this.once("builddone", () => {
+      fs.emptyDirSync(path.join(process.cwd(), './output'));
       this.builder();
     });
   }
 
   /** Readme */
   builder() {
-    console.log("====开始打包:", process.platform);
+    console.log("====打包开始 平台:", process.platform);
     switch (process.platform) {
       case "win32":
         shell.exec("electron-builder --win --ia32");

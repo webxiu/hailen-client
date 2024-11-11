@@ -1,16 +1,35 @@
 import * as path from "node:path";
 
-import { BrowserWindow, Menu, Tray, app, globalShortcut, ipcMain, nativeImage, protocol, shell } from "electron";
+import {
+  BrowserWindow,
+  Menu,
+  Tray,
+  app,
+  globalShortcut,
+  ipcMain,
+  nativeImage,
+  protocol,
+  shell,
+} from "electron";
+
+const faviconProPath = `/resources/app.asar.unpacked/public/favicon/png/favicon_ch@3x.png`;
+const faviconDevPath = `../public/favicon/png/favicon_ch@3x.png`;
 
 function resolve(dir: string) {
   return path.resolve(process.cwd(), dir);
 }
+
+const faviconPath = path.resolve(
+  process.cwd(),
+  process.env.NODE_ENV === "production" ? faviconProPath : faviconDevPath
+);
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
     autoHideMenuBar: true,
+    icon: nativeImage.createFromPath(faviconPath),
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: true,
@@ -61,31 +80,41 @@ function createWindow() {
       },
     },
   ];
-  console.log("主进程__dirname:", __dirname);
-  console.log("主进程process.cwd()", process.cwd());
+
   //系统托盘图标目录
-  // const trayIcon = path.resolve(
-  //   __dirname,
-  //   "../public/favicon/ico",
-  //   "favicon@4x.ico"
-  // );
+  let trayIcon = path.resolve(
+    __dirname,
+    "../public/favicon/png",
+    "favicon_ch@2x.png"
+  );
+  if (process.platform === "darwin") {
+    trayIcon = path.resolve(
+      __dirname,
+      "../public/favicon/png",
+      "favicon_ch@2x.png"
+    );
+  }
 
-  // //图标的上下文菜单
-  // const contextMenu = Menu.buildFromTemplate(trayMenuTemplate);
+  //图标的上下文菜单
+  const contextMenu = Menu.buildFromTemplate(trayMenuTemplate);
 
-  // //创建系统托盘图标
-  // const appTray = new Tray(trayIcon);
+  //创建系统托盘图标
+  const appTray = new Tray(trayIcon);
 
-  // //设置此托盘图标的悬停提示内容
-  // appTray.setToolTip("海阔天空");
+  //设置此托盘图标的悬停提示内容
+  appTray.setToolTip("海阔天空");
 
-  // //设置此图标的上下文菜单
-  // appTray.setContextMenu(contextMenu);
+  //设置此图标的上下文菜单
+  appTray.setContextMenu(contextMenu);
 
-  //单点击 1.主窗口显示隐藏切换 2.清除闪烁
-  // appTray.on("click", function () {
-  //   mainWindow.show();
-  // });
+  // 单点击 1.主窗口显示隐藏切换 2.清除闪烁
+  appTray.on("click", function () {
+    mainWindow.show();
+  });
+
+  console.log("主进程__dirname:", process.env.NODE_ENV, __dirname);
+  console.log("主进程process.cwd()", process.cwd());
+  console.log("主进程trayIcon", trayIcon);
 
   if (process.env.NODE_ENV === "development") {
     // 加载 URL 并在加载完成后显示窗口
@@ -114,6 +143,7 @@ function createWindow() {
 
 app.whenReady().then(() => {
   ipcMain.on("ping", () => console.log("pong"));
+  ipcMain.on("react", () => console.log("react"));
   createWindow();
   app.on("activate", function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();

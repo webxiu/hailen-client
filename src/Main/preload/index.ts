@@ -4,7 +4,7 @@ import { contextBridge, ipcRenderer } from "electron";
 const api = {
   send: (channel: string, data: any) => {
     // 只允许特定的通道
-    const validChannels = ["ping", "test"];
+    const validChannels = ["ping", "test", "react"];
     if (validChannels.includes(channel)) {
       ipcRenderer.send(channel, data);
     }

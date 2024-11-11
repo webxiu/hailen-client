@@ -1,5 +1,8 @@
 import { UserConfig, defineConfig } from "vite";
 
+import AutoImport from "unplugin-auto-import/vite";
+import Components from "unplugin-vue-components/vite";
+import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import { createHtmlPlugin } from "vite-plugin-html";
 import react from "@vitejs/plugin-react";
 import { resolve } from "path";
@@ -47,6 +50,12 @@ export default defineConfig(({ mode }): UserConfig => {
             },
           ],
         },
+      }),
+      AutoImport({
+        resolvers: [ElementPlusResolver()],
+      }),
+      Components({
+        resolvers: [ElementPlusResolver()],
       }),
     ],
     build: {
