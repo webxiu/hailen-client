@@ -12,6 +12,12 @@ import {
   shell,
 } from "electron";
 
+interface WindowProp {
+  devUrl: string;
+  prodUrl: string;
+  options?: Electron.BrowserWindowConstructorOptions;
+}
+
 const faviconProPath = `/resources/app.asar.unpacked/public/favicon/png/favicon_ch@3x.png`;
 const faviconDevPath = `../public/favicon/png/favicon_ch@3x.png`;
 
@@ -19,12 +25,12 @@ function resolve(dir: string) {
   return path.resolve(process.cwd(), dir);
 }
 
-const faviconPath = path.resolve(
-  process.cwd(),
-  process.env.NODE_ENV === "production" ? faviconProPath : faviconDevPath
-);
-
-function createWindow() {
+function createWindow(param: WindowProp) {
+  const { devUrl, prodUrl, options = {} } = param;
+  const faviconPath = path.resolve(
+    process.cwd(),
+    process.env.NODE_ENV === "production" ? faviconProPath : faviconDevPath
+  );
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
@@ -36,6 +42,7 @@ function createWindow() {
       // preload: "./preload/index.js",
       preload: "E:/project/electron/hailen-client/dist/preload/index.js",
     },
+    ...options,
   });
   // 注册热键
   globalShortcut.register("CommandOrControl+R", () => {
@@ -118,14 +125,15 @@ function createWindow() {
 
   if (process.env.NODE_ENV === "development") {
     // 加载 URL 并在加载完成后显示窗口
-    mainWindow.loadURL("http://localhost:8500/").then(() => {
+    mainWindow.loadURL(devUrl).then(() => {
       mainWindow.show(); // 在加载完成后显示窗口
     });
   } else {
     const pathVue = path.resolve(__dirname, "../../../dist-vue/index.html");
     const pathReact = path.resolve(__dirname, "../../../dist-react/index.html");
     // const pathVue2 = path.resolve(app.getAppPath(),"../../dist-vue/index.html");
-    mainWindow.loadFile(pathVue);
+    // mainWindow.loadFile(pathVue);
+    mainWindow.loadFile(prodUrl);
   }
 
   //===========自定义file:///协议的解析=======================
@@ -139,14 +147,35 @@ function createWindow() {
   });
 
   mainWindow.webContents.openDevTools(); // 打开开发者工具
+  return mainWindow;
 }
 
 app.whenReady().then(() => {
+  const pathReact = path.resolve(__dirname, "../../../dist-react/index.html");
+  const pathVue = path.resolve(__dirname, "../../../dist-vue/index.html");
+
+  let parentWin = createWindow({
+    devUrl: "http://localhost:8500",
+    prodUrl: pathVue,
+    options: {},
+  });
   ipcMain.on("ping", () => console.log("pong"));
-  ipcMain.on("react", () => console.log("react"));
-  createWindow();
+
+  ipcMain.on("react", () => {
+    console.log("react");
+    createWindow({
+      devUrl: "http://localhost:8600",
+      prodUrl: pathReact,
+      options: { parent: parentWin, modal: true },
+    });
+  });
   app.on("activate", function () {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    if (BrowserWindow.getAllWindows().length === 0)
+      parentWin = createWindow({
+        devUrl: "http://localhost:8500",
+        prodUrl: pathVue,
+        options: {},
+      });
   });
 });
 
