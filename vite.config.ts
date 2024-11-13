@@ -4,9 +4,13 @@ import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import { createHtmlPlugin } from "vite-plugin-html";
+import path from "path";
 import react from "@vitejs/plugin-react";
-import { resolve } from "path";
 import vue from "@vitejs/plugin-vue";
+
+function resolve(dir: string) {
+  return path.resolve(__dirname, dir);
+}
 
 export default defineConfig(({ mode }): UserConfig => {
   const isVue = mode === "vue";
@@ -14,14 +18,14 @@ export default defineConfig(({ mode }): UserConfig => {
 
   const mConfig = {
     vue: {
-      input: resolve(__dirname, "src/vue/main.ts"),
+      input: resolve("src/vue/main.ts"),
       outDir: "dist-vue",
       port: 8500,
       id: "app",
       scriptEntry: "/src/vue/main.ts",
     },
     react: {
-      input: resolve(__dirname, "src/react/main.tsx"),
+      input: resolve("src/react/main.tsx"),
       outDir: "dist-react",
       port: 8600,
       id: "root",
@@ -31,6 +35,13 @@ export default defineConfig(({ mode }): UserConfig => {
 
   return {
     base: "./", // 部署在根目录下 , ./vue/  ./react/ 部署在子目录下
+    resolve: {
+      alias: {
+        "@": resolve("src"),
+        "~": resolve(""),
+      },
+      extensions: [".js", ".ts", ".tsx", ".jsx"],
+    },
     plugins: [
       vue(),
       isReact ? react() : null,

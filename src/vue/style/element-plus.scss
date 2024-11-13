@@ -1,0 +1,374 @@
+.el-breadcrumb__inner,
+.el-breadcrumb__inner a {
+  font-weight: 400 !important;
+}
+
+.el-upload {
+  input[type="file"] {
+    display: none !important;
+  }
+}
+
+.el-upload__input {
+  display: none;
+}
+
+.upload-container {
+  .el-upload {
+    width: 100%;
+
+    .el-upload-dragger {
+      width: 100%;
+      height: 200px;
+    }
+  }
+}
+
+.el-dropdown-menu {
+  padding: 0 !important;
+}
+
+.el-range-separator {
+  box-sizing: content-box;
+}
+
+.el-loading-mask {
+  z-index: 5500 !important;
+}
+
+.is-dark {
+  z-index: 9999 !important;
+}
+
+/* 重置 el-button 中 icon 的 margin */
+.reset-margin [class*="el-icon"] + span {
+  margin-left: 2px !important;
+}
+
+/* 自定义 popover 的类名 */
+.pure-popper {
+  padding: 0 !important;
+}
+
+/* 自定义 tooltip 的类名 */
+.pure-tooltip {
+  // 右侧操作面板right-panel类名的z-index为40000，tooltip需要大于它才能显示
+  z-index: 41000 !important;
+}
+
+/* nprogress 适配 element-plus 的主题色 */
+#nprogress {
+  & .bar {
+    background-color: var(--el-color-primary) !important;
+  }
+
+  & .peg {
+    box-shadow: 0 0 10px var(--el-color-primary), 0 0 5px var(--el-color-primary) !important;
+  }
+
+  & .spinner-icon {
+    border-top-color: var(--el-color-primary);
+    border-left-color: var(--el-color-primary);
+  }
+}
+
+.el-overlay-dialog {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pure-dialog {
+  min-width: 300px;
+  margin: auto !important;
+
+  .pure-dialog-svg {
+    color: var(--el-color-info);
+  }
+
+  .el-dialog__header {
+    padding-right: 16px;
+    margin-right: 0;
+    border-bottom: 1px solid var(--el-input-border-color, var(--el-border-color));
+  }
+
+  .el-dialog__headerbtn {
+    top: 20px;
+    right: 14px;
+    width: 24px;
+    height: 24px;
+  }
+
+  .el-dialog__body {
+    position: relative !important;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+  }
+
+  &.is-fullscreen {
+    display: flex;
+    flex-direction: column;
+
+    .el-dialog__body {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      max-height: inherit;
+    }
+  }
+}
+
+/** 弹窗内容高度自适应 */
+.dialog-fill_body.pure-dialog {
+  display: flex;
+  flex-direction: column;
+  min-height: 500px;
+
+  .el-dialog__body {
+    display: flex;
+    flex: 1;
+  }
+}
+
+/* 弹窗内容满屏 */
+.full-dialog {
+  .el-dialog__body {
+    box-sizing: border-box;
+    padding: 0;
+    overflow-y: auto;
+  }
+
+  .el-dialog__footer {
+    box-sizing: border-box;
+    padding: 16px;
+    border-top: 1px solid #e8e8e8;
+  }
+
+  .el-dialog__close {
+    font-weight: 600;
+  }
+}
+
+/* 全局覆盖element-plus的el-dialog、el-drawer、el-message-box、el-notification组件右上角关闭图标的样式，表现更鲜明 */
+.el-dialog__headerbtn,
+.el-message-box__headerbtn {
+  &:hover {
+    .el-dialog__close {
+      color: var(--el-color-info) !important;
+    }
+  }
+}
+
+.el-icon {
+  &.el-dialog__close,
+  &.el-drawer__close,
+  &.el-message-box__close,
+  &.el-notification__closeBtn {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    outline: none;
+    transition: background-color 0.2s, color 0.2s;
+
+    &:hover {
+      color: rgb(0 0 0 / 88%) !important;
+      text-decoration: none;
+      background-color: rgb(0 0 0 / 6%);
+
+      .pure-dialog-svg {
+        color: rgb(0 0 0 / 88%) !important;
+      }
+    }
+  }
+}
+
+/* 克隆并自定义 ElMessage 样式，不会影响 ElMessage 原本样式，在 src/utils/message.ts 中调用自定义样式 ElMessage 方法即可，暗黑模式在 src/style/dark.scss 文件进行了适配 */
+.pure-message {
+  padding: 10px 13px !important;
+  background: #fff !important;
+  border-width: 0 !important;
+  box-shadow: 0 3px 6px -4px #0000001f, 0 6px 16px #00000014, 0 9px 28px 8px #0000000d !important;
+
+  &.el-message.is-closable .el-message__content {
+    padding-right: 17px !important;
+  }
+
+  & .el-message__content {
+    color: #000000d9 !important;
+    pointer-events: all !important;
+    background-image: initial !important;
+  }
+
+  & .el-message__icon {
+    margin-right: 8px !important;
+  }
+
+  & .el-message__closeBtn {
+    right: 9px !important;
+    border-radius: 4px;
+    outline: none;
+    transition: background-color 0.2s, color 0.2s;
+
+    &:hover {
+      background-color: rgb(0 0 0 / 6%);
+    }
+  }
+}
+
+/* 自定义菜单搜索样式 */
+.pure-search-dialog {
+  .el-dialog__header {
+    display: none;
+  }
+
+  .el-dialog__body {
+    padding-top: 12px;
+    padding-bottom: 0;
+  }
+
+  .el-input__inner {
+    font-size: 1.2em;
+  }
+
+  .el-dialog__footer {
+    padding-bottom: 10px;
+    box-shadow: 0 -1px 0 0 #e0e3e8, 0 -3px 6px 0 rgb(69 98 155 / 12%);
+  }
+}
+
+/** 全局边框线 */
+.border-line {
+  border: 1px solid $borderColor;
+}
+
+.border-line-top {
+  border-top: 1px solid $borderColor;
+}
+
+.border-line-right {
+  border-right: 1px solid $borderColor;
+}
+
+.border-line-bottom {
+  border-bottom: 1px solid $borderColor;
+}
+
+/** 全局表格单选框 选中状态 */
+.pure-table {
+  tr.current-row > td .el-radio .el-radio__inner {
+    background: var(--el-color-primary);
+    border-color: var(--el-color-primary);
+    transition: all 0.5s;
+
+    &::after {
+      background-color: var(--el-color-white);
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+
+  /** 全局表格头部背景和字体颜色 */
+  .el-table--fit {
+    height: auto !important;
+  }
+}
+
+/** 全局表格头部背景和字体颜色 */
+.el-table .el-table__header tr th {
+  color: var(--el-text-color-primary);
+  background: var(--el-table-row-hover-bg-color) !important;
+}
+
+.el-table {
+  &.el-table--small {
+    font-size: 14px !important;
+
+    .el-table__cell {
+      padding: 2px 0;
+      // 折叠按钮设置
+      &.custom-expend > div {
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
+  .el-scrollbar__bar.is-horizontal {
+    z-index: 222;
+    height: 12px;
+  }
+
+  .el-scrollbar__bar.is-vertical {
+    z-index: 222;
+    width: 12px;
+  }
+
+  /** 表格单选按钮 */
+  .table-radio .el-radio__label {
+    display: none;
+  }
+
+  .cell.el-tooltip {
+    width: auto !important;
+    min-width: auto;
+  }
+}
+
+.el-table__body-wrapper .el-table-column--selection > .cell,
+.el-table__header-wrapper .el-table-column--selection > .cell {
+  justify-content: center;
+}
+
+/** 全局表格头部背景和字体颜色 */
+.el-pagination {
+  margin-bottom: 5px !important;
+  color: var(--el-text-color-primary);
+  background: var(--el-table-row-hover-bg-color) !important;
+}
+
+/** 数字输入框居左显示 */
+.el-input-number .el-input__inner {
+  text-align: left !important;
+}
+
+.el-popper.is-pure {
+  max-height: 520px;
+  overflow-y: auto;
+}
+
+/** 取色器-自定义颜色边框 */
+.el-color-predefine__color-selector {
+  box-shadow: 0 0 0 1px #eee;
+}
+
+/** tabs内容区域高自适应 */
+.tabs-fill_content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  width: 100%;
+
+  > .el-tabs__content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+  }
+
+  > .el-tabs__content > .el-tab-pane {
+    display: flex;
+    flex: 1;
+  }
+}
+
+/** 树形列表 */
+.el-tree {
+  &.el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
+    background-color: #bbdcff !important;
+  }
+
+  .el-tree-node__content:hover {
+    background-color: #bbdcff !important;
+  }
+  .el-tree-node .el-tree-node__content .el-tree-node__label {
+    @include ellipsis();
+  }
+}
