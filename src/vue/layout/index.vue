@@ -50,5 +50,6 @@ const names = ref<string[]>([]);
 <style scoped lang="scss">
 .layout {
   display: flex;
+  width: 100%;
 }
 </style>

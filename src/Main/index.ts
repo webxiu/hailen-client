@@ -26,9 +26,9 @@ function createWindow(param: WindowProp) {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: true,
-      preload: path.resolve(__dirname, "./preload/index.js"),
+      preload: path.resolve(__dirname, "./preload/index.js")
     },
-    ...options,
+    ...options
   });
   // 注册热键
   globalShortcut.register("CommandOrControl+R", () => {
@@ -51,27 +51,27 @@ function createWindow(param: WindowProp) {
   const trayMenuTemplate = [
     {
       label: "设置app",
-      click: function () {}, //打开相应页面
+      click: function () {} //打开相应页面
     },
     {
       label: "意见反馈app",
-      click: function () {},
+      click: function () {}
     },
     {
       label: "帮助app",
-      click: function () {},
+      click: function () {}
     },
     {
       label: "关于app",
-      click: function () {},
+      click: function () {}
     },
     {
       label: "退出app",
       click: function () {
         //ipc.send('close-main-window');
         app.quit();
-      },
-    },
+      }
+    }
   ];
 
   //系统托盘图标目录
@@ -107,9 +107,9 @@ function createWindow(param: WindowProp) {
       mainWindow.show(); // 在加载完成后显示窗口
     });
   } else {
-    const pathVue = path.resolve(__dirname, "../../../dist-vue/index.html");
-    const pathReact = path.resolve(__dirname, "../../../dist-react/index.html");
-    // const pathVue2 = path.resolve(app.getAppPath(),"../../dist-vue/index.html");
+    const pathVue = path.resolve(__dirname, "../../../dist/vue/index.html");
+    const pathReact = path.resolve(__dirname, "../../../dist/react/index.html");
+    // const pathVue2 = path.resolve(app.getAppPath(),"../../dist/vue/index.html");
     // mainWindow.loadFile(pathVue);
     mainWindow.loadFile(prodUrl);
   }
@@ -129,13 +129,13 @@ function createWindow(param: WindowProp) {
 }
 
 app.whenReady().then(() => {
-  const pathReact = path.resolve(__dirname, "../../../dist-react/index.html");
-  const pathVue = path.resolve(__dirname, "../../../dist-vue/index.html");
+  const pathReact = path.resolve(__dirname, "../../../dist/react/index.html");
+  const pathVue = path.resolve(__dirname, "../../../dist/vue/index.html");
 
   let parentWin = createWindow({
     devUrl: "http://localhost:8500",
     prodUrl: pathVue,
-    options: {},
+    options: {}
   });
   ipcMain.on("ping", () => console.log("pong"));
 
@@ -144,7 +144,7 @@ app.whenReady().then(() => {
     createWindow({
       devUrl: "http://localhost:8600",
       prodUrl: pathReact,
-      options: { parent: parentWin, modal: true },
+      options: { parent: parentWin, modal: true }
     });
   });
   app.on("activate", function () {
@@ -152,7 +152,7 @@ app.whenReady().then(() => {
       parentWin = createWindow({
         devUrl: "http://localhost:8500",
         prodUrl: pathVue,
-        options: {},
+        options: {}
       });
   });
 });

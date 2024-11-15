@@ -7,6 +7,7 @@ import { createHtmlPlugin } from "vite-plugin-html";
 import path from "path";
 import react from "@vitejs/plugin-react";
 import vue from "@vitejs/plugin-vue";
+import vueJsx from "@vitejs/plugin-vue-jsx";
 
 function resolve(dir: string) {
   return path.resolve(__dirname, dir);
@@ -19,18 +20,18 @@ export default defineConfig(({ mode }): UserConfig => {
   const mConfig = {
     vue: {
       input: resolve("src/vue/main.ts"),
-      outDir: "dist-vue",
+      outDir: "dist/vue",
       port: 8500,
       id: "app",
-      scriptEntry: "/src/vue/main.ts",
+      scriptEntry: "/src/vue/main.ts"
     },
     react: {
       input: resolve("src/react/main.tsx"),
-      outDir: "dist-react",
+      outDir: "dist/react",
       port: 8600,
       id: "root",
-      scriptEntry: "/src/react/main.tsx",
-    },
+      scriptEntry: "/src/react/main.tsx"
+    }
   }[mode as keyof typeof mConfig];
 
   return {
@@ -38,12 +39,13 @@ export default defineConfig(({ mode }): UserConfig => {
     resolve: {
       alias: {
         "@": resolve("src"),
-        "~": resolve(""),
+        "~": resolve("")
       },
-      extensions: [".js", ".ts", ".tsx", ".jsx"],
+      extensions: [".js", ".ts", ".tsx", ".jsx"]
     },
     plugins: [
       vue(),
+      vueJsx(),
       isReact ? react() : null,
       createHtmlPlugin({
         inject: {
@@ -52,31 +54,31 @@ export default defineConfig(({ mode }): UserConfig => {
             {
               tag: "div",
               attrs: { id: mConfig.id },
-              injectTo: "body", // 或 'head'
+              injectTo: "body" // 或 'head'
             },
             {
               tag: "script",
               attrs: { type: "module", src: mConfig.scriptEntry },
-              injectTo: "body",
-            },
-          ],
-        },
+              injectTo: "body"
+            }
+          ]
+        }
       }),
       AutoImport({
-        resolvers: [ElementPlusResolver()],
+        resolvers: [ElementPlusResolver()]
       }),
       Components({
-        resolvers: [ElementPlusResolver()],
-      }),
+        resolvers: [ElementPlusResolver()]
+      })
     ],
     build: {
       outDir: mConfig.outDir,
       rollupOptions: {
         // input: { [mode]: mConfig.input },
-      },
+      }
     },
     server: {
-      port: mConfig.port,
-    },
+      port: mConfig.port
+    }
   };
 });
