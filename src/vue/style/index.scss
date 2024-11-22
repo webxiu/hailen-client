@@ -1,9 +1,9 @@
-@import "./reset";
-@import "./mixins";
-@import "./variables";
-@import "./transition";
-@import "./element-plus";
-@import "./dark";
+@import "./reset.scss";
+@import "./mixins.scss";
+@import "./variables.scss";
+@import "./transition.scss";
+@import "./element-plus.scss";
+@import "./dark.scss";
 
 /* 自定义全局 CssVar */
 :root {
@@ -57,13 +57,7 @@
 
 /** 设置滚动条宽度 */
 .menu-tree-popover {
-  @include scrollBar(
-    16px,
-    rgba(133, 143, 255, 0.3),
-    var(--scrollbar-bg-color),
-    rgba(196, 0, 0, 0.5),
-    10px
-  );
+  @include scrollBar(16px, rgba(133, 143, 255, 0.3), var(--scrollbar-bg-color), rgba(196, 0, 0, 0.5), 10px);
 }
 
 // 单选框禁用样式改为只读样式

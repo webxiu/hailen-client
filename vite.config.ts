@@ -2,7 +2,9 @@ import { UserConfig, defineConfig } from "vite";
 
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
+import ElementPlus from "unplugin-element-plus/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
+import babel from "@rollup/plugin-babel";
 import { createHtmlPlugin } from "vite-plugin-html";
 import path from "path";
 import react from "@vitejs/plugin-react";
@@ -45,7 +47,7 @@ export default defineConfig(({ mode }): UserConfig => {
     },
     plugins: [
       vue(),
-      vueJsx(),
+      isVue ? vueJsx() : null,
       isReact ? react() : null,
       createHtmlPlugin({
         inject: {
@@ -64,12 +66,17 @@ export default defineConfig(({ mode }): UserConfig => {
           ]
         }
       }),
+      babel({
+        babelHelpers: "bundled",
+        presets: ["@babel/preset-env", "@vue/babel-preset-jsx", "@babel/preset-typescript"]
+      }),
       AutoImport({
         resolvers: [ElementPlusResolver()]
       }),
       Components({
         resolvers: [ElementPlusResolver()]
-      })
+      }),
+      ElementPlus({})
     ],
     build: {
       outDir: mConfig.outDir,
