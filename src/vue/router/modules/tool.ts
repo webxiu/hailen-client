@@ -19,4 +19,4 @@ export default {
       meta: { title: "转换", icon: "xxx" }
     }
   ]
-} as RouteConfigRawType;
+} as RouteRecordRawType;

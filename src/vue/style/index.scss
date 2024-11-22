@@ -1,9 +1,9 @@
-@import "./reset.scss";
-@import "./mixins.scss";
-@import "./variables.scss";
-@import "./transition.scss";
-@import "./element-plus.scss";
-@import "./dark.scss";
+@use "./reset.scss" as *;
+@use "./mixins.scss" as *;
+@use "./variables.scss" as *;
+@use "./transition.scss" as *;
+@use "./element-plus.scss" as *;
+@use "./dark.scss" as *;
 
 /* 自定义全局 CssVar */
 :root {

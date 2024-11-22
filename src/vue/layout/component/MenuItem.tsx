@@ -1,6 +1,7 @@
 import { PropType, defineComponent } from "vue";
 
 import MenuItem from "./MenuItem";
+import { useRouter } from "vue-router";
 
 const props = {
   loading: { type: Boolean, default: false },
@@ -13,12 +14,21 @@ export default defineComponent({
   emits: ["submit", "reset", "change"],
   setup(props, { emit, expose, attrs, slots }) {
     const { index, item } = props;
+
+    const router = useRouter();
+
+    function onToPath(item) {
+      router.push({ path: item.path });
+    }
+
     return () => {
       const slots = {
         title: () => (
           <>
             {/* {renderIcon(item[options.icon!])} */}
-            <span class="title">{item.meta.title}66</span>
+            <span class="title" onClick={() => onToPath(item)}>
+              {item.meta.title}
+            </span>
           </>
         )
       };
@@ -35,7 +45,7 @@ export default defineComponent({
           {/* <el-icon>
             <setting />
           </el-icon> */}
-          <span>{item.meta.title}44</span>
+          <span onClick={() => onToPath(item)}>{item.meta.title}</span>
         </el-menu-item>
       );
     };

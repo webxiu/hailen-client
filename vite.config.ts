@@ -69,14 +69,7 @@ export default defineConfig(({ mode }): UserConfig => {
       babel({
         babelHelpers: "bundled",
         presets: ["@babel/preset-env", "@vue/babel-preset-jsx", "@babel/preset-typescript"]
-      }),
-      AutoImport({
-        resolvers: [ElementPlusResolver()]
-      }),
-      Components({
-        resolvers: [ElementPlusResolver()]
-      }),
-      ElementPlus({})
+      })
     ],
     build: {
       outDir: mConfig.outDir,

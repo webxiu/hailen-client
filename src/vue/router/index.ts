@@ -8,7 +8,7 @@ const Layout = () => import("@/vue/layout/index.vue");
 export const whiteList = ["/login", "/404"];
 
 // 公共全局路由
-const commonRoute: RouteConfigRawType[] = [
+const commonRoute: RouteRecordRawType[] = [
   {
     path: "/login",
     name: "Login",
@@ -32,7 +32,7 @@ const commonRoute: RouteConfigRawType[] = [
 const modules: Record<string, any> = import.meta.glob(["./modules/**/*.ts", "!./modules/**/test.ts"], { eager: true });
 
 // 路由模块列表
-const routeList: RouteConfigRawType[] = [];
+const routeList: RouteRecordRawType[] = [];
 Object.keys(modules).forEach((key) => {
   const mod = modules[key].default || {};
   const modList = Array.isArray(mod) ? [...mod] : [mod];

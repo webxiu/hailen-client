@@ -19,4 +19,4 @@ export default {
       meta: { title: "用户", icon: "xxx" }
     }
   ]
-} as RouteConfigRawType;
+} as RouteRecordRawType;

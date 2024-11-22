@@ -1,7 +1,7 @@
 <template>
   <div>
     dashboard
-    <button type="button" @click="onClick">count is {{ count }}</button>
+    <el-button type="primary" @click="onClick">count is {{ count }}</el-button>
   </div>
 </template>
 

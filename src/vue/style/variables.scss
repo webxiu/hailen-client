@@ -1,3 +1,5 @@
+@use "./mixins.scss" as mixins;
+
 /* 定义全局遍历变量 */
 
 // 间距与字体
@@ -282,16 +284,16 @@ $flexs: 1, 2, 3, 4, 5, 6, 7, 8, 9;
 }
 
 .ellipsis {
-  @include ellipsis();
+  @include mixins.ellipsis();
 }
 
 /** 超过2行省略 */
 .ellipsis-2 {
-  @include ellipsis-row(2);
+  @include mixins.ellipsis-row(2);
 }
 
 .ellipsis-3 {
-  @include ellipsis-row(3);
+  @include mixins.ellipsis-row(3);
 }
 
 .ellipsis-col {

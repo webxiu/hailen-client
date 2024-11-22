@@ -19,8 +19,8 @@ function createWindow(param: WindowProp) {
   const { devUrl, prodUrl, options = {} } = param;
   const faviconPath = path.resolve(process.cwd(), process.env.NODE_ENV === "production" ? faviconProPath : faviconDevPath);
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
+    width: 1366,
+    height: 768,
     autoHideMenuBar: true,
     icon: nativeImage.createFromPath(faviconPath),
     webPreferences: {
