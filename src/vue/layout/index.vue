@@ -8,6 +8,7 @@
 import { Transition, ref } from "vue";
 // import { routes } from "@/router";
 import Menu from "./component/Menu.vue";
+// import BackButton from "@/vue/components/BackButton/index.vue";
 
 const names = ref<string[]>([]);
 
@@ -29,12 +30,12 @@ const names = ref<string[]>([]);
 <template>
   <div class="layout">
     <Menu />
-    <div>
+    <div class="flex-1">
       <div class="header">头部</div>
       <div class="content">
         <router-view>
           <template #default="{ Component, route }">
-            <BackButton />
+            <!-- <BackButton /> -->
             <transition name="fade-transform" mode="out-in">
               <KeepAlive :exclude="names">
                 <component :is="Component" :key="route.fullPath" />
@@ -51,5 +52,8 @@ const names = ref<string[]>([]);
 .layout {
   display: flex;
   width: 100%;
+}
+.content {
+overflow: hidden;
 }
 </style>

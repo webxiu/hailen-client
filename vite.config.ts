@@ -47,7 +47,13 @@ export default defineConfig(({ mode }): UserConfig => {
     },
     plugins: [
       vue(),
-      isVue ? vueJsx() : null,
+      isVue
+        ? vueJsx({
+            // 如果需要 Babel 特定功能，可以在这里配置
+            optimize: true,
+            transformOn: true
+          })
+        : null,
       isReact ? react() : null,
       createHtmlPlugin({
         inject: {
@@ -65,11 +71,12 @@ export default defineConfig(({ mode }): UserConfig => {
             }
           ]
         }
-      }),
-      babel({
-        babelHelpers: "bundled",
-        presets: ["@babel/preset-env", "@vue/babel-preset-jsx", "@babel/preset-typescript"]
       })
+      // 打包报错
+      // babel({
+      //   babelHelpers: "bundled",
+      //   presets: ["@babel/preset-env", "@vue/babel-preset-jsx", "@babel/preset-typescript"]
+      // })
     ],
     build: {
       outDir: mConfig.outDir,

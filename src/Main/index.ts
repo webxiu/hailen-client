@@ -51,19 +51,19 @@ function createWindow(param: WindowProp) {
   const trayMenuTemplate = [
     {
       label: "设置app",
-      click: function () {} //打开相应页面
+      click: function () { } //打开相应页面
     },
     {
       label: "意见反馈app",
-      click: function () {}
+      click: function () { }
     },
     {
       label: "帮助app",
-      click: function () {}
+      click: function () { }
     },
     {
       label: "关于app",
-      click: function () {}
+      click: function () { }
     },
     {
       label: "退出app",
@@ -106,19 +106,9 @@ function createWindow(param: WindowProp) {
     mainWindow.loadURL(devUrl).then(() => {
       mainWindow.show(); // 在加载完成后显示窗口
     });
-  } else {
-    const pathVue = path.resolve(__dirname, "../../../dist/vue/index.html");
-    const pathReact = path.resolve(__dirname, "../../../dist/react/index.html");
-    // const pathVue2 = path.resolve(app.getAppPath(),"../../dist/vue/index.html");
-    // mainWindow.loadFile(pathVue);
+  } else { 
     mainWindow.loadFile(prodUrl);
   }
-
-  //===========自定义file:///协议的解析=======================
-  protocol.interceptFileProtocol("file", (req, callback) => {
-    const url = req.url.substr(8);
-    callback(decodeURI(url));
-  });
 
   mainWindow.on("closed", () => {
     console.log("Window closed");
@@ -129,21 +119,23 @@ function createWindow(param: WindowProp) {
 }
 
 app.whenReady().then(() => {
-  const pathReact = path.resolve(__dirname, "../../../dist/react/index.html");
-  const pathVue = path.resolve(__dirname, "../../../dist/vue/index.html");
-
+  const pathVue = path.join(__dirname, "./vue/index.html");
+  const pathReact = path.join(__dirname, "./react/index.html");
   let parentWin = createWindow({
     devUrl: "http://localhost:8500",
     prodUrl: pathVue,
     options: {}
   });
-  ipcMain.on("ping", () => console.log("pong"));
+  ipcMain.on("ping", () => {
+    console.log("pong")
+    console.log('pathVue:', pathVue)
+    console.log('pathReact:', pathReact)
+  });
 
   ipcMain.on("react", () => {
     console.log("react");
     createWindow({
-      devUrl: "http://localhost:8600",
-      prodUrl: pathReact,
+      devUrl: "http://localhost:8600", prodUrl: pathReact,
       options: { parent: parentWin, modal: true }
     });
   });

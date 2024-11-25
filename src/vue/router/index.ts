@@ -46,7 +46,7 @@ export const routeCateList = [...routeList].sort((a: any, b: any) => a.meta?.ord
 export const routes = [...commonRoute, ...routeList, ...asyncRoutes] as RouteRecordRaw[];
 
 const router = createRouter({
-  history: createWebHistory("./"),
+  history: createWebHashHistory("./"),
   routes: routes,
   scrollBehavior: () => ({ left: 0, top: 0 })
 });
