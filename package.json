@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/index.js",
+  "main": "index.js",
   "types": "./typings/index.d.ts",
   "scripts": {
     "start": "node electron-cli-service start",
