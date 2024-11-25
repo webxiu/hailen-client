@@ -3,20 +3,30 @@ import * as path from "node:path";
 import { BrowserWindow, Menu, Tray, app, globalShortcut, ipcMain, nativeImage, protocol, shell } from "electron";
 
 interface WindowProp {
-  devUrl: string;
-  prodUrl: string;
+  mode: "vue" | "react";
   options?: Electron.BrowserWindowConstructorOptions;
 }
 
 const faviconProPath = `/resources/app.asar.unpacked/public/favicon/png/favicon_ch@3x.png`;
 const faviconDevPath = `../public/favicon/png/favicon_ch@3x.png`;
 
+const hostConfig = {
+  development: {
+    vue: "http://localhost:8500",
+    react: "http://localhost:8600"
+  },
+  production: {
+    vue: path.join(__dirname, "./vue/index.html"),
+    react: path.join(__dirname, "./react/index.html")
+  }
+};
+
 function resolve(dir: string) {
   return path.resolve(process.cwd(), dir);
 }
 
 function createWindow(param: WindowProp) {
-  const { devUrl, prodUrl, options = {} } = param;
+  const { mode, options = {} } = param;
   const faviconPath = path.resolve(process.cwd(), process.env.NODE_ENV === "production" ? faviconProPath : faviconDevPath);
   const mainWindow = new BrowserWindow({
     width: 1366,
@@ -51,19 +61,19 @@ function createWindow(param: WindowProp) {
   const trayMenuTemplate = [
     {
       label: "设置app",
-      click: function () { } //打开相应页面
+      click: function () {} //打开相应页面
     },
     {
       label: "意见反馈app",
-      click: function () { }
+      click: function () {}
     },
     {
       label: "帮助app",
-      click: function () { }
+      click: function () {}
     },
     {
       label: "关于app",
-      click: function () { }
+      click: function () {}
     },
     {
       label: "退出app",
@@ -102,50 +112,30 @@ function createWindow(param: WindowProp) {
   console.log("主进程trayIcon", trayIcon);
 
   if (process.env.NODE_ENV === "development") {
-    // 加载 URL 并在加载完成后显示窗口
-    mainWindow.loadURL(devUrl).then(() => {
-      mainWindow.show(); // 在加载完成后显示窗口
-    });
-  } else { 
-    mainWindow.loadFile(prodUrl);
+    mainWindow.loadURL(hostConfig.development[mode]).then(() => mainWindow.show());
+  } else {
+    mainWindow.loadFile(hostConfig.production[mode]);
   }
 
   mainWindow.on("closed", () => {
     console.log("Window closed");
   });
 
-  mainWindow.webContents.openDevTools(); // 打开开发者工具
+  mainWindow.webContents.openDevTools();
   return mainWindow;
 }
 
 app.whenReady().then(() => {
-  const pathVue = path.join(__dirname, "./vue/index.html");
-  const pathReact = path.join(__dirname, "./react/index.html");
-  let parentWin = createWindow({
-    devUrl: "http://localhost:8500",
-    prodUrl: pathVue,
-    options: {}
-  });
-  ipcMain.on("ping", () => {
-    console.log("pong")
-    console.log('pathVue:', pathVue)
-    console.log('pathReact:', pathReact)
-  });
-
+  let parentWin = createWindow({ mode: "vue", options: {} });
   ipcMain.on("react", () => {
     console.log("react");
-    createWindow({
-      devUrl: "http://localhost:8600", prodUrl: pathReact,
-      options: { parent: parentWin, modal: true }
-    });
+    createWindow({ mode: "react", options: { parent: parentWin, modal: true } });
+  });
+  ipcMain.on("ping", () => {
+    console.log("pong");
   });
   app.on("activate", function () {
-    if (BrowserWindow.getAllWindows().length === 0)
-      parentWin = createWindow({
-        devUrl: "http://localhost:8500",
-        prodUrl: pathVue,
-        options: {}
-      });
+    if (BrowserWindow.getAllWindows().length === 0) parentWin = createWindow({ mode: "vue", options: {} });
   });
 });
 

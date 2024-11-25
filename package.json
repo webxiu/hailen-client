@@ -106,7 +106,7 @@
           "target": "zip"
         }
       ],
-      "icon": "public/favicon/png/favicon_ch@5x.png"
+      "icon": "public/favicon/ico/favicon@5x.ico"
     },
     "mac": {
       "icon": "public/favicon/icons/favicon@5x.icns"
