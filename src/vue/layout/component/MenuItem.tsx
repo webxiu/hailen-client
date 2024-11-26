@@ -26,9 +26,7 @@ export default defineComponent({
         title: () => (
           <>
             {/* {renderIcon(item[options.icon!])} */}
-            <span class="title" onClick={() => onToPath(item)}>
-              {item.meta.title}
-            </span>
+            <span class="title">{item.meta.title}</span>
           </>
         )
       };

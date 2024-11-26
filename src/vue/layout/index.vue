@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { Transition, ref } from "vue";
 // import { routes } from "@/router";
-import Menu from "./component/Menu.vue";
+import NavMenu from "./component/NavMenu.vue";
 // import BackButton from "@/vue/components/BackButton/index.vue";
 
 const names = ref<string[]>([]);
@@ -29,7 +29,12 @@ const names = ref<string[]>([]);
 
 <template>
   <div class="layout">
-    <Menu />
+    <div class="flex-col p-2">
+      <div>logo</div>
+      <div class="flex-1">
+        <NavMenu />
+      </div>
+    </div>
     <div class="flex-1">
       <div class="header">头部</div>
       <div class="content">
@@ -51,9 +56,10 @@ const names = ref<string[]>([]);
 <style scoped lang="scss">
 .layout {
   display: flex;
-  width: 100%;
+  width: 100vw;
+  height: 100vh;
 }
 .content {
-overflow: hidden;
+  overflow: hidden;
 }
 </style>

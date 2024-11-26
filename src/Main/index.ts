@@ -1,6 +1,6 @@
 import * as path from "node:path";
 
-import { BrowserWindow, Menu, Tray, app, globalShortcut, ipcMain, nativeImage, protocol, shell } from "electron";
+import { BrowserWindow, Menu, Tray, app, globalShortcut, ipcMain, nativeImage, screen, protocol, shell } from "electron";
 
 interface WindowProp {
   mode: "vue" | "react";
@@ -27,10 +27,27 @@ function resolve(dir: string) {
 
 function createWindow(param: WindowProp) {
   const { mode, options = {} } = param;
+  // 获取主屏幕
+  const primaryDisplay = screen.getPrimaryDisplay();
+  const { width: screenWidth, height: screenHeight } = primaryDisplay.workAreaSize;
+
+  // 计算窗口大小（例如：屏幕的80%）
+  const windowWidth = Math.floor(screenWidth * 0.8);
+  const windowHeight = Math.floor(screenHeight * 0.8);
+
+  // 计算窗口位置（居中）
+  const x = Math.floor((screenWidth - windowWidth) / 2);
+  const y = Math.floor((screenHeight - windowHeight) / 2);
+
   const faviconPath = path.resolve(process.cwd(), process.env.NODE_ENV === "production" ? faviconProPath : faviconDevPath);
   const mainWindow = new BrowserWindow({
-    width: 1366,
-    height: 768,
+    width: windowWidth,
+    height: windowHeight,
+    x: x,
+    y: y,
+    // 可选：设置最小尺寸
+    minWidth: Math.floor(screenWidth * 0.3),
+    minHeight: Math.floor(screenHeight * 0.3),
     autoHideMenuBar: true,
     icon: nativeImage.createFromPath(faviconPath),
     webPreferences: {
@@ -135,7 +152,9 @@ app.whenReady().then(() => {
     console.log("pong");
   });
   app.on("activate", function () {
-    if (BrowserWindow.getAllWindows().length === 0) parentWin = createWindow({ mode: "vue", options: {} });
+    if (BrowserWindow.getAllWindows().length === 0) {
+      parentWin = createWindow({ mode: "vue", options: {} });
+    }
   });
 });
 
