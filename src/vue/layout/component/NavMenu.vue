@@ -1,4 +1,5 @@
 <template>
+  <el-button @click="isCollapse = !isCollapse">切换</el-button>
   <el-menu default-active="2" class="slide-menu" :collapse="isCollapse" @open="handleOpen" @close="handleClose">
     <MenuItem v-for="item in routeCateList" :item="item" :index="item.path" :key="item.path" />
   </el-menu>

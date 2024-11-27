@@ -6,10 +6,10 @@
  */ -->
 <script setup lang="ts">
 import { Transition, ref } from "vue";
-// import { routes } from "@/router";
 import NavMenu from "./component/NavMenu.vue";
+import HxIcon from "@/vue/components/HxIcon";
+// import { routes } from "@/router";
 // import BackButton from "@/vue/components/BackButton/index.vue";
-
 const names = ref<string[]>([]);
 
 // const keepAliveNames = (routes) => {
@@ -29,8 +29,8 @@ const names = ref<string[]>([]);
 
 <template>
   <div class="layout">
-    <div class="flex-col p-2">
-      <div>logo</div>
+    <div class="flex-col p-4">
+      <div>logo <HxIcon icon="Setting" /></div>
       <div class="flex-1">
         <NavMenu />
       </div>

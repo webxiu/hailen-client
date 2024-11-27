@@ -3,10 +3,21 @@ declare module "vue" {
    * 自定义全局组件获得 Volar 提示（自定义的全局组件需要在这里声明下才能获得 Volar 类型提示哦）
    */
   export interface GlobalComponents {
-    IconifyIconOffline: typeof import("../src/components/ReIcon")["IconifyIconOffline"];
+    HxIcon: typeof import("../src/vue//components/HxIcon")["HxIcon"];
     IconifyIconOnline: typeof import("../src/components/ReIcon")["IconifyIconOnline"];
     FontIcon: typeof import("../src/components/ReIcon")["FontIcon"];
     Auth: typeof import("../src/components/ReAuth")["Auth"];
+  }
+}
+
+// 为 JSX 添加类型支持
+declare module "@vue/runtime-core" {
+  export interface GlobalComponents {
+    HxIcon: DefineComponent<{
+      icon: string | object;
+      size?: string | number;
+      color?: string;
+    }>;
   }
 }
 

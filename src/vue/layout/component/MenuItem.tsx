@@ -25,7 +25,7 @@ export default defineComponent({
       const slots = {
         title: () => (
           <>
-            {/* {renderIcon(item[options.icon!])} */}
+            <HxIcon icon="Setting" />
             <span class="title">{item.meta.title}</span>
           </>
         )
@@ -40,9 +40,7 @@ export default defineComponent({
         </el-sub-menu>
       ) : (
         <el-menu-item index={index}>
-          {/* <el-icon>
-            <setting />
-          </el-icon> */}
+          <HxIcon icon="Setting" />
           <span onClick={() => onToPath(item)}>{item.meta.title}</span>
         </el-menu-item>
       );
