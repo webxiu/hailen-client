@@ -7,6 +7,22 @@ declare module "vue" {
     IconifyIconOnline: typeof import("../src/components/ReIcon")["IconifyIconOnline"];
     FontIcon: typeof import("../src/components/ReIcon")["FontIcon"];
     Auth: typeof import("../src/components/ReAuth")["Auth"];
+
+    // 自定义全局组件类型(详细配置)
+    // DemoComponent: DefineComponent<DemoComponentProps> & {
+    //   new (): {
+    //     $props: MyComponentProps;
+    //     /* $emit: Record<"click" | "change", (value: string) => void>; */
+    //     $emit: { (e: "click", event: MouseEvent): void; (e: "change", value: string): void };
+    //     $slots: { default?: () => VNode[]; header?: (props: { title: string }) => VNode[] };
+    //     $refs: { input: HTMLInputElement; form: FormInstance };
+    //     $el: HTMLElement;
+    //     $forceUpdate: () => void;
+    //     $nextTick: (fn: () => void) => void;
+    //     $data: { count: number; name: string };
+    //     $computed: { fullName: string; total: number };
+    //   };
+    // };
   }
 }
 
