@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer } from "electron";
 
-import type { User } from "../../database";
+import type { User } from "../../server/database";
 
 // Custom APIs for renderer
 const api = {
