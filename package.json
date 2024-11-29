@@ -21,26 +21,40 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
     "antd": "^5.21.6",
+    "crypto-js": "^4.2.0",
     "dayjs": "^1.11.8",
     "element-plus": "^2.8.7",
     "js-cookie": "^3.0.5",
+    "koa": "^2.15.3",
+    "koa-body": "^6.0.1",
+    "koa-bodyparser": "^4.4.1",
+    "koa-router": "^13.0.1",
+    "koa-static": "^5.0.0",
     "lunar-calendar": "^0.1.4",
     "nprogress": "^0.2.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "sqlite3": "^5.1.7",
     "vue": "^3.4.37",
-    "vue-router": "^4.4.5"
+    "vue-router": "^4.4.5",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.26.0",
     "@babel/preset-typescript": "^7.26.0",
     "@eslint/js": "^9.9.0",
     "@rollup/plugin-babel": "^6.0.4",
+    "@types/crypto-js": "^4.2.2",
     "@types/js-cookie": "^3.0.6",
+    "@types/koa-bodyparser": "^4.3.12",
+    "@types/koa-router": "^7.4.8",
+    "@types/koa-static": "^4.0.4",
     "@types/node": "^22.5.5",
     "@types/nprogress": "^0.2.3",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
+    "@types/sqlite3": "^3.1.11",
+    "@types/ws": "^8.5.13",
     "@vitejs/plugin-react": "^4.3.1",
     "@vitejs/plugin-vue": "^5.1.2",
     "@vitejs/plugin-vue-jsx": "^4.1.0",
@@ -90,8 +104,7 @@
     ],
     "nodeGypRebuild": false,
     "extraFiles": [
-      "server",
-      "language"
+      "source"
     ],
     "win": {
       "requestedExecutionLevel": "asInvoker",
