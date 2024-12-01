@@ -3,6 +3,7 @@ import { downloadRouter, indexRouter, toolRouter, uploadRouter, userRouter, webs
 import Koa from "koa";
 import bodyParser from "koa-bodyparser";
 import { kimiRouter } from "./routes/aiRoutes";
+import { testRouter } from "./routes/test";
 import koaStatic from "koa-static";
 import logger from "./middlewares/logger";
 import path from "node:path";
@@ -33,6 +34,7 @@ function createServer() {
 
   // 使用路由
   app.use(indexRouter.routes()).use(indexRouter.allowedMethods());
+  app.use(testRouter.routes()).use(indexRouter.allowedMethods());
   // app.use(userRouter.routes()).use(userRouter.allowedMethods());
   // app.use(uploadRouter.routes()).use(uploadRouter.allowedMethods());
   // app.use(websocketRouter.routes()).use(websocketRouter.allowedMethods());

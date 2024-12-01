@@ -1,4 +1,4 @@
-import { UserConfig, defineConfig } from "vite";
+import { UserConfig, defineConfig, loadEnv } from "vite";
 
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
@@ -11,6 +11,9 @@ import react from "@vitejs/plugin-react";
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 
+/** 当前执行node命令时文件夹的地址（工作目录） */
+const root: string = process.cwd();
+
 function resolve(dir: string) {
   return path.resolve(__dirname, dir);
 }
@@ -18,19 +21,21 @@ function resolve(dir: string) {
 export default defineConfig(({ mode }): UserConfig => {
   const isVue = mode === "vue";
   const isReact = mode === "react";
+  const nodeEnv = process.env.NODE_ENV as string;
+  const { VITE_CDN, VITE_PORT, VITE_BASE_API, VITE_BASE_URL, VITE_VUE_PORT, VITE_REACT_PORT } = loadEnv(nodeEnv, root);
 
   const mConfig = {
     vue: {
       input: resolve("src/vue/main.ts"),
       outDir: "dist/vue",
-      port: 8500,
+      port: VITE_VUE_PORT,
       id: "app",
       scriptEntry: "/src/vue/main.ts"
     },
     react: {
       input: resolve("src/react/main.tsx"),
       outDir: "dist/react",
-      port: 8600,
+      port: VITE_REACT_PORT,
       id: "root",
       scriptEntry: "/src/react/main.tsx"
     }
@@ -85,7 +90,16 @@ export default defineConfig(({ mode }): UserConfig => {
       }
     },
     server: {
-      port: mConfig.port
+      port: mConfig.port,
+      host: "0.0.0.0",
+      // 本地跨域代理 https://cn.vitejs.dev/config/server-options.html#server-proxy
+      proxy: {
+        [VITE_BASE_API]: {
+          target: VITE_BASE_URL,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(VITE_BASE_API, "")
+        }
+      }
     }
   };
 });

@@ -9,16 +9,16 @@ import Axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken, C
 import { PureHttpError, PureHttpRequestConfig, PureHttpResponse, RequestMethods } from "./types.d";
 
 import NProgress from "../progress";
-import { getUrlParameters } from "../common";
-import { message } from "@/utils/message";
+import { message } from "@/vue/utils/message";
 import { stringify } from "qs";
-import { useAppStoreHook } from "@/store/modules/app";
-import { useUserStoreHook } from "@/store/modules/user";
-import { whiteList } from "@/router/index";
+import { whiteList } from "@/vue/router/index";
+
+console.log("=======", import.meta.env);
 
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig: AxiosRequestConfig = {
-  baseURL: import.meta.env.VITE_BASE_API,
+  // baseURL: import.meta.env.VITE_BASE_API,
+  baseURL: "/api",
   // 请求超时时间 60秒
   timeout: 60 * 1000,
   headers: {
@@ -72,9 +72,9 @@ class PureHttp {
         this.removeBlank(config.data); // 移除请求参数前后空格
 
         // 是否隐藏Loading
-        if (!config.headers.hideLoading) {
+        if (!config.hideLoading) {
           NProgress.start();
-          useAppStoreHook().pushPageLoading("loading");
+          // useAppStoreHook().pushPageLoading("loading");
         }
         // 优先判断post/get等方法是否传入回调，否则执行初始化设置等回调
         if (typeof config.beforeRequestCallback === "function") {
@@ -85,7 +85,7 @@ class PureHttp {
           PureHttp.initConfig.beforeRequestCallback(config);
           return config;
         }
-        const hasAuth = whiteList.some((v) => config.url.indexOf(v) > -1);
+        const hasAuth = whiteList.some((v) => config.url && config.url.indexOf(v) > -1);
         return hasAuth ? config : new Promise((resolve) => resolve(config));
       },
       (error) => Promise.reject(error)
@@ -102,7 +102,7 @@ class PureHttp {
         // 关闭进度条动画
         NProgress.done();
         // 关闭loading
-        useAppStoreHook().popPageLoading();
+        // useAppStoreHook().popPageLoading();
         // 优先判断post/get等方法是否传入回调，否则执行初始化设置等回调
         if (typeof $config.beforeResponseCallback === "function") {
           $config.beforeResponseCallback(response);
@@ -120,7 +120,7 @@ class PureHttp {
         }
 
         if (STATUS_CODE.includes(data.status)) {
-          useUserStoreHook().logOut();
+          // useUserStoreHook().logOut();
           message(data.message, { type: "error" });
         } else if (data.status === 403) {
           message("请求未授权", { type: "error" });
@@ -133,7 +133,7 @@ class PureHttp {
       (error: PureHttpError) => {
         console.log("http_error:", error);
         // 关闭loading
-        useAppStoreHook().popPageLoading();
+        // useAppStoreHook().popPageLoading();
         const data = error.response?.data as any;
         const status = error.response?.status as any;
 
@@ -160,12 +160,7 @@ class PureHttp {
    * 通用请求工具函数
    * method: 第一个参数是对象则为options方式配置请求参数, 调用接口是可自定义拦截请求和响应, 可配置取消请求 {..., cancelToken: InjectAbort(login) }
    */
-  public request<T>(
-    method: RequestMethods | PureHttpRequestConfig,
-    url?: string,
-    param?: AxiosRequestConfig,
-    config?: PureHttpRequestConfig
-  ): Promise<BaseResponseType<T>> {
+  public request<T>(method: RequestMethods | PureHttpRequestConfig, url?: string, param?: AxiosRequestConfig, config?: PureHttpRequestConfig): Promise<BaseResponseType<T>> {
     let option = { method, url, ...param, ...config } as PureHttpRequestConfig;
     if (typeof method === "object") option = method; // 判断是否为options方式
 
@@ -190,7 +185,7 @@ class PureHttp {
 }
 
 /** 为请求方法注入取消请求 */
-export function InjectCancel(fn: Function) {
+export function InjectCancel(fn: Function & { cancel: Axios.Canceler }) {
   const cancelToken = Axios.CancelToken;
   const source = cancelToken.source();
   fn["cancel"] = source.cancel;

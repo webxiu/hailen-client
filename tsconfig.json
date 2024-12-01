@@ -38,7 +38,6 @@
   "exclude": [
     "node_modules",
     "dist", // 排除构建输出目录
-    "dist-vue",
-    "dist-react"
+    "**/*.js"
   ]
 }

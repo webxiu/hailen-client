@@ -248,4 +248,11 @@ declare global {
     /** 是否显示在下拉按钮中 */
     isDropDown?: boolean;
   }
+
+  export interface BaseServeResponse<T> {
+    hasError: boolean;
+    errorId: string;
+    errorDesc: string;
+    data: T;
+  }
 }

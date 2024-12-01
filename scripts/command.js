@@ -8,8 +8,10 @@ const { build } = require("vite");
 const { resolve } = require("path");
 const Core = require("./core");
 const waitOn = require("wait-on");
-const fs = require('fs-extra');
-const path = require('path');
+const fs = require("fs-extra");
+const path = require("path");
+const dotenv = require("dotenv");
+dotenv.config({ path: ".env.development" });
 
 class Command extends EventEmitter {
   constructor() {
@@ -17,7 +19,7 @@ class Command extends EventEmitter {
     this.AutoOpenApp = new Proxy(
       {
         RenderProcessDone: false,
-        MainProcessDone: false,
+        MainProcessDone: false
       },
       {
         set: (target, props, value) => {
@@ -27,7 +29,7 @@ class Command extends EventEmitter {
             this.emit("builddone");
           }
           return isOk;
-        },
+        }
       }
     );
   }
@@ -72,7 +74,7 @@ class Command extends EventEmitter {
   async RenderProcess() {
     const command = {
       production: `concurrently "npm run build:vue" "npm run build:react"`,
-      development: `concurrently "npm run dev:vue" "npm run dev:react"`,
+      development: `concurrently "npm run dev:vue" "npm run dev:react"`
     }[process.env.NODE_ENV];
     console.log("启动渲染进程:", command);
 
@@ -102,7 +104,8 @@ class Command extends EventEmitter {
     if (Core.isPro()) {
       if (!this.AutoOpenApp.MainProcessDone) this.AutoOpenApp.MainProcessDone = true;
     } else {
-      waitOn({ resources: ["tcp:8500", "tcp:8600"], timeout: 30000, }, (err) => {
+      const { VITE_VUE_PORT, VITE_REACT_PORT } = process.env;
+      waitOn({ resources: [`tcp:${VITE_VUE_PORT}`, `tcp:${VITE_REACT_PORT}`], timeout: 30000 }, (err) => {
         if (err) {
           console.error("等待端口时错误:", err);
           process.exit(1);
@@ -111,8 +114,7 @@ class Command extends EventEmitter {
 
         this.runExec(command, ({ type, data }) => {
           console.log("=====监听主进程", type, data);
-          if (["data"].includes(type) && data.includes("Watching for file changes")
-          ) {
+          if (["data"].includes(type) && data.includes("Watching for file changes")) {
             if (!this.AutoOpenApp.MainProcessDone) this.AutoOpenApp.MainProcessDone = true;
           }
           if (["cp_close"].includes(type) && data === 0) {
@@ -137,9 +139,7 @@ class Command extends EventEmitter {
   /** Readme */
   app() {
     if (config.nodemon) {
-      this.childProcessExec(
-        `nodemon -e js,ts,tsx -w dist -w package.json -w src/Main -w index.js --exec electron . --inspect`
-      );
+      this.childProcessExec(`nodemon -e js,ts,tsx -w dist -w package.json -w src/Main -w index.js --exec electron . --inspect`);
     } else {
       this.childProcessExec(`electron . --inspect`);
     }
@@ -152,7 +152,7 @@ class Command extends EventEmitter {
     this.MainProcess();
     this.RenderProcess();
     this.once("builddone", () => {
-      fs.emptyDirSync(path.join(process.cwd(), './output'));
+      fs.emptyDirSync(path.join(process.cwd(), "./output"));
       this.builder();
     });
   }
