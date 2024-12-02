@@ -1,4 +1,4 @@
-import { BaseResponseType } from "../../types/index";
+import { BaseResponseType } from "../types/index";
 
 type StatusCode = 200 | 400 | 401 | 403 | 405 | 500;
 
