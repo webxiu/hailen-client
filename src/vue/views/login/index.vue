@@ -31,9 +31,9 @@ import { login, register } from "@/vue/api/user";
 const router = useRouter();
 
 const formData = reactive({
-  username: "admin",
+  username: "123",
   password: "123",
-  email: "admin@qq.com"
+  email: "123@qq.com"
 });
 
 function onSubmit() {

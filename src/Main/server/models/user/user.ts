@@ -1,6 +1,5 @@
 import { Database } from "../../database/db";
 import { User } from "./types";
-import bcrypt from "bcrypt";
 
 export type { User };
 
@@ -11,14 +10,13 @@ export default class UserModel {
   }
 
   async login(user: Pick<User, "email" | "password">): Promise<User | undefined> {
-    const sql = "SELECT * FROM users WHERE email = ? AND password = ?";
-    return this.db.get<User>(sql, [user.email, user.password]);
+    const sql = "SELECT * FROM users WHERE email = ?";
+    return await this.db.get<User>(sql, [user.email]);
   }
   async register(user: Omit<User, "id" | "created_at">): Promise<boolean> {
     const sql = `INSERT INTO users (username, password, email, phone) VALUES (?, ?, ?, ?)`;
-    const hashedPassword = await bcrypt.hash(user.password, 10);
     try {
-      await this.db.run(sql, [user.username, hashedPassword, user.email, user.phone]);
+      await this.db.run(sql, [user.username, user.password, user.email, user.phone]);
       return true;
     } catch (error) {
       return false;
