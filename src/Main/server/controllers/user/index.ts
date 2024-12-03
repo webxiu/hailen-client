@@ -23,7 +23,8 @@ const login = async (ctx: Context) => {
 const register = async (ctx: Context) => {
   const { username, password, email, phone } = ctx.request.body as User;
   try {
-    const user = await userModel.register({ username, password, email, phone });
+    const pwd = await bcrypt.hash(password, 10);
+    const user = await userModel.register({ username, password: pwd, email, phone });
     ctx.body = responseStatus(200, user);
   } catch (error: any) {
     ctx.body = responseStatus(400, "注册失败", error);
