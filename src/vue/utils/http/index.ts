@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2023-07-13 10:10:59
  * @Last Modified by: Hailen
- * @Last Modified time: 2024-11-08 17:08:01
+ * @Last Modified time: 2024-12-03 13:54:06
  */
 
 import Axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken, CustomParamsSerializer } from "axios";
@@ -33,14 +33,17 @@ const defaultConfig: AxiosRequestConfig = {
 };
 
 /**
- * 状态码说明:
- * 502: TOKEN过期
- * 504: 没有token
- * 508: token不合法
- * 509: 身份验证异常
+ * 状态码说明
  */
-const STATUS_CODE = [401, 403, 404, 405, 502, 504, 508, 509];
-
+const STATUS_CODE: Record<number, string> = {
+  400: "请求失败",
+  401: "登录过期",
+  403: "无访问权限",
+  404: "页面未找到",
+  405: "请求方法未找到",
+  408: "请求超时",
+  500: "服务内部错误"
+};
 class PureHttp {
   constructor() {
     this.httpInterceptorsRequest();
@@ -119,11 +122,9 @@ class PureHttp {
           return data;
         }
 
-        if (STATUS_CODE.includes(data.status)) {
+        if (STATUS_CODE[data.status]) {
           // useUserStoreHook().logOut();
-          message(data.message, { type: "error" });
-        } else if (data.status === 403) {
-          message("请求未授权", { type: "error" });
+          message(data.data || data.message, { type: "error" });
         } else {
           message(data.message || "服务器错误, 错误代码:" + data.status, { type: "error" });
         }
@@ -139,9 +140,7 @@ class PureHttp {
 
         if (!data) {
           message(error.message, { type: "error" });
-        } else if (STATUS_CODE.includes(data.status)) {
-          message(data.error, { type: "error" });
-        } else if (STATUS_CODE.includes(status)) {
+        } else if (STATUS_CODE[data.status]) {
           message(data.error || error.message, { type: "error" });
         }
 

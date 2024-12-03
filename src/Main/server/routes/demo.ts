@@ -11,7 +11,7 @@ import { koaBody } from "koa-body";
 import { uploadDir } from "../app";
 
 const indexRouter = new Router({ prefix: "/" });
-const userRouter = new Router({ prefix: "/users" });
+const userRouter = new Router({ prefix: "/aaa" });
 /** 1.首页 */
 indexRouter.get("/", index);
 /** 2.用户 */

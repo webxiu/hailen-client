@@ -1,12 +1,12 @@
-import { downloadRouter, indexRouter, toolRouter, uploadRouter, userRouter, websocketRouter } from "./routes/userRoutes";
+import { downloadRouter, indexRouter, toolRouter, uploadRouter, websocketRouter } from "./routes/demo";
 
 import Koa from "koa";
 import bodyParser from "koa-bodyparser";
 import { kimiRouter } from "./routes/aiRoutes";
-import { testRouter } from "./routes/test";
 import koaStatic from "koa-static";
 import logger from "./middlewares/logger";
 import path from "node:path";
+import { userRouter } from "./routes/userRouter";
 
 export const uploadDir = path.join(__dirname, "../static");
 console.log("logger", logger);
@@ -33,14 +33,8 @@ function createServer() {
   });
 
   // 使用路由
-  app.use(indexRouter.routes()).use(indexRouter.allowedMethods());
-  app.use(testRouter.routes()).use(indexRouter.allowedMethods());
-  // app.use(userRouter.routes()).use(userRouter.allowedMethods());
-  // app.use(uploadRouter.routes()).use(uploadRouter.allowedMethods());
-  // app.use(websocketRouter.routes()).use(websocketRouter.allowedMethods());
-  // app.use(downloadRouter.routes()).use(downloadRouter.allowedMethods());
-  // app.use(toolRouter.routes()).use(toolRouter.allowedMethods());
-  // app.use(kimiRouter.routes()).use(kimiRouter.allowedMethods());
+  const routers = [userRouter, indexRouter];
+  routers.forEach((r) => app.use(r.routes()).use(r.allowedMethods()));
 
   app.listen(3800, () => {
     console.log("服务运行在: http://localhost:3800");

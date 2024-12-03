@@ -42,8 +42,10 @@ export class Database {
     const tables = [
       `CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        email TEXT UNIQUE,
+        username varchar(50) NOT NULL UNIQUE,
+        password varchar(50) NOT NULL,
+        email varchar(50) NOT NULL,
+        phone varchar(20),
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )`
       // 其他表...

@@ -25,14 +25,19 @@ function onClick2() {
 }
 function onGet() {
   console.log("get");
-  getList({ ddd: "ddd" }).then((res) => {
+  getList({ username: "" }).then((res) => {
     console.log("res", res);
   });
 }
 
 function onAdd() {
   console.log("add");
-  addList({ aaa: "eee" }).then((res) => {
+  addList({
+    username: "张三",
+    password: "123",
+    email: "123@qq.com",
+    phone: "1888888888"
+  }).then((res) => {
     console.log("res", res);
   });
 }

@@ -19,7 +19,7 @@ export class UserModel {
   /**
    * 创建用户
    */
-  async create(user: Omit<User, "id" | "created_at">): Promise<User> {
+  async create(user: Omit<User, "id" | "created_at">): Promise<User | undefined> {
     const sql = `
       INSERT INTO users (name, email)
       VALUES (?, ?)
@@ -41,7 +41,7 @@ export class UserModel {
   /**
    * 通过邮箱查找用户
    */
-  async findByEmail(email: string): Promise<User> {
+  async findByEmail(email: string): Promise<User | undefined> {
     const sql = "SELECT * FROM users WHERE email = ?";
     return this.db.get<User>(sql, [email]);
   }
