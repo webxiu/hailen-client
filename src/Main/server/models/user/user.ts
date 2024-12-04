@@ -9,11 +9,11 @@ export default class UserModel {
     this.db = Database.getInstance();
   }
 
-  async login(user: Pick<User, "email" | "password">): Promise<User | undefined> {
+  async login(user: Pick<User["user"], "email" | "password">): Promise<User["user"] | undefined> {
     const sql = "SELECT * FROM users WHERE email = ?";
-    return await this.db.get<User>(sql, [user.email]);
+    return await this.db.get<User["user"]>(sql, [user.email]);
   }
-  async register(user: Omit<User, "id" | "created_at">): Promise<boolean> {
+  async register(user: Omit<User["user"], "id" | "created_at">): Promise<boolean> {
     const sql = `INSERT INTO users (username, password, email, phone) VALUES (?, ?, ?, ?)`;
     try {
       await this.db.run(sql, [user.username, user.password, user.email, user.phone]);

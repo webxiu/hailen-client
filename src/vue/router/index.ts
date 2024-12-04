@@ -1,5 +1,5 @@
 import { RouteRecordRaw, createRouter, createWebHashHistory, createWebHistory } from "vue-router";
-import { getLoginInfo, removeLoginInfo } from "@/vue/utils/storage";
+import { getUserInfo, removeUserInfo } from "@/vue/utils/storage";
 
 import NProgress from "@/vue/utils/progress";
 
@@ -55,7 +55,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   NProgress.start();
   const title = to.meta?.title as string;
-  const loginInfo = getLoginInfo();
+  const loginInfo = getUserInfo();
   console.log("loginInfo", loginInfo);
 
   if (loginInfo.token) {
@@ -69,7 +69,7 @@ router.beforeEach((to, from, next) => {
     if (whiteList.indexOf(to.path) !== -1) {
       next();
     } else {
-      removeLoginInfo();
+      removeUserInfo();
       next("/login");
     }
   }

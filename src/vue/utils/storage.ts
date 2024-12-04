@@ -1,14 +1,11 @@
+import { LoginInfoType, UserInfoType } from "@/vue/api/user";
+
 import Cookies from "js-cookie";
 import { toParse } from "@/vue/utils/common";
 
 const TOKEN_KEY = "Token";
 const COOKIE_KEY = "Cookie";
-const LOGIN_INFO = "Login_Info";
-
-interface LoginUserInfoType {
-  token: string;
-  userInfo: any;
-}
+const USER_INFO = "User_Info";
 
 /** ==================================  存储Cookie  ================================== */
 /**
@@ -22,8 +19,8 @@ export const getCookie = () => {
  * 设置Cookie
  * @param cookie cookie
  */
-export const setCookie = (cookie: string) => {
-  Cookies.set(COOKIE_KEY, cookie);
+export const setCookie = (cookie: string, days: number) => {
+  Cookies.set(COOKIE_KEY, cookie, { expires: days }); // 设置有效期
 };
 
 /**
@@ -37,23 +34,23 @@ export const removeCookie = () => {
 /**
  * 获取用户信息(包含权限列表)
  */
-export const getLoginInfo = (): LoginUserInfoType => {
-  return JSON.parse(localStorage.getItem(LOGIN_INFO) || "{}");
+export const getUserInfo = (): LoginInfoType => {
+  return JSON.parse(localStorage.getItem(USER_INFO) || "{}");
 };
 
 /**
  * 设置用户信息
  * @param userInfo 用户信息
  */
-export const setLoginInfo = (userInfo: LoginUserInfoType) => {
-  localStorage.setItem(LOGIN_INFO, JSON.stringify(userInfo));
+export const setUserInfo = (userInfo: LoginInfoType) => {
+  localStorage.setItem(USER_INFO, JSON.stringify(userInfo));
 };
 
 /**
  * 移除用户信息
  */
-export const removeLoginInfo = () => {
-  localStorage.removeItem(LOGIN_INFO);
+export const removeUserInfo = () => {
+  localStorage.removeItem(USER_INFO);
 };
 
 /** ==================================  存储悬浮按钮位置  ================================== */

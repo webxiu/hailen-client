@@ -1,59 +1,64 @@
 <template>
-  <div class="login flex-col align-center just-center">
+  <div class="login flex-col just-center align-center">
     <div>
-      <h3>登录</h3>
+      <h3>标题</h3>
     </div>
-
-    <el-form :model="formData" label-width="110px" style="max-width: 300px">
-      <el-form-item label="邮箱">
-        <el-input v-model="formData.email" placeholder="请输入密码" />
-      </el-form-item>
-      <el-form-item label="用户名">
-        <el-input v-model="formData.username" placeholder="请输入用户名" />
-      </el-form-item>
-      <el-form-item label="密码">
-        <el-input v-model="formData.password" placeholder="请输入密码" />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit" class="ui-w-100">登录</el-button>
-        <el-button type="primary" @click="onRegister" class="ui-w-100">注册</el-button>
-      </el-form-item>
-    </el-form>
+    <div class="login-form flex-col just-center align-center flex-1">
+      <h3>欢迎使用WORK系统</h3>
+      <el-form :model="formData" label-width="60px" style="max-width: 300px" class="mt-20">
+        <el-form-item label="邮箱">
+          <el-input v-model="formData.email" placeholder="请输入密码" />
+        </el-form-item>
+        <el-form-item v-if="!isLogin" label="用户名">
+          <el-input v-model="formData.username" placeholder="请输入用户名" />
+        </el-form-item>
+        <el-form-item v-if="!isLogin" label="手机号">
+          <el-input v-model="formData.phone" placeholder="请输入用户名" />
+        </el-form-item>
+        <el-form-item label="密码">
+          <el-input v-model="formData.password" placeholder="请输入密码" />
+        </el-form-item>
+        <el-form-item>
+          <el-button v-if="isLogin" type="primary" @click="onSubmit" class="ui-w-100">登录</el-button>
+          <el-button v-else type="primary" @click="onRegister" class="ui-w-100">注册</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+    <div class="ui-w-100 login-footer flex just-end">
+      <div v-if="isLogin">没有账号? 去<span class="tip-btn" @click="isLogin = false">注册</span></div>
+      <div v-else>已有账号? 去<span class="tip-btn" @click="isLogin = true">登录</span></div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import { reactive } from "vue";
-import { setLoginInfo } from "@/vue/utils/storage";
+import { reactive, ref } from "vue";
+import { setUserInfo, setCookie } from "@/vue/utils/storage";
 import { login, register } from "@/vue/api/user";
+import { message } from "@/vue/utils/message";
+import { useUserStore } from "@/vue/store/modules/user";
 
+const isLogin = ref(true);
 const router = useRouter();
+const useStore = useUserStore();
 
 const formData = reactive({
   username: "123",
   password: "123",
+  phone: "1888888888",
   email: "123@qq.com"
 });
 
 function onSubmit() {
-  console.log("submit!", formData);
-  login(formData).then((res) => {
-    console.log("login", res);
-    // setLoginInfo({ userInfo: res.data, token: Date.now().toString() });
+  useStore.userLogin(formData).then(() => {
+    message("登录成功");
   });
-
-  // router.push("/");
 }
 function onRegister() {
-  console.log("submit!", formData);
-  register({
-    username: "张三",
-    password: "123",
-    email: "123@qq.com",
-    phone: "1888888888"
-  }).then((res) => {
-    console.log("register", res);
+  register(formData).then(({ data }) => {
+    if (!data) return message("注册失败");
+    message("注册成功");
   });
 }
 </script>
@@ -62,5 +67,12 @@ function onRegister() {
 .login {
   background: #eee;
   height: 100vh;
+  .login-footer {
+    padding: 20px;
+    .tip-btn {
+      cursor: pointer;
+      color: #409eff;
+    }
+  }
 }
 </style>

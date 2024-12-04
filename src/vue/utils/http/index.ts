@@ -2,18 +2,21 @@
  * @Author: Hailen
  * @Date: 2023-07-13 10:10:59
  * @Last Modified by: Hailen
- * @Last Modified time: 2024-12-03 13:54:06
+ * @Last Modified time: 2024-12-04 17:22:43
  */
 
 import Axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken, CustomParamsSerializer } from "axios";
 import { PureHttpError, PureHttpRequestConfig, PureHttpResponse, RequestMethods } from "./types.d";
 
 import NProgress from "../progress";
+import { clear } from "console";
+import { getUserInfo } from "@/vue/utils/storage";
 import { message } from "@/vue/utils/message";
 import { stringify } from "qs";
+import { useUserStore } from "@/vue/store/modules/user";
 import { whiteList } from "@/vue/router/index";
 
-console.log("=======", import.meta.env);
+const useStore = useUserStore();
 
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig: AxiosRequestConfig = {
@@ -37,7 +40,7 @@ const defaultConfig: AxiosRequestConfig = {
  */
 const STATUS_CODE: Record<number, string> = {
   400: "请求失败",
-  401: "登录过期",
+  // 401: "登录过期",
   403: "无访问权限",
   404: "页面未找到",
   405: "请求方法未找到",
@@ -73,6 +76,10 @@ class PureHttp {
     PureHttp.axiosInstance.interceptors.request.use(
       async (config: PureHttpRequestConfig): Promise<any> => {
         this.removeBlank(config.data); // 移除请求参数前后空格
+        const userInfo = getUserInfo();
+        if (config.headers && userInfo.token) {
+          config.headers["Authorization"] = userInfo.token;
+        }
 
         // 是否隐藏Loading
         if (!config.hideLoading) {
@@ -100,10 +107,9 @@ class PureHttp {
     const instance = PureHttp.axiosInstance;
     instance.interceptors.response.use(
       (response: PureHttpResponse) => {
+        NProgress.done();
         const $config = response.config;
         const data = response.data;
-        // 关闭进度条动画
-        NProgress.done();
         // 关闭loading
         // useAppStoreHook().popPageLoading();
         // 优先判断post/get等方法是否传入回调，否则执行初始化设置等回调
@@ -118,13 +124,17 @@ class PureHttp {
         if (data.status === 200) {
           return data;
         } else if (response.status === 200 && !data.status) {
-          // 处理Excel数据导出没有包装响应格式
-          return data;
+          return data; // 处理Excel数据导出没有包装响应格式
         }
 
-        if (STATUS_CODE[data.status]) {
-          // useUserStoreHook().logOut();
-          message(data.data || data.message, { type: "error" });
+        if (data.status === 401) {
+          message(data.message, { type: "error" });
+          const timer = setTimeout(() => {
+            useStore.logOut();
+            clearTimeout(timer);
+          }, 1500);
+        } else if (STATUS_CODE[data.status]) {
+          message(data.message, { type: "error" });
         } else {
           message(data.message || "服务器错误, 错误代码:" + data.status, { type: "error" });
         }

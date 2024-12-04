@@ -6,7 +6,7 @@ import HelloWorld from "./components/HelloWorld.vue";
 </script>
 
 <template>
-  <el-config-provider :locale="zhCn" :message="{ max: 1 }">
+  <el-config-provider :locale="zhCn" :message="{ max: 2 }">
     <router-view />
   </el-config-provider>
 </template>

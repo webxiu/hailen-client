@@ -4,15 +4,22 @@
     <el-button type="primary" @click="onClick">count is {{ count }}</el-button>
     <el-button type="primary" @click="onClick2">ping</el-button>
     <el-button type="primary" @click="onGet">获取数据</el-button>
-    <el-button type="primary" @click="onAdd">添加数据</el-button>
+    <el-button type="primary" @click="logout">退出登录</el-button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { on } from "events";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 const count = ref(0);
 import { addList, getList } from "@/vue/api/home/dashboard";
+import { useUserStore } from "@/vue/store/modules/user";
+
+const useStore = useUserStore();
+
+onMounted(() => {
+  onGet();
+});
+
 function onClick() {
   count.value++;
   // 向主进程发送消息
@@ -24,22 +31,13 @@ function onClick2() {
   window.api.send("ping", "world");
 }
 function onGet() {
-  console.log("get");
-  getList({ username: "" }).then((res) => {
-    console.log("res", res);
+  getList({ username: "123", email: "123@qq.com" }).then(({ data }) => {
+    console.log("data", data);
   });
 }
 
-function onAdd() {
-  console.log("add");
-  addList({
-    username: "张三",
-    password: "123",
-    email: "123@qq.com",
-    phone: "1888888888"
-  }).then((res) => {
-    console.log("res", res);
-  });
+function logout() {
+  useStore.logOut();
 }
 </script>
 

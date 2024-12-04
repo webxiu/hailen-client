@@ -2,7 +2,7 @@ import { Context } from "koa";
 import fs from "fs";
 import path from "node:path";
 import { responseStatus } from "../../config/index";
-import { uploadDir } from "../../app";
+import { uploadDir } from "../../config/constant";
 
 export const download = async (ctx: Context) => {
   // const newUser = ctx.request.body;

@@ -6,12 +6,11 @@ import ElementPlus from "element-plus";
 import { createApp } from "vue";
 import { registerComponents } from "@/vue/components";
 import router from "@/vue/router";
-
-console.log("router", router);
+import { setupStore } from "@/vue/store";
 
 const app = createApp(App);
-
 registerComponents(app);
+setupStore(app);
 app.use(ElementPlus);
 app.use(router);
 
