@@ -1,5 +1,8 @@
 <template>
-  <div>transform</div>
+  <div>
+    menuManage
+    <HxTable />
+  </div>
 </template>
 
 <script setup lang="ts"></script>

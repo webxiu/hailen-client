@@ -35,8 +35,8 @@ function createWindow(param: WindowProp) {
   const { width: screenWidth, height: screenHeight } = primaryDisplay.workAreaSize;
 
   // 计算窗口大小（例如：屏幕的80%）
-  const windowWidth = Math.floor(screenWidth * 0.6);
-  const windowHeight = Math.floor(screenHeight * 0.6);
+  const windowWidth = Math.floor(screenWidth * 0.8);
+  const windowHeight = Math.floor(screenHeight * 0.8);
 
   // 计算窗口位置（居中）
   const x = Math.floor((screenWidth - windowWidth) / 2);

@@ -101,7 +101,7 @@
       "public",
       "node_modules/@spk"
     ],
-    "appId": "com.electron-admin",
+    "appId": "com.hailen-client",
     "productName": "海阔天空",
     "files": [
       "dist",
