@@ -1,4 +1,5 @@
 /**
+ * @name 主进程类型声明
  * @notice 注意: 修改"全局声明"必须在模块内部, 所以至少要有 @export{} 字样
  */
 import { Dialog } from "electron";
@@ -91,14 +92,8 @@ declare global {
       const write: (fileName: string, buffer: any) => string;
     }
     export namespace Event {
-      const on: (
-        eventName: AppEventNames,
-        listener: ListenerType
-      ) => () => void;
-      const once: (
-        eventName: AppEventNames,
-        listener: ListenerType
-      ) => () => void;
+      const on: (eventName: AppEventNames, listener: ListenerType) => () => void;
+      const once: (eventName: AppEventNames, listener: ListenerType) => () => void;
       const emit: (eventName: AppEventNames, args: unknown) => boolean;
       const off: (eventName: AppEventNames, listener?: ListenerType) => boolean;
       const offAll: () => void;

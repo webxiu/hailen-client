@@ -32,15 +32,12 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from "vue-router";
 import { reactive, ref } from "vue";
-import { setUserInfo, setCookie } from "@/vue/utils/storage";
 import { login, register } from "@/vue/api/user";
 import { message } from "@/vue/utils/message";
 import { useUserStore } from "@/vue/store/modules/user";
 
 const isLogin = ref(true);
-const router = useRouter();
 const useStore = useUserStore();
 
 const formData = reactive({
@@ -52,13 +49,13 @@ const formData = reactive({
 
 function onSubmit() {
   useStore.userLogin(formData).then(() => {
-    message("登录成功");
+    message.success("登录成功");
   });
 }
 function onRegister() {
   register(formData).then(({ data }) => {
-    if (!data) return message("注册失败");
-    message("注册成功");
+    if (!data) return message.error("注册失败");
+    message.success("注册成功");
   });
 }
 </script>

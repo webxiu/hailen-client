@@ -9,13 +9,9 @@ import { CheckOnlineWebsocket } from "@/hooks/websocketOnline";
  * 全局类型声明，无需引入直接在 `.vue` 、`.ts` 、`.tsx` 文件使用即可获得类型提示
  */
 declare global {
-  /**
-   * 项目根目录
-   */
+  /** 项目根目录 */
   const __ROOT__: string;
-  /**
-   * 平台的名称、版本、依赖、最后构建时间的类型提示
-   */
+  /** 平台的名称、版本、依赖、最后构建时间的类型提示 */
   const __APP_INFO__: {
     pkg: {
       name: string;
@@ -25,10 +21,19 @@ declare global {
     };
     lastBuildTime: string;
   };
+  namespace T {
+    class Map {
+      constructor(containerId: string);
+      centerAndZoom(lngLat: LngLat, zoom: number): void;
+      addEventListener(event: string, callback: Function): void;
+    }
 
-  /**
-   * Window 的类型提示
-   */
+    class LngLat {
+      constructor(lng: number, lat: number);
+    }
+  }
+
+  /** Window 的类型提示 */
   interface Window {
     // Global vue app instance
     __APP__: App<Element>;
@@ -56,6 +61,10 @@ declare global {
       replace: any;
       selection: any;
       bpmnElement: any;
+    };
+    api: {
+      send: (channel: string, data: any) => void;
+      receive: (channel: string, func: (...args: any[]) => void) => void;
     };
   }
 
@@ -179,30 +188,6 @@ declare global {
     showLogo?: boolean;
     showModel?: string;
     username?: string;
-  }
-
-  /**
-   * `responsive-storage` 本地响应式 `storage` 的类型声明
-   */
-  interface ResponsiveStorage {
-    locale: {
-      locale?: string;
-    };
-    layout: {
-      layout?: LayoutStyle;
-      theme?: string;
-      darkMode?: boolean;
-      sidebarStatus?: boolean;
-      epThemeColor?: string;
-    };
-    configure: {
-      grey?: boolean;
-      hideTabs?: boolean;
-      showLogo?: boolean;
-      showModel?: string;
-      multiTagsCache?: boolean;
-    };
-    tags?: Array<any>;
   }
 
   /**
