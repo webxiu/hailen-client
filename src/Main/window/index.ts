@@ -19,8 +19,8 @@ const hostConfig = {
     react: "http://localhost:8600"
   },
   production: {
-    vue: path.join(__dirname, "./vue/index.html"),
-    react: path.join(__dirname, "./react/index.html")
+    vue: path.join(__dirname, "../vue/index.html"),
+    react: path.join(__dirname, "../react/index.html")
   }
 };
 

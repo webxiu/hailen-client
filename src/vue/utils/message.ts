@@ -57,9 +57,9 @@ export const wrapFn = (row: Ref<any | any[]>, func: Function, msg = "请选择�
   return (...arg: any) => {
     const rowData = row.value;
     if (Array.isArray(rowData)) {
-      if (!rowData.length) return message(msg, { type: "warning" });
+      if (!rowData.length) return message.error(msg);
     } else {
-      if (!rowData) return message(msg, { type: "warning" });
+      if (!rowData) return message.error(msg);
     }
     func.call(null, ...arg);
   };

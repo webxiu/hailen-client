@@ -5,7 +5,7 @@ import { responseStatus } from "../config";
 
 export const verifyToken = async (ctx: any, next: any) => {
   const token = ctx.request.headers["authorization"];
-  if (whiteList.includes(ctx.url)) return await next();
+  // if (whiteList.includes(ctx.url)) return await next();
   if (!token) return (ctx.body = responseStatus(401, "Token已过期"));
   try {
     const decoded = jwt.verify(token, secretKey);

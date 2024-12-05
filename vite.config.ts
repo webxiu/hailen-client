@@ -21,8 +21,8 @@ function resolve(dir: string) {
 export default defineConfig(({ mode }): UserConfig => {
   const isVue = mode === "vue";
   const isReact = mode === "react";
-  const nodeEnv = process.env.NODE_ENV as string;
-  const { VITE_CDN, VITE_PORT, VITE_BASE_API, VITE_BASE_URL, VITE_VUE_PORT, VITE_REACT_PORT } = loadEnv(nodeEnv, root);
+  const viteEnv = loadEnv(process.env.NODE_ENV as string, root);
+  const { VITE_CDN, VITE_PORT, VITE_BASE_API, VITE_BASE_URL, VITE_VUE_PORT, VITE_REACT_PORT } = viteEnv;
 
   const mConfig = {
     vue: {
@@ -100,6 +100,9 @@ export default defineConfig(({ mode }): UserConfig => {
           rewrite: (path) => path.replace(VITE_BASE_API, "")
         }
       }
+    },
+    define: {
+      "process.env": JSON.stringify(viteEnv)
     }
   };
 });

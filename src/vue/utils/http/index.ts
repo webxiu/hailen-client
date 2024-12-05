@@ -21,7 +21,7 @@ const useStore = useUserStore();
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig: AxiosRequestConfig = {
   // baseURL: import.meta.env.VITE_BASE_API,
-  baseURL: "/api",
+  baseURL: "http://127.0.0.1:3800",
   // 请求超时时间 60秒
   timeout: 60 * 1000,
   headers: {
@@ -128,15 +128,15 @@ class PureHttp {
         }
 
         if (data.status === 401) {
-          message(data.message, { type: "error" });
+          message.error(data.message);
           const timer = setTimeout(() => {
             useStore.logOut();
             clearTimeout(timer);
           }, 1500);
         } else if (STATUS_CODE[data.status]) {
-          message(data.message, { type: "error" });
+          message.error(data.message);
         } else {
-          message(data.message || "服务器错误, 错误代码:" + data.status, { type: "error" });
+          message.error(data.message || "服务器错误, 错误代码:" + data.status);
         }
         return Promise.reject(data);
         // ================ 状态码判断 end ================
@@ -149,9 +149,9 @@ class PureHttp {
         const status = error.response?.status as any;
 
         if (!data) {
-          message(error.message, { type: "error" });
+          message.error(error.message);
         } else if (STATUS_CODE[data.status]) {
-          message(data.error || error.message, { type: "error" });
+          message.error(data.error || error.message);
         }
 
         if (error?.isCancelRequest) {
