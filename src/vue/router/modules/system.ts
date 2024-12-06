@@ -4,7 +4,7 @@ export default {
   path: "/system",
   component: Layout,
   redirect: "/system/menu",
-  meta: { title: "系统管理", icon: "Setting", order: 3 },
+  meta: { title: "系统管理", icon: "Setting", order: 2 },
   children: [
     {
       path: "/system/menu",

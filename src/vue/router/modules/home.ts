@@ -4,7 +4,7 @@ export default {
   path: "/",
   component: Layout,
   redirect: "/home/dashboard",
-  meta: { title: "首页", icon: "Monitor", order: 3 },
+  meta: { title: "首页", icon: "Monitor", order: 1 },
   children: [
     {
       path: "/home/dashboard",

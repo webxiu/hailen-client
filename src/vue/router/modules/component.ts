@@ -4,7 +4,7 @@ export default {
   path: "/component",
   component: Layout,
   redirect: "/component/blendedSearch",
-  meta: { title: "组件", icon: "Operation", rank: 3 },
+  meta: { title: "组件", icon: "Operation", order: 3 },
   children: [
     {
       path: "/component/blendedSearch",

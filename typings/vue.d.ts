@@ -7,6 +7,18 @@ declare global {
     meta: CustomizeRouteMeta;
   }
 
+  /** Meta配置 */
+  interface RouteMeta {
+    /** 菜单名称 */
+    title: string;
+    /** 菜单图标 `可选` */
+    icon: string | FunctionalComponent | IconifyIcon;
+    /** 是否在菜单中显示（默认`true`）`可选` */
+    showLink?: boolean;
+    /** 菜单升序排序，值越高排的越后（只针对顶级路由）`必填` */
+    order: number;
+  }
+
   /**
    * @description 路由列表项类型
    */
@@ -19,18 +31,9 @@ declare global {
     component?: RouteComponent;
     /** 路由重定向 `可选` */
     redirect?: string;
-    meta?: {
-      /** 菜单名称 */
-      title: string;
-      /** 菜单图标 `可选` */
-      icon?: string | FunctionalComponent | IconifyIcon;
-      /** 是否在菜单中显示（默认`true`）`可选` */
-      showLink?: boolean;
-      /** 菜单升序排序，值越高排的越后（只针对顶级路由）`可选` */
-      rank?: number;
-    };
+    meta?: RouteMeta;
     /** 子路由配置项 */
-    children?: Array<RouteRecordRawType>;
+    children?: Array<Omit<RouteRecordRawType, "meta"> & { meta?: Omit<RouteMeta, "order"> }>;
     /** 菜单id */
     id?: number;
   }
