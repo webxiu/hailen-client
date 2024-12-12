@@ -23,12 +23,9 @@ export default defineConfig(({ mode }): UserConfig => {
   const isVue = mode === "vue";
   const isReact = mode === "react";
   const envInfo = dotenv.config({ path: `.env.${process.env.NODE_ENV}` }).parsed || {};
+  const { VITE_BASE_API, VITE_BASE_URL, VITE_VUE_PORT, VITE_REACT_PORT } = envInfo;
 
-  const viteEnv = loadEnv(process.env.NODE_ENV as string, root);
-  // const { VITE_CDN, VITE_PORT, VITE_BASE_API, VITE_BASE_URL, VITE_VUE_PORT, VITE_REACT_PORT } = viteEnv;
-  const { NODE_ENV, VITE_CDN, VITE_PORT, VITE_BASE_API, VITE_BASE_URL, VITE_VUE_PORT, VITE_REACT_PORT } = envInfo;
-
-  const mConfig = {
+  const projectConf = {
     vue: {
       input: resolve("src/vue/main.ts"),
       outDir: "dist/vue",
@@ -43,7 +40,7 @@ export default defineConfig(({ mode }): UserConfig => {
       id: "root",
       scriptEntry: "/src/react/main.tsx"
     }
-  }[mode as keyof typeof mConfig];
+  }[mode as keyof typeof projectConf];
 
   return {
     base: "./", // 部署在根目录下 , ./vue/  ./react/ 部署在子目录下
@@ -70,12 +67,12 @@ export default defineConfig(({ mode }): UserConfig => {
           tags: [
             {
               tag: "div",
-              attrs: { id: mConfig.id },
+              attrs: { id: projectConf.id },
               injectTo: "body" // 或 'head'
             },
             {
               tag: "script",
-              attrs: { type: "module", src: mConfig.scriptEntry },
+              attrs: { type: "module", src: projectConf.scriptEntry },
               injectTo: "body"
             }
           ]
@@ -88,13 +85,13 @@ export default defineConfig(({ mode }): UserConfig => {
       // })
     ],
     build: {
-      outDir: mConfig.outDir,
+      outDir: projectConf.outDir,
       rollupOptions: {
-        // input: { [mode]: mConfig.input },
+        // input: { [mode]: projectConf.input },
       }
     },
     server: {
-      port: mConfig.port,
+      port: projectConf.port,
       host: "0.0.0.0",
       // 本地跨域代理 https://cn.vitejs.dev/config/server-options.html#server-proxy
       proxy: {

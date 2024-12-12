@@ -127,9 +127,9 @@ function createWindow(param: WindowProp) {
     mainWindow.show();
   });
 
-  console.log("主进程__dirname:", process.env.NODE_ENV, __dirname);
-  console.log("主进程process.cwd()", process.cwd());
-  console.log("主进程trayIcon", trayIcon);
+  console.log("主进程trayIcon:".bgMagenta, trayIcon);
+  console.log("主进程process.cwd():".bgMagenta, process.cwd());
+  console.log("主进程__dirname:".bgMagenta, __dirname);
 
   if (process.env.NODE_ENV === "development") {
     mainWindow.loadURL(hostConfig.development[mode]).then(() => mainWindow.show());

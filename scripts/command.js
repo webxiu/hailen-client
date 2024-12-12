@@ -1,3 +1,4 @@
+const colors = require('colors');
 const { EventEmitter } = require("events");
 const { exec } = require("child_process");
 const config = require("./config.js");
@@ -70,37 +71,23 @@ class Command extends EventEmitter {
     cp.stderr.on("error", console.info);
   }
 
-  /** Readme */
-  async RenderProcess() {
-    const command = {
-      development: `concurrently "npm run dev:vue" "npm run dev:react"`,
-      production: `concurrently "npm run build:vue" "npm run build:react"`
-    }[process.env.NODE_ENV];
-    console.log("启动渲染进程:", process.env.NODE_ENV, command);
-
-    this.runExec(command, ({ type, data }) => {
-      console.log("===监听渲染进程", data);
-      if (Core.isPro()) {
-        if (data === 0) {
-          if (!this.AutoOpenApp.RenderProcessDone) this.AutoOpenApp.RenderProcessDone = true;
-        }
-      } else {
-        if (["data", "close"].includes(type) && !Core.isPro() && data.includes("8500")) {
-          if (!this.AutoOpenApp.RenderProcessDone) this.AutoOpenApp.RenderProcessDone = true;
-        }
-      }
-    });
-  }
-
-  /** Readme */
+  /** 主进程 */
   async MainProcess() {
-    // const dir = `tsc ${resolve(process.cwd(), "src/Main/index.ts")} --outFile ${resolve(process.cwd(), "dist/mainProcess2.js")} --module commonjs`
     const project = resolve(process.cwd(), "tsconfig.main.json");
     const outDir = resolve(process.cwd(), "dist");
     const rootDir = resolve(process.cwd(), "src/Main");
-    const command = `tsc --project ${project} --rootDir ${rootDir} --outDir ${outDir} --module commonjs --target esnext --strict --esModuleInterop`;
-    console.log("启动主进程:", command);
-
+    const args = [
+      'tsc',
+      `--project ${project}`,
+      `--rootDir ${rootDir}`,
+      `--outDir ${outDir}`,
+      `--module commonjs`,
+      `--target esnext`,
+      `--strict`,
+      `--esModuleInterop`
+    ]
+    const command = args.join(" ");
+    console.log(`启动主进程: ${process.env.NODE_ENV}\n${command}`.blue);
     if (Core.isPro()) {
       this.runExec(command, ({ type, data }) => {
         if (["cp_close"].includes(type) || data === 0) {
@@ -111,20 +98,42 @@ class Command extends EventEmitter {
       const { VITE_VUE_PORT, VITE_REACT_PORT } = process.env;
       waitOn({ resources: [`tcp:${VITE_VUE_PORT}`, `tcp:${VITE_REACT_PORT}`], timeout: 30000 }, (err) => {
         if (err) {
-          console.error("等待端口时错误:", err);
+          console.error("等待端口时错误:".red, err);
           process.exit(1);
         }
         if (!this.AutoOpenApp.RenderProcessDone) this.AutoOpenApp.RenderProcessDone = true;
 
         this.runExec(command + ' --watch', ({ type, data }) => {
           if (["data"].includes(type) && data.includes("Watching for file changes")) {
-            console.log("=====监听主进程(开发):", type, data);
+            console.log("监听主进程(开发):".blue, type, data);
             if (!this.AutoOpenApp.MainProcessDone) this.AutoOpenApp.MainProcessDone = true;
           }
         });
       });
     }
   }
+
+
+  /** 渲染进程 */
+  async RenderProcess() {
+    const command = {
+      development: `concurrently "npm run dev:vue" "npm run dev:react"`,
+      production: `concurrently "npm run build:vue" "npm run build:react"`
+    }[process.env.NODE_ENV];
+    console.log(`启动渲染进程: ${process.env.NODE_ENV}\n`.yellow, command.green);
+    this.runExec(command, ({ type, data }) => {
+      if (Core.isPro()) {
+        if (data === 0 && !this.AutoOpenApp.RenderProcessDone) {
+          this.AutoOpenApp.RenderProcessDone = true;
+        }
+      } else {
+        if (["data", "close"].includes(type) && data.includes("8500")) {
+          if (!this.AutoOpenApp.RenderProcessDone) this.AutoOpenApp.RenderProcessDone = true;
+        }
+      }
+    });
+  }
+
 
   /** Readme */
   start() {
@@ -160,7 +169,7 @@ class Command extends EventEmitter {
 
   /** Readme */
   builder() {
-    console.log("====打包开始 平台:", process.platform);
+    console.log("打包平台:".yellow, process.platform.green);
     switch (process.platform) {
       case "win32":
         shell.exec("electron-builder --win --ia32");

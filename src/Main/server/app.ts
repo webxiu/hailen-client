@@ -1,3 +1,5 @@
+import "colors";
+
 import { logger, verifyToken } from "./middlewares";
 
 import Koa from "koa";
@@ -24,7 +26,7 @@ function createServer() {
   });
   registerRouter(app);
   app.listen(3800, () => {
-    console.log("服务运行在: http://localhost:3800");
+    console.log("服务运行在: http://localhost:3800".bgBlue);
   });
 }
 

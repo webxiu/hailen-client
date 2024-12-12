@@ -13,13 +13,13 @@ export class Database {
     // const dbPath = path.join(app.getPath("userData"), "database.db");
     const dbPath = path.join(process.cwd(), "source", "database", "database.db");
 
-    console.log("数据库文件路径:", dbPath);
+    console.log("服务:数据库文件路径:".bgBlue, dbPath.green);
 
     this.db = new sqlite3.Database(dbPath, (err) => {
       if (err) {
-        console.error("数据库连接失败:", err);
+        console.error("服务:数据库连接失败:".bgRed, err);
       } else {
-        console.log("数据库连接成功");
+        console.log("服务:数据库连接成功".bgBlue);
         this.init().catch(console.error);
       }
     });
