@@ -11,8 +11,7 @@ const Core = require("./core");
 const waitOn = require("wait-on");
 const fs = require("fs-extra");
 const path = require("path");
-const dotenv = require("dotenv");
-dotenv.config({ path: ".env.development" });
+
 
 class Command extends EventEmitter {
   constructor() {
