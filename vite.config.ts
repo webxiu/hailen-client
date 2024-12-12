@@ -11,6 +11,7 @@ import react from "@vitejs/plugin-react";
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 
+const dotenv = require("dotenv");
 /** 当前执行node命令时文件夹的地址（工作目录） */
 const root: string = process.cwd();
 
@@ -21,8 +22,11 @@ function resolve(dir: string) {
 export default defineConfig(({ mode }): UserConfig => {
   const isVue = mode === "vue";
   const isReact = mode === "react";
+  const envInfo = dotenv.config({ path: `.env.${process.env.NODE_ENV}` }).parsed || {};
+
   const viteEnv = loadEnv(process.env.NODE_ENV as string, root);
-  const { VITE_CDN, VITE_PORT, VITE_BASE_API, VITE_BASE_URL, VITE_VUE_PORT, VITE_REACT_PORT } = viteEnv;
+  // const { VITE_CDN, VITE_PORT, VITE_BASE_API, VITE_BASE_URL, VITE_VUE_PORT, VITE_REACT_PORT } = viteEnv;
+  const { NODE_ENV, VITE_CDN, VITE_PORT, VITE_BASE_API, VITE_BASE_URL, VITE_VUE_PORT, VITE_REACT_PORT } = envInfo;
 
   const mConfig = {
     vue: {
@@ -102,7 +106,7 @@ export default defineConfig(({ mode }): UserConfig => {
       }
     },
     define: {
-      "process.env": JSON.stringify(viteEnv)
+      "process.env": JSON.stringify(envInfo)
     }
   };
 });

@@ -73,10 +73,10 @@ class Command extends EventEmitter {
   /** Readme */
   async RenderProcess() {
     const command = {
-      production: `concurrently "npm run build:vue" "npm run build:react"`,
-      development: `concurrently "npm run dev:vue" "npm run dev:react"`
+      development: `concurrently "npm run dev:vue" "npm run dev:react"`,
+      production: `concurrently "npm run build:vue" "npm run build:react"`
     }[process.env.NODE_ENV];
-    console.log("启动渲染进程:", command);
+    console.log("启动渲染进程:", process.env.NODE_ENV, command);
 
     this.runExec(command, ({ type, data }) => {
       console.log("===监听渲染进程", data);
@@ -98,11 +98,15 @@ class Command extends EventEmitter {
     const project = resolve(process.cwd(), "tsconfig.main.json");
     const outDir = resolve(process.cwd(), "dist");
     const rootDir = resolve(process.cwd(), "src/Main");
-    const command = `tsc --project ${project} --rootDir ${rootDir} --outDir ${outDir} --module commonjs --target esnext --strict --esModuleInterop --watch`;
+    const command = `tsc --project ${project} --rootDir ${rootDir} --outDir ${outDir} --module commonjs --target esnext --strict --esModuleInterop`;
     console.log("启动主进程:", command);
 
     if (Core.isPro()) {
-      if (!this.AutoOpenApp.MainProcessDone) this.AutoOpenApp.MainProcessDone = true;
+      this.runExec(command, ({ type, data }) => {
+        if (["cp_close"].includes(type) || data === 0) {
+          if (!this.AutoOpenApp.MainProcessDone) this.AutoOpenApp.MainProcessDone = true;
+        }
+      });
     } else {
       const { VITE_VUE_PORT, VITE_REACT_PORT } = process.env;
       waitOn({ resources: [`tcp:${VITE_VUE_PORT}`, `tcp:${VITE_REACT_PORT}`], timeout: 30000 }, (err) => {
@@ -112,12 +116,9 @@ class Command extends EventEmitter {
         }
         if (!this.AutoOpenApp.RenderProcessDone) this.AutoOpenApp.RenderProcessDone = true;
 
-        this.runExec(command, ({ type, data }) => {
-          console.log("=====监听主进程", type, data);
+        this.runExec(command + ' --watch', ({ type, data }) => {
           if (["data"].includes(type) && data.includes("Watching for file changes")) {
-            if (!this.AutoOpenApp.MainProcessDone) this.AutoOpenApp.MainProcessDone = true;
-          }
-          if (["cp_close"].includes(type) && data === 0) {
+            console.log("=====监听主进程(开发):", type, data);
             if (!this.AutoOpenApp.MainProcessDone) this.AutoOpenApp.MainProcessDone = true;
           }
         });

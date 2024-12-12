@@ -5,7 +5,7 @@
     "module": "esnext", // 使用 ES 模块
     "lib": ["dom", "esnext", "dom.iterable", "scripthost"], // 使用 DOM 和 ESNext 库
     "jsx": "preserve", // 保留 JSX 语法
-    "strict": true, // 启用所有严格类型检查选项
+    "strict": false, // 启用所有严格类型检查选项
     "esModuleInterop": true, // 允许默认导入非 ES 模块
     "skipLibCheck": true, // 跳过库文件的类型检查
     "allowImportingTsExtensions": true,

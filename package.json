@@ -2,7 +2,7 @@
   "name": "hailen-client",
   "private": true,
   "version": "1.0.0",
-  "description": "",
+  "description": "Hailen Client",
   "main": "index.js",
   "types": "./typings/index.d.ts",
   "scripts": {
@@ -16,13 +16,11 @@
     "build:react": "vite build --config vite.config.ts --mode react",
     "lint": "eslint ."
   },
-  "author": "Hailen",
-  "license": "ISC",
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
     "antd": "^5.21.6",
     "axios": "^1.7.8",
-    "bcrypt": "^5.1.1",
+    "bcrypt": "5.0.0",
     "crypto-js": "^4.2.0",
     "dayjs": "^1.11.8",
     "element-plus": "^2.8.7",
@@ -89,6 +87,7 @@
     "vue-tsc": "^2.0.29",
     "wait-on": "^8.0.1"
   },
+  "author": "Hailen",
   "build": {
     "publish": [
       {
@@ -147,5 +146,6 @@
     "directories": {
       "output": "output"
     }
-  }
+  },
+  "license": "ISC"
 }

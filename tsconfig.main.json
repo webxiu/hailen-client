@@ -3,13 +3,9 @@
     "outDir": "./dist/Main",
     "module": "commonjs",
     "target": "esnext",
-    "strict": true,
+    "strict": false,
     "esModuleInterop": true
   },
-  "include": [
-    "src/Main/**/*"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["src/Main/**/*"],
+  "exclude": ["node_modules"]
 }

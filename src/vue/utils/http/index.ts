@@ -2,14 +2,13 @@
  * @Author: Hailen
  * @Date: 2023-07-13 10:10:59
  * @Last Modified by: Hailen
- * @Last Modified time: 2024-12-04 17:22:43
+ * @Last Modified time: 2024-12-12 17:26:00
  */
 
 import Axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken, CustomParamsSerializer } from "axios";
 import { PureHttpError, PureHttpRequestConfig, PureHttpResponse, RequestMethods } from "./types.d";
 
 import NProgress from "../progress";
-import { clear } from "console";
 import { getUserInfo } from "@/vue/utils/storage";
 import { message } from "@/vue/utils/message";
 import { stringify } from "qs";
@@ -18,11 +17,8 @@ import { whiteList } from "@/vue/router/index";
 
 const useStore = useUserStore();
 
-// 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig: AxiosRequestConfig = {
-  // baseURL: import.meta.env.VITE_BASE_API,
-  baseURL: "http://127.0.0.1:3800",
-  // 请求超时时间 60秒
+  baseURL: process.env.VITE_BASE_API,
   timeout: 60 * 1000,
   headers: {
     Accept: "application/json, text/plain, */*",
@@ -35,9 +31,7 @@ const defaultConfig: AxiosRequestConfig = {
   }
 };
 
-/**
- * 状态码说明
- */
+/** 状态码说明 */
 const STATUS_CODE: Record<number, string> = {
   400: "请求失败",
   // 401: "登录过期",

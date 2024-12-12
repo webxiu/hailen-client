@@ -36,7 +36,7 @@ export const startServer = async (ctx: Context) => {
       sendMessageToDevice({ message: "connect", deviceId, data: index++ });
     }
 
-    ws.on("message", function incoming(data) {
+    ws.on("message", function incoming(data: any) {
       const msgInfo = JSON.parse(data);
       console.log("收到消息:", msgInfo.message, msgInfo);
       if (msgInfo.message === "ping") {
