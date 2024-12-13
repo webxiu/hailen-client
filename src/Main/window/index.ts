@@ -27,6 +27,9 @@ const hostConfig = {
 function resolve(dir: string) {
   return path.resolve(process.cwd(), dir);
 }
+export function printl(s1, s2, ...rest) {
+  console.log(s1.bgBlue, s2.magenta, ...rest, "\n");
+}
 
 function createWindow(param: WindowProp) {
   const { mode, options = {} } = param;
@@ -127,9 +130,9 @@ function createWindow(param: WindowProp) {
     mainWindow.show();
   });
 
-  console.log("主进程trayIcon:".bgMagenta, trayIcon);
-  console.log("主进程process.cwd():".bgMagenta, process.cwd());
-  console.log("主进程__dirname:".bgMagenta, __dirname);
+  printl("主进程trayIcon:", trayIcon);
+  printl("主进程process.cwd():", process.cwd());
+  printl("主进程__dirname:", __dirname);
 
   if (process.env.NODE_ENV === "development") {
     mainWindow.loadURL(hostConfig.development[mode]).then(() => mainWindow.show());

@@ -8,3 +8,7 @@ export function responseStatus<T = any>(status: StatusCode, data?: T, message?: 
   const _data = status === 200 ? data : null;
   return { status, data: _data, message: msg };
 }
+
+export function printl(s1, s2, ...rest) {
+  console.log(s1.bgYellow, s2.magenta, ...rest, "\n");
+}

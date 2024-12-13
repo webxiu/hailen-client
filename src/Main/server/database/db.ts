@@ -2,6 +2,7 @@
 
 import { app } from "electron";
 import path from "path";
+import { printl } from "../config";
 import sqlite3 from "sqlite3";
 
 export class Database {
@@ -13,16 +14,20 @@ export class Database {
     // const dbPath = path.join(app.getPath("userData"), "database.db");
     const dbPath = path.join(process.cwd(), "source", "database", "database.db");
 
-    console.log("服务:数据库文件路径:".bgBlue, dbPath.green);
+    printl("数据库文件路径:", dbPath);
 
     this.db = new sqlite3.Database(dbPath, (err) => {
       if (err) {
-        console.error("服务:数据库连接失败:".bgRed, err);
+        console.error("数据库连接失败:".bgRed, err);
       } else {
-        console.log("服务:数据库连接成功".bgBlue);
+        printl("数据库连接成功", "");
         this.init().catch(console.error);
       }
     });
+  }
+
+  printl(s1, s2, ...rest) {
+    console.log(s1.bgBlue, s2.blue, ...rest, "\n");
   }
 
   /**

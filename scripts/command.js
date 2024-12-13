@@ -5,12 +5,12 @@ const config = require("./config.js");
 const net = require("net");
 const pkg = require("../package.json");
 const shell = require("shelljs");
-const { build } = require("vite");
 const { resolve } = require("path");
 const Core = require("./core");
 const waitOn = require("wait-on");
 const fs = require("fs-extra");
 const path = require("path");
+const dotenv = require("dotenv");
 
 
 class Command extends EventEmitter {
@@ -50,9 +50,17 @@ class Command extends EventEmitter {
     });
   }
 
+  printl(s1, s2, ...rest) {
+    console.log(s1.bgMagenta, s2.magenta, ...rest, '\n')
+  }
+
+  getEnv() {
+    return dotenv.config({ path: `.env.${process.env.NODE_ENV}` }).parsed || {};
+  }
+
   /** Readme */
   childProcessExec(runPath) {
-    console.log("runPath", runPath);
+    this.printl("runPath:", runPath);
     const _childProcess = exec(runPath);
     _childProcess.stdout.on("data", console.info);
     _childProcess.stdout.on("error", console.info);
@@ -72,21 +80,19 @@ class Command extends EventEmitter {
 
   /** 主进程 */
   async MainProcess() {
-    const project = resolve(process.cwd(), "tsconfig.main.json");
-    const outDir = resolve(process.cwd(), "dist");
-    const rootDir = resolve(process.cwd(), "src/Main");
     const args = [
       'tsc',
-      `--project ${project}`,
-      `--rootDir ${rootDir}`,
-      `--outDir ${outDir}`,
+      `--project ${resolve(process.cwd(), "tsconfig.main.json")}`,
+      `--rootDir ${resolve(process.cwd(), "src/Main")}`,
+      `--outDir ${resolve(process.cwd(), "dist")}`,
       `--module commonjs`,
       `--target esnext`,
       `--strict`,
       `--esModuleInterop`
     ]
     const command = args.join(" ");
-    console.log(`启动主进程: ${process.env.NODE_ENV}\n${command}`.blue);
+    this.printl('环境:', process.env.NODE_ENV);
+    this.printl('启动主进程:', command);
     if (Core.isPro()) {
       this.runExec(command, ({ type, data }) => {
         if (["cp_close"].includes(type) || data === 0) {
@@ -94,17 +100,16 @@ class Command extends EventEmitter {
         }
       });
     } else {
-      const { VITE_VUE_PORT, VITE_REACT_PORT } = process.env;
-      waitOn({ resources: [`tcp:${VITE_VUE_PORT}`, `tcp:${VITE_REACT_PORT}`], timeout: 30000 }, (err) => {
+      const { VITE_VUE_PORT, VITE_REACT_PORT } = this.getEnv()
+      const resources = [`tcp:${VITE_VUE_PORT}`, `tcp:${VITE_REACT_PORT}`]
+      waitOn({ resources, timeout: 30000 }, (err) => {
         if (err) {
           console.error("等待端口时错误:".red, err);
           process.exit(1);
         }
-        if (!this.AutoOpenApp.RenderProcessDone) this.AutoOpenApp.RenderProcessDone = true;
-
         this.runExec(command + ' --watch', ({ type, data }) => {
-          if (["data"].includes(type) && data.includes("Watching for file changes")) {
-            console.log("监听主进程(开发):".blue, type, data);
+          if (["data"].includes(type) && data.includes("Watching")) {
+            this.printl("监听主进程(开发):", type, data);
             if (!this.AutoOpenApp.MainProcessDone) this.AutoOpenApp.MainProcessDone = true;
           }
         });
@@ -119,14 +124,16 @@ class Command extends EventEmitter {
       development: `concurrently "npm run dev:vue" "npm run dev:react"`,
       production: `concurrently "npm run build:vue" "npm run build:react"`
     }[process.env.NODE_ENV];
-    console.log(`启动渲染进程: ${process.env.NODE_ENV}\n`.yellow, command.green);
+    this.printl('启动渲染进程:', command);
     this.runExec(command, ({ type, data }) => {
+      this.printl('渲染进程输出:', data);
       if (Core.isPro()) {
         if (data === 0 && !this.AutoOpenApp.RenderProcessDone) {
           this.AutoOpenApp.RenderProcessDone = true;
         }
       } else {
-        if (["data", "close"].includes(type) && data.includes("8500")) {
+        const { VITE_VUE_PORT, VITE_REACT_PORT } = this.getEnv()
+        if (["data", "close"].includes(type) && (data.includes(VITE_VUE_PORT) || data.includes(VITE_REACT_PORT))) {
           if (!this.AutoOpenApp.RenderProcessDone) this.AutoOpenApp.RenderProcessDone = true;
         }
       }
@@ -168,7 +175,7 @@ class Command extends EventEmitter {
 
   /** Readme */
   builder() {
-    console.log("打包平台:".yellow, process.platform.green);
+    this.printl("打包平台:", process.platform);
     switch (process.platform) {
       case "win32":
         shell.exec("electron-builder --win --ia32");
