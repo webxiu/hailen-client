@@ -1,4 +1,4 @@
-const colors = require('colors');
+const colors = require("colors");
 const { EventEmitter } = require("events");
 const { exec } = require("child_process");
 const config = require("./config.js");
@@ -10,8 +10,6 @@ const Core = require("./core");
 const waitOn = require("wait-on");
 const fs = require("fs-extra");
 const path = require("path");
-const dotenv = require("dotenv");
-
 
 class Command extends EventEmitter {
   constructor() {
@@ -51,11 +49,7 @@ class Command extends EventEmitter {
   }
 
   printl(s1, s2, ...rest) {
-    console.log(s1.bgMagenta, s2.magenta, ...rest, '\n')
-  }
-
-  getEnv() {
-    return dotenv.config({ path: `.env.${process.env.NODE_ENV}` }).parsed || {};
+    console.log(s1.bgMagenta, s2.magenta, ...rest, "\n");
   }
 
   /** Readme */
@@ -81,7 +75,7 @@ class Command extends EventEmitter {
   /** 主进程 */
   async MainProcess() {
     const args = [
-      'tsc',
+      "tsc",
       `--project ${resolve(process.cwd(), "tsconfig.main.json")}`,
       `--rootDir ${resolve(process.cwd(), "src/Main")}`,
       `--outDir ${resolve(process.cwd(), "dist")}`,
@@ -89,10 +83,10 @@ class Command extends EventEmitter {
       `--target esnext`,
       `--strict`,
       `--esModuleInterop`
-    ]
+    ];
     const command = args.join(" ");
-    this.printl('环境:', process.env.NODE_ENV);
-    this.printl('启动主进程:', command);
+    this.printl("环境:", process.env.NODE_ENV);
+    this.printl("启动主进程:", command);
     if (Core.isPro()) {
       this.runExec(command, ({ type, data }) => {
         if (["cp_close"].includes(type) || data === 0) {
@@ -100,14 +94,14 @@ class Command extends EventEmitter {
         }
       });
     } else {
-      const { VITE_VUE_PORT, VITE_REACT_PORT } = this.getEnv()
-      const resources = [`tcp:${VITE_VUE_PORT}`, `tcp:${VITE_REACT_PORT}`]
+      const { VITE_VUE_PORT = 8500, VITE_REACT_PORT = 8600 } = process.env;
+      const resources = [`tcp:${VITE_VUE_PORT}`, `tcp:${VITE_REACT_PORT}`];
       waitOn({ resources, timeout: 30000 }, (err) => {
         if (err) {
           console.error("等待端口时错误:".red, err);
           process.exit(1);
         }
-        this.runExec(command + ' --watch', ({ type, data }) => {
+        this.runExec(command + " --watch", ({ type, data }) => {
           if (["data"].includes(type) && data.includes("Watching")) {
             this.printl("监听主进程(开发):", type, data);
             if (!this.AutoOpenApp.MainProcessDone) this.AutoOpenApp.MainProcessDone = true;
@@ -117,29 +111,27 @@ class Command extends EventEmitter {
     }
   }
 
-
   /** 渲染进程 */
   async RenderProcess() {
     const command = {
       development: `concurrently "npm run dev:vue" "npm run dev:react"`,
       production: `concurrently "npm run build:vue" "npm run build:react"`
     }[process.env.NODE_ENV];
-    this.printl('启动渲染进程:', command);
+    this.printl("启动渲染进程:", command);
     this.runExec(command, ({ type, data }) => {
-      this.printl('渲染进程输出:', data);
+      this.printl("渲染进程输出:", data);
       if (Core.isPro()) {
         if (data === 0 && !this.AutoOpenApp.RenderProcessDone) {
           this.AutoOpenApp.RenderProcessDone = true;
         }
       } else {
-        const { VITE_VUE_PORT, VITE_REACT_PORT } = this.getEnv()
+        const { VITE_VUE_PORT = 8500, VITE_REACT_PORT = 8600 } = process.env;
         if (["data", "close"].includes(type) && (data.includes(VITE_VUE_PORT) || data.includes(VITE_REACT_PORT))) {
           if (!this.AutoOpenApp.RenderProcessDone) this.AutoOpenApp.RenderProcessDone = true;
         }
       }
     });
   }
-
 
   /** Readme */
   start() {

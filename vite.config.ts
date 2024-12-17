@@ -11,7 +11,6 @@ import react from "@vitejs/plugin-react";
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 
-const dotenv = require("dotenv");
 /** 当前执行node命令时文件夹的地址（工作目录） */
 const root: string = process.cwd();
 
@@ -29,8 +28,7 @@ const JoinCwd = (...args) => {
 export default defineConfig(({ mode }): UserConfig => {
   const isVue = mode === "vue";
   const isReact = mode === "react";
-  const envInfo = dotenv.config({ path: `.env.${process.env.NODE_ENV}` }).parsed || {};
-  const { VITE_BASE_API, VITE_BASE_URL, VITE_VUE_PORT, VITE_REACT_PORT } = envInfo;
+  const { VITE_BASE_API, VITE_BASE_URL, VITE_VUE_PORT, VITE_REACT_PORT } = process.env;
 
   const projectConf = {
     vue: {
