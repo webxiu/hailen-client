@@ -82,6 +82,7 @@ declare global {
       window: Electron.BrowserWindowConstructorOptions;
       /** 应用名称 */
       appName: string;
+      globalEnv: globalEnv;
     }>;
     export namespace Settings {
       const read: () => SettingTypes | undefined;

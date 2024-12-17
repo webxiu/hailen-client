@@ -20,7 +20,8 @@
     "jsxFactory": "h",
     "jsxFragmentFactory": "Fragment",
     "paths": {
-      "@/*": ["src/*"] // 设置路径别名
+      "@/*": ["src/*"], // 设置路径别名
+      "~/*": ["./*"]
     },
     "types": ["node", "vite/client", "element-plus/global"], // 包含 Vite 和 Node 类型
     "noEmit": true // 不生成输出文件

@@ -1,4 +1,4 @@
 /**
  * @Entry electron
  */
-require("./dist/window/index.js");
+require("./dist/index.js");

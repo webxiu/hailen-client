@@ -19,6 +19,13 @@ function resolve(dir: string) {
   return path.resolve(__dirname, dir);
 }
 
+const JoinCwd = (...args) => {
+  if (!args.length) {
+    return process.cwd();
+  }
+  return path.join(process.cwd(), ...args);
+};
+
 export default defineConfig(({ mode }): UserConfig => {
   const isVue = mode === "vue";
   const isReact = mode === "react";
@@ -47,7 +54,7 @@ export default defineConfig(({ mode }): UserConfig => {
     resolve: {
       alias: {
         "@": resolve("src"),
-        "~": resolve("")
+        "~": JoinCwd("./")
       },
       extensions: [".js", ".ts", ".tsx", ".jsx"]
     },

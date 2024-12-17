@@ -1,6 +1,7 @@
 import "./App.css";
 
 import { Button } from "antd";
+import Hello from "./components/Hello";
 import reactLogo from "./assets/react.svg";
 import { useState } from "react";
 import viteLogo from "/vite.svg";
@@ -24,6 +25,7 @@ function App() {
           count is {count}
         </Button>
       </div>
+      <Hello />
     </>
   );
 }
