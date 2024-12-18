@@ -6,6 +6,7 @@ import ElementPlus from "unplugin-element-plus/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import babel from "@rollup/plugin-babel";
 import { createHtmlPlugin } from "vite-plugin-html";
+import envConfig from "./src/Main/client/config";
 import path from "path";
 import react from "@vitejs/plugin-react";
 import vue from "@vitejs/plugin-vue";
@@ -28,7 +29,7 @@ const JoinCwd = (...args) => {
 export default defineConfig(({ mode }): UserConfig => {
   const isVue = mode === "vue";
   const isReact = mode === "react";
-  const { VITE_BASE_API, VITE_BASE_URL, VITE_VUE_PORT, VITE_REACT_PORT } = process.env;
+  const { VITE_BASE_API, VITE_BASE_URL, VITE_VUE_PORT, VITE_REACT_PORT } = envConfig;
 
   const projectConf = {
     vue: {
@@ -108,7 +109,7 @@ export default defineConfig(({ mode }): UserConfig => {
       }
     },
     define: {
-      "process.env": JSON.stringify(envInfo)
+      "process.env": JSON.stringify(envConfig)
     }
   };
 });

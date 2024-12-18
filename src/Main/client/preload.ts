@@ -1,8 +1,7 @@
 import { contextBridge, ipcRenderer } from "electron";
-import envConf from "./config";
 
 import type { User } from "../server/database";
-Reflect.set(global, "$$", { ...process.env, ...envConf });
+
 // Custom APIs for renderer
 const api = {
   send: (channel: string, data: any) => {
@@ -21,12 +20,11 @@ const api = {
 
   async getAll(): Promise<User[]> {
     return ipcRenderer.invoke("user:getAll");
-  }
+  },
+  getGlobal: () => ipcRenderer.sendSync("my-global")
 };
 
 console.log("preload:", process.contextIsolated);
-console.log("$$:", global.$$);
-console.log("process", process.env);
 if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld("api", api);
@@ -34,8 +32,6 @@ if (process.contextIsolated) {
     console.error(error);
   }
 } else {
-  // @ts-ignore (define in dts)
-  window.electron = electronAPI;
   // @ts-ignore (define in dts)
   window.api = api;
 }

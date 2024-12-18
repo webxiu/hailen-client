@@ -29,4 +29,10 @@ export function setupUserIPC() {
   //   }
   // });
   // 其他 IPC 处理...
+  // 处理同步请求
+  ipcMain.on("my-global", (event) => {
+    // 只返回可序列化的属性
+    const globalData = { ...JSON.parse(JSON.stringify(global.$$)) };
+    event.returnValue = globalData;
+  });
 }

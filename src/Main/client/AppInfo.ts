@@ -1,6 +1,8 @@
 // import Package from "~/package.json";
 // import _WorkPath from './_WorkPath';
+
 import { dialog } from "electron";
+import envConf from "./config";
 import path from "path";
 
 // const Build = {
@@ -10,7 +12,7 @@ import path from "path";
 // };
 
 Reflect.set($$, "AppInfo", {
-  platform: process.platform
+  platform: process.platform,
   // versions: { ...process.versions, ...Build },
   // /** 软件外部存储根目录 */
   // WorkPath: _WorkPath(),
@@ -26,6 +28,7 @@ Reflect.set($$, "AppInfo", {
   // appName: Package.build.productName,
 
   /** 程序名称 */
+  envConf
 });
 
 Reflect.set($$, "isPro", () => process.env.NODE_ENV === "production");

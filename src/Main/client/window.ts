@@ -46,6 +46,7 @@ function createWindow(param: WindowProp) {
   const y = Math.floor((screenHeight - windowHeight) / 2);
 
   const faviconPath = path.resolve(process.cwd(), process.env.NODE_ENV === "production" ? faviconProPath : faviconDevPath);
+
   const mainWindow = new BrowserWindow({
     width: windowWidth,
     height: windowHeight,
@@ -58,8 +59,7 @@ function createWindow(param: WindowProp) {
     icon: nativeImage.createFromPath(faviconPath),
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: true,
-      webSecurity: false,
+      contextIsolation: true, // 启用上下文隔离
       preload: path.resolve(__dirname, "./preload.js")
     },
     ...options
@@ -83,22 +83,10 @@ function createWindow(param: WindowProp) {
 
   //系统托盘右键菜单 https://segmentfault.com/q/1010000012390487
   const trayMenuTemplate = [
-    {
-      label: "设置app",
-      click: function () {} //打开相应页面
-    },
-    {
-      label: "意见反馈app",
-      click: function () {}
-    },
-    {
-      label: "帮助app",
-      click: function () {}
-    },
-    {
-      label: "关于app",
-      click: function () {}
-    },
+    { label: "设置app", click: function () {} },
+    { label: "意见反馈app", click: function () {} },
+    { label: "帮助app", click: function () {} },
+    { label: "关于app", click: function () {} },
     {
       label: "退出app",
       click: function () {

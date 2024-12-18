@@ -5,8 +5,7 @@ import envConf from "./config";
  * @Msg 基于 require 同步导入，可控制导入顺序
  */
 
-Reflect.set(global, "$$", { ...process.env, ...envConf });
-// Reflect.set(global, "$$", {});
+Reflect.set(global, "$$", { ...envConf });
 
 export default () => {
   // /** $$.AppInfo 且 初始化公共函数 */
