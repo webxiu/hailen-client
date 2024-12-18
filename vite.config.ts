@@ -6,7 +6,7 @@ import ElementPlus from "unplugin-element-plus/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import babel from "@rollup/plugin-babel";
 import { createHtmlPlugin } from "vite-plugin-html";
-import envConfig from "./src/Main/client/config";
+import envConfig from "./src/Main/config";
 import path from "path";
 import react from "@vitejs/plugin-react";
 import vue from "@vitejs/plugin-vue";

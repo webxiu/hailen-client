@@ -22,6 +22,8 @@
 import { BrowserWindow, app } from "electron";
 
 import MountGlobal from "./client";
+import createServer from "./server/app";
+import envConf from "./client";
 // import _WorkPath from "./Global/_WorkPath";
 
 const child_process = require("child_process");
@@ -50,7 +52,9 @@ const wakeOrCreate = () => {
   app.on("ready", function () {
     // require("./DataBase/index");
     // require("./Application");
+    createServer();
     console.log("======================>app", app.getLocale());
+    console.log("$$$$$$$", $$);
   });
 
   let rootPath = path.join(__dirname, "../"); // 根目录
@@ -60,6 +64,7 @@ const wakeOrCreate = () => {
     rootPath = path.join(__dirname, "../../../");
   }
   Reflect.set($$, "rootPath", rootPath);
+  Reflect.set($$, "env", { ...process.env, ev: process.env.NODE_ENV, envConf });
 
   // const voiceFiles = _WorkPath("voiceFiles");
   // const localDBPath = _WorkPath("db");

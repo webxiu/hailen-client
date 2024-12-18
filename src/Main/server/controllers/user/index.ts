@@ -18,7 +18,7 @@ const login = async (ctx: Context) => {
     if (!isPasswordValid) return (ctx.body = responseStatus(400, "密码不正确"));
     // 生成token
     const token = jwt.sign({ id: user.email }, secretKey, { expiresIn: "1h" });
-    ctx.body = responseStatus(200, { user: userWithoutPassword, token });
+    ctx.body = responseStatus(200, { user: userWithoutPassword, token, $$: $$ || {} });
   } catch (error: any) {
     ctx.body = responseStatus(400, "登录失败");
   }

@@ -7,9 +7,8 @@
     <title>Vite + Vue + React + TS</title>
     <script src="http://api.tianditu.gov.cn/api?v=4.0&tk=c6987c276a8e36cb2f43807e5e0f7bc9" type="text/javascript"></script>
     <script>
-      const envConf = window.api.getGlobal();
-      console.log("1111", envConf);
-      window.$$ = envConf;
+      window.$$ = window.api.getGlobal();
+      console.log("$$", $$);
     </script>
   </head>
   <body>

@@ -1,11 +1,9 @@
-import envConf from "./config";
-
 /**
  * @Message 初始化项目配置
  * @Msg 基于 require 同步导入，可控制导入顺序
  */
 
-Reflect.set(global, "$$", { ...envConf });
+Reflect.set(global, "$$", {});
 
 export default () => {
   // /** $$.AppInfo 且 初始化公共函数 */

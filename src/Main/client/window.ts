@@ -2,7 +2,6 @@ import * as path from "node:path";
 
 import { BrowserWindow, Menu, Tray, app, globalShortcut, ipcMain, nativeImage, protocol, screen, shell } from "electron";
 
-import createServer from "../server/app";
 import { setupUserIPC } from "./ipc";
 
 interface WindowProp {
@@ -151,7 +150,6 @@ app.whenReady().then(() => {
       parentWin = createWindow({ mode: "vue", options: {} });
     }
   });
-  createServer();
   setupUserIPC();
 });
 

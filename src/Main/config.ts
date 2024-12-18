@@ -1,4 +1,4 @@
-const path = require("path");
+import path from "path";
 
 const JoinCwd = (...args) => {
   if (!args.length) {
@@ -35,6 +35,6 @@ const envConf = {
     // Kimi ApiKey: sk-G37tdZZBhaXukFYvVkMvxgPtRTB4xOS5ty3jeMay8IOFOmOe
     VITE_KIMI_API_KEY: "c2stRzM3dGRaWkJoYVh1a0ZZdlZrTXZ4Z1B0UlRCNHhPUzV0eTNqZU1heThJT0ZPbU9l"
   }
-}[process.env.NODE_ENV];
+}[process.env.NODE_ENV || "production"];
 
 export default envConf;
