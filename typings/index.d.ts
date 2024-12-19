@@ -50,7 +50,8 @@ declare global {
     const language: string;
     /** 系统根目录 */
     const rootPath: string;
-    const getEnv: () => string;
+    const NODE_ENV: string;
+    const env: globalEnv;
     const isPro: () => boolean;
     const JoinDirWithRoot: (...dir) => string;
     const isString: (arg) => Boolean;
@@ -83,7 +84,6 @@ declare global {
       window: Electron.BrowserWindowConstructorOptions;
       /** 应用名称 */
       appName: string;
-      globalEnv: globalEnv;
     }>;
     export namespace Settings {
       const read: () => SettingTypes | undefined;

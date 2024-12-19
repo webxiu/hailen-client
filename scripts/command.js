@@ -10,6 +10,7 @@ const Core = require("./core");
 const waitOn = require("wait-on");
 const fs = require("fs-extra");
 const path = require("path");
+const dotenv = require("dotenv");
 
 class Command extends EventEmitter {
   constructor() {
@@ -51,7 +52,9 @@ class Command extends EventEmitter {
   printl(s1, s2, ...rest) {
     console.log(s1.bgMagenta, s2.magenta, ...rest, "\n");
   }
-
+  getEnv() {
+    return dotenv.config({ path: `.env.${process.env.NODE_ENV}` }).parsed || {};
+  }
   /** Readme */
   childProcessExec(runPath) {
     this.printl("runPath:", runPath);
@@ -94,7 +97,7 @@ class Command extends EventEmitter {
         }
       });
     } else {
-      const { VITE_VUE_PORT = 8500, VITE_REACT_PORT = 8600 } = process.env;
+      const { VITE_VUE_PORT, VITE_REACT_PORT } = this.getEnv();
       const resources = [`tcp:${VITE_VUE_PORT}`, `tcp:${VITE_REACT_PORT}`];
       waitOn({ resources, timeout: 30000 }, (err) => {
         if (err) {

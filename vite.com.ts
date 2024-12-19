@@ -14,6 +14,7 @@ import vueJsx from "@vitejs/plugin-vue-jsx";
 
 /** 当前执行node命令时文件夹的地址（工作目录） */
 const root: string = process.cwd();
+const envInfo = envConfig[process.env.NODE_ENV as string];
 
 function resolve(dir: string) {
   return path.resolve(__dirname, dir);
@@ -26,10 +27,10 @@ const JoinCwd = (...args) => {
   return path.join(process.cwd(), ...args);
 };
 
-export default defineConfig(({ mode }): UserConfig => {
+export default (mode: string, env: Record<string, any>): UserConfig => {
   const isVue = mode === "vue";
   const isReact = mode === "react";
-  const { VITE_BASE_API, VITE_BASE_URL, VITE_VUE_PORT, VITE_REACT_PORT } = envConfig;
+  const { VITE_BASE_API, VITE_BASE_URL, VITE_VUE_PORT, VITE_REACT_PORT } = env;
 
   const projectConf = {
     vue: {
@@ -109,7 +110,7 @@ export default defineConfig(({ mode }): UserConfig => {
       }
     },
     define: {
-      "process.env": JSON.stringify(envConfig)
+      "process.env": JSON.stringify(envInfo)
     }
   };
-});
+};

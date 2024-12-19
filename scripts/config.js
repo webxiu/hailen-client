@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require("path");
 
 const JoinCwd = (...args) => {
   if (!args.length) {
@@ -9,7 +9,7 @@ const JoinCwd = (...args) => {
 // export default {
 module.exports = {
   /** 公共存储二级目录, 打包(zh_CN)和运行时(zh-CN)判断语言 */
-  diskPath: path.join('speakin', 'electron-admin'),
+  diskPath: path.join("speakin", "electron-admin"),
   /** 开发运行时 runtime */
   nodemon: true,
 
@@ -26,26 +26,26 @@ module.exports = {
   port: 10120,
 
   entry: {
-    renderProcess: 'src/Render/index.tsx',
-    mainProcess: 'src/Main/index.ts'
+    renderProcess: "src/Render/index.tsx",
+    mainProcess: "src/Main/index.ts"
   },
 
   alias: {
-    '~': JoinCwd(),
-    '@': JoinCwd('src')
+    "~": JoinCwd(),
+    "@": JoinCwd("src")
   },
 
   /** 日志保留天数 */
   logRetainDate: 7,
 
-  output: 'dist',
+  output: "dist",
 
-  publicPath: '/',
+  publicPath: "/",
 
   devServer: {
-    after() { },
-    before() { }
+    after() {},
+    before() {}
   },
-  prefix: '/apis',
-  hotUpdaterUri: 'http://118.24.173.102:10160',
+  prefix: "/apis",
+  hotUpdaterUri: "http://118.24.173.102:10160"
 };

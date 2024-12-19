@@ -3,6 +3,7 @@ import * as path from "node:path";
 import { BrowserWindow, Menu, Tray, app, globalShortcut, ipcMain, nativeImage, protocol, screen, shell } from "electron";
 
 import { setupUserIPC } from "./ipc";
+import createServer from "../server/app";
 
 interface WindowProp {
   mode: "vue" | "react";
@@ -14,8 +15,8 @@ const faviconDevPath = `../../public/favicon/png/favicon_ch@3x.png`;
 
 const hostConfig = {
   development: {
-    vue: "http://localhost:8500",
-    react: "http://localhost:8600"
+    vue: `http://localhost:${$$.env.VITE_VUE_PORT}`,
+    react: `http://localhost:${$$.env.VITE_REACT_PORT}`
   },
   production: {
     vue: path.join(__dirname, "../vue/index.html"),
@@ -30,30 +31,33 @@ export function printl(s1, s2, ...rest) {
   console.log(s1.bgBlue, s2.magenta, ...rest, "\n");
 }
 
-function createWindow(param: WindowProp) {
-  const { mode, options = {} } = param;
+function windowSize() {
   // 获取主屏幕
   const primaryDisplay = screen.getPrimaryDisplay();
   const { width: screenWidth, height: screenHeight } = primaryDisplay.workAreaSize;
-
   // 计算窗口大小（例如：屏幕的80%）
   const windowWidth = Math.floor(screenWidth * 0.8);
   const windowHeight = Math.floor(screenHeight * 0.8);
-
   // 计算窗口位置（居中）
   const x = Math.floor((screenWidth - windowWidth) / 2);
   const y = Math.floor((screenHeight - windowHeight) / 2);
+  // 窗口最小尺寸
+  const minWidth = Math.floor(screenWidth * 0.3);
+  const minHeight = Math.floor(screenHeight * 0.3);
+  return { windowWidth, windowHeight, x, y, minWidth, minHeight };
+}
 
-  const faviconPath = path.resolve(process.cwd(), process.env.NODE_ENV === "production" ? faviconProPath : faviconDevPath);
-
+function createWindow(param: WindowProp) {
+  const { mode, options = {} } = param;
+  const { windowWidth, windowHeight, x, y, minWidth, minHeight } = windowSize();
+  const faviconPath = path.resolve(process.cwd(), $$.isPro() ? faviconProPath : faviconDevPath);
   const mainWindow = new BrowserWindow({
-    width: windowWidth,
-    height: windowHeight,
     x: x,
     y: y,
-    // 可选：设置最小尺寸
-    minWidth: Math.floor(screenWidth * 0.3),
-    minHeight: Math.floor(screenHeight * 0.3),
+    width: windowWidth,
+    height: windowHeight,
+    minWidth: minWidth,
+    minHeight: minHeight,
     autoHideMenuBar: true,
     icon: nativeImage.createFromPath(faviconPath),
     webPreferences: {
@@ -151,6 +155,7 @@ app.whenReady().then(() => {
     }
   });
   setupUserIPC();
+  createServer();
 });
 
 app.on("window-all-closed", () => {
