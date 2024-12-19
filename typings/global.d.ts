@@ -96,6 +96,9 @@ declare global {
     VITE_COMPRESSION: ViteCompression;
     VITE_BASE_API: string;
     VITE_BASE_URL: string;
+    VITE_VUE_PORT: number;
+    VITE_REACT_PORT: number;
+    VITE_API_SERVER: string;
   }
 
   /**

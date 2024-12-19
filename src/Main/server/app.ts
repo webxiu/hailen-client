@@ -26,8 +26,9 @@ function createServer() {
     await next();
   });
   registerRouter(app);
-  app.listen(3800, () => {
-    printl("服务运行在:", "http://localhost:3800");
+  const port = $$.env.VITE_API_SERVER || 3800;
+  app.listen(port, () => {
+    printl("服务运行在:", `http://localhost:${port}`);
   });
 }
 

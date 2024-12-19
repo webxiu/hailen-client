@@ -22,7 +22,6 @@
 import { BrowserWindow, app } from "electron";
 
 import MountGlobal from "./client";
-import envConf from "./config";
 
 // import _WorkPath from "./Global/_WorkPath";
 

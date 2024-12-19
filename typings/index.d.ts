@@ -51,7 +51,7 @@ declare global {
     /** 系统根目录 */
     const rootPath: string;
     const NODE_ENV: string;
-    const env: globalEnv;
+    const env: ViteEnv;
     const isPro: () => boolean;
     const JoinDirWithRoot: (...dir) => string;
     const isString: (arg) => Boolean;

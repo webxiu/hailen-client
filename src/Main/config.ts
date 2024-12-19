@@ -26,8 +26,8 @@ export default {
     VITE_PUBLIC_PATH: "./", // 线上环境平台打包路径
     VITE_VUE_PORT: 7500, // 打包本地运行端口号
     VITE_REACT_PORT: 7600,
-    VITE_API_SERVER: "http://127.0.0.1:2800", // 本地接口地址
-    VITE_BASE_API: "http://127.0.0.1:2800", // 请求接口地址
+    VITE_API_SERVER: "http://127.0.0.1:4800", // 本地接口地址
+    VITE_BASE_API: "http://127.0.0.1:4800", // 请求接口地址
     VITE_ROUTER_HISTORY: "hash",
     // Kimi ApiKey: sk-G37tdZZBhaXukFYvVkMvxgPtRTB4xOS5ty3jeMay8IOFOmOe
     VITE_KIMI_API_KEY: "c2stRzM3dGRaWkJoYVh1a0ZZdlZrTXZ4Z1B0UlRCNHhPUzV0eTNqZU1heThJT0ZPbU9l",
