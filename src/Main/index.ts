@@ -23,7 +23,8 @@ import { BrowserWindow, app } from "electron";
 
 import MountGlobal from "./client";
 import createServer from "./server/app";
-import envConf from "./client";
+import envConf from "./config";
+
 // import _WorkPath from "./Global/_WorkPath";
 
 const child_process = require("child_process");
