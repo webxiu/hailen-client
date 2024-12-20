@@ -6,7 +6,6 @@ import ElementPlus from "unplugin-element-plus/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import babel from "@rollup/plugin-babel";
 import { createHtmlPlugin } from "vite-plugin-html";
-import envConfig from "./src/Main/config";
 import path from "path";
 import react from "@vitejs/plugin-react";
 import vue from "@vitejs/plugin-vue";
@@ -14,7 +13,6 @@ import vueJsx from "@vitejs/plugin-vue-jsx";
 
 /** 当前执行node命令时文件夹的地址（工作目录） */
 const root: string = process.cwd();
-const envInfo = envConfig[process.env.NODE_ENV as string];
 
 function resolve(dir: string) {
   return path.resolve(__dirname, dir);
@@ -110,7 +108,7 @@ export default (mode: string, env: Record<string, any>): UserConfig => {
       }
     },
     define: {
-      "process.env": JSON.stringify(envInfo)
+      "process.env": JSON.stringify(env)
     }
   };
 };

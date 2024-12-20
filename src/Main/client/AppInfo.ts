@@ -3,8 +3,8 @@
 
 import { app, dialog } from "electron";
 
+import dotenv from "dotenv";
 import path from "path";
-import envConf from "../config";
 
 // const Build = {
 //   appVersion: Package.version.split("-")[0],
@@ -30,9 +30,9 @@ Reflect.set($$, "AppInfo", {
 
   /** 程序名称 */
 });
-
+console.log("process.env", process.env);
 Reflect.set($$, "NODE_ENV", app.isPackaged ? "production" : "development");
-Reflect.set($$, "env", { ...JSON.parse(JSON.stringify(process.env)), ...envConf[app.isPackaged ? "production" : "development"] });
+Reflect.set($$, "env", { ...JSON.parse(JSON.stringify(process.env)), ...(dotenv.config({ path: `.env.${app.isPackaged ? "production" : "development"}` }).parsed || {}) });
 Reflect.set($$, "isPro", () => app.isPackaged);
 Reflect.set($$, "JoinDirWithRoot", (...dir) => path.join(process.cwd(), ...dir));
 Reflect.set($$, "isString", (arg) => Reflect.toString.call(arg) === "[object String]");
