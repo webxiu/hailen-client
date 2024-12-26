@@ -2,8 +2,8 @@ import * as path from "node:path";
 
 import { BrowserWindow, Menu, Tray, app, globalShortcut, ipcMain, nativeImage, protocol, screen, shell } from "electron";
 
-import { setupUserIPC } from "./ipc";
 import createServer from "../server/app";
+import { setupUserIPC } from "./ipc";
 
 interface WindowProp {
   mode: "vue" | "react";
@@ -144,7 +144,8 @@ app.whenReady().then(() => {
   let parentWin = createWindow({ mode: "vue", options: {} });
   ipcMain.on("react", () => {
     console.log("react");
-    createWindow({ mode: "react", options: { parent: parentWin, modal: true } });
+    // createWindow({ mode: "react", options: { parent: parentWin, modal: true } });
+    createWindow({ mode: "react" });
   });
   ipcMain.on("ping", () => {
     console.log("pong");
@@ -155,7 +156,7 @@ app.whenReady().then(() => {
     }
   });
   setupUserIPC();
-  createServer();
+  createServer($$.env.VITE_API_SERVER, {});
 });
 
 app.on("window-all-closed", () => {

@@ -9,7 +9,7 @@ import { printl } from "./config";
 import { registerRouter } from "./routes";
 import { uploadDir } from "./config/constant";
 
-function createServer() {
+function createServer(domain: string, opt) {
   const app = new Koa();
   // 使用中间件
   app.use(bodyParser());
@@ -26,9 +26,8 @@ function createServer() {
     await next();
   });
   registerRouter(app);
-  const port = $$.env.VITE_API_SERVER || 3800;
-  app.listen(port, () => {
-    printl("服务运行在:", `http://localhost:${port}`);
+  app.listen(domain.split(":").pop(), () => {
+    printl("服务运行在:", domain);
   });
 }
 

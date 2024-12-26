@@ -3,8 +3,11 @@
 
 import { app, dialog } from "electron";
 
+import config from "../config";
 import dotenv from "dotenv";
 import path from "path";
+
+console.log("config", config);
 
 // const Build = {
 //   appVersion: Package.version.split("-")[0],
