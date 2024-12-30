@@ -108,7 +108,8 @@
       "dist",
       "public",
       "index.js",
-      "config.js",
+      "source",
+      "scripts/config.js",
       "!**/*.{lib,obj,pdb,cc,h,tlog,map,exp,gypi,vcxproj,filters,cpp,c,ts}"
     ],
     "nodeGypRebuild": false,

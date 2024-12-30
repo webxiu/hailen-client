@@ -98,7 +98,8 @@ declare global {
     VITE_BASE_URL: string;
     VITE_VUE_PORT: number;
     VITE_REACT_PORT: number;
-    VITE_API_SERVER: string;
+    // 主进程
+    SERVER_HOST: string;
   }
 
   /**

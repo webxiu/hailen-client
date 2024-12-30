@@ -156,7 +156,10 @@ app.whenReady().then(() => {
     }
   });
   setupUserIPC();
-  createServer($$.env.VITE_API_SERVER, {});
+  createServer({
+    ...$$.env[$$.NODE_ENV],
+    NODE_ENV: $$.NODE_ENV
+  });
 });
 
 app.on("window-all-closed", () => {

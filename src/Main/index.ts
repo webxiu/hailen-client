@@ -61,8 +61,9 @@ const wakeOrCreate = () => {
     rootPath = path.join(__dirname, "../../../");
   }
   Reflect.set($$, "rootPath", rootPath);
+  const { env, ...reset } = $$;
 
-  console.log("$$,", $$);
+  console.log("$$,", reset);
 
   // const voiceFiles = _WorkPath("voiceFiles");
   // const localDBPath = _WorkPath("db");

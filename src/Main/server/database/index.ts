@@ -13,7 +13,7 @@ export class UserModel {
   private db: Database;
 
   constructor() {
-    this.db = Database.getInstance();
+    this.db = Database.getInstance({ isDev: false });
   }
 
   /**

@@ -9,10 +9,10 @@ export class Database {
   private db: sqlite3.Database;
   private static instance: Database;
 
-  private constructor() {
+  private constructor({ isDev }) {
     // 数据库文件路径
     // const dbPath = path.join(app.getPath("userData"), "database.db");
-    const dbPath = path.join(process.cwd(), "source", "database", "database.db");
+    const dbPath = path.join(process.cwd(), isDev ? "source" : "../source", "database", "database.db");
 
     printl("数据库文件路径:", dbPath);
 
@@ -33,9 +33,9 @@ export class Database {
   /**
    * 获取数据库实例（单例模式）
    */
-  public static getInstance(): Database {
+  public static getInstance({ isDev }): Database {
     if (!Database.instance) {
-      Database.instance = new Database();
+      Database.instance = new Database({ isDev });
     }
     return Database.instance;
   }

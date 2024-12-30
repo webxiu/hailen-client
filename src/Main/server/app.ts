@@ -8,8 +8,9 @@ import koaStatic from "koa-static";
 import { printl } from "./config";
 import { registerRouter } from "./routes";
 import { uploadDir } from "./config/constant";
+import { Database } from "./database/db";
 
-function createServer(domain: string, opt) {
+function createServer({ SERVER_HOST, SERVER_PORT, NODE_ENV }) {
   const app = new Koa();
   // 使用中间件
   app.use(bodyParser());
@@ -25,9 +26,10 @@ function createServer(domain: string, opt) {
     if (ctx.method === "OPTIONS") return (ctx.status = 200);
     await next();
   });
+  app.context.db = Database.getInstance({ isDev: NODE_ENV === "development" });
   registerRouter(app);
-  app.listen(domain.split(":").pop(), () => {
-    printl("服务运行在:", domain);
+  app.listen(SERVER_PORT, () => {
+    printl("服务运行在:", `${SERVER_HOST}:${SERVER_PORT}`);
   });
 }
 
