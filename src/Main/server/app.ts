@@ -6,12 +6,16 @@ import Koa from "koa";
 import bodyParser from "koa-bodyparser";
 import koaStatic from "koa-static";
 import { printl } from "./config";
-import { registerRouter } from "./routes";
 import { uploadDir } from "./config/constant";
-import { Database } from "./database/db";
 
-function createServer({ SERVER_HOST, SERVER_PORT, NODE_ENV }) {
+async function createServer({ SERVER_HOST, SERVER_PORT, NODE_ENV }) {
   const app = new Koa();
+  const isDev = NODE_ENV === "development";
+  app.context.isDev = isDev;
+  global.isDev = isDev; // 动态设置全局变量
+  const { Database } = await import("./database/db");
+  const { registerRouter } = await import("./routes");
+
   // 使用中间件
   app.use(bodyParser());
   app.use(logger);
@@ -26,7 +30,6 @@ function createServer({ SERVER_HOST, SERVER_PORT, NODE_ENV }) {
     if (ctx.method === "OPTIONS") return (ctx.status = 200);
     await next();
   });
-  app.context.db = Database.getInstance({ isDev: NODE_ENV === "development" });
   registerRouter(app);
   app.listen(SERVER_PORT, () => {
     printl("服务运行在:", `${SERVER_HOST}:${SERVER_PORT}`);

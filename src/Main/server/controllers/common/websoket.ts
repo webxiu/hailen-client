@@ -10,7 +10,7 @@ interface WSMessageType {
 }
 
 const clients = new Map();
-let socketServe: WebSocket.Serve;
+let socketServe: WebSocket;
 
 /** 发送给指定设备 */
 function sendMessageToDevice(params: WSMessageType) {

@@ -6,7 +6,7 @@ export type { User };
 export default class HomeModel {
   private db: Database;
   constructor() {
-    this.db = Database.getInstance({ isDev: false });
+    this.db = Database.getInstance();
   }
 
   // 获取所有用户

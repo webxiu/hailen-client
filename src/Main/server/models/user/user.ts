@@ -6,7 +6,7 @@ export type { User };
 export default class UserModel {
   private db: Database;
   constructor() {
-    this.db = Database.getInstance({ isDev: false });
+    this.db = Database.getInstance();
   }
 
   async login(user: Pick<User["user"], "email" | "password">): Promise<User["user"] | undefined> {
