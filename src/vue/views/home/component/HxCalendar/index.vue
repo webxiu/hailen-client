@@ -46,6 +46,12 @@ import utils, { LunarType } from "./utils";
 import { onMounted, reactive, ref, watch, h } from "vue";
 import { ArrowLeft, ArrowRight, DArrowLeft, DArrowRight } from "@element-plus/icons-vue";
 
+/**
+ * 日期说明:
+ *  1. 周数: 0-6 => 周日-周六
+ *  2. 月份: 0-11 => 1月-12月
+ */
+
 /** 属性 */
 export interface PropsType {
   modelValue?: Date | string;
@@ -99,9 +105,7 @@ const lunarFestivals = {
   "5-1": "劳动节",
   "5-4": "青年节",
   "5-12": "护士节",
-  "5-11": "母亲节",
   "6-1": "儿童节",
-  "6-15": "父亲节",
   "7-1": "建党节",
   "8-1": "建军节",
   "9-10": "教师节",
@@ -110,7 +114,13 @@ const lunarFestivals = {
   "12-25": "圣诞节"
 };
 
-// 补充放假节气(当作节日处理)
+/** 按某月的第几周的周几作为节日(月-第几周-周几) */
+const weekDayFestival = {
+  "6-3-0": "父亲节",
+  "5-2-0": "母亲节"
+};
+
+// 补充放假节气(把节气改为节日处理)
 const extraFestival = ["清明节"];
 
 /** 农历(阴历), 处理接口没有返回'节'字*/
@@ -170,13 +180,41 @@ function classList(item: CalendarItemType) {
   return ["day-cell ellipsis", today, select, currentMonth, festival];
 }
 
+/**
+ * 获取当前年月的第N周的周几的日期
+ * @param year 年
+ * @param month 月
+ * @param weekNumber 第几周
+ * @param weekday 周几
+ */
+function getNthWeekdayOfMonth(year, month, weekNumber, weekday) {
+  const date = new Date(year, month - 1, 1);
+  // 计算该月的第一个指定星期几的日期
+  const firstWeekday = ((7 + weekday - date.getDay()) % 7) + 1;
+  // 计算第N个指定星期几的日期
+  const nthWeekday = firstWeekday + (weekNumber - 1) * 7;
+  // 返回结果
+  return new Date(year, month - 1, nthWeekday);
+}
+
 /** 获取节日(在格子中高亮显示) */
 function getFestivalDay({ date, lunar }) {
-  const { month, day } = utils.getYearMonthDay(date);
-  const { lunarMonth, lunarDay, term } = lunar;
-  // 特殊处理:由于term包含了很多节气(如:清明节被当作节气处理了)
+  const { year, month, day } = utils.getYearMonthDay(date);
+  const { lunarMonth, lunarDay, term } = lunar; // 农历
+
+  // 节气节日:由于term包含了很多节气(如:清明节被当作节气处理了)
   const extraDay = extraFestival.find((f) => f.includes(term));
+  // 阳历节日
   const festival = lunarFestivals[`${month + 1}-${day}`] || solarFestival[`${lunarMonth}-${lunarDay}`];
+
+  // 查找当前日期是否是按周几配置的节日
+  const weekDayKey = Object.keys(weekDayFestival).find((key) => {
+    const [_month, _week, _weekDay] = key.split("-").map(Number);
+    const festivalDay = getNthWeekdayOfMonth(year, _month, _week, _weekDay);
+    const { year: y, month: m, day: d } = utils.getYearMonthDay(festivalDay);
+    return year === y && month === m && day === d;
+  });
+  if (weekDayKey) return weekDayFestival[weekDayKey as string];
   return festival || lunar.lunarFestival || extraDay;
 }
 
@@ -249,42 +287,49 @@ const onChangeDate = debounce((date: Date) => {
 </script>
 
 <style lang="scss">
-$cell-height: 18px;
+$cellHeight: 18px;
 $weekColor: #57a3dc;
-$color: var(--el-text-color-primary);
-$borderColor: var(--el-card-border-color);
+$color: #303133;
+$borderColor: #e4e7ed;
+$background: #fff;
+$today: #409eff;
+$hover: #1bac46;
 
 .hx-calendar {
-  background: var(--el-fill-color-blank);
-  border-top: 1px solid $borderColor;
-  border-left: 1px solid $borderColor;
-  flex-direction: column;
   display: flex;
   flex: 1;
+  flex-direction: column;
   overflow: hidden;
+  background: $background;
+  border-top: 1px solid $borderColor;
+  border-left: 1px solid $borderColor;
 
   .calendar-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    height: 42px;
     white-space: nowrap;
     user-select: none;
     border-right: 1px solid $borderColor;
-    height: 42px;
+
     .calendar-month {
       width: 100px;
+      font-size: 18px;
       text-align: center;
       border: none;
-      font-size: 18px;
       box-shadow: none;
+
       .el-input__wrapper,
       .el-input__wrapper.is-focus {
         box-shadow: none;
       }
+
       .el-input__prefix-inner {
         display: none;
       }
     }
+
     .calendar-today {
       flex: 1;
       font-size: 20px;
@@ -294,13 +339,15 @@ $borderColor: var(--el-card-border-color);
   }
 
   .calendar-body {
-    flex: 1;
     display: flex;
+    flex: 1;
     flex-direction: column;
+
     .week-item {
       display: flex;
       font-size: 14px;
       background: rgb(145 219 224 / 35%);
+
       .week-cell {
         flex: 1;
         padding: 5px;
@@ -309,6 +356,7 @@ $borderColor: var(--el-card-border-color);
         user-select: none;
         border: 1px solid $borderColor;
         border-left: none;
+
         &:nth-child(1) {
           color: $weekColor;
         }
@@ -320,17 +368,20 @@ $borderColor: var(--el-card-border-color);
       flex: 1;
       width: 100%;
       color: $color;
+
       .today {
         color: #fff !important;
-        background: var(--el-color-primary);
+        background: $today;
       }
+
       .festival {
-        color: var(--el-color-primary);
+        color: $today;
       }
 
       .current-month {
         font-size: 14px;
       }
+
       .other-month {
         color: #b5b5b5;
       }
@@ -340,34 +391,36 @@ $borderColor: var(--el-card-border-color);
       }
 
       .day-cell {
-        flex: 1;
-        padding: 4px;
-        cursor: pointer;
+        box-sizing: border-box;
         display: flex;
-        align-items: center;
+        flex: 1;
         flex-direction: column;
+        align-items: center;
         justify-content: center;
-        line-height: $cell-height;
-        border-right: 1px solid $borderColor;
-        border-bottom: 1px solid $borderColor;
+        padding: 4px;
+        line-height: $cellHeight;
         text-align: center;
         white-space: nowrap;
-        box-sizing: border-box;
+        cursor: pointer;
+        border-right: 1px solid $borderColor;
+        border-bottom: 1px solid $borderColor;
 
         &:hover,
         &.select {
           color: #fff !important;
-          background: #1bac46;
+          background: $hover;
         }
+
         .day {
           font-size: 18px;
           line-height: 1em;
         }
+
         .lunar {
-          opacity: 0.7;
           margin-top: 2px;
           font-size: 12px;
           line-height: 1em;
+          opacity: 0.7;
         }
       }
     }

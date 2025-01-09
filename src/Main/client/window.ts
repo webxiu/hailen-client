@@ -157,6 +157,7 @@ app.whenReady().then(() => {
   });
   setupUserIPC();
   createServer({
+    platform: process.platform,
     ...$$.env[$$.NODE_ENV],
     NODE_ENV: $$.NODE_ENV
   });

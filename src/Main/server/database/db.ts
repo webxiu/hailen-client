@@ -12,9 +12,12 @@ export class Database {
   private constructor() {
     // 数据库文件路径
     // const dbPath = path.join(app.getPath("userData"), "database.db");
-    const dbPath = path.join(process.cwd(), global.isDev ? "source" : "../source", "database", "database.db");
+    let dbPath = path.join(process.cwd(), global.isDev ? "source" : "../source", "database", "database.db");
+    if (global.platform !== "darwin") {
+      dbPath = path.join(process.cwd(), "source", "database", "database.db");
+    }
 
-    console.log("========是否开发环境:", global.isDev);
+    console.log("========是否开发环境:", global);
     printl("数据库文件路径:", dbPath);
 
     this.db = new sqlite3.Database(dbPath, (err) => {

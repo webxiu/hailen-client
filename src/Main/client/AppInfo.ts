@@ -4,11 +4,8 @@
 import { app, dialog } from "electron";
 
 import path from "path";
-// import Config from "../../scripts/config.js";
-// console.log("========== Config", Config);
+
 const Config = require(path.join(__dirname, "../../scripts/config.js"));
-console.log("========== __dirname", __dirname);
-console.log("========== Config", Config);
 
 // const Build = {
 //   appVersion: Package.version.split("-")[0],

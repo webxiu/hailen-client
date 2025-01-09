@@ -31,7 +31,7 @@ const names = ref<string[]>([]);
   <div class="layout">
     <div class="flex-col p-4">
       <div>logo <HxIcon icon="Setting" /></div>
-      <div class="flex-1">
+      <div>
         <NavMenu />
       </div>
     </div>

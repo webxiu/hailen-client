@@ -8,11 +8,12 @@ import koaStatic from "koa-static";
 import { printl } from "./config";
 import { uploadDir } from "./config/constant";
 
-async function createServer({ SERVER_HOST, SERVER_PORT, NODE_ENV }) {
+async function createServer({ platform, SERVER_HOST, SERVER_PORT, NODE_ENV }) {
   const app = new Koa();
   const isDev = NODE_ENV === "development";
-  app.context.isDev = isDev;
+  // app.context.isDev = isDev; // 注入到ctx
   global.isDev = isDev; // 动态设置全局变量
+  global.platform = platform; // 动态设置全局变量
   const { Database } = await import("./database/db");
   const { registerRouter } = await import("./routes");
 

@@ -6,22 +6,28 @@
     <el-button type="primary" @click="onPing">ping</el-button>
     <el-button type="primary" @click="onGet">获取数据</el-button>
     <el-button type="primary" @click="logout">退出登录</el-button>
-    <div id="tmap" style="width: 100%; height: 500px"></div>
+
+    <div>
+      <pre>
+        <code>
+          {{  JSON.stringify(userData, null, 2) }}
+        </code>
+      </pre>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-const count = ref(0);
 import { addList, getList } from "@/vue/api/home/dashboard";
 import { useUserStore } from "@/vue/store/modules/user";
-import { initMap } from "@/lib/map";
 
 const useStore = useUserStore();
+const count = ref(0);
+const userData = ref([]);
 
 onMounted(() => {
   onGet();
-  initMap();
 });
 
 // 累加
@@ -43,6 +49,7 @@ function onPing() {
 function onGet() {
   getList({ username: "123", email: "123@qq.com" }).then(({ data }) => {
     console.log("data", data);
+    userData.value = data;
   });
 }
 
