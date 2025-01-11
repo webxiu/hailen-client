@@ -35,9 +35,9 @@ const names = ref<string[]>([]);
         <NavMenu />
       </div>
     </div>
-    <div class="flex-1">
+    <div class="flex-col flex-1 ui-h-100 ui-ov-h">
       <div class="header">头部</div>
-      <div class="content">
+      <div class="main-content flex-1">
         <router-view>
           <template #default="{ Component, route }">
             <!-- <BackButton /> -->
@@ -59,7 +59,12 @@ const names = ref<string[]>([]);
   width: 100vw;
   height: 100vh;
 }
-.content {
+.header {
+  background: #bbebff;
+}
+.main-content {
+  width: 100%;
   overflow: hidden;
+  background: #ffd9d9;
 }
 </style>
