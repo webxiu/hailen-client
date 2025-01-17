@@ -1,7 +1,9 @@
 import { PropType, defineComponent, h } from "vue";
 
 const props = {
-  border: { type: String, required: false, default: "" }
+  border: { type: String, default: "" },
+  dataList: { type: Array, default: () => [] },
+  columns: { type: Array, default: () => [] }
 };
 
 export default defineComponent({
@@ -10,19 +12,9 @@ export default defineComponent({
   emits: ["submit", "reset", "change"],
   setup(props, {}) {
     const { border } = props;
-    const tableData = [
-      { date: "2016-05-03", name: "Tom" },
-      { date: "2016-05-02", name: "Tom" },
-      { date: "2016-05-04", name: "Tom" },
-      { date: "2016-05-01", name: "Tom" }
-    ];
-    const columns = [
-      { label: "Date", prop: "date" },
-      { label: "Name", prop: "name", align: "center" }
-    ];
     return () => (
-      <el-table data={tableData} border>
-        {columns.map((item) => {
+      <el-table data={props.dataList} border>
+        {props.columns.map((item) => {
           return <el-table-column {...item} />;
         })}
       </el-table>

@@ -23,6 +23,18 @@ export default {
       name: "Json2TS",
       component: () => import("@/vue/views/home/tool/json2ts/index.vue"),
       meta: { title: "JSON转TS", icon: "SetUp" }
+    },
+    {
+      path: "/tool/mxgraph",
+      name: "Mxgraph",
+      component: () => import("@/vue/views/home/tool/mxgraph/index.vue"),
+      meta: { title: "画图工具", icon: "SetUp" }
+    },
+    {
+      path: "/tool/screenRecord",
+      name: "ScreenRecord",
+      component: () => import("@/vue/views/home/tool/screenRecord/index.vue"),
+      meta: { title: "屏幕录制", icon: "SetUp" }
     }
   ]
 } as RouteRecordRawType;
