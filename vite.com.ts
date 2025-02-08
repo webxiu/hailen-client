@@ -6,6 +6,7 @@ import ElementPlus from "unplugin-element-plus/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import babel from "@rollup/plugin-babel";
 import { createHtmlPlugin } from "vite-plugin-html";
+import { getPlugins } from "./build/plugins";
 import path from "path";
 import react from "@vitejs/plugin-react";
 import vue from "@vitejs/plugin-vue";
@@ -28,24 +29,24 @@ const JoinCwd = (...args) => {
 export default (mode: string, env: Record<string, any>): UserConfig => {
   const isVue = mode === "vue";
   const isReact = mode === "react";
-  const { VITE_BASE_API, VITE_BASE_URL, VITE_VUE_PORT, VITE_REACT_PORT } = env;
-
-  const projectConf = {
+  const { VITE_BASE_API, VITE_BASE_URL, VITE_VUE_PORT, VITE_REACT_PORT, VITE_COMPRESSION } = env;
+  const modeConfig = {
     vue: {
+      id: "app",
+      src: "/src/vue/main.ts",
       input: resolve("src/vue/main.ts"),
       outDir: "dist/vue",
-      port: VITE_VUE_PORT,
-      id: "app",
-      scriptEntry: "/src/vue/main.ts"
+      port: VITE_VUE_PORT
     },
     react: {
+      id: "root",
+      src: "/src/react/main.tsx",
       input: resolve("src/react/main.tsx"),
       outDir: "dist/react",
-      port: VITE_REACT_PORT,
-      id: "root",
-      scriptEntry: "/src/react/main.tsx"
+      port: VITE_REACT_PORT
     }
-  }[mode as keyof typeof projectConf];
+  };
+  const modeObj = modeConfig[mode as keyof typeof modeConfig];
 
   return {
     base: "./", // 部署在根目录下 , ./vue/  ./react/ 部署在子目录下
@@ -56,47 +57,15 @@ export default (mode: string, env: Record<string, any>): UserConfig => {
       },
       extensions: [".js", ".ts", ".tsx", ".jsx"]
     },
-    plugins: [
-      vue(),
-      isVue
-        ? vueJsx({
-            // 如果需要 Babel 特定功能，可以在这里配置
-            optimize: true,
-            transformOn: true
-          })
-        : null,
-      isReact ? react() : null,
-      createHtmlPlugin({
-        inject: {
-          // 动态控制 script 标签的保留或移除
-          tags: [
-            {
-              tag: "div",
-              attrs: { id: projectConf.id },
-              injectTo: "body" // 或 'head'
-            },
-            {
-              tag: "script",
-              attrs: { type: "module", src: projectConf.scriptEntry },
-              injectTo: "body"
-            }
-          ]
-        }
-      })
-      // 打包报错
-      // babel({
-      //   babelHelpers: "bundled",
-      //   presets: ["@babel/preset-env", "@vue/babel-preset-jsx", "@babel/preset-typescript"]
-      // })
-    ],
+    plugins: getPlugins({ isVue, isReact, modeObj, VITE_COMPRESSION }),
     build: {
-      outDir: projectConf.outDir,
+      outDir: modeObj.outDir,
       rollupOptions: {
-        // input: { [mode]: projectConf.input },
+        // input: { [mode]: modeObj.input },
       }
     },
     server: {
-      port: projectConf.port,
+      port: modeObj.port,
       host: "0.0.0.0",
       // 本地跨域代理 https://cn.vitejs.dev/config/server-options.html#server-proxy
       proxy: {

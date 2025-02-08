@@ -1,16 +1,35 @@
 <template>
-  <div class="ui-w-100 ui-h-100" style="height: 500px">
-    <iframe :src="weather" width="100%" height="100%"></iframe>
+  <div class="ui-w-100 ui-h-100" style="height: 800px">
+    <el-input v-model="formData.city" placeholder="请输入内容" @change="onChange" />
+    <iframe id="iframe" :src="weather" :key="formData.city" width="100%" height="100%"></iframe>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, reactive, ref } from "vue";
+
+const formData = reactive({ city: "深圳" });
+const word = ref("深圳");
 
 const weather = computed(() => {
-  const url = `https://m.baidu.com/sf?pd=life_compare_weather&openapi=1&dspName=iphone&from_sf=1&word=%E6%B7%B1%E5%9C%B3&title=%E5%A4%A9%E6%B0%94%E5%9C%B0%E5%9B%BE&resource_id=5138&county_id=101280601&county=%E6%B7%B1%E5%9C%B3&source=weather&lid=10614196007587409405&referlid=10614196007587409405&ms=1&frsrcid=5063&frorder=1`;
+  const link = `https://m.baidu.com/sf`;
+  const params: Record<string, any> = {
+    openapi: 1,
+    from_sf: 1,
+    resource_id: 5138,
+    county_id: 101280601,
+    word: word.value,
+    source: "weather",
+    dspName: "iphone",
+    pd: "life_compare_weather"
+  };
+  const url = `${link}?${new URLSearchParams(params).toString()}`;
   return url;
 });
+
+function onChange(value) {
+  word.value = value;
+}
 </script>
 
 <style scoped></style>
