@@ -18,6 +18,7 @@ import vueJsx from "@vitejs/plugin-vue-jsx";
 export function injectHtmlPlugin(options) {
   return {
     name: "vite-inject-html-plugin",
+    enforce: "pre",
     transformIndexHtml(html) {
       const { tags } = options.inject;
       tags.forEach((tag) => {

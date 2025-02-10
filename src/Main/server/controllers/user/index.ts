@@ -1,7 +1,7 @@
 import UserModel, { User } from "../../models/user/user";
 
 import { Context } from "koa";
-import bcrypt from "bcrypt";
+import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { responseStatus } from "../../config/index";
 import { secretKey } from "../../config/constant";
@@ -14,7 +14,7 @@ const login = async (ctx: Context) => {
     const user = await userModel.login({ email, password });
     if (!user) return (ctx.body = responseStatus(400, "邮箱不存在"));
     const { password: pwd, ...userWithoutPassword } = user;
-    const isPasswordValid = await bcrypt.compare(password, pwd); // 比较输入密码和数据库哈希密码
+    const isPasswordValid = await bcryptjs.compare(password, pwd); // 比较输入密码和数据库哈希密码
     if (!isPasswordValid) return (ctx.body = responseStatus(400, "密码不正确"));
     // 生成token
     const token = jwt.sign({ id: user.email }, secretKey, { expiresIn: "1h" });
@@ -27,7 +27,7 @@ const login = async (ctx: Context) => {
 const register = async (ctx: Context) => {
   const { username, password, email, phone } = ctx.request.body as User["user"];
   try {
-    const pwd = await bcrypt.hash(password, 10);
+    const pwd = await bcryptjs.hash(password, 10);
     const user = await userModel.register({ username, password: pwd, email, phone });
     ctx.body = responseStatus(200, user);
   } catch (error: any) {

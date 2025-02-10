@@ -1,0 +1,16 @@
+{
+  "id": "4824369",
+  "name": "electron",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "23445861",
+      "name": "表格",
+      "font_class": "biaoge",
+      "unicode": "e679",
+      "unicode_decimal": 59001
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 import "element-plus/dist/index.css";
 import "./style/index.scss";
+import "./assets/iconfont/iconfont.js";
 
 import App from "./App.vue";
 import ElementPlus from "element-plus";

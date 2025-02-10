@@ -10,7 +10,7 @@ export default {
       path: "/component/blendedSearch",
       name: "BlendedSearch",
       component: () => import("@/vue/components/HelloWorld.vue"),
-      meta: { title: "组合查询框", icon: "Warning" }
+      meta: { title: "组合查询框", icon: "biaoge" }
     },
     {
       path: "/component/hxCalendar",
