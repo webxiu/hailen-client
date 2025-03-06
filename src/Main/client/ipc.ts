@@ -2,7 +2,7 @@
 
 // import { User, UserModel } from "../server/database";
 
-import { ipcMain } from "electron";
+import { desktopCapturer, ipcMain } from "electron";
 
 export enum EventName {
   CreateWindow = "createWindow"
@@ -33,5 +33,15 @@ export function setupUserIPC() {
   ipcMain.on("my-global", (event) => {
     const { rootPath, env, NODE_ENV } = $$;
     event.returnValue = { rootPath, env, NODE_ENV }; // 只返回可序列化的属性
+  });
+
+  ipcMain.handle("get-screen-sources", async () => {
+    try {
+      const sources = await desktopCapturer.getSources({ types: ["screen", "window"] });
+      return sources;
+    } catch (err) {
+      console.error("Error getting screen sources:", err);
+      throw err;
+    }
   });
 }

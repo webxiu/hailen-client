@@ -3,9 +3,15 @@ import Layout from "@/vue/layout/index.vue";
 export default {
   path: "/component",
   component: Layout,
-  redirect: "/component/blendedSearch",
+  redirect: "/component/index",
   meta: { title: "组件", icon: "Operation", order: 3 },
   children: [
+    {
+      path: "/component/list",
+      name: "ComponentList",
+      component: () => import("@/vue/views/home/component/index.vue"),
+      meta: { title: "组件列表", icon: "biaoge" }
+    },
     {
       path: "/component/blendedSearch",
       name: "BlendedSearch",

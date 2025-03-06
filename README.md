@@ -37,6 +37,12 @@ yarn build   # 需先在.env.production中修改生产环境打包的部署域�
 # 构建生产环境
 yarn build   # 需先在.env.production中修改生产环境打包的部署域名和目录
 
+#打包报错: ⨯ [Error: EPERM: operation not permitted, unlink 'E:\project\electron\hailen-client\node_modules\sqlite3\build\Release\node_sqlite3.node']
+
+关闭开发服务
+
+yarn 一次
+
 ```
 
 ## Expanding the ESLint configuration

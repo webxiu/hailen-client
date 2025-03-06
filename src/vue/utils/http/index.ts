@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2023-07-13 10:10:59
  * @Last Modified by: Hailen
- * @Last Modified time: 2024-12-12 17:26:00
+ * @Last Modified time: 2025-03-06 15:51:46
  */
 
 import Axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken, CustomParamsSerializer } from "axios";
@@ -12,10 +12,10 @@ import NProgress from "../progress";
 import { getUserInfo } from "@/vue/utils/storage";
 import { message } from "@/vue/utils/message";
 import { stringify } from "qs";
-import { useUserStore } from "@/vue/store/modules/user";
+import { useUserStoreHook } from "@/vue/store/modules/user";
 import { whiteList } from "@/vue/router/index";
 
-const useStore = useUserStore();
+const useStore = useUserStoreHook();
 
 const defaultConfig: AxiosRequestConfig = {
   baseURL: process.env.VITE_BASE_API,

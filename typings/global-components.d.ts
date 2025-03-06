@@ -1,3 +1,7 @@
+import type { ButtonListProps } from "@/vue/components/ButtonList/index.vue";
+import type { BlendedSearchProps } from "@/vue/components/BlendedSearch/index.vue";
+import type { SearchHighlightProps } from "@/vue/components/HxSearchHighlight/index.vue";
+
 declare module "vue" {
   /**
    * 自定义全局组件获得 Volar 提示（自定义的全局组件需要在这里声明下才能获得 Volar 类型提示哦）
@@ -8,7 +12,15 @@ declare module "vue" {
     Auth: typeof import("../src/components/ReAuth")["Auth"];
     HxIcon: typeof import("../src/vue//components/HxIcon")["HxIcon"];
     HxTable: typeof import("../src/vue/components/HxTable")["HxTable"];
-
+    AgGridTable: typeof import("../src/vue/components/AgGridTable/index.vue")["AgGridTable"];
+    ButtonList: DefineComponent<ButtonListProps>;
+    HxSearchHighlight: DefineComponent<SearchHighlightProps>;
+    BlendedSearch: DefineComponent<BlendedSearchProps> & {
+      new (): {
+        $props: BlendedSearchProps;
+        $emit: { (event: "tagSearch", val: Recordable): void; (event: "selectNode", val: Recordable): void };
+      };
+    };
     // 自定义全局组件类型(详细配置)
     // DemoComponent: DefineComponent<DemoComponentProps> & {
     //   new (): {

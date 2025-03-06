@@ -9,6 +9,10 @@ import { CheckOnlineWebsocket } from "@/hooks/websocketOnline";
  * 全局类型声明，无需引入直接在 `.vue` 、`.ts` 、`.tsx` 文件使用即可获得类型提示
  */
 declare global {
+  /**
+   * JSX元素渲染类型
+   */
+  type JSXElement = JSX.Element | string;
   /** 项目根目录 */
   const __ROOT__: string;
   /** 平台的名称、版本、依赖、最后构建时间的类型提示 */
@@ -62,9 +66,10 @@ declare global {
       selection: any;
       bpmnElement: any;
     };
-    api: {
+    electronAPI: {
       send: (channel: string, data: any) => void;
       receive: (channel: string, func: (...args: any[]) => void) => void;
+      getScreenSources: () => Promise<any>;
     };
   }
 

@@ -38,12 +38,12 @@ function onClick() {
 
 // 创建react窗口
 function onReact() {
-  window.api.send("react", "world"); // 向主进程发送消息
+  window.electronAPI.send("react", "world"); // 向主进程发送消息
 }
 
 // 发送消息
 function onPing() {
-  window.api.send("ping", "world");
+  window.electronAPI.send("ping", "world");
 }
 
 // 获取数据

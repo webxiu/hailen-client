@@ -99,7 +99,7 @@ class Command extends EventEmitter {
     } else {
       const { VITE_VUE_PORT, VITE_REACT_PORT } = this.getEnv();
       const resources = [`tcp:${VITE_VUE_PORT}`, `tcp:${VITE_REACT_PORT}`];
-      waitOn({ resources, timeout: 30000 }, (err) => {
+      waitOn({ resources, timeout: 60 * 1000 }, (err) => {
         if (err) {
           console.error("等待端口时错误:".red, err);
           process.exit(1);

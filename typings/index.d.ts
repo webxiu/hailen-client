@@ -10,6 +10,8 @@ import React from "react";
 const PackageJson = require("~/package.json");
 const pkg = JSON.parse(JSON.stringify(PackageJson));
 
+type ValueOf<T> = T[keyof T];
+
 interface ElectronProcessVersions extends NodeJS.ProcessVersions {
   brotli: string;
   chrome: string;
@@ -24,7 +26,7 @@ interface ElectronProcessVersions extends NodeJS.ProcessVersions {
 }
 
 interface Window {
-  api: {
+  electronAPI: {
     alterMessage: (message: string) => void;
     setUserInfo: (user: any) => void;
     clearCache: () => void;
@@ -32,7 +34,7 @@ interface Window {
 }
 
 declare global {
-  export const api: object;
+  export const electronAPI: object;
   export const LANGUAGE: string;
   export type DirPath = string;
   export type FilePath = string;

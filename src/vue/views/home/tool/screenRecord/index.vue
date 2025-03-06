@@ -3,7 +3,7 @@
     <h1>屏幕录制</h1>
     <el-button id="start" @click="onStart" :disabled="disabledStart">开始录制</el-button>
     <el-button id="stop" @click="onStop" :disabled="disabledStop">停止录制</el-button>
-    <video id="video" controls ref="videoRef"></video>
+    <video id="video-preview" controls ref="videoRef"></video>
   </div>
 </template>
 
@@ -15,20 +15,64 @@ let mediaRecorder;
 let recordedChunks = [];
 const disabledStart = ref(false);
 const disabledStop = ref(false);
-const videoRef = ref();
+const videoRef = ref<HTMLVideoElement>();
 
 const onStart = async () => {
-  console.log("window", window.desktopCapturer);
-  const sources = await window.desktopCapturer.getSources({ types: ["screen"] });
+  const sources = await window.electronAPI.getScreenSources(); // 使用暴露的 API
+  console.log("sources", sources);
+  if (sources.length === 0) {
+    console.error("No screen sources found");
+    return;
+  }
+  const sourceId = sources[0].id;
 
-  const screenSource = sources[0]; // 选择第一个屏幕源
-  const stream = await navigator.mediaDevices.getUserMedia({
-    video: {
-      mandatory: {
-        chromeMediaSource: "desktop",
-        chromeMediaSourceId: screenSource.id
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio: false,
+      video: {
+        mandatory: {
+          chromeMediaSource: "desktop",
+          chromeMediaSourceId: sourceId
+        }
       }
-    }
+    });
+
+    videoRef.value.srcObject = stream;
+    videoRef.value.play(); // 播放视频
+
+    mediaRecorder = new MediaRecorder(stream);
+    const chunks = [];
+
+    mediaRecorder.ondataavailable = (event) => {
+      chunks.push(event.data);
+    };
+
+    mediaRecorder.onstop = () => {
+      const blob = new Blob(chunks, { type: "video/webm" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a") as HTMLAnchorElement;
+      document.body.appendChild(a);
+      a.style.display = "none";
+      a.href = url;
+      a.download = "recording.mp4";
+      a.click();
+      window.URL.revokeObjectURL(url);
+    };
+
+    mediaRecorder.start();
+
+    // Stop recording after 10 seconds for demonstration purposes
+    setTimeout(() => {
+      mediaRecorder.stop();
+    }, 10000);
+  } catch (err) {
+    console.error("Error accessing screen stream:", err);
+  }
+  return;
+
+  const stream = await navigator.mediaDevices.getDisplayMedia({
+    video: true,
+    audio: true
   });
 
   mediaRecorder = new MediaRecorder(stream);
@@ -64,6 +108,8 @@ const onStop = () => {
   mediaRecorder.stop();
   disabledStart.value = false;
   disabledStop.value = true;
+  videoRef.value.srcObject = null;
+  videoRef.value.pause();
 };
 </script>
 

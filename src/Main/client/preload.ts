@@ -3,7 +3,7 @@ import { contextBridge, ipcRenderer } from "electron";
 import type { User } from "../server/database";
 
 // Custom APIs for renderer
-const api = {
+const electronAPI = {
   send: (channel: string, data: any) => {
     // 只允许特定的通道
     const validChannels = ["ping", "test", "react", "user:create"];
@@ -21,17 +21,18 @@ const api = {
   async getAll(): Promise<User[]> {
     return ipcRenderer.invoke("user:getAll");
   },
-  getGlobal: () => ipcRenderer.sendSync("my-global")
+  getGlobal: () => ipcRenderer.sendSync("my-global"),
+  getScreenSources: () => ipcRenderer.invoke("get-screen-sources")
 };
 
 console.log("preload:", process.contextIsolated);
 if (process.contextIsolated) {
   try {
-    contextBridge.exposeInMainWorld("api", api);
+    contextBridge.exposeInMainWorld("electronAPI", electronAPI);
   } catch (error) {
     console.error(error);
   }
 } else {
   // @ts-ignore (define in dts)
-  window.api = api;
+  window.electronAPI = electronAPI;
 }

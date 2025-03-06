@@ -66,11 +66,6 @@ const reaponse = {
           ]
         }
       ]
-    },
-    {
-      id: 2900,
-      taskName: "信息中心",
-      children: [{ id: 2901, taskName: "解决方案", good: [] }]
     }
   ],
   detail: {

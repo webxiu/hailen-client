@@ -128,6 +128,7 @@ function createWindow(param: WindowProp) {
 
   if (process.env.NODE_ENV === "development") {
     mainWindow.loadURL(hostConfig.development[mode]).then(() => mainWindow.show());
+    mainWindow.webContents.openDevTools();
   } else {
     mainWindow.loadFile(hostConfig.production[mode]);
   }
@@ -136,7 +137,6 @@ function createWindow(param: WindowProp) {
     console.log("Window closed");
   });
 
-  mainWindow.webContents.openDevTools();
   return mainWindow;
 }
 
