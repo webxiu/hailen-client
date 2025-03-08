@@ -48,45 +48,49 @@ class DrawBoard {
   optionsTemp: OptionsType = { ...defaultOption };
   ratio = 1;
   eraseMode: boolean = false;
+  wrapDom: HTMLDivElement;
 
-  constructor(selector, options: Partial<OptionsType>) {
+  constructor(selector, options: Partial<OptionsType> = {}) {
+    this.wrapDom = document.querySelector(selector);
+    if (!this.wrapDom) return;
+    const { width, height } = this.wrapDom.getBoundingClientRect();
     this.updateOption(options);
-    const wrapDom: HTMLDivElement = document.querySelector(selector);
-    // const { width, height } = wrapDom.getBoundingClientRect();
-    const { width, height } = this.getContentDimensions(wrapDom);
     this.canvas = document.createElement("canvas");
-    wrapDom.appendChild(this.canvas);
+    this.wrapDom.appendChild(this.canvas);
     this.ratio = window.devicePixelRatio;
-
+    this.setCanvasSize({ width, height });
     this.ctx = this.canvas.getContext("2d")!;
-    this.canvas.width = width * this.ratio;
-    this.canvas.height = this.options.height * this.ratio;
-    // this.canvas.style.width = width + "px";
-    // this.canvas.style.height = this.options.height + "px";
     this.ctx.fillStyle = this.options.fillStyle;
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    this.create(this.canvas);
-    console.log("this.options", this.options);
+    this.bindEvent(this.canvas);
   }
 
-  getContentDimensions = (element: HTMLElement) => {
-    const style = window.getComputedStyle(element);
-    const paddingTop = parseInt(style.paddingTop, 10);
-    const paddingRight = parseInt(style.paddingRight, 10);
-    const paddingBottom = parseInt(style.paddingBottom, 10);
-    const paddingLeft = parseInt(style.paddingLeft, 10);
-    const borderTop = parseInt(style.borderTopWidth, 10);
-    const borderRight = parseInt(style.borderRightWidth, 10);
-    const borderBottom = parseInt(style.borderBottomWidth, 10);
-    const borderLeft = parseInt(style.borderLeftWidth, 10);
-
-    const contentWidth = element.offsetWidth - (paddingLeft + paddingRight + borderLeft + borderRight);
-    const contentHeight = element.offsetHeight - (paddingTop + paddingBottom + borderTop + borderBottom);
-    return {
-      width: contentWidth,
-      height: contentHeight
-    };
+  bindEvent = (dom: HTMLCanvasElement) => {
+    this.addEvent(dom, "mousedown", (ev: MouseEvent) => this.onTouchstart(ev));
+    this.addEvent(dom, "mousemove", (ev: MouseEvent) => this.onTouchmove(ev));
+    this.addEvent(dom, "mouseup", (ev: MouseEvent) => this.onTouchend(ev));
   };
+
+  // 窗口尺寸变化
+  resize = debounce(() => {
+    const { width, height } = this.wrapDom.getBoundingClientRect();
+    const imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height); // 保存当前画布内容
+    this.setCanvasSize({ width, height });
+    this.ctx.putImageData(imageData, 0, 0); // 恢复画布内容
+    this.ctx.fillStyle = this.options.fillStyle;
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    this.onRestore();
+  });
+
+  // 设置canvas宽高
+  setCanvasSize({ width, height }) {
+    this.options.width = width;
+    this.options.height = height;
+    this.canvas.width = width * this.ratio;
+    this.canvas.height = height * this.ratio;
+    this.canvas.style.width = width + "px";
+    this.canvas.style.height = height + "px";
+  }
 
   // 移动端和PC端事件
   private addEvent = (el: Element, eventName, cb: Function) => {
@@ -110,12 +114,6 @@ class DrawBoard {
       el.addEventListener(eventName, fn);
     }
     return () => el.removeEventListener(eventObj[eventName], fn);
-  };
-
-  create = (dom: HTMLCanvasElement) => {
-    this.addEvent(dom, "mousedown", (ev: MouseEvent) => this.onTouchstart(ev));
-    this.addEvent(dom, "mousemove", (ev: MouseEvent) => this.onTouchmove(ev));
-    this.addEvent(dom, "mouseup", (ev: MouseEvent) => this.onTouchend(ev));
   };
 
   private onTouchstart = (ev: MouseEvent) => {
@@ -179,6 +177,7 @@ class DrawBoard {
     this.onSetLine();
   };
 
+  /* 重绘所有历史记录 */
   onRestore = (type?: "revoke" | "recover" | "edit", item?: { historyList: PathType[]; fillStyle: string }) => {
     const { width, height } = this.canvas;
     const { fillStyle } = this.options;
@@ -243,6 +242,15 @@ class DrawBoard {
 
   getHistory = () => {
     return this.historyList;
+  };
+}
+
+/* 防抖 */
+function debounce(fn: Function, wait = 300) {
+  let timeout: NodeJS.Timeout;
+  return (...arg) => {
+    if (timeout !== null) clearTimeout(timeout);
+    timeout = setTimeout(fn.bind(null, ...arg), wait);
   };
 }
 

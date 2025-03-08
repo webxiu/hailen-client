@@ -1,8 +1,10 @@
 <template>
   <Container :offset="4">
     <div class="flex flex-1 ui-h-100" ref="signRef">
-      <div id="signature" class="flex-1" />
-      <div class="p-10 flex-col">
+      <div class="draw-area">
+        <div id="signature" />
+      </div>
+      <div class="draw-tool">
         <ControlPanel @select="onSelect" @change="onChange" :defaultValue="defaultValue" :option="option" />
         <title-cate :name="`截图(${imgList.length})`" />
         <div class="flex-1 ui-ovy-a">
@@ -38,7 +40,7 @@
 <script setup lang="ts">
 import { DrawBoard } from "./draw";
 import { Container } from "@/vue/layout/Layout";
-import { nextTick, onMounted, ref, reactive } from "vue";
+import { nextTick, onMounted, onUnmounted, ref, reactive } from "vue";
 import ControlPanel, { ControlType } from "./ControlPanel.vue";
 import { v4 as uuidv4 } from "uuid";
 import { onDownload, base64ToBlob } from "@/vue/utils/common";
@@ -56,23 +58,21 @@ const defaultValue = {
 };
 
 onMounted(() => {
+  window.addEventListener("resize", handleResize);
   nextTick(createSign);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", handleResize);
 });
 
 // 创建签名画布
 function createSign() {
-  if (signRef.value) {
-    const { width, height } = signRef.value.getBoundingClientRect();
-    const { lineWidth, lineStyle, fillStyle } = defaultValue;
-    signInstance.value = new DrawBoard("#signature", {
-      width: width,
-      height: height,
-      lineWidth,
-      lineStyle,
-      fillStyle,
-      lineCap: "round"
-    });
-  }
+  signInstance.value = new DrawBoard("#signature");
+}
+
+function handleResize() {
+  signInstance.value.resize();
 }
 
 // 操作选项
@@ -114,37 +114,48 @@ function onDelete(item) {
 </script>
 
 <style lang="scss" scoped>
-#signature {
-  box-sizing: border-box;
-  width: 100%;
-  border: 1px solid #ccc;
-  overflow: hidden;
-  box-sizing: border-box;
-  border-radius: 10px;
-}
-
-.img-item {
+.draw-area {
+  flex: 1;
+  height: 100%;
   position: relative;
-  margin-right: 8px;
+  overflow: hidden;
+  border-radius: 10px;
+  border: 1px solid #ccc;
 
-  .item-header {
+  #signature {
     position: absolute;
-    top: 0;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     width: 100%;
-    padding: 2px 6px;
-    color: #393e65;
-    background: #8ea7d780;
-    cursor: pointer;
+    height: 100%;
+    box-sizing: border-box;
+  }
+}
+.draw-tool {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  .img-item {
+    position: relative;
+    margin-right: 8px;
 
-    .opt-icon {
-      color: #2bff3d;
+    .item-header {
+      position: absolute;
+      top: 0;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 2px 6px;
+      color: #393e65;
+      background: #8ea7d780;
+      cursor: pointer;
 
-      &:hover {
-        color: #409efc;
+      .opt-icon {
+        color: #2bff3d;
+
+        &:hover {
+          color: #409efc;
+        }
       }
     }
   }
