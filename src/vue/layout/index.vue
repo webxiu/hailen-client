@@ -25,6 +25,20 @@ const names = ref<string[]>([]);
 // };
 
 // names.value = keepAliveNames(routes);
+
+/**
+ * 在vscode中打开
+ */
+const openInVScode = (path = "/system/menuManage/index") => {
+  const codePath = "vscode://file/";
+  const urlPath = !path.includes("index") ? `${path}/index` : path;
+  const openURL = codePath + $$.rootPath + `/src/vue/views${urlPath}.vue`;
+  const newWindow = window.open(openURL, "在vscode中打开", "width=480,height=200,resizable=yes");
+  const timer = setTimeout(() => {
+    newWindow.close();
+    clearTimeout(timer);
+  }, 3000);
+};
 </script>
 
 <template>
@@ -36,7 +50,11 @@ const names = ref<string[]>([]);
       </div>
     </div>
     <div class="flex-col flex-1 ui-h-100 ui-ov-h">
-      <div class="header">头部</div>
+      <div class="header">
+        头部
+
+        <el-button type="primary" @click="openInVScode()">在VSCode中打开</el-button>
+      </div>
       <div class="main-content flex-1">
         <router-view>
           <template #default="{ Component, route }">

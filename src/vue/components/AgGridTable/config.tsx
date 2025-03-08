@@ -1,7 +1,6 @@
 /* 
   组件配置说明, Ag-Grid默认可前端分页,后端分页需要企业版付费
-
-  使用纯数字列可以使用数据透视统计, 字符串数字列不支持数据透视统计
+  纯数字列才能对数据做透视统计, 字符串数字列不支持数据透视统计
 
   实例方法:
     agRef.value.api.setRowData(dataList)    #设置表格数据
@@ -10,7 +9,7 @@
     agRef.value.api.deselectAll()           #取消全选
 */
 
-import { CSSProperties, PropType, defineComponent, withModifiers } from "vue";
+import { CSSProperties, defineComponent, withModifiers } from "vue";
 import { ColDef, SideBarDef, colorSchemeVariable, themeQuartz } from "ag-grid-community";
 import { RendererType, getFormatType } from "@/vue/utils/table";
 
@@ -64,8 +63,8 @@ export interface AgGridProps {
   rowModelType?: "infinite" | "viewport" | "clientSide" | "serverSide";
   /** 整行编辑(fullRow) */
   editType?: "fullRow" | undefined;
-  /** 显示基础列配置 */
-  setIcon?: Partial<Record<ShowKeyType, boolean>>;
+  /** 显示配置 */
+  showIcon?: boolean;
   /** 表头查询配置 */
   blendedSearch?: BlendedSearchProps;
   /** 表头按钮配置 */
@@ -105,7 +104,7 @@ interface ColumnDefsOption<T> {
   /** 列排序(默认 `显示`) */
   columnSort?: boolean;
   /** 表格行操作按钮 */
-  rowButtons?: RowButtonItemType<T>[];
+  renderButtons?: (row: T) => RowButtonItemType<T>[];
 }
 
 export const myTheme = themeQuartz
@@ -130,8 +129,6 @@ export const myTheme = themeQuartz
   );
 
 export type ItemType = Record<string, any>;
-// 刷新、多选(状态)、切换表格
-export type ShowKeyType = "refresh" | "select" | "switchTable";
 
 // 边框颜色
 export const boxShadow = "1px 0px 0 0 color(srgb 0.0941176 0.113725 0.121569 / 0.15)";
@@ -192,7 +189,7 @@ export const props = {
   /** 整行编辑(fullRow) */
   editType: { type: String as PropType<"fullRow" | undefined> },
   /** 显示基础列配置 */
-  setIcon: { type: Object as PropType<Record<ShowKeyType, boolean>>, default: () => ({}) },
+  showIcon: { type: Boolean, default: true },
   /** 表头查询配置 */
   blendedSearch: { type: Object as PropType<BlendedSearchProps> },
   /** 表头按钮配置 */
@@ -259,7 +256,7 @@ const defCol: ColDef = {
 
 /** 获取AgGrid表格列配置 */
 export function getAgGridColumns<T extends Record<string, any>>(columnDefOption: ColumnDefsOption<T>, config?: Record<string, RendererType>) {
-  const { columnData = [], formData = {}, rowButtons = [], rowSort = false, radioColumn = {}, indexColumn = {}, selectionColumn = {}, operationColumn = {} } = columnDefOption;
+  const { columnData = [], formData = {}, renderButtons = [], rowSort = false, radioColumn = {}, indexColumn = {}, selectionColumn = {}, operationColumn = {} } = columnDefOption;
 
   const _columnDefs: ColDef[] = columnData.map((item: any) => ({
     // ...item,
@@ -267,7 +264,7 @@ export function getAgGridColumns<T extends Record<string, any>>(columnDefOption:
     field: item.prop as string,
     headerName: item.label,
     width: item.width as number,
-    minWidth: item.minWidth as number,
+    minWidth: (item.width || item.minWidth) as number,
     formatType: item.formatType,
     cellStyle: { textAlign: item.align }
   }));
@@ -305,7 +302,8 @@ export function getAgGridColumns<T extends Record<string, any>>(columnDefOption:
   const columnDefs: ColDef[] = [
     {
       field: "radio",
-      headerName: getWeek(),
+      headerName: "😉",
+      headerComponent: defineComponent({ render: () => <el-radio label="&nbsp;" size="large" style={{ marginLeft: "2px" }} /> }),
       minWidth: 50,
       maxWidth: 50,
       pinned: pinnedItem?.pinned,
@@ -330,8 +328,8 @@ export function getAgGridColumns<T extends Record<string, any>>(columnDefOption:
     {
       field: "rowIndex",
       headerName: "序号",
-      minWidth: 60 + (rowSort ? 28 : 0),
-      maxWidth: 60 + (rowSort ? 28 : 0),
+      minWidth: 80 + (rowSort ? 28 : 0),
+      maxWidth: 80 + (rowSort ? 28 : 0),
       ...defCol,
       hide: !indexColumn,
       pinned: pinnedItem?.pinned,
@@ -354,9 +352,9 @@ export function getAgGridColumns<T extends Record<string, any>>(columnDefOption:
       ...defCol,
       pinned: "right",
       ...operationColumn,
-      hide: !rowButtons.length || !operationColumn,
+      hide: !renderButtons || !operationColumn,
       cellRenderer: defineComponent({
-        render: ({ params }) => renderOperation({ params }, rowButtons)
+        render: ({ params }) => renderOperation({ params }, renderButtons)
       })
     }
   ];
@@ -364,8 +362,9 @@ export function getAgGridColumns<T extends Record<string, any>>(columnDefOption:
 }
 
 /** 操作按钮 */
-function renderOperation({ params }, rowButtons) {
+function renderOperation({ params }, renderButtons) {
   const row = params.data || {};
+  const rowButtons = typeof renderButtons === "function" ? renderButtons(row) : [];
   return (
     <div class="flex just-center align-center ui-h-100">
       {rowButtons.map((item) => {
@@ -388,13 +387,6 @@ function renderOperation({ params }, rowButtons) {
       })}
     </div>
   );
-}
-
-// 获取周表情
-function getWeek() {
-  const emojiList = ["😅", "🙂", "😉", "😊", "😃", "😁", "😂"];
-  const day = new Date().getDay(); // 0-6(0代表星期日)
-  return emojiList[day];
 }
 
 /**

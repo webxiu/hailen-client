@@ -2,12 +2,13 @@
  * @Author: Hailen
  * @Date: 2023-07-13 10:10:59
  * @Last Modified by: Hailen
- * @Last Modified time: 2025-03-06 15:51:46
+ * @Last Modified time: 2025-03-08 14:36:08
  */
 
 import Axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken, CustomParamsSerializer } from "axios";
 import { PureHttpError, PureHttpRequestConfig, PureHttpResponse, RequestMethods } from "./types.d";
 
+import type { Canceler } from "axios";
 import NProgress from "../progress";
 import { getUserInfo } from "@/vue/utils/storage";
 import { message } from "@/vue/utils/message";
@@ -188,7 +189,7 @@ class PureHttp {
 }
 
 /** 为请求方法注入取消请求 */
-export function InjectCancel(fn: Function & { cancel: Axios.Canceler }) {
+export function InjectCancel(fn: Function & { cancel: Canceler }) {
   const cancelToken = Axios.CancelToken;
   const source = cancelToken.source();
   fn["cancel"] = source.cancel;

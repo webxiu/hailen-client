@@ -19,7 +19,7 @@ export default () => {
   // require('./Event');
 
   // /** 绑定热键 */
-  // require('./CreateGlobalShortcut');
+  require("./ShortcutKey");
 
   /** 订阅窗口创建 */
   require("./window");

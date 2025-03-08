@@ -1,7 +1,7 @@
 // import Package from "~/package.json";
 // import _WorkPath from './_WorkPath';
 
-import { app, dialog } from "electron";
+import { BrowserWindow, Menu, Tray, app, dialog } from "electron";
 
 import path from "path";
 

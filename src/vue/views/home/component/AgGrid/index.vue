@@ -2,7 +2,6 @@
 import { ref, defineComponent, withModifiers, reactive } from "vue";
 import type { ColDef } from "ag-grid-community";
 import { PAGE_CONFIG } from "@/vue/config/constant";
-import AgGridTable from "@/vue/components/AgGridTable/index.vue";
 
 interface DataItemType {
   id: string;
@@ -136,7 +135,7 @@ const deselectAll = () => {
     <button @click="getResult">获取数据</button>
     <button @click="selectAll">全选</button>
     <button @click="deselectAll">全不选</button>
-    <AgGridTable ref="gridRef" rowKey="staffId" :rowData="rowData" :columnDefs="columnDefs" :height="500" :paginations="pagination"> </AgGridTable>
+    <AgGridTable ref="gridRef" rowKey="id" :rowData="rowData" :columnDefs="columnDefs" :height="300" :paginations="pagination" />
   </div>
 </template>
 

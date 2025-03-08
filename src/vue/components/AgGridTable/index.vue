@@ -32,6 +32,7 @@ import { AllEnterpriseModule } from "ag-grid-enterprise";
 import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
 import ButtonList from "@/vue/components/ButtonList/index.vue";
 import BlendedSearch from "@/vue/components/BlendedSearch/index.vue";
+import { v4 as uuidv4 } from "uuid";
 import { zh_CN, mergeColDef, mergeAutoGroupColumnDef, myTheme, ItemType, props } from "./config";
 
 ModuleRegistry.registerModules([AllCommunityModule, AllEnterpriseModule]);
@@ -73,18 +74,26 @@ export const AgGridTable = defineComponent({
 
     // 图标配置列表
     const iconList = computed<any>(() => {
-      const { refresh = true, switchTable = true, select = false } = props.setIcon;
+      const hasSelect = props.columnDefs.find(({ field, hide }) => field === "select" && !hide);
       const { content, icon } = selectWay.value;
       return [
-        { color: "#1e90ff", content: "刷新", icon: "Refresh", hide: !refresh, onClick: () => emit("refresh") },
-        { color: "#00ab07", content: content, icon: icon, hide: !select, onClick: () => iconIndex.value++ },
-        { color: "#f32b82", content: "切换表", icon: "DocumentCopy", hide: !switchTable, onClick: () => emit("switch") }
+        { color: "#1e90ff", content: "刷新", icon: "Refresh", hide: false, onClick: () => emit("refresh") },
+        { color: "#00ab07", content: content, icon: icon, hide: !hasSelect, onClick: () => iconIndex.value++ },
+        { color: "#f32b82", content: "切换表", icon: "DocumentCopy", hide: false, onClick: () => emit("switch") }
       ];
+    });
+
+    // 表格数据处理
+    const _rowData = computed(() => {
+      return props.rowData.map((item) => {
+        item.uuid = uuidv4(); // 添加唯一uuid
+        return item;
+      });
     });
 
     /** 事件中心:统一派发 */
     function eventSend(event, data: any, data2?: any) {
-      // console.log(event, data, data2 || "");
+      // console.log(event, data, data2);
       if (data) emit(event, data, data2);
     }
 
@@ -168,6 +177,18 @@ export const AgGridTable = defineComponent({
       emit("sizeChange", size);
     }
 
+    /** 渲染图标 */
+    function renderIcon() {
+      if (!props.showIcon) return null;
+      return iconList.value.map((item) => {
+        return item.hide ? null : (
+          <el-tooltip key={item.icon} content={item.content} effect="dark" placement="top">
+            <HxIcon icon={item.icon} color={item.color} onClick={item.onClick} size="18" class="ml-6 pointer" />
+          </el-tooltip>
+        );
+      });
+    }
+
     expose({ setRowSelected, getRef: () => gridApi.value });
 
     const { rowKey, height, paginations, style, sideBar, openSideBar, ...resetProp } = props;
@@ -177,15 +198,7 @@ export const AgGridTable = defineComponent({
           <div>{slots?.title ? slots.title() : props.blendedSearch ? <BlendedSearch {...props.blendedSearch} /> : null}</div>
           <div class="flex flex-1 align-center just-end">
             <div class="table-buttons">{slots?.buttons ? slots.buttons() : <ButtonList {...props.headButtons} />}</div>
-            <div class="flex align-center">
-              {iconList.value.map((item) => {
-                return item.hide ? null : (
-                  <el-tooltip key={item.icon} content={item.content} effect="dark" placement="top">
-                    <HxIcon icon={item.icon} color={item.color} onClick={item.onClick} size="18" class="ml-6 pointer" />
-                  </el-tooltip>
-                );
-              })}
-            </div>
+            <div class="flex align-center">{renderIcon()}</div>
           </div>
         </div>
         <AgGridVue
@@ -193,11 +206,11 @@ export const AgGridTable = defineComponent({
           {...resetProp}
           localeText={zh_CN}
           theme={theme.value}
-          rowData={props.rowData}
+          rowData={_rowData.value}
           columnDefs={props.columnDefs}
           defaultColDef={defaultColDef}
           autoGroupColumnDef={autoGroupColumnDef}
-          getRowId={({ data }) => `${data[rowKey || "id"]}`}
+          getRowId={({ data }) => `${data[rowKey] || data.uuid}`}
           sideBar={{ ...sideBar, defaultToolPanel: openSideBar ? "columns" : undefined }}
           style={{ height: props.height + "px", ...style }}
           onGridReady={onGridReady}

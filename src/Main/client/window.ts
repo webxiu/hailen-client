@@ -67,10 +67,7 @@ function createWindow(param: WindowProp) {
     },
     ...options
   });
-  // 注册热键
-  globalShortcut.register("CommandOrControl+R", () => {
-    mainWindow.reload();
-  });
+
   // mainWindow.on("ready-to-show", () => {
   //   mainWindow.show();
   // });
@@ -105,16 +102,9 @@ function createWindow(param: WindowProp) {
     trayIcon = path.resolve(__dirname, "../../public/favicon/png", "favicon_ch@2x.png");
   }
 
-  //图标的上下文菜单
   const contextMenu = Menu.buildFromTemplate(trayMenuTemplate);
-
-  //创建系统托盘图标
   const appTray = new Tray(trayIcon);
-
-  //设置此托盘图标的悬停提示内容
   appTray.setToolTip("海阔天空");
-
-  //设置此图标的上下文菜单
   appTray.setContextMenu(contextMenu);
 
   // 单点击 1.主窗口显示隐藏切换 2.清除闪烁
@@ -167,9 +157,4 @@ app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
   }
-});
-
-// 监听应用退出事件
-app.on("before-quit", () => {
-  globalShortcut.unregisterAll(); // 注销所有热键
 });
