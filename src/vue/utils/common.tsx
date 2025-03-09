@@ -398,3 +398,21 @@ export const openInVScode = (vscodeMain, { path }) => {
     clearTimeout(timer);
   }, 5000);
 };
+
+/** 获取随机颜色 */
+export function getRandomColor() {
+  const r = Math.floor(Math.random() * 256);
+  const g = Math.floor(Math.random() * 256);
+  const b = Math.floor(Math.random() * 256);
+  return `rgb(${r},${g},${b})`;
+}
+
+/** 获取随机字符 */
+export function getRandomChar() {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let str = "";
+  for (let i = 0; i < 6; i++) {
+    str = chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return str;
+}
