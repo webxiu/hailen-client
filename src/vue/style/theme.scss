@@ -1,0 +1,69 @@
+// @use "element-plus/theme-chalk/src/dark/css-vars.scss" as *;
+@use "element-plus/theme-chalk/dark/css-vars.css";
+
+$themeConfig: (
+  light: (
+    color: #111,
+    head: #edd9d9,
+    content: #fff,
+    background: #f0f3f8
+  ),
+  dark: (
+    color: #ffffff,
+    head: #6d6d6d,
+    content: #223646,
+    background: #1b1b1b
+  )
+);
+
+// 主题变量和属性生成
+:root {
+  @each $theme-name, $theme-map in $themeConfig {
+    &[data-theme="#{$theme-name}"] {
+      @each $property, $value in $theme-map {
+        --theme-#{$property}: #{$value};
+      }
+    }
+  }
+}
+
+/** 主题切换动画时长 */
+@mixin delayTime(
+  $properties: (
+    color,
+    background-color,
+    background
+  ),
+  $duration: 0.5s
+) {
+  transition: #{$properties} $duration;
+}
+
+// ===================== 主题颜色变量 =====================
+
+body {
+  color: var(--theme-color);
+  background-color: var(--theme-background);
+  @include delayTime;
+}
+
+// 其他使用主题变量的元素
+.themed-component {
+  color: var(--theme-color);
+  background-color: var(--theme-background);
+  @include delayTime;
+}
+
+.main-header {
+  background: var(--theme-head);
+  @include delayTime;
+}
+.main-header {
+  background: var(--theme-head);
+  @include delayTime;
+}
+
+.main-content {
+  @include delayTime;
+  background: var(--theme-content);
+}
