@@ -5,8 +5,7 @@
     <el-button type="primary" @click="onPing">ping</el-button>
     <el-button type="primary" @click="onGet">获取数据</el-button>
     <el-button type="primary" @click="logout">退出登录</el-button>
-    <div>根路径: {{ $$.rootPath }}</div>
-    <Baidu />
+    <div>根路径: {{ $$?.rootPath }}</div>
     <div>
       <pre>
         <code>
@@ -21,12 +20,11 @@
 import { onMounted, ref } from "vue";
 import { addList, getList } from "@/vue/api/home/dashboard";
 import { useUserStore } from "@/vue/store/modules/user";
-import Baidu from "../component/Weather/Baidu.vue";
 
 const useStore = useUserStore();
 const count = ref(0);
 const userData = ref([]);
-console.log("window.$$", window.$$);
+console.log("window.$$", window?.$$);
 onMounted(() => {
   onGet();
 });

@@ -1,7 +1,12 @@
 <template>
-  <div>user</div>
+  <div>
+    user
+    <Baidu />
+  </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Baidu from "../component/Weather/Baidu.vue";
+</script>
 
 <style scoped></style>

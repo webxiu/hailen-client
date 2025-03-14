@@ -47,13 +47,6 @@ body {
   @include delayTime;
 }
 
-// 其他使用主题变量的元素
-.themed-component {
-  color: var(--theme-color);
-  background-color: var(--theme-background);
-  @include delayTime;
-}
-
 .main-header {
   background: var(--theme-head);
   @include delayTime;

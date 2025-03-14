@@ -25,9 +25,9 @@ export default {
       meta: { title: "JSON转TS", icon: "SetUp" }
     },
     {
-      path: "/tool/mxgraph",
-      name: "Mxgraph",
-      component: () => import("@/vue/views/home/tool/mxgraph/index.vue"),
+      path: "/tool/drawTools",
+      name: "DrawTools",
+      component: () => import("@/vue/views/home/tool/drawTools/index.vue"),
       meta: { title: "画图工具", icon: "SetUp" }
     },
     {

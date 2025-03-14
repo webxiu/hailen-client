@@ -14,7 +14,7 @@ const app = createApp(App);
 function setGlobalVariables() {
   return new Promise<typeof $$>((resolve) => {
     window.onload = function () {
-      window.$$ = window.electronAPI.getGlobal();
+      window.$$ = window.electronAPI?.getGlobal();
       resolve(window.$$);
     };
   });

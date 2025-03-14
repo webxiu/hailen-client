@@ -62,7 +62,6 @@ function onRegister() {
 
 <style lang="scss" scoped>
 .login {
-  background: #eee;
   height: 100vh;
   .login-footer {
     padding: 20px;
