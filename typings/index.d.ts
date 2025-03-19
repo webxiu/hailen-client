@@ -86,8 +86,7 @@ declare global {
   export namespace $$ {
     // 全局的语言变量
     const language: string;
-    /** 系统根目录 */
-    const rootPath: string;
+
     const NODE_ENV: string;
     const env: ViteEnv;
     const isPro: () => boolean;
@@ -122,6 +121,13 @@ declare global {
       window: Electron.BrowserWindowConstructorOptions;
       /** 应用名称 */
       appName: string;
+      /** 系统目录 */
+      cwd: string;
+      __dirname: string;
+      appPath: string;
+      rootPath: string;
+      sourcePath: string;
+      buildPath: string;
     }>;
     export namespace Settings {
       const read: () => SettingTypes | undefined;

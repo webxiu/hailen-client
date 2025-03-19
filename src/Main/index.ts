@@ -32,15 +32,6 @@ const wakeOrCreate = () => {
     // require("./Application");
     console.log("app.getLocale==>:", app.getLocale());
   });
-
-  let rootPath = path.join(__dirname, "../"); // 根目录
-  let dirName = path.join(__dirname, "../server"); // 接口服务目录
-  if (dirName.includes("app.asar") || dirName.includes("app")) {
-    dirName = path.join(__dirname, "../../../server");
-    rootPath = path.join(__dirname, "../../../");
-  }
-  Reflect.set($$, "rootPath", rootPath);
-
   // const voiceFiles = _WorkPath("voiceFiles");
   // const localDBPath = _WorkPath("db");
 

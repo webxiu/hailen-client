@@ -112,6 +112,12 @@ function createWindow(param: WindowProp) {
     mainWindow.show();
   });
 
+  //===========自定义file:///协议的解析=======================
+  protocol.interceptFileProtocol("file", (req, callback) => {
+    const url = req.url.substr(8);
+    callback(decodeURI(url));
+  });
+
   printl("主进程trayIcon:", trayIcon);
   printl("主进程process.cwd():", process.cwd());
   printl("主进程__dirname:", __dirname);

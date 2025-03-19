@@ -3,7 +3,7 @@ import Components from "unplugin-vue-components/vite";
 import ElementPlus from "unplugin-element-plus/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import babel from "@rollup/plugin-babel";
-import { createHtmlPlugin } from "vite-plugin-html";
+import createHtmlPlugin from "vite-plugin-html";
 import react from "@vitejs/plugin-react";
 import { viteBuildInfo } from "./info";
 import vue from "@vitejs/plugin-vue";
@@ -13,30 +13,6 @@ import vueJsx from "@vitejs/plugin-vue-jsx";
 // import { configCompressPlugin } from "./compress";
 // import svgLoader from "vite-svg-loader";
 // import legacy from "@vitejs/plugin-legacy";
-
-/** HTML注入标签元素 */
-export function injectHtmlPlugin(options) {
-  return {
-    name: "vite-inject-html-plugin",
-    enforce: "pre",
-    transformIndexHtml(html) {
-      const { tags } = options.inject;
-      tags.forEach((tag) => {
-        const { tag: tagName, injectTo, attrs } = tag;
-        const attributes = Object.entries(attrs || {})
-          .map(([key, value]) => `${key}="${value}"`)
-          .join(" ");
-        const newTag = `<${tagName} ${attributes}></${tagName}>`;
-        if (injectTo === "head") {
-          html = html.replace(/<head>/, `<head>${newTag}`);
-        } else if (injectTo === "body") {
-          html = html.replace(/<body>/, `<body>${newTag}`);
-        }
-      });
-      return html;
-    }
-  };
-}
 
 export function getPlugins({ isVue, isReact, modeObj, VITE_COMPRESSION }) {
   return [

@@ -5,15 +5,60 @@ import { BrowserWindow, Menu, Tray, app, dialog } from "electron";
 
 import path from "path";
 
-const Config = require(path.join(__dirname, "../../scripts/config.js"));
+const serverConfig = require(path.join(__dirname, "../../scripts/config.js"));
 
 // const Build = {
 //   appVersion: Package.version.split("-")[0],
 //   /** 开发环境为 undefined， 生产环境为 CI 打包的 {打包号} */
 //   build: Package.version.split("-")[1]
 // };
+function getAppPath() {
+  const cwd = process.cwd();
+  const appPath = app.getAppPath();
+  let rootPath = cwd; // 根目录
+  let sourcePath = path.join(cwd, "./source"); // 资源目录
+  let buildPath = path.join(cwd, "./"); // 打包构建目录
+  if (appPath.includes("app.asar") || appPath.includes("app")) {
+    buildPath = path.join(cwd, "resources", "app.asar.unpacked");
+  }
+  return { appPath, rootPath, sourcePath, buildPath };
+}
+
+function getEnv() {
+  Object.keys(process.env).forEach((key) => {
+    if (key.startsWith("npm_")) Reflect.deleteProperty(process.env, key);
+  });
+  return process.env;
+}
+const { appPath, rootPath, sourcePath, buildPath } = getAppPath();
+
+/*
+# 安装环境
+{
+    "__dirname": "D:\\hailen\\hailen-client\\resources\\app.asar\\dist\\client",
+    "appPath": "D:\\hailen\\hailen-client\\resources\\app.asar",
+    "rootPath": "D:\\hailen\\hailen-client",
+    "sourcePath": "D:\\hailen\\hailen-client\\source",
+    "buildPath": "D:\\hailen\\hailen-client\\resources\\app.asar.unpacked",
+    "platform": "win32"
+}
+# 测试环境
+{
+    "__dirname": "E:\\project\\electron\\hailen-client\\dist\\client",
+    "appPath": "E:\\project\\electron\\hailen-client",
+    "rootPath": "E:\\project\\electron\\hailen-client",
+    "sourcePath": "E:\\project\\electron\\hailen-client\\source",
+    "buildPath": "E:\\project\\electron\\hailen-client\\",
+    "platform": "win32"
+} 
+*/
 
 Reflect.set($$, "AppInfo", {
+  __dirname,
+  appPath,
+  rootPath,
+  sourcePath,
+  buildPath,
   platform: process.platform
   // versions: { ...process.versions, ...Build },
   // /** 软件外部存储根目录 */
@@ -33,7 +78,7 @@ Reflect.set($$, "AppInfo", {
 });
 
 Reflect.set($$, "NODE_ENV", app.isPackaged ? "production" : "development");
-Reflect.set($$, "env", { ...JSON.parse(JSON.stringify(process.env)), ...Config });
+Reflect.set($$, "env", { ...getEnv(), ...serverConfig });
 Reflect.set($$, "isPro", () => app.isPackaged);
 Reflect.set($$, "JoinDirWithRoot", (...dir) => path.join(process.cwd(), ...dir));
 Reflect.set($$, "isString", (arg) => Reflect.toString.call(arg) === "[object String]");

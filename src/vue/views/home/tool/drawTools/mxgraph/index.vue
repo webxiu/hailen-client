@@ -1,13 +1,14 @@
 <template>
   <div class="ui-h-100" v-loading="loading">
-    <iframe v-if="!loading" ref="iframeRef" id="iframe" width="100%" height="100%" @load="loaded" src="/mxgraph-editor/www/index.html" style="border: 0" />
+    <el-input v-model="myPath" placeholder="请输入路径" />
+    <iframe v-if="!loading" ref="iframeRef" id="iframe" width="100%" height="100%" @load="loaded" :src="iframeUrl" style="border: 0" />
   </div>
 </template>
 
 <script setup lang="ts">
-// import { http } from "@/utils/http";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import xmlConf from "./utils/xmlConf";
+// import { http } from "@/utils/http";
 // import testInit from "./utils/testShap";
 // import initMain from "./utils/swimlanes";
 // import { DrawToolItemType } from "@/api/workbench/teamManage";
@@ -30,6 +31,12 @@ const xml = ref("");
 const iframeRef = ref();
 const loading = ref(false);
 const emits = defineEmits(["saveGraph"]);
+const myPath = ref("");
+
+const iframeUrl = computed(() => {
+  if (import.meta.env.DEV) return "/mxgraph-editor/www/index.html";
+  return `file://${$$.AppInfo.buildPath}/public/mxgraph-editor/www/index.html`;
+});
 
 onMounted(() => {
   loadData();
