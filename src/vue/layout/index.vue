@@ -23,7 +23,7 @@ const themeConfig = reactive([
 const openInVScode = (path = "/system/menuManage/index") => {
   const codePath = "vscode://file/";
   const urlPath = !path.includes("index") ? `${path}/index` : path;
-  const openURL = codePath + $$.rootPath + `/src/vue/views${urlPath}.vue`;
+  const openURL = codePath + $$.AppInfo.rootPath + `/src/vue/views${urlPath}.vue`;
   const newWindow = window.open(openURL, "在vscode中打开", "width=480,height=200,resizable=yes");
   const timer = setTimeout(() => {
     newWindow.close();
