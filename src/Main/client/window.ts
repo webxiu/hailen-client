@@ -61,6 +61,7 @@ function createWindow(param: WindowProp) {
     autoHideMenuBar: true,
     icon: nativeImage.createFromPath(faviconPath),
     webPreferences: {
+      webSecurity: false, // 允许加载本地文件
       nodeIntegration: true,
       contextIsolation: true, // 启用上下文隔离
       preload: path.resolve(__dirname, "./preload.js")

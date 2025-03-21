@@ -25,6 +25,7 @@ const useStore = useUserStore();
 const count = ref(0);
 const userData = ref([]);
 console.log("window.$$", window?.$$);
+console.log("import.meta.env:", import.meta.env);
 onMounted(() => {
   onGet();
 });
