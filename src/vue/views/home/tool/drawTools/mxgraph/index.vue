@@ -1,6 +1,5 @@
 <template>
   <div class="ui-h-100" v-loading="loading">
-    <el-input v-model="myPath" placeholder="请输入路径" />
     <iframe v-if="!loading" ref="iframeRef" id="iframe" width="100%" height="100%" @load="loaded" :src="iframeUrl" style="border: 0" />
   </div>
 </template>
@@ -32,7 +31,6 @@ const xml = ref("");
 const iframeRef = ref();
 const loading = ref(false);
 const emits = defineEmits(["saveGraph"]);
-const myPath = ref("");
 
 const iframeUrl = computed(() => {
   if (import.meta.env.DEV) return "/mxgraph-editor/www/index.html";
@@ -41,10 +39,10 @@ const iframeUrl = computed(() => {
 
 onMounted(() => {
   loadData();
-  window.addEventListener("message", messageCallback);
+  window.addEventListener("message", onMessage);
 });
 
-const messageCallback = (event) => {
+const onMessage = (event) => {
   const data: GraphDataType = event.data;
   console.log("接收message:", data);
   if (!data.eventName) return;
