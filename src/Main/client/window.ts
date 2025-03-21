@@ -3,6 +3,7 @@ import * as path from "node:path";
 import { BrowserWindow, Menu, Tray, app, globalShortcut, ipcMain, nativeImage, protocol, screen, shell } from "electron";
 
 import createServer from "../server/app";
+import { getJsonFiles } from "../utils/fs";
 import { setupUserIPC } from "./ipc";
 
 interface WindowProp {
@@ -157,6 +158,13 @@ app.whenReady().then(() => {
     platform: process.platform,
     ...$$.env[$$.NODE_ENV],
     NODE_ENV: $$.NODE_ENV
+  }).then(() => {
+    console.log("=============================$$.vuePagePath", $$.AppInfo.vuePagePath);
+    const jsonFiles = getJsonFiles($$.AppInfo.vuePagePath, (dir) => dir.endsWith("index.vue"));
+    const result = jsonFiles.map((item) => {
+      return { path: item.split($$.AppInfo.vuePagePath)[1].replace(/\\/g, "/").replace(".vue", "") };
+    });
+    console.log("=============================result", result);
   });
 });
 

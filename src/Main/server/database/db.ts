@@ -1,8 +1,9 @@
 // src/main/database/index.ts
 
+import { printl, tables } from "../config";
+
 import { app } from "electron";
 import path from "path";
-import { printl } from "../config";
 import sqlite3 from "sqlite3";
 
 export class Database {
@@ -17,7 +18,7 @@ export class Database {
       dbPath = path.join(process.cwd(), "source", "database", "database.db");
     }
 
-    console.log("========是否开发环境:", global);
+    // console.log("========是否开发环境:", global);
     printl("数据库文件路径:", dbPath);
 
     this.db = new sqlite3.Database(dbPath, (err) => {
@@ -48,17 +49,17 @@ export class Database {
    * 初始化数据库表
    */
   private async init(): Promise<void> {
-    const tables = [
-      `CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username varchar(50) NOT NULL UNIQUE,
-        password varchar(50) NOT NULL,
-        email varchar(50) NOT NULL,
-        phone varchar(20),
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      )`
-      // 其他表...
-    ];
+    // const tables = [
+    //   `CREATE TABLE IF NOT EXISTS users (
+    //     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    //     username varchar(50) NOT NULL UNIQUE,
+    //     password varchar(50) NOT NULL,
+    //     email varchar(50) NOT NULL,
+    //     phone varchar(20),
+    //     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    //   )`
+    //   // 其他表...
+    // ];
 
     for (const sql of tables) {
       await this.run(sql);
