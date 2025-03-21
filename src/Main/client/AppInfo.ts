@@ -59,7 +59,9 @@ Reflect.set($$, "AppInfo", {
   rootPath,
   sourcePath,
   buildPath,
-  platform: process.platform
+  platform: process.platform,
+  vuePagePath: path.join(rootPath, "src", "vue", "views"),
+  reactPagePath: path.join(rootPath, "src", "react", "pages")
   // versions: { ...process.versions, ...Build },
   // /** 软件外部存储根目录 */
   // WorkPath: _WorkPath(),

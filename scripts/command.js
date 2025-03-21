@@ -77,6 +77,7 @@ class Command extends EventEmitter {
 
   /** 主进程 */
   async MainProcess() {
+    // ts编译js
     const args = [
       "tsc",
       `--project ${resolve(process.cwd(), "tsconfig.main.json")}`,
@@ -150,7 +151,7 @@ class Command extends EventEmitter {
   /** Readme */
   app() {
     if (config.nodemon) {
-      this.childProcessExec(`nodemon -e js,ts,tsx -w dist -w package.json -w src/Main -w index.js --exec electron . --inspect`);
+      this.childProcessExec(`nodemon -e js,ts,tsx -w dist/client -w package.json -w index.js --exec electron . --inspect`);
     } else {
       this.childProcessExec(`electron . --inspect`);
     }
