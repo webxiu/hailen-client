@@ -128,6 +128,8 @@ declare global {
       rootPath: string;
       sourcePath: string;
       buildPath: string;
+      vuePagePath: string;
+      reactPagePath: string;
     }>;
     export namespace Settings {
       const read: () => SettingTypes | undefined;
