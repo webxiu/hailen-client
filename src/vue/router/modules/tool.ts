@@ -35,6 +35,12 @@ export default {
       name: "ScreenRecord",
       component: () => import("@/vue/views/home/tool/screenRecord/index.vue"),
       meta: { title: "屏幕录制", icon: "SetUp" }
+    },
+    {
+      path: "/tool/kimi",
+      name: "Kimi",
+      component: () => import("@/vue/views/home/tool/kimi/index.vue"),
+      meta: { title: "Kimi聊天", icon: "SetUp" }
     }
   ]
 } as RouteRecordRawType;

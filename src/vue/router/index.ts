@@ -88,4 +88,18 @@ export function resetRouter() {
   });
 }
 
+/** 获取当前页面按钮级别的权限 */
+function getAuths(): Array<string> {
+  return router.currentRoute.value.meta.auths as Array<string>;
+}
+
+/** 是否有按钮级别的权限 */
+export function hasAuth(value: string): boolean {
+  if (!value) return false;
+  /** 从当前路由的`meta`字段里获取按钮级别的所有自定义`code`值 */
+  const metaAuths = getAuths();
+  if (!metaAuths) return false;
+  return metaAuths.includes(value);
+}
+
 export default router;

@@ -4549,6 +4549,11 @@ hexoid@^1.0.0:
   resolved "https://registry.npmmirror.com/hexoid/-/hexoid-1.0.0.tgz#ad10c6573fb907de23d9ec63a711267d9dc9bc18"
   integrity sha512-QFLV0taWQOZtvIRIAdBChesmogZrtuXvVWsFHZTk2SU+anspqZ2vMnoLg7IE1+Uk16N19APic1BuF8bC8c2m5g==
 
+highlight.js@^11.11.1:
+  version "11.11.1"
+  resolved "https://registry.npmmirror.com/highlight.js/-/highlight.js-11.11.1.tgz#fca06fa0e5aeecf6c4d437239135fabc15213585"
+  integrity sha512-Xwwo44whKBVCYoliBQwaPvtd/2tYFkRQtXDWj1nackaV2JPXx3L0+Jvd8/qCJ2p+ML0/XVkJ2q+Mr+UVdpJK5w==
+
 hosted-git-info@^4.1.0:
   version "4.1.0"
   resolved "https://registry.npmmirror.com/hosted-git-info/-/hosted-git-info-4.1.0.tgz#827b82867e9ff1c8d0c4d9d53880397d2c86d224"
@@ -5432,6 +5437,11 @@ make-fetch-happen@^9.1.0:
     promise-retry "^2.0.1"
     socks-proxy-agent "^6.0.0"
     ssri "^8.0.0"
+
+marked@^15.0.8:
+  version "15.0.8"
+  resolved "https://registry.npmmirror.com/marked/-/marked-15.0.8.tgz#39873a3fdf91a520111e48aeb2ef3746d58d7166"
+  integrity sha512-rli4l2LyZqpQuRve5C0rkn6pj3hT8EWPC+zkAxFTAJLxRbENfTAhEQq9itrmf1Y81QtAX5D/MYlGlIomNgj9lA==
 
 matcher@^3.0.0:
   version "3.0.0"
@@ -7391,6 +7401,11 @@ type-is@^1.6.16, type-is@^1.6.18:
   dependencies:
     media-typer "0.3.0"
     mime-types "~2.1.24"
+
+typed.js@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.npmmirror.com/typed.js/-/typed.js-2.1.0.tgz#b97a06111a5f57d6a59acfdd36d4f9b891ee13b4"
+  integrity sha512-bDuXEf7YcaKN4g08NMTUM6G90XU25CK3bh6U0THC/Mod/QPKlEt9g/EjvbYB8x2Qwr2p6J6I3NrsoYaVnY6wsQ==
 
 typescript-eslint@^8.0.1:
   version "8.24.1"

@@ -6,6 +6,7 @@ import App from "./App.vue";
 import ElementPlus from "element-plus";
 import { createApp } from "vue";
 import { registerComponents } from "@/vue/components";
+import { registerDirective } from "@/vue/directives";
 import router from "@/vue/router";
 import { setupStore } from "@/vue/store";
 
@@ -23,6 +24,7 @@ function setGlobalVariables() {
 setGlobalVariables().then((res) => {
   app.config.globalProperties.$$ = res;
   registerComponents(app);
+  registerDirective(app);
   setupStore(app);
   app.use(ElementPlus);
   app.use(router);
