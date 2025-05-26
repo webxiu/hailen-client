@@ -7,13 +7,11 @@
  * @app   开发环境启动客户端
  */
 
-const Command = require("./command.js");
+const Command = require("./command2.js");
 const minimist = require("minimist");
 const command = new Command();
 
-const argvs = minimist(process.argv.slice(2))["_"].filter(
-  (item) => command[item] && typeof command[item] === "function"
-);
+const argvs = minimist(process.argv.slice(2))["_"].filter((item) => command[item] && typeof command[item] === "function");
 for (const argvItem of argvs) {
   command[argvItem]();
 }
