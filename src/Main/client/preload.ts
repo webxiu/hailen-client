@@ -6,13 +6,13 @@ import type { User } from "../server/database";
 const electronAPI = {
   send: (channel: string, data: any) => {
     // 只允许特定的通道
-    const validChannels = ["ping", "test", "react", "user:create"];
+    const validChannels = ["ping", "test", "react", "user:create", "light"];
     if (validChannels.includes(channel)) {
       ipcRenderer.send(channel, data);
     }
   },
   test: () => {
-    console.log("Test");
+    console.log("Test=");
   },
   async create(user: Omit<User, "id">): Promise<User> {
     return ipcRenderer.invoke("user:create", user);

@@ -86,54 +86,51 @@ class Command extends EventEmitter {
     });
   }
 
-  // run
-  myRun() {
-    if (Core.isPro()) {
-      // ts编译js
-      const args = [
-        "tsc",
-        `--project ${resolve(process.cwd(), "tsconfig.main.json")}`,
-        `--rootDir ${resolve(process.cwd(), "src/Main")}`,
-        `--outDir ${resolve(process.cwd(), "dist")}`,
-        `--module commonjs`,
-        `--target esnext`,
-        `--strict`,
-        `--esModuleInterop`
-      ];
-      const command = args.join(" ");
-      this.printl("环境:", process.env.NODE_ENV);
-      this.runExec(command, ({ type, data }) => {
-        if (["cp_close"].includes(type) || data === 0) {
-          this.printl("打包编译TS:", command);
-          console.log("ok");
-          fs.emptyDirSync(path.join(process.cwd(), "./output"));
-          this.builder();
-        }
-      });
-    } else {
-      this.cleanCache(); // 👈 新增这一行：开发环境自动清缓存
-      const { VITE_VUE_PORT, VITE_REACT_PORT } = this.getEnv();
-      const serverList = [
-        {
-          server: { port: VITE_VUE_PORT },
-          configFile: `${resolve(process.cwd(), "vite.vue.ts")}`
-        },
-        {
-          server: { port: VITE_REACT_PORT },
-          configFile: `${resolve(process.cwd(), "vite.react.ts")}`
-        }
-      ];
+  StartProcess() {
+    const _isPro = Core.isPro();
+    const command = [
+      "tsc",
+      `--project ${resolve(process.cwd(), "tsconfig.main.json")}`,
+      `--rootDir ${resolve(process.cwd(), "src/Main")}`,
+      `--outDir ${resolve(process.cwd(), "dist")}`,
+      `--module commonjs`,
+      `--target esnext`,
+      `--strict`,
+      `--esModuleInterop`,
+      `--noEmit`,
+      `--skipLibCheck`,
+      _isPro ? "" : `--watch`
+    ].join(" "); // ts编译js
 
-      this.runExec(command + " --watch", ({ type, data }) => {
+    this.runExec(command, ({ type, data }) => {
+      if (Core.isPro()) {
+        this.printl("打包编译TS:", command, type, data);
+        if (["cp_close"].includes(type) || data === 0) {
+          this.RunServer();
+        }
+        this.printl("打包编译TS:", command, type, data);
+      } else {
         if (["data"].includes(type) && data.includes("Watching")) {
-          this.printl("开发编译TS:", type, data);
+          this.cleanCache(); // 👈 新增这一行：开发环境自动清缓存
+          const { VITE_VUE_PORT, VITE_REACT_PORT } = this.getEnv();
+          const serverList = [
+            {
+              server: { port: VITE_VUE_PORT },
+              configFile: `${resolve(process.cwd(), "vite.vue.ts")}`
+            },
+            {
+              server: { port: VITE_REACT_PORT },
+              configFile: `${resolve(process.cwd(), "vite.react.ts")}`
+            }
+          ];
           Promise.all(serverList.map((item) => this.startServer(item)))
-            .then(([vueUrl, reactUrl]) => {
-              console.log("first", [vueUrl, reactUrl]);
+            .then((res) => {
+              const [vueUrl, reactUrl] = res;
+              console.log("res", res);
               console.log(`✅ Vue启动成功:   ${vueUrl.local}`.italic);
               console.log(`✅ React启动成功: ${reactUrl.local}`.italic);
               setTimeout(() => {
-                this.app(); // 在这里触发 Electron 应用启动等后续操作
+                this.RunServer();
               }, 100);
             })
             .catch((err) => {
@@ -141,18 +138,8 @@ class Command extends EventEmitter {
               process.exit(1);
             });
         }
-      });
-    }
-  }
-
-  MainProcess() {
-    this.myRun();
-  }
-
-  // 启动命令
-  start() {
-    process.env.NODE_ENV = "development";
-    this.MainProcess();
+      }
+    });
   }
 
   /** Readme */
@@ -164,11 +151,27 @@ class Command extends EventEmitter {
     }
   }
 
+  RunServer() {
+    if (Core.isPro()) {
+      fs.emptyDirSync(path.join(process.cwd(), "./output"));
+      this.builder();
+    } else {
+      this.app(); // 在这里触发 Electron 应用启动等后续操作
+      if (config.tslint) this.childProcessExec(`tsc -w`);
+    }
+  }
+
+  // 启动命令
+  start() {
+    process.env.NODE_ENV = "development";
+    this.StartProcess();
+  }
+
   // 构建命令
   build() {
     process.env.NODE_ENV = "production";
     this.autoVersion();
-    this.MainProcess();
+    this.StartProcess();
   }
 
   // 打包平台

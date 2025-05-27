@@ -5,6 +5,7 @@
     <el-button type="primary" @click="onPing">ping</el-button>
     <el-button type="primary" @click="onGet">获取数据</el-button>
     <el-button type="primary" @click="logout">退出登录</el-button>
+    <el-slider v-model="value1" @change="onChangeSlider" />
     <div>根路径: {{ $$?.rootPath }}</div>
     <div>
       <pre>
@@ -24,11 +25,17 @@ import { useUserStore } from "@/vue/store/modules/user";
 const useStore = useUserStore();
 const count = ref(0);
 const userData = ref([]);
+const value1 = ref(50);
 console.log("window.$$", window?.$$);
 console.log("import.meta.env:", import.meta.env);
 onMounted(() => {
   onGet();
 });
+
+function onChangeSlider(val) {
+  console.log("val", val);
+  window.electronAPI.send("light", val); // 亮度调节
+}
 
 // 累加
 function onClick() {

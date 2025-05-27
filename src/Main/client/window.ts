@@ -3,6 +3,7 @@ import * as path from "node:path";
 import { BrowserWindow, Menu, Tray, app, globalShortcut, ipcMain, nativeImage, protocol, screen, shell } from "electron";
 
 import createServer from "../server/app";
+import { exec } from "child_process";
 import { getJsonFiles } from "../utils/fs";
 import { setupUserIPC } from "./ipc";
 
@@ -147,6 +148,16 @@ app.whenReady().then(() => {
   });
   ipcMain.on("ping", () => {
     console.log("pong");
+  });
+  ipcMain.on("light", (_, level) => {
+    console.log("light=====", level);
+    exec('powershell.exe "(Get-WmiObject -Namespace root\\WMI -Class WmiMonitorBrightness).CurrentBrightness"', (error, stdout) => {
+      if (error) {
+        console.log("Error getting screen brightness:", error);
+      } else {
+        console.log("Current screen brightness:", stdout);
+      }
+    });
   });
   app.on("activate", function () {
     if (BrowserWindow.getAllWindows().length === 0) {
