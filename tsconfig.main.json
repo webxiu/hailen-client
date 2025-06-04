@@ -4,7 +4,9 @@
     "module": "commonjs",
     "target": "esnext",
     "strict": false,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "noImplicitAny": false,
+    "skipLibCheck": true
   },
   "include": ["src/Main/**/*"],
   "exclude": ["node_modules"]

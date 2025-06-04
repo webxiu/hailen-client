@@ -141,6 +141,9 @@ function createWindow(param: WindowProp) {
 
 app.whenReady().then(() => {
   let parentWin = createWindow({ mode: "vue", options: {} });
+  ipcMain.on("light", (_, value) => {
+    console.log("light", value);
+  });
   ipcMain.on("react", () => {
     console.log("react");
     // createWindow({ mode: "react", options: { parent: parentWin, modal: true } });
@@ -150,13 +153,10 @@ app.whenReady().then(() => {
     console.log("pong");
   });
   ipcMain.on("light", (_, level) => {
-    console.log("light=====", level);
-    exec('powershell.exe "(Get-WmiObject -Namespace root\\WMI -Class WmiMonitorBrightness).CurrentBrightness"', (error, stdout) => {
-      if (error) {
-        console.log("Error getting screen brightness:", error);
-      } else {
-        console.log("Current screen brightness:", stdout);
-      }
+    console.log("======light=====>", level);
+    // level 是 0-100 的百分比
+    exec(`powershell (Get-WmiObject -Namespace root/WMI -Class WmiMonitorBrightnessMethods).WmiSetBrightness(1,${level})`, (error) => {
+      if (error) console.error("亮度调节失败:", error);
     });
   });
   app.on("activate", function () {
@@ -170,12 +170,14 @@ app.whenReady().then(() => {
     ...$$.env[$$.NODE_ENV],
     NODE_ENV: $$.NODE_ENV
   }).then(() => {
-    console.log("=============================$$.vuePagePath", $$.AppInfo.vuePagePath);
-    const jsonFiles = getJsonFiles($$.AppInfo.vuePagePath, (dir) => dir.endsWith("index.vue"));
-    const result = jsonFiles.map((item) => {
-      return { path: item.split($$.AppInfo.vuePagePath)[1].replace(/\\/g, "/").replace(".vue", "") };
-    });
-    console.log("=============================result", result);
+    if(process.env.NODE_ENV === "development"){
+      console.log("=============================$$.vuePagePath", $$.AppInfo.vuePagePath);
+      const jsonFiles = getJsonFiles($$.AppInfo.vuePagePath, (dir) => dir.endsWith("index.vue"));
+      const result = jsonFiles.map((item) => {
+        return { path: item.split($$.AppInfo.vuePagePath)[1].replace(/\\/g, "/").replace(".vue", "") };
+      });
+      console.log("=============================result", result);
+    }
   });
 });
 

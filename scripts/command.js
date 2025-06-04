@@ -5,32 +5,18 @@ const config = require("./config.js");
 const net = require("net");
 const pkg = require("../package.json");
 const shell = require("shelljs");
-const { resolve } = require("path");
+const { resolve, join } = require("path");
 const Core = require("./core");
-const waitOn = require("wait-on");
 const fs = require("fs-extra");
-const path = require("path");
 const dotenv = require("dotenv");
+const path = require("path");
+const { createServer, build } = require("vite");
 
 class Command extends EventEmitter {
   constructor() {
     super();
-    this.AutoOpenApp = new Proxy(
-      {
-        RenderProcessDone: false,
-        MainProcessDone: false
-      },
-      {
-        set: (target, props, value) => {
-          const isOk = Reflect.set(target, props, value);
-          if (target.MainProcessDone && target.RenderProcessDone) {
-            this.emit("openApp");
-            this.emit("builddone");
-          }
-          return isOk;
-        }
-      }
-    );
+    this.renderReady = false;
+    this.mainReady = false;
   }
 
   /** 检测端口占用 */
@@ -52,17 +38,17 @@ class Command extends EventEmitter {
   printl(s1, s2, ...rest) {
     console.log(s1.bgMagenta, s2.magenta, ...rest, "\n");
   }
+
   getEnv() {
     return dotenv.config({ path: `.env.${process.env.NODE_ENV}` }).parsed || {};
   }
-  /** Readme */
+
   childProcessExec(runPath) {
     this.printl("runPath:", runPath);
     const _childProcess = exec(runPath);
     _childProcess.stdout.on("data", console.info);
-    _childProcess.stdout.on("error", console.info);
-    _childProcess.stderr.on("data", console.info);
-    _childProcess.stderr.on("error", console.info);
+    _childProcess.stderr.on("data", console.error);
+    return _childProcess;
   }
 
   runExec(command, callback) {
@@ -70,15 +56,91 @@ class Command extends EventEmitter {
     cp.stdout.on("data", (data) => callback({ type: "data", data }));
     cp.stdout.on("close", (data) => callback({ type: "close", data }));
     cp.on("close", (data) => callback({ type: "cp_close", data }));
-    cp.stdout.on("error", console.info);
-    cp.stderr.on("data", console.info);
-    cp.stderr.on("error", console.info);
+    cp.stderr.on("data", console.error);
+    return cp;
+  }
+  cleanCache() {
+    const viteCacheDir = resolve(process.cwd(), "node_modules/.vite");
+    if (fs.existsSync(viteCacheDir)) {
+      try {
+        fs.removeSync(viteCacheDir);
+        console.log("✅ 已清除 .vite 缓存".green);
+      } catch (err) {
+        console.error("❌ 清除缓存失败:", err.message.red);
+      }
+    } else {
+      console.log("💡 .vite 缓存不存在，跳过清理".yellow);
+    }
   }
 
-  /** 主进程 */
-  async MainProcess() {
-    // ts编译js
-    const args = [
+  // 创建 vite 开发服务
+  startServer(options = {}) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const server = await createServer(options);
+        const { resolvedUrls } = await server.listen();
+        resolve(resolvedUrls);
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+  // 创建 vite 生产服务
+  buildServer(options = {}) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        await build(options);
+        resolve(0);
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+
+  StartProcess() {
+    if (Core.isPro()) {
+      const serverList = [
+        { mode: "production", configFile: `${resolve(process.cwd(), "vite.vue.ts")}` },
+        { mode: "production", configFile: `${resolve(process.cwd(), "vite.react.ts")}` }
+      ];
+      Promise.all(serverList.map((item) => this.buildServer(item)))
+        .then((res) => {
+          console.log("res", res);
+          if (res.includes(0)) {
+            console.log(`✅ Vue  打包成功`.italic);
+            console.log(`✅ React打包成功`.italic);
+            this.watchMain();
+          }
+        })
+        .catch((err) => {
+          console.error("❌ 有一个服务打包失败:", err);
+          process.exit(1);
+        });
+      return;
+    }
+    this.cleanCache(); // 👈 新增这一行：开发环境自动清缓存
+    const { VITE_VUE_PORT, VITE_REACT_PORT } = this.getEnv();
+    const serverList = [
+      { server: { port: VITE_VUE_PORT }, configFile: `${resolve(process.cwd(), "vite.vue.ts")}` },
+      { server: { port: VITE_REACT_PORT }, configFile: `${resolve(process.cwd(), "vite.react.ts")}` }
+    ];
+    Promise.all(serverList.map((item) => this.startServer(item)))
+      .then((res) => {
+        const [vueUrl, reactUrl] = res;
+        console.log("res", res);
+        console.log(`✅ Vue启动成功: ${vueUrl.local}`.italic, `\n✅ React启动成功: ${reactUrl.local}`.italic);
+        this.watchMain();
+      })
+      .catch((err) => {
+        console.error("❌ 有一个服务启动失败:", err);
+        process.exit(1);
+      });
+  }
+
+  // 主进程编译TS为JS
+  watchMain() {
+    const _isPro = Core.isPro();
+    const command = [
       "tsc",
       `--project ${resolve(process.cwd(), "tsconfig.main.json")}`,
       `--rootDir ${resolve(process.cwd(), "src/Main")}`,
@@ -86,66 +148,32 @@ class Command extends EventEmitter {
       `--module commonjs`,
       `--target esnext`,
       `--strict`,
-      `--esModuleInterop`
-    ];
-    const command = args.join(" ");
-    this.printl("环境:", process.env.NODE_ENV);
-    this.printl("启动主进程:", command);
-    if (Core.isPro()) {
-      this.runExec(command, ({ type, data }) => {
-        if (["cp_close"].includes(type) || data === 0) {
-          if (!this.AutoOpenApp.MainProcessDone) this.AutoOpenApp.MainProcessDone = true;
-        }
-      });
-    } else {
-      const { VITE_VUE_PORT, VITE_REACT_PORT } = this.getEnv();
-      const resources = [`tcp:${VITE_VUE_PORT}`, `tcp:${VITE_REACT_PORT}`];
-      waitOn({ resources, timeout: 60 * 1000 }, (err) => {
-        if (err) {
-          console.error("等待端口时错误:".red, err);
-          process.exit(1);
-        }
-        this.runExec(command + " --watch", ({ type, data }) => {
-          if (["data"].includes(type) && data.includes("Watching")) {
-            this.printl("监听主进程(开发):", type, data);
-            if (!this.AutoOpenApp.MainProcessDone) this.AutoOpenApp.MainProcessDone = true;
-          }
-        });
-      });
-    }
-  }
+      `--esModuleInterop`,
+      // `--noEmit`, 会导致编译监听失效
+      `--skipLibCheck`,
+      _isPro ? "" : `--watch`
+    ].join(" ");
 
-  /** 渲染进程 */
-  async RenderProcess() {
-    const command = {
-      development: `concurrently "npm run dev:vue" "npm run dev:react"`,
-      production: `concurrently "npm run build:vue" "npm run build:react"`
-    }[process.env.NODE_ENV];
-    this.printl("启动渲染进程:", command);
     this.runExec(command, ({ type, data }) => {
-      this.printl("渲染进程输出:", data);
-      if (Core.isPro()) {
-        if (data === 0 && !this.AutoOpenApp.RenderProcessDone) {
-          this.AutoOpenApp.RenderProcessDone = true;
-        }
+      this.printl("主进程编译ts:", command, type, data);
+      const proStatus = ["cp_close"].includes(type) || data === 0;
+      const devStatus = ["data"].includes(type) && data.includes("Watching");
+      if (_isPro) {
+        if (proStatus) this.startBuild();
       } else {
-        const { VITE_VUE_PORT = 8500, VITE_REACT_PORT = 8600 } = process.env;
-        if (["data", "close"].includes(type) && (data.includes(VITE_VUE_PORT) || data.includes(VITE_REACT_PORT))) {
-          if (!this.AutoOpenApp.RenderProcessDone) this.AutoOpenApp.RenderProcessDone = true;
-        }
+        if (devStatus) this.startBuild();
       }
     });
   }
 
-  /** Readme */
-  start() {
-    process.env.NODE_ENV = "development";
-    this.once("openApp", () => {
-      this.app();
+  startBuild() {
+    if (Core.isPro()) {
+      fs.emptyDirSync(path.join(process.cwd(), "./output"));
+      this.builder();
+    } else {
+      this.app(); // 在这里触发 Electron 应用启动等后续操作
       if (config.tslint) this.childProcessExec(`tsc -w`);
-    });
-    this.MainProcess();
-    this.RenderProcess();
+    }
   }
 
   /** Readme */
@@ -157,19 +185,20 @@ class Command extends EventEmitter {
     }
   }
 
-  /** Readme */
+  // 启动命令
+  start() {
+    process.env.NODE_ENV = "development";
+    this.StartProcess();
+  }
+
+  // 构建命令
   build() {
     process.env.NODE_ENV = "production";
     this.autoVersion();
-    this.MainProcess();
-    this.RenderProcess();
-    this.once("builddone", () => {
-      fs.emptyDirSync(path.join(process.cwd(), "./output"));
-      this.builder();
-    });
+    this.StartProcess();
   }
 
-  /** Readme */
+  // 打包平台
   builder() {
     this.printl("打包平台:", process.platform);
     switch (process.platform) {
@@ -188,7 +217,6 @@ class Command extends EventEmitter {
     }
   }
 
-  /** Readme */
   help() {
     console.log(`
     Command:    node electron-cli-service
@@ -197,22 +225,18 @@ class Command extends EventEmitter {
     `);
   }
 
-  /** Readme */
   kill() {
     shell.exec(`taskkill /f /t /im electron.exe`);
     shell.exec(`taskkill /f /t /im ${pkg.build.productName}.exe`);
   }
 
-  /** Extends */
   autoVersion() {
     // require("../run/auto-version");
   }
 
-  /** Extends */
   autoService() {
     // require("../run/auto-service");
   }
 }
 
-// export default Command;
 module.exports = Command;
