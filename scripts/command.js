@@ -97,42 +97,38 @@ class Command extends EventEmitter {
     });
   }
 
-  StartProcess() {
-    if (Core.isPro()) {
-      const serverList = [
-        { mode: "production", configFile: `${resolve(process.cwd(), "vite.vue.ts")}` },
-        { mode: "production", configFile: `${resolve(process.cwd(), "vite.react.ts")}` }
-      ];
-      Promise.all(serverList.map((item) => this.buildServer(item)))
-        .then((res) => {
-          console.log("res", res);
-          if (res.includes(0)) {
-            console.log(`✅ Vue  打包成功`.italic);
-            console.log(`✅ React打包成功`.italic);
-            this.watchMain();
-          }
-        })
-        .catch((err) => {
-          console.error("❌ 有一个服务打包失败:", err);
-          process.exit(1);
-        });
-      return;
-    }
-    this.cleanCache(); // 👈 新增这一行：开发环境自动清缓存
+  startProcess() {
     const { VITE_VUE_PORT, VITE_REACT_PORT } = this.getEnv();
-    const serverList = [
-      { server: { port: VITE_VUE_PORT }, configFile: `${resolve(process.cwd(), "vite.vue.ts")}` },
-      { server: { port: VITE_REACT_PORT }, configFile: `${resolve(process.cwd(), "vite.react.ts")}` }
+    const isPro = Core.isPro();
+    const viteConfig = [
+      {
+        name: "Vue",
+        mode: process.env.NODE_ENV,
+        server: { port: VITE_VUE_PORT },
+        configFile: resolve(process.cwd(), "vite.vue.ts"),
+      },
+      {
+        name: "React",
+        mode: process.env.NODE_ENV,
+        server: { port: VITE_REACT_PORT },
+        configFile: resolve(process.cwd(), "vite.react.ts"),
+      }
     ];
-    Promise.all(serverList.map((item) => this.startServer(item)))
-      .then((res) => {
-        const [vueUrl, reactUrl] = res;
-        console.log("res", res);
-        console.log(`✅ Vue启动成功: ${vueUrl.local}`.italic, `\n✅ React启动成功: ${reactUrl.local}`.italic);
+    if (!isPro) this.cleanCache(); 
+    const processMethod = isPro ? this.buildServer : this.startServer;
+    Promise.all(viteConfig.map((config) => processMethod(config)))
+      .then((results) => {
+        let resultText = viteConfig.map((c, i) => `✅ ${viteConfig[i].name}启动成功: ${c.local}`);
+        if (isPro) {
+          if (!results.includes(0)) throw new Error("构建失败");
+          resultText = viteConfig.map((c) => `✅ ${c.name}打包成功`); 
+        }
+        console.log(`${resultText.join("\n")}`.italic);
         this.watchMain();
       })
       .catch((err) => {
-        console.error("❌ 有一个服务启动失败:", err);
+        const errorText = isPro ? "构建" : "启动";
+        console.error(`❌ 服务${errorText}失败:`, err);
         process.exit(1);
       });
   }
@@ -188,14 +184,14 @@ class Command extends EventEmitter {
   // 启动命令
   start() {
     process.env.NODE_ENV = "development";
-    this.StartProcess();
+    this.startProcess();
   }
 
   // 构建命令
   build() {
     process.env.NODE_ENV = "production";
     this.autoVersion();
-    this.StartProcess();
+    this.startProcess();
   }
 
   // 打包平台
