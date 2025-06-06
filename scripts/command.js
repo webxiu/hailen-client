@@ -105,23 +105,23 @@ class Command extends EventEmitter {
         name: "Vue",
         mode: process.env.NODE_ENV,
         server: { port: VITE_VUE_PORT },
-        configFile: resolve(process.cwd(), "vite.vue.ts"),
+        configFile: resolve(process.cwd(), "vite.vue.ts")
       },
       {
         name: "React",
         mode: process.env.NODE_ENV,
         server: { port: VITE_REACT_PORT },
-        configFile: resolve(process.cwd(), "vite.react.ts"),
+        configFile: resolve(process.cwd(), "vite.react.ts")
       }
     ];
-    if (!isPro) this.cleanCache(); 
+    if (!isPro) this.cleanCache();
     const processMethod = isPro ? this.buildServer : this.startServer;
     Promise.all(viteConfig.map((config) => processMethod(config)))
       .then((results) => {
-        let resultText = viteConfig.map((c, i) => `✅ ${viteConfig[i].name}启动成功: ${c.local}`);
+        let resultText = viteConfig.map((c, i) => `✅ ${viteConfig[i].name}启动成功: ${results[i].local}`);
         if (isPro) {
           if (!results.includes(0)) throw new Error("构建失败");
-          resultText = viteConfig.map((c) => `✅ ${c.name}打包成功`); 
+          resultText = viteConfig.map((c) => `✅ ${c.name}打包成功`);
         }
         console.log(`${resultText.join("\n")}`.italic);
         this.watchMain();
@@ -147,7 +147,7 @@ class Command extends EventEmitter {
       `--esModuleInterop`,
       // `--noEmit`, 会导致编译监听失效
       `--skipLibCheck`,
-      _isPro ? "" : `--watch`
+      _isPro ? "" : `--watch --preserveWatchOutput`
     ].join(" ");
 
     this.runExec(command, ({ type, data }) => {
@@ -167,8 +167,7 @@ class Command extends EventEmitter {
       fs.emptyDirSync(path.join(process.cwd(), "./output"));
       this.builder();
     } else {
-      this.app(); // 在这里触发 Electron 应用启动等后续操作
-      if (config.tslint) this.childProcessExec(`tsc -w`);
+      this.app();
     }
   }
 

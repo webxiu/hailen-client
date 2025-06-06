@@ -153,7 +153,7 @@ app.whenReady().then(() => {
     console.log("pong");
   });
   ipcMain.on("light", (_, level) => {
-    console.log("======light=====>", level);
+    console.log("======light====>", level);
     // level 是 0-100 的百分比
     exec(`powershell (Get-WmiObject -Namespace root/WMI -Class WmiMonitorBrightnessMethods).WmiSetBrightness(1,${level})`, (error) => {
       if (error) console.error("亮度调节失败:", error);
@@ -170,7 +170,7 @@ app.whenReady().then(() => {
     ...$$.env[$$.NODE_ENV],
     NODE_ENV: $$.NODE_ENV
   }).then(() => {
-    if(process.env.NODE_ENV === "development"){
+    if (process.env.NODE_ENV === "development") {
       console.log("=============================$$.vuePagePath", $$.AppInfo.vuePagePath);
       const jsonFiles = getJsonFiles($$.AppInfo.vuePagePath, (dir) => dir.endsWith("index.vue"));
       const result = jsonFiles.map((item) => {
