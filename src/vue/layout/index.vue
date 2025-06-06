@@ -10,6 +10,7 @@ import NavMenu from "./component/NavMenu.vue";
 import HxIcon from "@/vue/components/HxIcon";
 // import { routes } from "@/router";
 // import BackButton from "@/vue/components/BackButton/index.vue";
+import Star from "@/vue/components/Star.vue";
 const names = ref<string[]>([]);
 const theme = ref("light");
 const themeConfig = reactive([
@@ -60,6 +61,7 @@ function onChange(value) {
 </script>
 
 <template>
+  <Star />
   <div class="layout">
     <div class="flex-col p-4">
       <div>logo <HxIcon icon="Setting" /></div>
@@ -100,6 +102,7 @@ function onChange(value) {
   display: flex;
   width: 100vw;
   height: 100vh;
+  z-index: 1;
 }
 .main-header {
   padding: 10px;
