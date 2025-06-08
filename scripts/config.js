@@ -10,18 +10,10 @@ const JoinCwd = (...args) => {
 const diskPath = path.join("speakin", "electron-admin");
 
 module.exports = {
-  development: {
-    SERVER_HOST: "http://127.0.0.1",
-    SERVER_PORT: 3800
-  },
-  production: {
-    SERVER_HOST: "http://127.0.0.1",
-    SERVER_PORT: 4800
-  },
+  host: "http://127.0.0.1:3800", // 本地服务地址(不配置使用VITE_BASE_URL环境变量)
   diskPath: diskPath,
   nodemon: true,
   eslint: false,
   tslint: true,
-  smp: false,
-  port: 10120
+  smp: false
 };

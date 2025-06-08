@@ -8,7 +8,7 @@ import koaStatic from "koa-static";
 import { printl } from "./config";
 import { uploadDir } from "./config/constant";
 
-async function createServer({ platform, SERVER_HOST, SERVER_PORT, NODE_ENV }) {
+async function createServer({ platform, host, NODE_ENV }) {
   const app = new Koa();
   const isDev = NODE_ENV === "development";
   // app.context.isDev = isDev; // 注入到ctx
@@ -32,8 +32,9 @@ async function createServer({ platform, SERVER_HOST, SERVER_PORT, NODE_ENV }) {
     await next();
   });
   registerRouter(app);
-  app.listen(SERVER_PORT, () => {
-    printl("服务运行在:", `${SERVER_HOST}:${SERVER_PORT}`);
+  const prot = host.slice(host.lastIndexOf(":") + 1);
+  app.listen(prot, () => {
+    printl("服务运行在:", host);
   });
 }
 

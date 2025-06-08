@@ -1,11 +1,8 @@
 import * as path from "node:path";
 
-import { BrowserWindow, Menu, Tray, app, globalShortcut, ipcMain, nativeImage, protocol, screen, shell } from "electron";
+import { BrowserWindow, Menu, Tray, app, ipcMain, nativeImage, protocol, screen } from "electron";
 
-import createServer from "../server/app";
 import { exec } from "child_process";
-import { getJsonFiles } from "../utils/fs";
-import { setupUserIPC } from "./ipc";
 
 interface WindowProp {
   mode: "vue" | "react";
@@ -162,21 +159,6 @@ app.whenReady().then(() => {
   app.on("activate", function () {
     if (BrowserWindow.getAllWindows().length === 0) {
       parentWin = createWindow({ mode: "vue", options: {} });
-    }
-  });
-  setupUserIPC();
-  createServer({
-    platform: process.platform,
-    ...$$.env[$$.NODE_ENV],
-    NODE_ENV: $$.NODE_ENV
-  }).then(() => {
-    if (process.env.NODE_ENV === "development") {
-      console.log("=============================$$.vuePagePath", $$.AppInfo.vuePagePath);
-      const jsonFiles = getJsonFiles($$.AppInfo.vuePagePath, (dir) => dir.endsWith("index.vue"));
-      const result = jsonFiles.map((item) => {
-        return { path: item.split($$.AppInfo.vuePagePath)[1].replace(/\\/g, "/").replace(".vue", "") };
-      });
-      console.log("=============================result", result);
     }
   });
 });

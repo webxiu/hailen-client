@@ -5,7 +5,7 @@ import { BrowserWindow, Menu, Tray, app, dialog } from "electron";
 
 import path from "path";
 
-const serverConfig = require(path.join(__dirname, "../../scripts/config.js"));
+const appConfig = require(path.join(__dirname, "../../scripts/config.js"));
 
 // const Build = {
 //   appVersion: Package.version.split("-")[0],
@@ -61,7 +61,8 @@ Reflect.set($$, "AppInfo", {
   buildPath,
   platform: process.platform,
   vuePagePath: path.join(rootPath, "src", "vue", "views"),
-  reactPagePath: path.join(rootPath, "src", "react", "pages")
+  reactPagePath: path.join(rootPath, "src", "react", "pages"),
+  ...appConfig
   // versions: { ...process.versions, ...Build },
   // /** 软件外部存储根目录 */
   // WorkPath: _WorkPath(),
@@ -80,7 +81,7 @@ Reflect.set($$, "AppInfo", {
 });
 
 Reflect.set($$, "NODE_ENV", app.isPackaged ? "production" : "development");
-Reflect.set($$, "env", { ...getEnv(), ...serverConfig });
+Reflect.set($$, "env", { ...getEnv() });
 Reflect.set($$, "isPro", () => app.isPackaged);
 Reflect.set($$, "JoinDirWithRoot", (...dir) => path.join(process.cwd(), ...dir));
 Reflect.set($$, "isString", (arg) => Reflect.toString.call(arg) === "[object String]");

@@ -7,7 +7,7 @@ Reflect.set(global, "$$", {});
 
 export default () => {
   // /** $$.AppInfo 且 初始化公共函数 */
-  require("./AppInfo");
+  require("./appInfo");
 
   // /** $$.log 且 初始化 日志存储文件目录 */
   // require('./Log');
@@ -19,10 +19,16 @@ export default () => {
   // require('./Event');
 
   // /** 绑定热键 */
-  require("./ShortcutKey");
+  require("./shortcutKey");
+
+  /** IPC */
+  require("./ipc");
 
   /** 订阅窗口创建 */
   require("./window");
+
+  /** 启动Koa服务 */
+  require("./koaServer");
 
   // /** other */
   // require('./AppGuard');

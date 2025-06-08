@@ -1,13 +1,27 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/Main",
+    "rootDir": "./src/Main",
+    "outDir": "./dist",
     "module": "commonjs",
     "target": "esnext",
+    /* 完全关闭类型检查 */
     "strict": false,
-    "esModuleInterop": true,
     "noImplicitAny": false,
-    "skipLibCheck": true
+    "strictNullChecks": false,
+    "strictFunctionTypes": false,
+    "strictBindCallApply": false,
+    "strictPropertyInitialization": false,
+    "noImplicitThis": false,
+    "alwaysStrict": false,
+    "skipLibCheck": true,
+    /* 其他可选宽松设置 */
+    "allowJs": false,
+    "checkJs": false,
+    /* 解析 json 文件 */
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "types": ["./typings/index.d.ts"]
   },
-  "include": ["src/Main/**/*"],
+  "include": ["src/Main/**/*", "typings/**/*"],
   "exclude": ["node_modules"]
 }

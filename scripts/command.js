@@ -1,15 +1,15 @@
 const colors = require("colors");
-const { EventEmitter } = require("events");
-const { exec } = require("child_process");
-const config = require("./config.js");
 const net = require("net");
-const pkg = require("../package.json");
-const shell = require("shelljs");
-const { resolve, join } = require("path");
-const Core = require("./core");
-const fs = require("fs-extra");
-const dotenv = require("dotenv");
 const path = require("path");
+const fs = require("fs-extra");
+const shell = require("shelljs");
+const dotenv = require("dotenv");
+const Core = require("./core");
+const pkg = require("../package.json");
+const config = require("./config.js");
+const { resolve } = require("path");
+const { exec } = require("child_process");
+const { EventEmitter } = require("events");
 const { createServer, build } = require("vite");
 
 class Command extends EventEmitter {
@@ -36,7 +36,7 @@ class Command extends EventEmitter {
   }
 
   printl(s1, s2, ...rest) {
-    console.log(s1.bgMagenta, s2.magenta, ...rest, "\n");
+    console.log("\n", s1.bgMagenta, s2.magenta, ...rest);
   }
 
   getEnv() {
@@ -44,7 +44,7 @@ class Command extends EventEmitter {
   }
 
   childProcessExec(runPath) {
-    this.printl("runPath:", runPath);
+    this.printl("[command]", runPath);
     const _childProcess = exec(runPath);
     _childProcess.stdout.on("data", console.info);
     _childProcess.stderr.on("data", console.error);
@@ -73,7 +73,7 @@ class Command extends EventEmitter {
     }
   }
 
-  // 创建 vite 开发服务
+  // Vite 开发服务
   startServer(options = {}) {
     return new Promise(async (resolve, reject) => {
       try {
@@ -85,7 +85,7 @@ class Command extends EventEmitter {
       }
     });
   }
-  // 创建 vite 生产服务
+  // Vite 生产服务
   buildServer(options = {}) {
     return new Promise(async (resolve, reject) => {
       try {
@@ -136,22 +136,10 @@ class Command extends EventEmitter {
   // 主进程编译TS为JS
   watchMain() {
     const _isPro = Core.isPro();
-    const command = [
-      "tsc",
-      `--project ${resolve(process.cwd(), "tsconfig.main.json")}`,
-      `--rootDir ${resolve(process.cwd(), "src/Main")}`,
-      `--outDir ${resolve(process.cwd(), "dist")}`,
-      `--module commonjs`,
-      `--target esnext`,
-      `--strict`,
-      `--esModuleInterop`,
-      // `--noEmit`, 会导致编译监听失效
-      `--skipLibCheck`,
-      _isPro ? "" : `--watch --preserveWatchOutput`
-    ].join(" ");
+    const command = [`tsc --project ${resolve(process.cwd(), "tsconfig.main.json")} --preserveWatchOutput`, _isPro ? "" : "-w"].filter(Boolean).join(" ");
 
     this.runExec(command, ({ type, data }) => {
-      this.printl("主进程编译ts:", command, type, data);
+      this.printl("[compile main]", command, data);
       const proStatus = ["cp_close"].includes(type) || data === 0;
       const devStatus = ["data"].includes(type) && data.includes("Watching");
       if (_isPro) {

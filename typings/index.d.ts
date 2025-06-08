@@ -130,6 +130,14 @@ declare global {
       buildPath: string;
       vuePagePath: string;
       reactPagePath: string;
+
+      // config.js
+      host: string; // 本地服务
+      diskPath: string;
+      nodemon?: boolean;
+      eslint?: boolean;
+      tslint?: boolean;
+      smp?: boolean;
     }>;
     export namespace Settings {
       const read: () => SettingTypes | undefined;
@@ -213,8 +221,6 @@ declare global {
     VITE_BASE_URL: string;
     VITE_VUE_PORT: number;
     VITE_REACT_PORT: number;
-    // 主进程
-    SERVER_HOST: string;
   }
 
   /**

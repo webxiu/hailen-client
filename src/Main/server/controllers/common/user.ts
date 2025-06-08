@@ -1,10 +1,10 @@
 import { Context } from "koa";
-import { User } from "~/types/user";
+import { User } from "../../types/user";
 
 // 假设这里有一个简单的用户数据
 const users: User[] = [
   { id: 1, name: "John Doe" },
-  { id: 2, name: "Jane Doe" },
+  { id: 2, name: "Jane Doe" }
 ];
 
 export const getUsers = async (ctx: Context) => {
