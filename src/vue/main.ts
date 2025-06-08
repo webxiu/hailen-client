@@ -12,16 +12,14 @@ import { setupStore } from "@/vue/store";
 
 const app = createApp(App);
 
-function setGlobalVariables() {
-  return new Promise<typeof $$>((resolve) => {
-    window.onload = function () {
-      window.$$ = window.electronAPI?.getGlobal();
-      resolve(window.$$);
-    };
+function setGlobalVariables(callback) {
+  electronAPI.on("Init_Event", (event, data) => {
+    Reflect.set(window, "$$", data);
+    callback(data);
   });
 }
 
-setGlobalVariables().then((res) => {
+setGlobalVariables((res) => {
   app.config.globalProperties.$$ = res;
   registerComponents(app);
   registerDirective(app);

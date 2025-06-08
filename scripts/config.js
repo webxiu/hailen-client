@@ -4,8 +4,9 @@ const diskPath = path.join("hailen", "electron-admin");
 
 // 项目启动配置
 class Config {
-  static appConfig = {
+  static startOption = {
     diskPath: diskPath,
+    host: "http://127.0.0.1:3800",
     nodemon: true, // 启用nodemon, 修改主进程文件自动重启
     eslint: false,
     tslint: true,

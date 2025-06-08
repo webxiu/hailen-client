@@ -5,7 +5,7 @@
     <el-button type="primary" @click="onPing">ping</el-button>
     <el-button type="primary" @click="onGet">获取数据</el-button>
     <el-button type="primary" @click="logout">退出登录</el-button>
-    <div>根路径: {{ $$?.rootPath }}</div>
+    <div>根路径: {{ $$.appInfo.rootPath }}</div>
     <div>
       <pre>
         <code>
@@ -24,8 +24,9 @@ import { useUserStore } from "@/vue/store/modules/user";
 const useStore = useUserStore();
 const count = ref(0);
 const userData = ref([]);
-console.log("window.$$", window?.$$);
-console.log("import.meta.env:", import.meta.env);
+console.log("$$", $$);
+console.log("viteEnv:", import.meta.env);
+
 onMounted(() => {
   onGet();
 });

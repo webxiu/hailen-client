@@ -20,7 +20,6 @@ const svgClass = computed(() => {
     return "svg-icon";
   }
 });
-console.log("svgClass", svgClass);
 </script>
 <style lang="scss">
 .svg-icon {

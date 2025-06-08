@@ -38,6 +38,7 @@ interface ElectronAPI {
   setUserInfo: (user: any) => void;
   clearCache: () => void;
   send: (channel: string, data: any) => void;
+  on: (channel: string, func: (...args: any[]) => void) => void;
   receive: (channel: string, func: (...args: any[]) => void) => void;
   getScreenSources: () => Promise<any>;
 }

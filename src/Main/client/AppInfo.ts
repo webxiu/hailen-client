@@ -5,13 +5,16 @@ import { BrowserWindow, Menu, Tray, app, dialog } from "electron";
 
 import path from "path";
 
-const { appConfig, JoinCwd } = require(path.join(__dirname, "../../scripts/config.js"));
+const { startOption, JoinCwd } = require(path.join(__dirname, "../../scripts/config.js"));
 
 const faviconPath = `/public/favicon/png/favicon_ch@3x.png`;
 const trayIconPath = `/public/favicon/png/favicon_ch@2x.png`;
 
 const getSystemPath = (...dir: string[]) => {
   if (app.isPackaged) {
+    if (process.platform === "darwin") {
+      return $$.JoinCwd("../resources/app.asar", ...dir);
+    }
     return $$.JoinCwd("./resources/app.asar.unpacked", ...dir);
   } else {
     return $$.JoinCwd(...dir);
@@ -99,7 +102,7 @@ Reflect.set($$, "appInfo", {
   __dirname,
   platform: process.platform,
   ...getAppPath(),
-  ...appConfig
+  ...startOption
   // versions: { ...process.versions, ...Build },
   // /** 软件外部存储根目录 */
   // WorkPath: _WorkPath(),

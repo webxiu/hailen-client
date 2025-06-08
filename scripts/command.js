@@ -118,7 +118,7 @@ class Command extends EventEmitter {
     const _isPro = Config.isPro();
     const command = [`tsc --project ${resolve(process.cwd(), "tsconfig.main.json")} --preserveWatchOutput`, _isPro ? "" : "-w"].filter(Boolean).join(" ");
     this.runExec(command, ({ type, data }) => {
-      this.printl("[compile main]", command, data);
+      this.printl("[compile main]", command, type, data);
       const proStatus = ["cp_close"].includes(type) || data === 0;
       const devStatus = ["data"].includes(type) && data.includes("Watching");
       if (_isPro) {
@@ -140,7 +140,8 @@ class Command extends EventEmitter {
 
   /** Readme */
   app() {
-    if (Config.nodemon) {
+    console.log("3333", Config.startOption.nodemon);
+    if (Config.startOption.nodemon) {
       this.childProcessExec(`nodemon -e js,ts,tsx -w dist/client -w package.json -w index.js --exec electron . --inspect`);
     } else {
       this.childProcessExec(`electron . --inspect`);

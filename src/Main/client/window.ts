@@ -118,6 +118,12 @@ function createWindow(param: WindowProp) {
 
 app.whenReady().then(() => {
   let parentWin = createWindow({ mode: "vue", options: {} });
+  // 窗口加载完成后发送初始化就绪消息
+  parentWin.webContents.on("did-finish-load", () => {
+    const { appInfo, env, NODE_ENV } = $$;
+    parentWin.webContents.send("Init_Event", { appInfo, env, NODE_ENV });
+  });
+
   ipcMain.on("light", (_, value) => {
     console.log("light", value);
   });
