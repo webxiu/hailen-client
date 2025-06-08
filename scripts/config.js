@@ -1,19 +1,45 @@
 const path = require("path");
+const dotenv = require("dotenv");
+const diskPath = path.join("hailen", "electron-admin");
 
-const JoinCwd = (...args) => {
-  if (!args.length) {
-    return process.cwd();
+// 项目启动配置
+class Config {
+  static appConfig = {
+    diskPath: diskPath,
+    nodemon: true, // 启用nodemon, 修改主进程文件自动重启
+    eslint: false,
+    tslint: true,
+    smp: false
+  };
+  static viteConfig() {
+    const mode = process.env.NODE_ENV;
+    const { VITE_VUE_PORT, VITE_REACT_PORT } = this.getEnvFile();
+    return [
+      {
+        name: "Vue",
+        mode: mode,
+        server: { port: VITE_VUE_PORT },
+        configFile: this.JoinCwd("vite.vue.ts")
+      },
+      {
+        name: "React",
+        mode: mode,
+        server: { port: VITE_REACT_PORT },
+        configFile: this.JoinCwd("vite.react.ts")
+      }
+    ];
   }
-  return path.join(process.cwd(), ...args);
-};
+  static getEnvFile() {
+    const path = `.env.${process.env.NODE_ENV}`;
+    return dotenv.config({ path }).parsed || {};
+  }
+  static JoinCwd(...dir) {
+    if (!dir) return process.cwd();
+    return path.join(process.cwd(), ...dir);
+  }
+  static isPro() {
+    return process.env.NODE_ENV === "production";
+  }
+}
 
-const diskPath = path.join("speakin", "electron-admin");
-
-module.exports = {
-  host: "http://127.0.0.1:3800", // 本地服务地址(不配置使用VITE_BASE_URL环境变量)
-  diskPath: diskPath,
-  nodemon: true,
-  eslint: false,
-  tslint: true,
-  smp: false
-};
+module.exports = Config;

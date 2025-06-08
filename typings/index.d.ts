@@ -42,6 +42,13 @@ interface ElectronAPI {
   getScreenSources: () => Promise<any>;
 }
 
+interface StartupType {
+  vue: string;
+  react: string;
+  faviconPath: string;
+  trayIconPath: string;
+}
+
 declare global {
   export const LANGUAGE: string;
   export type DirPath = string;
@@ -89,8 +96,10 @@ declare global {
 
     const NODE_ENV: string;
     const env: ViteEnv;
+    const clog: (...args) => void;
+    const JoinCwd: (...dir) => string;
+    const startup: StartupType;
     const isPro: () => boolean;
-    const JoinDirWithRoot: (...dir) => string;
     const isString: (arg) => Boolean;
     const isNumber: (arg) => Boolean;
     const isObject: (arg) => Boolean;
@@ -106,7 +115,7 @@ declare global {
     const isNaN: (arg) => Boolean;
     /** 系统 Dialog 组件只有在主进程才能访问到， 把方法直接挂载到全局提供所有渲染进程访问 */
     const dialog: Dialog;
-    const AppInfo: Readonly<{
+    const appInfo: Readonly<{
       platform: NodeJS.Platform;
       versions: ElectronProcessVersions;
       /** 软件外部存储根目录 */
@@ -128,8 +137,6 @@ declare global {
       rootPath: string;
       sourcePath: string;
       buildPath: string;
-      vuePagePath: string;
-      reactPagePath: string;
 
       // config.js
       host: string; // 本地服务

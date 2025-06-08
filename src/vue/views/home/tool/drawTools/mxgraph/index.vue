@@ -34,7 +34,7 @@ const emits = defineEmits(["saveGraph"]);
 
 const iframeUrl = computed(() => {
   if (import.meta.env.DEV) return "/mxgraph-editor/www/index.html";
-  return `file://${$$.AppInfo.buildPath}/public/mxgraph-editor/www/index.html`;
+  return `file://${$$.appInfo.buildPath}/public/mxgraph-editor/www/index.html`;
 });
 
 onMounted(() => {

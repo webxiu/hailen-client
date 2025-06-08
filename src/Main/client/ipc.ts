@@ -31,8 +31,8 @@ export function setupUserIPC() {
   // 其他 IPC 处理...
   // 处理同步请求
   ipcMain.on("my-global", (event) => {
-    const { AppInfo, env, NODE_ENV } = $$;
-    event.returnValue = { AppInfo, env, NODE_ENV }; // 只返回可序列化的属性
+    const { appInfo, env, NODE_ENV } = $$;
+    event.returnValue = { appInfo, env, NODE_ENV }; // 只返回可序列化的属性
   });
 
   ipcMain.handle("get-screen-sources", async () => {

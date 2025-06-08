@@ -9,27 +9,6 @@ interface WindowProp {
   options?: Electron.BrowserWindowConstructorOptions;
 }
 
-const faviconProPath = `/resources/app.asar.unpacked/public/favicon/png/favicon_ch@3x.png`;
-const faviconDevPath = `../../public/favicon/png/favicon_ch@3x.png`;
-
-const hostConfig = {
-  development: {
-    vue: `http://localhost:${$$.env.VITE_VUE_PORT}`,
-    react: `http://localhost:${$$.env.VITE_REACT_PORT}`
-  },
-  production: {
-    vue: path.join(__dirname, "../vue/index.html"),
-    react: path.join(__dirname, "../react/index.html")
-  }
-};
-
-function resolve(dir: string) {
-  return path.resolve(process.cwd(), dir);
-}
-export function printl(s1, s2, ...rest) {
-  console.log(s1.bgBlue, s2.magenta, ...rest, "\n");
-}
-
 function windowSize() {
   // 获取主屏幕
   const primaryDisplay = screen.getPrimaryDisplay();
@@ -48,8 +27,15 @@ function windowSize() {
 
 function createWindow(param: WindowProp) {
   const { mode, options = {} } = param;
+  const sysConfig = $$.startup;
+  console.log("========$$====>:", {
+    isPro: $$.isPro(),
+    env: $$.env,
+    NODE_ENV: $$.NODE_ENV,
+    appInfo: $$.appInfo,
+    startup: $$.startup
+  });
   const { windowWidth, windowHeight, x, y, minWidth, minHeight } = windowSize();
-  const faviconPath = path.resolve(process.cwd(), $$.isPro() ? faviconProPath : faviconDevPath);
   const mainWindow = new BrowserWindow({
     x: x,
     y: y,
@@ -58,7 +44,7 @@ function createWindow(param: WindowProp) {
     minWidth: minWidth,
     minHeight: minHeight,
     autoHideMenuBar: true,
-    icon: nativeImage.createFromPath(faviconPath),
+    icon: nativeImage.createFromPath(sysConfig.faviconPath),
     webPreferences: {
       webSecurity: false, // 允许加载本地文件
       nodeIntegration: true,
@@ -97,13 +83,8 @@ function createWindow(param: WindowProp) {
   ];
 
   //系统托盘图标目录
-  let trayIcon = path.resolve(__dirname, "../../public/favicon/png", "favicon_ch@2x.png");
-  if (process.platform === "darwin") {
-    trayIcon = path.resolve(__dirname, "../../public/favicon/png", "favicon_ch@2x.png");
-  }
-
   const contextMenu = Menu.buildFromTemplate(trayMenuTemplate);
-  const appTray = new Tray(trayIcon);
+  const appTray = new Tray(sysConfig.trayIconPath);
   appTray.setToolTip("海阔天空");
   appTray.setContextMenu(contextMenu);
 
@@ -118,15 +99,14 @@ function createWindow(param: WindowProp) {
     callback(decodeURI(url));
   });
 
-  printl("主进程trayIcon:", trayIcon);
-  printl("主进程process.cwd():", process.cwd());
-  printl("主进程__dirname:", __dirname);
+  $$.clog("主进程process.cwd():", process.cwd());
+  $$.clog("主进程__dirname:", __dirname);
 
   if (process.env.NODE_ENV === "development") {
-    mainWindow.loadURL(hostConfig.development[mode]).then(() => mainWindow.show());
+    mainWindow.loadURL(sysConfig[mode]).then(() => mainWindow.show());
     mainWindow.webContents.openDevTools();
   } else {
-    mainWindow.loadFile(hostConfig.production[mode]);
+    mainWindow.loadFile(sysConfig[mode]);
   }
 
   mainWindow.on("closed", () => {

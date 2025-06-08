@@ -3,10 +3,8 @@ const net = require("net");
 const path = require("path");
 const fs = require("fs-extra");
 const shell = require("shelljs");
-const dotenv = require("dotenv");
-const Core = require("./core");
 const pkg = require("../package.json");
-const config = require("./config.js");
+const Config = require("./config");
 const { resolve } = require("path");
 const { exec } = require("child_process");
 const { EventEmitter } = require("events");
@@ -37,10 +35,6 @@ class Command extends EventEmitter {
 
   printl(s1, s2, ...rest) {
     console.log("\n", s1.bgMagenta, s2.magenta, ...rest);
-  }
-
-  getEnv() {
-    return dotenv.config({ path: `.env.${process.env.NODE_ENV}` }).parsed || {};
   }
 
   childProcessExec(runPath) {
@@ -98,25 +92,11 @@ class Command extends EventEmitter {
   }
 
   startProcess() {
-    const { VITE_VUE_PORT, VITE_REACT_PORT } = this.getEnv();
-    const isPro = Core.isPro();
-    const viteConfig = [
-      {
-        name: "Vue",
-        mode: process.env.NODE_ENV,
-        server: { port: VITE_VUE_PORT },
-        configFile: resolve(process.cwd(), "vite.vue.ts")
-      },
-      {
-        name: "React",
-        mode: process.env.NODE_ENV,
-        server: { port: VITE_REACT_PORT },
-        configFile: resolve(process.cwd(), "vite.react.ts")
-      }
-    ];
+    const isPro = Config.isPro();
+    const viteConfig = Config.viteConfig();
     if (!isPro) this.cleanCache();
     const processMethod = isPro ? this.buildServer : this.startServer;
-    Promise.all(viteConfig.map((config) => processMethod(config)))
+    Promise.all(viteConfig.map((vc) => processMethod(vc)))
       .then((results) => {
         let resultText = viteConfig.map((c, i) => `✅ ${viteConfig[i].name}启动成功: ${results[i].local}`);
         if (isPro) {
@@ -135,9 +115,8 @@ class Command extends EventEmitter {
 
   // 主进程编译TS为JS
   watchMain() {
-    const _isPro = Core.isPro();
+    const _isPro = Config.isPro();
     const command = [`tsc --project ${resolve(process.cwd(), "tsconfig.main.json")} --preserveWatchOutput`, _isPro ? "" : "-w"].filter(Boolean).join(" ");
-
     this.runExec(command, ({ type, data }) => {
       this.printl("[compile main]", command, data);
       const proStatus = ["cp_close"].includes(type) || data === 0;
@@ -151,7 +130,7 @@ class Command extends EventEmitter {
   }
 
   startBuild() {
-    if (Core.isPro()) {
+    if (Config.isPro()) {
       fs.emptyDirSync(path.join(process.cwd(), "./output"));
       this.builder();
     } else {
@@ -161,7 +140,7 @@ class Command extends EventEmitter {
 
   /** Readme */
   app() {
-    if (config.nodemon) {
+    if (Config.nodemon) {
       this.childProcessExec(`nodemon -e js,ts,tsx -w dist/client -w package.json -w index.js --exec electron . --inspect`);
     } else {
       this.childProcessExec(`electron . --inspect`);

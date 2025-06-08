@@ -6,7 +6,7 @@
 Reflect.set(global, "$$", {});
 
 export default () => {
-  // /** $$.AppInfo 且 初始化公共函数 */
+  // /** $$.appInfo 且 初始化公共函数 */
   require("./appInfo");
 
   // /** $$.log 且 初始化 日志存储文件目录 */

@@ -3,18 +3,18 @@ import createServer from "../server/app";
 import { getJsonFiles } from "../utils/fs";
 
 app.whenReady().then(() => {
-  const config = {
-    ...$$.AppInfo,
-    host: $$.AppInfo.host || $$.env.VITE_BASE_URL,
-    NODE_ENV: $$.NODE_ENV
+  const config = { ...$$.appInfo, host: $$.env.VITE_BASE_URL, NODE_ENV: $$.NODE_ENV };
+  const pageObj = {
+    vue: "src/vue/views",
+    react: "src/react/pages"
   };
+  const pagePath = $$.JoinCwd(pageObj["vue"]);
 
-  console.log("===========config", config);
   createServer(config).then(() => {
     if (process.env.NODE_ENV === "development") {
-      const jsonFiles = getJsonFiles($$.AppInfo.vuePagePath, (dir) => dir.endsWith("index.vue"));
+      const jsonFiles = getJsonFiles(pagePath, (dir) => dir.endsWith("index.vue"));
       const result = jsonFiles.map((item) => {
-        return { path: item.split($$.AppInfo.vuePagePath)[1].replace(/\\/g, "/").replace(".vue", "") };
+        return { path: item.split(pagePath)[1].replace(/\\/g, "/").replace(".vue", "") };
       });
       console.log("=============================result", result);
     }

@@ -20,9 +20,7 @@ function resolve(dir: string) {
 }
 
 const JoinCwd = (...args) => {
-  if (!args.length) {
-    return process.cwd();
-  }
+  if (!args.length) return process.cwd();
   return path.join(process.cwd(), ...args);
 };
 
@@ -52,8 +50,8 @@ export default (mode: string, env: Record<string, any>): UserConfig => {
     base: "./", // 部署在根目录下 , ./vue/  ./react/ 部署在子目录下
     resolve: {
       alias: {
-        "@": resolve("src"),
-        "~": JoinCwd("./")
+        "~": JoinCwd(),
+        "@": resolve("src")
       },
       extensions: [".js", ".ts", ".tsx", ".jsx"]
     },

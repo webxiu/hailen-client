@@ -5,7 +5,39 @@ import { BrowserWindow, Menu, Tray, app, dialog } from "electron";
 
 import path from "path";
 
-const appConfig = require(path.join(__dirname, "../../scripts/config.js"));
+const { appConfig, JoinCwd } = require(path.join(__dirname, "../../scripts/config.js"));
+
+const faviconPath = `/public/favicon/png/favicon_ch@3x.png`;
+const trayIconPath = `/public/favicon/png/favicon_ch@2x.png`;
+
+const getSystemPath = (...dir: string[]) => {
+  if (app.isPackaged) {
+    return $$.JoinCwd("./resources/app.asar.unpacked", ...dir);
+  } else {
+    return $$.JoinCwd(...dir);
+  }
+};
+/** Electron 启动配置 */
+function getStartup() {
+  const _faviconPath = getSystemPath(faviconPath);
+  const _trayIconPath = getSystemPath(trayIconPath);
+  /** 启动路径 */
+  const startup = {
+    development: {
+      vue: `http://localhost:${$$.env.VITE_VUE_PORT}`,
+      react: `http://localhost:${$$.env.VITE_REACT_PORT}`,
+      faviconPath: _faviconPath,
+      trayIconPath: _trayIconPath
+    },
+    production: {
+      vue: path.join(__dirname, "../vue/index.html"),
+      react: path.join(__dirname, "../react/index.html"),
+      faviconPath: _faviconPath,
+      trayIconPath: _trayIconPath
+    }
+  };
+  return startup[$$.NODE_ENV];
+}
 
 // const Build = {
 //   appVersion: Package.version.split("-")[0],
@@ -24,13 +56,18 @@ function getAppPath() {
   return { appPath, rootPath, sourcePath, buildPath };
 }
 
-function getEnv() {
+function getProcessEnv() {
   Object.keys(process.env).forEach((key) => {
     if (key.startsWith("npm_")) Reflect.deleteProperty(process.env, key);
   });
-  return process.env;
+  const viteEnv = Object.keys(process.env)
+    .filter((key) => key.startsWith("VITE_"))
+    .reduce((obj, key) => {
+      obj[key] = process.env[key];
+      return obj;
+    }, {});
+  return viteEnv;
 }
-const { appPath, rootPath, sourcePath, buildPath } = getAppPath();
 
 /*
 # 安装环境
@@ -53,15 +90,15 @@ const { appPath, rootPath, sourcePath, buildPath } = getAppPath();
 } 
 */
 
-Reflect.set($$, "AppInfo", {
+/** 输出打印颜色 */
+function clog(s1, s2, ...rest) {
+  console.log("\n", s1.bgBlue, s2.magenta, ...rest);
+}
+
+Reflect.set($$, "appInfo", {
   __dirname,
-  appPath,
-  rootPath,
-  sourcePath,
-  buildPath,
   platform: process.platform,
-  vuePagePath: path.join(rootPath, "src", "vue", "views"),
-  reactPagePath: path.join(rootPath, "src", "react", "pages"),
+  ...getAppPath(),
   ...appConfig
   // versions: { ...process.versions, ...Build },
   // /** 软件外部存储根目录 */
@@ -81,9 +118,11 @@ Reflect.set($$, "AppInfo", {
 });
 
 Reflect.set($$, "NODE_ENV", app.isPackaged ? "production" : "development");
-Reflect.set($$, "env", { ...getEnv() });
+Reflect.set($$, "clog", clog);
+Reflect.set($$, "JoinCwd", JoinCwd);
+Reflect.set($$, "env", { ...getProcessEnv() }); // 环境变量通过 scripts/config.js 读文件获取，可以移除这个配置,
+Reflect.set($$, "startup", { ...getStartup() });
 Reflect.set($$, "isPro", () => app.isPackaged);
-Reflect.set($$, "JoinDirWithRoot", (...dir) => path.join(process.cwd(), ...dir));
 Reflect.set($$, "isString", (arg) => Reflect.toString.call(arg) === "[object String]");
 Reflect.set($$, "isNumber", (arg) => Reflect.toString.call(arg) === "[object Number]");
 Reflect.set($$, "isObject", (arg) => Reflect.toString.call(arg) === "[object Object]");
