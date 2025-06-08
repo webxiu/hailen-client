@@ -41,6 +41,12 @@ export default {
       name: "Kimi",
       component: () => import("@/vue/views/home/tool/kimi/index.vue"),
       meta: { title: "Kimi聊天", icon: "SetUp" }
+    },
+    {
+      path: "/tool/transform",
+      name: "Transform",
+      component: () => import("@/vue/views/home/tool/transform/index.vue"),
+      meta: { title: "声音转换", icon: "SetUp" }
     }
   ]
 } as RouteRecordRawType;
