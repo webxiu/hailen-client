@@ -13,9 +13,9 @@ const trayIconPath = `/public/favicon/png/favicon_ch@2x.png`;
 const getSystemPath = (...dir: string[]) => {
   if (app.isPackaged) {
     if (process.platform === "darwin") {
-      return $$.JoinCwd("../resources/app.asar", ...dir);
+      return $$.JoinCwd("../resources/app.asar.unpacked", ...dir);
     }
-    return $$.JoinCwd("./resources/app.asar.unpacked", ...dir);
+    return $$.JoinCwd("../resources/app.asar.unpacked", ...dir);
   } else {
     return $$.JoinCwd(...dir);
   }
