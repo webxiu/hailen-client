@@ -3,7 +3,7 @@ import createServer from "../server/app";
 import { getJsonFiles } from "../utils/fs";
 
 app.whenReady().then(() => {
-  const config = { ...$$.appInfo, host: $$.env.VITE_BASE_URL || $$.appInfo.host, NODE_ENV: $$.NODE_ENV };
+  const config = { ...$$.appInfo, host: $$.appInfo.host, NODE_ENV: $$.NODE_ENV };
   const pageObj = {
     vue: "src/vue/views",
     react: "src/react/pages"
