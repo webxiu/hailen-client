@@ -15,7 +15,7 @@ const getSystemPath = (...dir: string[]) => {
     if (process.platform === "darwin") {
       return $$.JoinCwd("../resources/app.asar.unpacked", ...dir);
     }
-    return $$.JoinCwd("../resources/app.asar.unpacked", ...dir);
+    return $$.JoinCwd("./resources/app.asar.unpacked", ...dir);
   } else {
     return $$.JoinCwd(...dir);
   }

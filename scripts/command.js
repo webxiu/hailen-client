@@ -140,7 +140,6 @@ class Command extends EventEmitter {
 
   /** Readme */
   app() {
-    console.log("3333", Config.startOption.nodemon);
     if (Config.startOption.nodemon) {
       this.childProcessExec(`nodemon -e js,ts,tsx -w dist/client -w package.json -w index.js --exec electron . --inspect`);
     } else {
