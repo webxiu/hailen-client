@@ -141,7 +141,7 @@ function create() {
 .piano-key {
   width: 60px;
   height: 100px;
-  background-color: white;
+  background-color: #ffffff7a;
   border: 1px solid #ccc;
   display: flex;
   align-items: flex-end;
@@ -152,7 +152,7 @@ function create() {
   cursor: pointer;
 }
 .piano-key.active {
-  background-color: #f0f0f0;
+  background-color: #ddc7c765;
   transform: scale(1, 0.98);
 }
 </style>

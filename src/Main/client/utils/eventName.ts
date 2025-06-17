@@ -1,0 +1,36 @@
+export enum EventName {
+  /** Electron Event */
+  CreateWindow = "createWindow",
+  /** windows command */
+  WindowCommand = "windows_command",
+  /** test */
+  appReady = "appReady",
+  appQuit = "appQuit",
+  show = "show",
+  close = "close",
+  minimize = "minimize",
+  maximize = "maximize",
+  unmaximize = "unmaximize",
+  ready = "ready",
+  maximized = "maximized",
+  unmaximized = "unmaximized",
+  focus = "focus",
+  blur = "blur",
+  resize = "resize",
+  move = "move",
+  windowStateChanged = "windowStateChanged",
+  windowCreated = "windowCreated",
+  windowClosed = "windowClosed",
+  windowFocusChanged = "windowFocusChanged",
+  windowMaximized = "windowMaximized",
+  windowUnmaximized = "windowUnmaximized",
+  windowMinimized = "windowMinimized",
+  windowRestored = "windowRestored",
+  windowReady = "windowReady",
+  windowBlur = "windowBlur",
+  windowMove = "windowMove",
+  windowResize = "windowResize",
+  windowShow = "windowShow",
+  windowClose = "windowClose",
+  windowMinimize = "windowMinimize"
+}
