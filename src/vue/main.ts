@@ -1,6 +1,7 @@
 import "element-plus/dist/index.css";
-import "./style/index.scss";
-import "./assets/iconfont/iconfont.js";
+import "@/vue/style/index.scss";
+import "@/vue/assets/iconfont/iconfont.js";
+import "virtual:svg-icons-register";
 
 import App from "./App.vue";
 import ElementPlus from "element-plus";

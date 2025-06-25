@@ -2,8 +2,8 @@
 
 // import { User, UserModel } from "../server/database";
 
-import { childExec, childSpawn } from "./utils/childProcess";
-import { desktopCapturer, ipcMain } from "electron";
+import { app, desktopCapturer, ipcMain } from "electron";
+import { childExec, childSpawn, openShell } from "./utils/childProcess";
 
 import { EventName } from "./utils/eventName";
 
@@ -43,17 +43,22 @@ ipcMain.handle("get-screen-sources", async () => {
 });
 
 // 执行命令
-ipcMain.handle(EventName.WindowCommand, async (event, { command }) => {
+ipcMain.handle(EventName.WindowCommand, async (event, { command, method, type }) => {
+  if (method === "getPath") command = app.getPath(command);
   console.log("[command]:", command);
   return new Promise((resolve, reject) => {
-  childExec(command)
-    .then((result) => {
-      console.log("command result:", result);
-      resolve(result);
-    })
-    .catch((error) => {
-      console.error("command error:", error);
-      reject(error);
-    });
+    const cp = {
+      shell: openShell
+    };
+    const exe = cp[type] || childExec;
+    exe(command)
+      .then((result) => {
+        console.log("command result:", result);
+        resolve(result);
+      })
+      .catch((error) => {
+        console.error("command error:", error);
+        reject(error);
+      });
   });
 });

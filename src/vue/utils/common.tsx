@@ -144,6 +144,10 @@ export const cloneDeep = (value) => {
   return objCopy;
 };
 
+export function isExternal(path) {
+  return /^(https?:|mailto:|tel:)/.test(path);
+}
+
 /**
  * 请求接口导出(下载)
  * @param url 下载地址

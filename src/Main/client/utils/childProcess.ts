@@ -1,9 +1,11 @@
-import { exec,spawn} from "child_process";
+import { exec, spawn } from "child_process";
 
-export function childExec(command) { 
+import { shell } from "electron";
+
+export function childExec(command) {
   return new Promise((resolve, reject) => {
     const cp = exec(command);
-    cp.on("error", (error) =>  reject({ error: error.message }));
+    cp.on("error", (error) => reject({ error: error.message }));
     // 子进程结束
     cp.on("close", (code) => {
       if (code === 0) {
@@ -15,11 +17,11 @@ export function childExec(command) {
   });
 }
 
-export function childSpawn(command) { 
+export function childSpawn(command) {
   const cp = spawn(command, { shell: true });
-  return new Promise((resolve, reject) => {   
+  return new Promise((resolve, reject) => {
     let chunk = "";
-    cp.stdout.on("data", (data) => chunk += data.toString());
+    cp.stdout.on("data", (data) => (chunk += data.toString()));
     cp.stderr.on("data", (data) => {
       console.error(`stderr: ${data}`);
       reject({ error: data.toString() });
@@ -31,5 +33,11 @@ export function childSpawn(command) {
         reject({ error: `exited code ${code}` });
       }
     });
+  });
+}
+
+export function openShell(link) {
+  return new Promise((resolve, reject) => {
+    shell.openExternal(link).then(resolve, reject);
   });
 }

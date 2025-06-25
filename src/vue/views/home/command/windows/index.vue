@@ -18,6 +18,15 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref, toRaw } from "vue";
 import { EventName } from "@/Main/client/utils/eventName";
+
+interface Command {
+  command: string /** 命令 */;
+  title: string /** 命令名称 */;
+  description: string /** 命令描述 */;
+  method?: string /** 方法 */;
+  type?: string /** 类型(默认不填直接执行, 为shell时执行shell打开命令) */;
+}
+
 const commandList = reactive([
   {
     title: "Windows Command",
@@ -26,7 +35,17 @@ const commandList = reactive([
       { command: "notepad", title: "记事本", description: "打开系统记事本" },
       { command: "mspaint", title: "画板", description: "打开系统画板" },
       { command: "osk", title: "屏幕键盘", description: "打开屏幕键盘" },
-      { command: "snippingtool", title: "截图工具", description: "打开截图工具" },
+      { command: "desktop", method: "getPath", type: "shell", title: "桌面", description: "打开桌面" },
+      { command: "documents", method: "getPath", type: "shell", title: "文档", description: "打开文档" },
+      { command: "downloads", method: "getPath", type: "shell", title: "下载", description: "打开下载" },
+      { command: "music", method: "getPath", type: "shell", title: "音乐", description: "打开音乐" },
+      { command: "pictures", method: "getPath", type: "shell", title: "图片", description: "打开图片" },
+      { command: "videos", method: "getPath", type: "shell", title: "视频", description: "打开视频" },
+      { command: "appData", method: "getPath", type: "shell", title: "缓存目录", description: "打开缓存目录" },
+      { command: "userData", method: "getPath", type: "shell", title: "用户数据目录", description: "打开用户数据目录" },
+      { command: "exe", method: "getPath", type: "shell", title: "客户端目录", description: "打开客户端目录" },
+      { command: "snippingtool", type: "shell", title: "截图工具", description: "打开截图工具" },
+
       { command: "explorer.exe", title: "资源管理器", description: "打开资源管理器" },
       { command: "explorer .", title: "当前目录资源管理器", description: "在当前目录打开资源管理器" },
       { command: "explorer D:\\", title: "指定目录资源管理器", description: "在指定目录打开资源管理器" },
@@ -59,11 +78,14 @@ const commandList = reactive([
 ]);
 
 function onClick(cmd) {
-  window.electronAPI.invoke(EventName.WindowCommand, toRaw(cmd)).then(res=>{
-    console.log("成功:", res);
-  }).catch(err => {
-    console.error("失败:", err);
-  });
+  window.electronAPI
+    .invoke(EventName.WindowCommand, toRaw(cmd))
+    .then((res) => {
+      console.log("成功:", res);
+    })
+    .catch((err) => {
+      console.error("失败:", err);
+    });
 }
 </script>
 <style lang="scss" scoped>

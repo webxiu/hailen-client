@@ -18,6 +18,25 @@
         <el-form-item label="密码">
           <el-input v-model="formData.password" placeholder="请输入密码" />
         </el-form-item>
+        <el-form-item label="验证码" prop="authcode">
+          <div class="flex">
+            <div class="flex">
+              <el-input
+                ref="authcode"
+                v-model="formData.authcode"
+                placeholder="请输入验证码"
+                name="authcode"
+                type="text"
+                tabindex="3"
+                autocomplete="on"
+                style="width: 100%"
+                clear
+              />
+            </div>
+            <AuthCode :getCode="getCode" />
+            <!-- <SvgIcon icon-class="user" /> -->
+          </div>
+        </el-form-item>
         <el-form-item>
           <el-button v-if="isLogin" type="primary" @click="onSubmit" class="ui-w-100">登录</el-button>
           <el-button v-else type="primary" @click="onRegister" class="ui-w-100">注册</el-button>
@@ -36,18 +55,27 @@ import { reactive, ref } from "vue";
 import { login, register } from "@/vue/api/user";
 import { message } from "@/vue/utils/message";
 import { useUserStore } from "@/vue/store/modules/user";
+import AuthCode from "./components/AuthCode.vue";
 
+const authCode = ref("");
 const isLogin = ref(true);
 const useStore = useUserStore();
-
 const formData = reactive({
   username: "123",
   password: "123",
+  authcode: "",
   phone: "1888888888",
   email: "123@qq.com"
 });
 
+function getCode(code) {
+  formData.authcode = code;
+  authCode.value = code;
+}
 function onSubmit() {
+  if (formData.authcode !== authCode.value) {
+    return message.error("验证码错误");
+  }
   useStore.userLogin(formData).then(() => {
     message.success("登录成功");
   });
