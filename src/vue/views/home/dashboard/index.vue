@@ -4,7 +4,6 @@
     <el-button type="primary" @click="onReact">React窗口</el-button>
     <el-button type="primary" @click="onPing">ping</el-button>
     <el-button type="primary" @click="onGet">获取数据</el-button>
-    <el-button type="primary" @click="logout">退出登录</el-button>
     <div>根路径: {{ $$.appInfo.rootPath }}</div>
     <div>
       <pre>
@@ -19,9 +18,7 @@
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
 import { addList, getList } from "@/vue/api/home/dashboard";
-import { useUserStore } from "@/vue/store/modules/user";
 
-const useStore = useUserStore();
 const count = ref(0);
 const userData = ref([]);
 console.log("$$", $$);
@@ -52,11 +49,6 @@ function onGet() {
     console.log("data", data);
     userData.value = data;
   });
-}
-
-// 退出登录
-function logout() {
-  useStore.logOut();
 }
 </script>
 

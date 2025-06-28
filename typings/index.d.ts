@@ -13,6 +13,7 @@ import type { IconifyIcon } from "@iconify/vue";
 import type { TableColumns } from "@pureadmin/table";
 import type { ElOption, UploadProps } from "element-plus";
 import { CheckOnlineWebsocket } from "@/hooks/websocketOnline";
+import { EventName } from "@/Main/client/utils/eventName";
 import React from "react";
 const PackageJson = require("~/package.json");
 const pkg = JSON.parse(JSON.stringify(PackageJson));
@@ -40,7 +41,7 @@ interface ElectronAPI {
   send: (channel: string, data: any) => void;
   on: (channel: string, func: (...args: any[]) => void) => void;
   receive: (channel: string, func: (...args: any[]) => void) => void;
-  getScreenSources: () => Promise<any>;
+  invoke: (channel: EventName, data: any) => Promise<any>;
 }
 
 interface StartupType {

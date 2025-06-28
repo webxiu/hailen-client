@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer } from "electron";
 
+import { EventName } from "./utils/eventName";
 import type { User } from "../server/database";
 
 // Custom APIs for renderer
@@ -27,7 +28,15 @@ const electronAPI = {
   getGlobal: async () => {
     return await ipcRenderer.invoke("xxx-call");
   },
-  getScreenSources: () => ipcRenderer.invoke("get-screen-sources")
+  // windows commands
+  invoke: (channel: EventName, data) => {
+    // 只允许特定的通道
+    const validChannels: EventName[] = [EventName.WindowCommand];
+    if (validChannels.includes(channel)) {
+      return ipcRenderer.invoke(channel, data);
+    }
+    return Promise.reject(new Error("EventName事件未定义"));
+  }
 };
 
 console.log("preload:", process.contextIsolated);

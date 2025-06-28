@@ -6,9 +6,11 @@ import HxIcon from "@/vue/components/HxIcon";
 import HxSearchHighlight from "@/vue/components/HxSearchHighlight/index.vue";
 import HxTable from "@/vue/components/HxTable";
 import HxUploadButton from "@/vue/components/HxUploadButton/index.vue";
+import SvgIcon from "@/vue/components/SvgIcon/index.vue";
 
 const components = [
   { name: "HxIcon", component: HxIcon },
+  { name: "SvgIcon", component: SvgIcon },
   { name: "HxTable", component: HxTable },
   { name: "ButtonList", component: ButtonList }, // 表格操作按钮
   { name: "HxUploadButton", component: HxUploadButton }, // 上传

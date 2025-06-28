@@ -112,7 +112,7 @@ const getAudio = (type: OscillatorType, index: number, rate: number) => {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 .piano-key.active {
-  background-color: #f0f0f0;
+  background-color: #ddc7c765;
   transform: scale(1, 0.98);
 }
 /* 钢琴 */

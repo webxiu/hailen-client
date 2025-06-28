@@ -4,14 +4,17 @@ import ElementPlus from "unplugin-element-plus/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import babel from "@rollup/plugin-babel";
 import createHtmlPlugin from "vite-plugin-html";
+import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
+import path from "path";
 import react from "@vitejs/plugin-react";
+import svgLoader from "vite-svg-loader";
 import { viteBuildInfo } from "./info";
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 
 // import { cdn } from "./cdn";
 // import { configCompressPlugin } from "./compress";
-// import svgLoader from "vite-svg-loader";
+
 // import legacy from "@vitejs/plugin-legacy";
 
 export function getPlugins({ isVue, isReact, modeObj, VITE_COMPRESSION }) {
@@ -33,9 +36,13 @@ export function getPlugins({ isVue, isReact, modeObj, VITE_COMPRESSION }) {
         ]
       }
     }),
-    viteBuildInfo()
+    viteBuildInfo(),
     // 1.svg组件化支持
     // svgLoader()
+    createSvgIconsPlugin({
+      iconDirs: [path.resolve(process.cwd(), "src/vue/assets/icons")], // 你的 SVG 目录
+      symbolId: "icon-[name]" // 支持目录层级: icon-[dir]-[name]
+    })
 
     // 2.代码压缩
     // configCompressPlugin(VITE_COMPRESSION)
