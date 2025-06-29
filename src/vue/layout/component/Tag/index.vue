@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import HxIcon from "@/vue/components/HxIcon";
-import { ref, reactive, unref } from "vue";
+import { tr } from "element-plus/es/locale";
+import { ref, reactive, unref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 const tabDom = ref();
 const scrollbarDom = ref();
@@ -144,6 +145,54 @@ function transformI18n(item) {}
 function onRouteClick(item) {
   console.log("跳转", item);
 }
+
+onMounted(() => {
+  scrollbarDom.value.addEventListener("mousedown", onMouseDown);
+});
+
+const startX = ref(0);
+const elementX = ref(0); // 记录元素当前的实际位置
+
+function onMouseDown(ev) {
+  startX.value = ev.clientX;
+  elementX.value = translateX.value; // 保存元素当前的位置
+  tabDom.value.style.transition = "none";
+
+  scrollbarDom.value.addEventListener("mousemove", onMouseMove);
+  scrollbarDom.value.addEventListener("mouseup", onMouseUp);
+  document.addEventListener("mouseup", onMouseUp); // 防止在元素外释放鼠标
+}
+
+function onMouseMove(ev) {
+  const distX = ev.clientX - startX.value;
+  translateX.value = elementX.value + distX; // 基于原始位置计算新位置
+  const minX = scrollbarDom.value.clientWidth - tabDom.value.offsetWidth;
+
+  if (translateX.value > 0) {
+    const scale = (scrollbarDom.value.offsetWidth / (scrollbarDom.value.scrollWidth + translateX.value)) * 1.5;
+    translateX.value = elementX.value + distX * scale;
+  } else if (translateX.value < minX) {
+    const scale = (scrollbarDom.value.offsetWidth / (scrollbarDom.value.scrollWidth - translateX.value)) * 1.5;
+    translateX.value = elementX.value + distX * scale;
+  }
+  tabDom.value.style.transform = `translateX(${translateX.value}px)`;
+}
+
+function onMouseUp() {
+  tabDom.value.style.transition = "transform 0.3s ease-in-out";
+  const minX = scrollbarDom.value.clientWidth - tabDom.value.offsetWidth;
+  if (translateX.value > 0) {
+    translateX.value = 0;
+    tabDom.value.style.transform = `translateX(${translateX.value}px)`;
+  } else if (translateX.value < minX) {
+    translateX.value = minX;
+    tabDom.value.style.transform = `translateX(${translateX.value}px)`;
+  }
+
+  scrollbarDom.value.removeEventListener("mousemove", onMouseMove);
+  scrollbarDom.value.removeEventListener("mouseup", onMouseUp);
+  document.removeEventListener("mouseup", onMouseUp);
+}
 </script>
 
 <template>
@@ -152,24 +201,22 @@ function onRouteClick(item) {
       <HxIcon icon="ArrowLeftBold" @click="handleScroll(200)" />
     </span>
     <div ref="scrollbarDom" class="scroll-container">
-      <div class="tab select-none" ref="tabDom">
-        <div class="tab select-none" ref="tabDom" @wheel.prevent="onWheel($event)">
-          <div
-            :ref="'dynamic' + index"
-            v-for="(item, index) in multiTags"
-            :key="index"
-            :class="['scroll-item is-closable', 'card']"
-            @contextmenu.prevent="openMenu(item, $event)"
-            @mouseenter.prevent="onMouseenter(index)"
-            @mouseleave.prevent="onMouseleave(index)"
-            @click="tagOnClick(item)"
-          >
-            <span @click="onRouteClick(item)">{{ item.meta.title }}</span>
-            <span class="el-icon-close" @click.stop="deleteMenu(item)">
-              <HxIcon icon="CloseBold" />
-            </span>
-            <!-- <div :ref="'schedule' + index" v-if="showModel !== 'card'" :class="[scheduleIsActive(item)]" /> -->
-          </div>
+      <div class="tab select-none" ref="tabDom" @wheel.prevent="onWheel($event)">
+        <div
+          :ref="'dynamic' + index"
+          v-for="(item, index) in multiTags"
+          :key="index"
+          :class="['scroll-item is-closable', 'card']"
+          @contextmenu.prevent="openMenu(item, $event)"
+          @mouseenter.prevent="onMouseenter(index)"
+          @mouseleave.prevent="onMouseleave(index)"
+          @click="tagOnClick(item)"
+        >
+          <span @click="onRouteClick(item)">{{ item.meta.title }}</span>
+          <span class="el-icon-close" @click.stop="deleteMenu(item)">
+            <HxIcon icon="CloseBold" />
+          </span>
+          <!-- <div :ref="'schedule' + index" v-if="showModel !== 'card'" :class="[scheduleIsActive(item)]" /> -->
         </div>
       </div>
     </div>
@@ -269,10 +316,7 @@ function onRouteClick(item) {
 
       .scroll-item {
         transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-
-        &:nth-child(1) {
-          margin-left: 5px;
-        }
+        user-select: none;
       }
     }
   }
