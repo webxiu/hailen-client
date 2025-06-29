@@ -45,6 +45,7 @@
   width: 100%;
   font-size: 14px;
   color: var(--el-text-color-primary);
+  background: #fff;
   box-shadow: 0 0 1px #888;
 
   .scroll-item {
@@ -70,7 +71,8 @@
 
       &:hover {
         font-size: 13px;
-        color: #fff; 
+        color: #fff;
+        background: #b4bccc;
         border-radius: 50%;
       }
     }
@@ -129,7 +131,7 @@
     color: var(--el-text-color-primary);
     white-space: nowrap;
     list-style-type: none;
-    background: #f60;
+    background: #fff;
     border-radius: 4px;
     outline: 0;
     box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
