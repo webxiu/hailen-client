@@ -6,6 +6,7 @@ import HxIcon from "@/vue/components/HxIcon";
 // import BackButton from "@/vue/components/BackButton/index.vue";
 import Star from "@/vue/components/Star.vue";
 import { useUserStore } from "@/vue/store/modules/user";
+import Tag from "./component/Tag/index.vue";
 
 const useStore = useUserStore();
 const names = ref<string[]>([]);
@@ -73,16 +74,19 @@ function logout() {
     </div>
     <div class="flex-col flex-1 ui-h-100 ui-ov-h">
       <div class="main-header">
-        <div class="left">
-          <SvgIcon icon-class="user" />
-          <el-button type="primary" @click="openInVScode()">在VSCode中打开</el-button>
+        <div class="head-view">
+          <div class="left">
+            <SvgIcon icon-class="user" />
+            <el-button type="primary" @click="openInVScode()">在VSCode中打开</el-button>
+          </div>
+          <div class="right">
+            <el-select v-model="theme" @change="onChange" style="width: 140px">
+              <el-option v-for="item in themeConfig" :key="item.value" :value="item.value">{{ item.label }}</el-option>
+            </el-select>
+            <el-button type="primary" @click="logout">退出登录</el-button>
+          </div>
         </div>
-        <div class="right">
-          <el-select v-model="theme" @change="onChange" style="width: 140px">
-            <el-option v-for="item in themeConfig" :key="item.value" :value="item.value">{{ item.label }}</el-option>
-          </el-select>
-          <el-button type="primary" @click="logout">退出登录</el-button>
-        </div>
+        <Tag />
       </div>
       <div class="main-content flex-1">
         <router-view>
@@ -110,7 +114,11 @@ function logout() {
 .main-header {
   padding: 10px;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  .head-view {
+    display: flex;
+    justify-content: space-between;
+  }
 }
 .main-content {
   width: 100%;
