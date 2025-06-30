@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import HxIcon from "@/vue/components/HxIcon";
-import { tr } from "element-plus/es/locale";
+import { useMoveEvent } from "@/vue/hooks/event";
 import { ref, reactive, unref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
-const tabDom = ref();
-const scrollbarDom = ref();
-const translateX = ref(0);
+const wrapRef = ref();
+const scrollRef = ref();
 const isShowArrow = ref(true);
 const route = useRoute();
 const router = useRouter();
+const { onWheel, onStepMove } = useMoveEvent({ wrapRef, scrollRef });
 
 const tagsViews = reactive<Array<any>>([
   { icon: "RefreshRight", text: "重新加载", divided: false, disabled: false, show: true },
@@ -21,13 +21,16 @@ const tagsViews = reactive<Array<any>>([
   { icon: "FullScreen", text: "内容全屏", divided: false, disabled: false, show: true }
 ]);
 
+// 5-10随即索引
+
 const tags = new Array(30).fill(0).map((item, index) => {
+  const randomIndex = Math.floor(Math.random() * 5 + 5);
   index++;
   return {
     name: `Home${index}`,
     path: `/workbench/home${index}`,
     meta: {
-      title: "标题" + index,
+      title: "标题很累空间四六级".slice(0, randomIndex) + index,
       icon: "icon-gongzuotai",
       keepAlive: true
     },
@@ -42,45 +45,6 @@ const tags = new Array(30).fill(0).map((item, index) => {
 });
 
 const multiTags = ref(tags);
-
-const handleScroll = (offset: number): void => {
-  tabDom.value.style.transition = "transform 0.5s ease-in-out";
-
-  const scrollbarDomWidth = scrollbarDom.value ? scrollbarDom.value?.offsetWidth : 0;
-  const tabDomWidth = tabDom.value ? tabDom.value.offsetWidth : 0;
-  if (offset > 0) {
-    translateX.value = Math.min(0, translateX.value + offset);
-  } else {
-    if (scrollbarDomWidth < tabDomWidth) {
-      if (translateX.value >= -(tabDomWidth - scrollbarDomWidth)) {
-        translateX.value = Math.max(translateX.value + offset, scrollbarDomWidth - tabDomWidth);
-      }
-    } else {
-      translateX.value = 0;
-    }
-  }
-  tabDom.value.style.transform = `translateX(${translateX.value}px)`;
-};
-
-function onWheel(ev) {
-  ev.preventDefault();
-  const scrollbarDomWidth = scrollbarDom.value ? scrollbarDom.value?.offsetWidth : 0;
-  const tabDomWidth = tabDom.value ? tabDom.value.offsetWidth : 0;
-  const scrollWidth = tabDomWidth - scrollbarDomWidth;
-  const x = ev.deltaY; // 计算鼠标滚动的距离
-  tabDom.value.style.transition = "none"; // 消除tabDom的动画
-  if (scrollbarDomWidth < tabDomWidth) {
-    if (translateX.value >= -scrollWidth) {
-      translateX.value = Math.max(translateX.value + x, scrollbarDomWidth - tabDomWidth);
-    }
-  }
-  if (translateX.value >= 0) translateX.value = 0;
-
-  if (translateX.value >= 0 || translateX.value <= -scrollWidth) {
-    tabDom.value.style.transition = "transform 0.5s ease-in-out";
-  }
-  tabDom.value.style.transform = `translateX(${translateX.value}px)`;
-}
 
 function openMenu(tag, e) {}
 
@@ -145,63 +109,15 @@ function transformI18n(item) {}
 function onRouteClick(item) {
   console.log("跳转", item);
 }
-
-onMounted(() => {
-  scrollbarDom.value.addEventListener("mousedown", onMouseDown);
-});
-
-const startX = ref(0);
-const elementX = ref(0); // 记录元素当前的实际位置
-
-function onMouseDown(ev) {
-  startX.value = ev.clientX;
-  elementX.value = translateX.value; // 保存元素当前的位置
-  tabDom.value.style.transition = "none";
-
-  scrollbarDom.value.addEventListener("mousemove", onMouseMove);
-  scrollbarDom.value.addEventListener("mouseup", onMouseUp);
-  document.addEventListener("mouseup", onMouseUp); // 防止在元素外释放鼠标
-}
-
-function onMouseMove(ev) {
-  const distX = ev.clientX - startX.value;
-  translateX.value = elementX.value + distX; // 基于原始位置计算新位置
-  const minX = scrollbarDom.value.clientWidth - tabDom.value.offsetWidth;
-
-  if (translateX.value > 0) {
-    const scale = (scrollbarDom.value.offsetWidth / (scrollbarDom.value.scrollWidth + translateX.value)) * 1.5;
-    translateX.value = elementX.value + distX * scale;
-  } else if (translateX.value < minX) {
-    const scale = (scrollbarDom.value.offsetWidth / (scrollbarDom.value.scrollWidth - translateX.value)) * 1.5;
-    translateX.value = elementX.value + distX * scale;
-  }
-  tabDom.value.style.transform = `translateX(${translateX.value}px)`;
-}
-
-function onMouseUp() {
-  tabDom.value.style.transition = "transform 0.3s ease-in-out";
-  const minX = scrollbarDom.value.clientWidth - tabDom.value.offsetWidth;
-  if (translateX.value > 0) {
-    translateX.value = 0;
-    tabDom.value.style.transform = `translateX(${translateX.value}px)`;
-  } else if (translateX.value < minX) {
-    translateX.value = minX;
-    tabDom.value.style.transform = `translateX(${translateX.value}px)`;
-  }
-
-  scrollbarDom.value.removeEventListener("mousemove", onMouseMove);
-  scrollbarDom.value.removeEventListener("mouseup", onMouseUp);
-  document.removeEventListener("mouseup", onMouseUp);
-}
 </script>
 
 <template>
   <div class="tags-view">
     <span v-show="isShowArrow" class="arrow-left">
-      <HxIcon icon="ArrowLeftBold" @click="handleScroll(200)" />
+      <HxIcon icon="ArrowLeftBold" @click="onStepMove(400)" />
     </span>
-    <div ref="scrollbarDom" class="scroll-container">
-      <div class="tab select-none" ref="tabDom" @wheel.prevent="onWheel($event)">
+    <div ref="wrapRef" class="wrap-container">
+      <div class="scroll-area select-none" ref="scrollRef" @wheel.prevent="onWheel($event)">
         <div
           :ref="'dynamic' + index"
           v-for="(item, index) in multiTags"
@@ -221,7 +137,7 @@ function onMouseUp() {
       </div>
     </div>
     <span v-show="isShowArrow" class="arrow-right">
-      <HxIcon icon="ArrowRightBold" @click="handleScroll(-200)" />
+      <HxIcon icon="ArrowRightBold" @click="onStepMove(-400)" />
     </span>
 
     <!-- 右侧功能按钮 -->
@@ -279,34 +195,16 @@ function onMouseUp() {
         border-radius: 50%;
       }
     }
-
-    &.is-closable:not(:first-child) {
-      // &:hover {
-      //   padding-right: 18px;
-
-      //   &:not(.is-active) {
-      //     .el-icon-close {
-      //       animation: close 200ms ease-in forwards;
-      //     }
-      //   }
-      // }
-    }
   }
 
-  a {
-    padding: 0 4px;
-    color: var(--el-text-color-primary);
-    text-decoration: none;
-  }
-
-  .scroll-container {
+  .wrap-container {
     position: relative;
     flex: 1;
     padding: 5px 0;
     overflow: hidden;
     white-space: nowrap;
 
-    .tab {
+    .scroll-area {
       position: relative;
       float: left;
       overflow: visible;
