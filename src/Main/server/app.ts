@@ -1,12 +1,12 @@
 import "colors";
 
 import { logger, verifyToken } from "./middlewares";
+import { prefixPath, uploadDir } from "./config/constant";
 
 import Koa from "koa";
 import bodyParser from "koa-bodyparser";
 import koaStatic from "koa-static";
 import { printl } from "./config";
-import { uploadDir } from "./config/constant";
 
 async function createServer({ platform, host, NODE_ENV }) {
   const app = new Koa();
@@ -17,11 +17,16 @@ async function createServer({ platform, host, NODE_ENV }) {
   const { Database } = await import("./database/db");
   const { registerRouter } = await import("./routes");
 
+  // 设置静态资源目录 注意：koa-static默认会处理所有路径，所以需要在其他中间件之前
+  app.use((ctx, next) => {
+    if (!ctx.path.startsWith(prefixPath)) return next();
+    ctx.path = ctx.path.replace(prefixPath, "");
+    return koaStatic(uploadDir)(ctx, next);
+  });
   // 使用中间件
   app.use(bodyParser());
   app.use(logger);
   app.use(verifyToken);
-  app.use(koaStatic(uploadDir));
 
   app.use(async (ctx, next) => {
     ctx.set("Access-Control-Allow-Origin", "*");

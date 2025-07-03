@@ -1,5 +1,7 @@
 import path from "node:path";
 
+export const prefixPath = "/static";
+
 /** 设置上传文件的目录 */
 export const uploadDir = path.join(__dirname, "../static");
 
@@ -10,4 +12,4 @@ export const secretKey = "your_secret_key";
 export const tokenExpireTime = "1h";
 
 /** 不验证Token的白名单 */
-export const whiteList = ["/user/login", "/user/register"];
+export const whiteList = ["/user/login", "/user/register", prefixPath];
