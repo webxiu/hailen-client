@@ -2,6 +2,7 @@ import { RouteRecordRaw, createRouter, createWebHashHistory, createWebHistory } 
 import { getUserInfo, removeUserInfo } from "@/vue/utils/storage";
 
 import NProgress from "@/vue/utils/progress";
+import { useTagStoreHook } from "@/vue/store/modules/tag";
 
 /** 路由白名单 */
 export const whiteList = ["/login", "/404"];
@@ -61,6 +62,7 @@ router.beforeEach((to, from, next) => {
       next({ path: "/" });
       NProgress.done();
     } else {
+      addTagPath(to);
       next();
     }
   } else {
@@ -76,6 +78,10 @@ router.beforeEach((to, from, next) => {
 router.afterEach(() => {
   NProgress.done();
 });
+
+function addTagPath(to) {
+  useTagStoreHook().addTag(to);
+}
 
 // 重置路由
 export function resetRouter() {

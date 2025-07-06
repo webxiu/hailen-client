@@ -14,11 +14,17 @@ export function useMoveEvent(options: EventOptionType) {
   const translateX = ref(0);
   const startX = ref(0);
   const elementX = ref(0);
+  const isMove = ref(false);
 
   onMounted(() => {
     if (!wrapRef.value || !scrollRef.value) return;
     wrapRef.value.addEventListener("mousedown", onMouseDown);
   });
+
+  function moveToView(distX) {
+    translateX.value = distX;
+    scrollRef.value.style.transform = `translateX(${translateX.value}px)`;
+  }
 
   function onMouseDown(ev) {
     startX.value = ev.clientX;
@@ -31,6 +37,7 @@ export function useMoveEvent(options: EventOptionType) {
   }
 
   function onMouseMove(ev) {
+    isMove.value = true;
     const distX = ev.clientX - startX.value;
     translateX.value = elementX.value + distX; // 基于原始位置计算新位置
     const minX = wrapRef.value.clientWidth - scrollRef.value.offsetWidth;
@@ -46,6 +53,7 @@ export function useMoveEvent(options: EventOptionType) {
   }
 
   function onMouseUp() {
+    if (!isMove.value) return;
     // scrollRef.value.style.transition = "transform 0.3s ease-in-out";
     const minX = wrapRef.value.clientWidth - scrollRef.value.offsetWidth;
     if (translateX.value > 0) {
@@ -60,26 +68,73 @@ export function useMoveEvent(options: EventOptionType) {
     wrapRef.value.removeEventListener("mouseup", onMouseUp);
     document.removeEventListener("mouseup", onMouseUp);
   }
+  const rubberOffset = ref(0); // 新增响应式变量
+  const isDragging = ref(false);
+  const isAnimating = ref(false);
 
   function onWheel(ev) {
+    console.log("111", 111);
+
     ev.preventDefault();
-    const scrollbarDomWidth = wrapRef.value ? wrapRef.value?.offsetWidth : 0;
-    const tabDomWidth = scrollRef.value ? scrollRef.value.offsetWidth : 0;
-    const scrollWidth = tabDomWidth - scrollbarDomWidth;
-    const x = -ev.deltaY; // 计算鼠标滚动的距离
-    scrollRef.value.style.transition = "none"; // 消除tabDom的动画
-    if (scrollbarDomWidth < tabDomWidth) {
-      if (translateX.value >= -scrollWidth) {
-        translateX.value = Math.max(translateX.value + x, scrollbarDomWidth - tabDomWidth);
+    const wrapWidth = wrapRef.value?.offsetWidth || 0;
+    const tabWidth = scrollRef.value?.offsetWidth || 0;
+    const scrollWidth = tabWidth - wrapWidth;
+
+    // 当前是否在边界内？
+    const atRightEdge = translateX.value >= 0;
+    const atLeftEdge = translateX.value <= -scrollWidth;
+
+    const x = -ev.deltaY; // 滚动方向（正值向右）
+
+    // ===== 引入 rubberOffset =====
+    if (!isDragging.value && !isAnimating.value) {
+      if (atRightEdge && x > 0) {
+        // 右侧边界继续向右滚动，添加弹性偏移
+        const maxRubber = 50;
+        const delta = Math.min(x * 0.5, maxRubber);
+        rubberOffset.value += delta;
+      } else if (atLeftEdge && x < 0) {
+        // 左侧边界继续向左滚动，添加弹性偏移
+        const maxRubber = 50;
+        const delta = Math.min(-x * 0.5, maxRubber);
+        rubberOffset.value -= delta;
+      } else {
+        // 正常滚动范围
+        translateX.value = Math.max(Math.min(translateX.value + x, 0), -scrollWidth);
+        rubberOffset.value = 0;
+      }
+
+      // 应用变换
+      scrollRef.value.style.transition = "none";
+      scrollRef.value.style.transform = `translateX(${translateX.value + rubberOffset.value}px)`;
+
+      // 开始回弹动画
+      startAnimation();
+    }
+  }
+
+  function startAnimation() {
+    if (isAnimating.value || rubberOffset.value === 0) return;
+
+    isAnimating.value = true;
+    let offset = rubberOffset.value;
+    const friction = 0.85;
+
+    function step() {
+      offset *= friction;
+      if (Math.abs(offset) > 0.1) {
+        scrollRef.value.style.transform = `translateX(${translateX.value + offset}px)`;
+        requestAnimationFrame(step);
+      } else {
+        offset = 0;
+        scrollRef.value.style.transition = "transform 0.5s cubic-bezier(0.26, 1, 0.68, 1)";
+        scrollRef.value.style.transform = `translateX(${translateX.value}px)`;
+        rubberOffset.value = 0;
+        isAnimating.value = false;
       }
     }
-    if (translateX.value >= 0) translateX.value = 0;
 
-    if (translateX.value >= 0 || translateX.value <= -scrollWidth) {
-      // scrollRef.value.style.transition = "transform 0.5s cubic-bezier(0.26, 1, 0.68, 1)";
-    }
-    scrollRef.value.style.transition = "transform 0.5s cubic-bezier(0.26, 1, 0.68, 1)";
-    scrollRef.value.style.transform = `translateX(${translateX.value}px)`;
+    requestAnimationFrame(step);
   }
 
   function onStepMove(offset: number) {
@@ -101,5 +156,5 @@ export function useMoveEvent(options: EventOptionType) {
     scrollRef.value.style.transform = `translateX(${translateX.value}px)`;
   }
 
-  return { onWheel, onStepMove };
+  return { translateX, onWheel, onStepMove, moveToView };
 }
