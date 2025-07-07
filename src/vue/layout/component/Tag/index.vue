@@ -164,7 +164,8 @@ function handleAliveRoute(route, type) {}
 function transformI18n(item) {}
 
 function onRouteClick(item) {
-  console.log("跳转", item);
+  console.log("跳转", item); 
+  router.push({ path:item.path, query: item.query });
 }
 </script>
 
@@ -268,8 +269,7 @@ function onRouteClick(item) {
       text-align: center;
 
       &:hover {
-        font-size: 13px;
-        color: #fff;
+        font-size: 13px; 
         border-radius: 50%;
         transform: translate(3px, -50%) scale(0);
       }
