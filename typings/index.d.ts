@@ -236,6 +236,8 @@ declare global {
    *  继承 `@pureadmin/table` 的 `TableColumns` ，方便全局直接调用
    */
   interface TableColumnList extends TableColumns {
+    label: string;
+    prop: string;
     /** 表格行编辑表单网格占比 */
     span?: number;
     /** 禁止编辑 */

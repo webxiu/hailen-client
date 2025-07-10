@@ -4,7 +4,7 @@ import BlendedSearch from "@/vue/components/BlendedSearch/index.vue";
 import ButtonList from "@/vue/components/ButtonList/index.vue";
 import HxIcon from "@/vue/components/HxIcon";
 import HxSearchHighlight from "@/vue/components/HxSearchHighlight/index.vue";
-import HxTable from "@/vue/components/HxTable";
+import HxTable from "@/vue/components/HxTable/index.vue";
 import HxUploadButton from "@/vue/components/HxUploadButton/index.vue";
 import SvgIcon from "@/vue/components/SvgIcon/index.vue";
 

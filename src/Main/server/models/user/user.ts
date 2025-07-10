@@ -1,7 +1,8 @@
-import { Database } from "../../database/db";
-import { User } from "./types";
+import { User, UserItemType } from "./types";
 
-export type { User };
+import { Database } from "../../database/db";
+
+export type { User, UserItemType };
 
 export default class UserModel {
   private db: Database;

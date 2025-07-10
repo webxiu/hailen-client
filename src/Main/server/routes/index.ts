@@ -1,7 +1,7 @@
 import { closeServer, startServer } from "../controllers/common/websoket";
 import { createUser, getUserById, getUsers } from "../controllers/common/user";
 import { download, getMarkdown, getVersion } from "../controllers/common/download";
-import { login, register } from "../controllers/user/index";
+import { getUserList, login, register } from "../controllers/user/index";
 import { uploadController, uploadImg } from "../controllers/common/upload";
 
 import Koa from "koa";
@@ -17,6 +17,7 @@ const indexRouter = new Router({ prefix: "/home" });
 /** 1.用户 */
 userRouter.post("/login", bodyParser(), login);
 userRouter.post("/register", bodyParser(), register);
+userRouter.get("/list", getUserList);
 
 /** 2.首页 */
 indexRouter.get("/dashboard", getDashboard);

@@ -35,4 +35,14 @@ const register = async (ctx: Context) => {
   }
 };
 
-export { login, register };
+const getUserList = async (ctx: Context) => {
+  const { username, email } = ctx.query;
+  try {
+    const user = await userModel.findAll({ username, email });
+    ctx.body = responseStatus(200, user);
+  } catch (error: any) {
+    ctx.body = responseStatus(400, error, "操作失败");
+  }
+};
+
+export { login, register, getUserList };
