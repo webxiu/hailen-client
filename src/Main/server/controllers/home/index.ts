@@ -1,14 +1,14 @@
-import HomeModel, { User } from "../../models/home";
+import DbModel, { User } from "./model";
 
 import { Context } from "koa";
 import { responseStatus } from "../../config/index";
 
-const homeModel = new HomeModel();
+const dbModel = new DbModel();
 
 const getDashboard = async (ctx: Context) => {
   const { username, email } = ctx.query;
   try {
-    const user = await homeModel.findAll({ username, email });
+    const user = await dbModel.findAll({ username, email });
     ctx.body = responseStatus(200, user);
   } catch (error: any) {
     ctx.body = responseStatus(400, error, "注册失败");

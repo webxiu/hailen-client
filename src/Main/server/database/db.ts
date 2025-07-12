@@ -56,7 +56,7 @@ export class Database {
     //     password varchar(50) NOT NULL,
     //     email varchar(50) NOT NULL,
     //     phone varchar(20),
-    //     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    //     create_date DATETIME DEFAULT CURRENT_TIMESTAMP
     //   )`
     //   // 其他表...
     // ];

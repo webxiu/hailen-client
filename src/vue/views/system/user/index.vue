@@ -13,7 +13,7 @@ const columns = ref<TableColumnList[]>([
   { label: "用户名", prop: "username" },
   { label: "邮箱", prop: "email" },
   { label: "手机号", prop: "phone" },
-  { label: "创建时间", prop: "created_at" }
+  { label: "创建时间", prop: "create_date" }
 ]);
 const dataList = ref<UserItemType[]>([]);
 

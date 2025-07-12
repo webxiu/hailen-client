@@ -1,4 +1,4 @@
-import UserModel, { User } from "../../models/user/user";
+import DbModel, { User } from "./model";
 
 import { Context } from "koa";
 import bcryptjs from "bcryptjs";
@@ -6,12 +6,12 @@ import jwt from "jsonwebtoken";
 import { responseStatus } from "../../config/index";
 import { secretKey } from "../../config/constant";
 
-const userModel = new UserModel();
+const dbModel = new DbModel();
 
 const login = async (ctx: Context) => {
   const { password, email } = ctx.request.body as User["user"];
   try {
-    const user = await userModel.login({ email, password });
+    const user = await dbModel.login({ email, password });
     if (!user) return (ctx.body = responseStatus(400, "邮箱不存在"));
     const { password: pwd, ...userWithoutPassword } = user;
     const isPasswordValid = await bcryptjs.compare(password, pwd); // 比较输入密码和数据库哈希密码
@@ -27,8 +27,12 @@ const login = async (ctx: Context) => {
 const register = async (ctx: Context) => {
   const { username, password, email, phone } = ctx.request.body as User["user"];
   try {
+    // 邮箱是否存在
+    const hasUser = await dbModel.findByEmail(email);
+    if (hasUser) return (ctx.body = responseStatus(400, "邮箱已存在"));
+
     const pwd = await bcryptjs.hash(password, 10);
-    const user = await userModel.register({ username, password: pwd, email, phone });
+    const user = await dbModel.register({ username, password: pwd, email, phone });
     ctx.body = responseStatus(200, user);
   } catch (error: any) {
     ctx.body = responseStatus(400, "注册失败");
@@ -38,7 +42,7 @@ const register = async (ctx: Context) => {
 const getUserList = async (ctx: Context) => {
   const { username, email } = ctx.query;
   try {
-    const user = await userModel.findAll({ username, email });
+    const user = await dbModel.findAll({ username, email });
     ctx.body = responseStatus(200, user);
   } catch (error: any) {
     ctx.body = responseStatus(400, error, "操作失败");

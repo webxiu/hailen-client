@@ -84,6 +84,7 @@ function onRegister() {
   register(formData).then(({ data }) => {
     if (!data) return message.error("注册失败");
     message.success("注册成功");
+    isLogin.value = true;
   });
 }
 </script>

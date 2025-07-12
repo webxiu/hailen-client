@@ -12,4 +12,4 @@ export const secretKey = "your_secret_key";
 export const tokenExpireTime = "1h";
 
 /** 不验证Token的白名单 */
-export const whiteList = ["/user/login", "/user/register", prefixPath];
+export const whiteList = [prefixPath, "/system/menu/create", "/user/login", "/user/register"];

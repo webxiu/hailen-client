@@ -9,13 +9,13 @@ export default {
     {
       path: "/system/menu",
       name: "SystemMenu",
-      component: () => import("@/vue/views/system/menuManage/index.vue"),
+      component: () => import("@/vue/views/system/menu/index.vue"),
       meta: { title: "菜单管理", icon: "Menu" }
     },
     {
       path: "/system/user",
       name: "SystemUser",
-      component: () => import("@/vue/views/system/userManage/index.vue"),
+      component: () => import("@/vue/views/system/user/index.vue"),
       meta: { title: "用户管理", icon: "UserFilled" }
     }
   ]

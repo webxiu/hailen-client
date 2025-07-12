@@ -1,4 +1,5 @@
 import { closeServer, startServer } from "../controllers/common/websoket";
+import { createMenu, getMenu } from "../controllers/system";
 import { createUser, getUserById, getUsers } from "../controllers/common/user";
 import { download, getMarkdown, getVersion } from "../controllers/common/download";
 import { getUserList, login, register } from "../controllers/user/index";
@@ -12,8 +13,13 @@ import { index } from "../controllers/common";
 import { koaBody } from "koa-body";
 import { uploadDir } from "../config/constant";
 
+const systemRouter = new Router({ prefix: "/system" });
 const userRouter = new Router({ prefix: "/user" });
 const indexRouter = new Router({ prefix: "/home" });
+/** 1.应用 */
+systemRouter.post("/menu/create", bodyParser(), createMenu);
+systemRouter.get("/menu/list", getMenu);
+
 /** 1.用户 */
 userRouter.post("/login", bodyParser(), login);
 userRouter.post("/register", bodyParser(), register);
@@ -40,8 +46,7 @@ indexRouter.get("/dashboard", getDashboard);
 
 // 使用路由
 function registerRouter(app: Koa) {
-  // export { indexRouter, userRouter, uploadRouter, downloadRouter, websocketRouter };
-  const routers = [userRouter, indexRouter];
+  const routers = [systemRouter, userRouter, indexRouter];
   routers.forEach((r) => app.use(r.routes()).use(r.allowedMethods()));
 }
 

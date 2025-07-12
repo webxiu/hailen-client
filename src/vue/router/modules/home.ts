@@ -11,12 +11,6 @@ export default {
       name: "HomeDashboard",
       component: () => import("@/vue/views/home/dashboard/index.vue"),
       meta: { title: "仪表盘", icon: "Odometer" }
-    },
-    {
-      path: "/home/user",
-      name: "HomeUser",
-      component: () => import("@/vue/views/home/user/index.vue"),
-      meta: { title: "用户", icon: "User" }
     }
   ]
 } as RouteRecordRawType;

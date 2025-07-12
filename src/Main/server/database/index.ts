@@ -1,12 +1,10 @@
-// src/main/models/user.ts
-
 import { Database } from "./db";
 
 export interface User {
   id?: number;
   name: string;
   email: string;
-  created_at?: string;
+  create_date?: string;
 }
 
 export class UserModel {
@@ -19,7 +17,7 @@ export class UserModel {
   /**
    * 创建用户
    */
-  async create(user: Omit<User, "id" | "created_at">): Promise<User | undefined> {
+  async create(user: Omit<User, "id" | "create_date">): Promise<User | undefined> {
     const sql = `
       INSERT INTO users (name, email)
       VALUES (?, ?)
@@ -50,7 +48,7 @@ export class UserModel {
    * 获取所有用户
    */
   async findAll(): Promise<User[]> {
-    const sql = "SELECT * FROM users ORDER BY created_at DESC";
+    const sql = "SELECT * FROM users ORDER BY create_date DESC";
     return this.db.all<User>(sql);
   }
 

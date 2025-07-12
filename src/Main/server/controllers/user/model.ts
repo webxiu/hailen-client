@@ -4,7 +4,7 @@ import { Database } from "../../database/db";
 
 export type { User, UserItemType };
 
-export default class UserModel {
+export default class DbModel {
   private db: Database;
   constructor() {
     this.db = Database.getInstance();
@@ -14,7 +14,7 @@ export default class UserModel {
     const sql = "SELECT * FROM users WHERE email = ?";
     return await this.db.get<User["user"]>(sql, [user.email]);
   }
-  async register(user: Omit<User["user"], "id" | "created_at">): Promise<boolean> {
+  async register(user: Omit<User["user"], "id" | "createDate">): Promise<boolean> {
     const sql = `INSERT INTO users (username, password, email, phone) VALUES (?, ?, ?, ?)`;
     try {
       await this.db.run(sql, [user.username, user.password, user.email, user.phone]);
@@ -31,7 +31,7 @@ export default class UserModel {
 
   // 获取所有用户
   async findAll(params: Record<string, any>): Promise<User[]> {
-    // const sql = "SELECT * FROM users WHERE ORDER BY created_at DESC";
+    // const sql = "SELECT * FROM users WHERE ORDER BY create_date DESC";
     let sql = "SELECT * FROM users WHERE 1=1";
     const queryParams: any[] = [];
     for (const key in params) {
@@ -40,7 +40,7 @@ export default class UserModel {
         queryParams.push(params[key]);
       }
     }
-    sql += " ORDER BY created_at DESC";
+    sql += " ORDER BY create_date DESC";
     return this.db.all<User>(sql, queryParams);
   }
 }

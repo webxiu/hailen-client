@@ -3,7 +3,7 @@ import { User } from "./types";
 
 export type { User };
 
-export default class HomeModel {
+export default class DbModel {
   private db: Database;
   constructor() {
     this.db = Database.getInstance();
@@ -19,7 +19,7 @@ export default class HomeModel {
         queryParams.push(params[key]);
       }
     }
-    sql += " ORDER BY created_at DESC";
+    sql += " ORDER BY create_date DESC";
     return this.db.all<User>(sql, queryParams);
   }
 }
