@@ -26,12 +26,11 @@ export default class DbModel {
 
       // 4. 重置自增主键计数器（SQLite 需要）
       await db.run("DELETE FROM sqlite_sequence WHERE name = 'menus'");
-      console.log("mergedData", mergedData);
+
       // 5. 插入合并后的数据（ID 会从 1 开始重新分配）
       for (const item of mergedData) {
         await db.run("INSERT INTO menus (title, path, icon) VALUES (?, ?, ?)", [item.title, item.path, item.icon]);
       }
-
       await db.run("COMMIT");
       return true;
     } catch (error) {
@@ -45,5 +44,28 @@ export default class DbModel {
     const db = this.db;
     const result = await db.all("SELECT * FROM menus");
     return result as MenuItemType[];
+  }
+
+  async updateMenu(data: { id: number; [key: string]: any }): Promise<boolean> {
+    try {
+      const { id, ...rest } = data;
+      if (!id) throw new Error("菜单ID不能为空");
+
+      const keyValues = Object.entries(rest).filter(([_, value]) => value !== undefined);
+      if (keyValues.length === 0) throw new Error("没有要更新的字段");
+
+      const hasId = await this.db.get("SELECT id FROM menus WHERE id = ?", [id]);
+      if (!hasId) throw new Error(`菜单ID:${id}不存在`);
+
+      const setFields = keyValues.map(([key]) => `${key} = ?`);
+      const queryParams = keyValues.map(([_, value]) => value);
+      queryParams.push(id); // 添加WHERE条件参数
+      const sql = `UPDATE menus SET ${setFields.join(", ")} WHERE id = ?`;
+      await this.db.run(sql, queryParams);
+
+      return true;
+    } catch (error) {
+      throw error; // 或者 return false 根据业务需求
+    }
   }
 }

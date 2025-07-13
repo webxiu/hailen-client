@@ -12,7 +12,7 @@ function post(data, host) {
       console.log(8888, response.data);
     })
     .catch((error) => {
-      console.error("请求失败:", error);
+      console.error("axios请求失败");
     });
 }
 

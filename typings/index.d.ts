@@ -263,6 +263,7 @@ declare global {
     groupCode?: string;
     groupName?: string;
     columnGroupId?: string;
+    formatter?: (row: any) => JSX.Element;
     // type?: string;
     // align?: string;
     // fixed?: string;

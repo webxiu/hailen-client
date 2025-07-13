@@ -16,7 +16,7 @@ import { stringify } from "qs";
 import { useUserStoreHook } from "@/vue/store/modules/user";
 import { whiteList } from "@/vue/router/index";
 
-const useStore = useUserStoreHook();
+const userStore = useUserStoreHook();
 
 const defaultConfig: AxiosRequestConfig = {
   baseURL: process.env.VITE_BASE_API,
@@ -73,7 +73,7 @@ class PureHttp {
         this.removeBlank(config.data); // 移除请求参数前后空格
         const userInfo = getUserInfo();
         if (config.headers && userInfo.token) {
-          config.headers["Authorization"] = userInfo.token;
+          config.headers["Authorization"] = "Bearer " + userInfo.token;
         }
 
         // 是否隐藏Loading
@@ -117,6 +117,7 @@ class PureHttp {
 
         // ================ 状态码判断 start ================
         if (data.status === 200) {
+          data.message && message.success(data.message);
           return data;
         } else if (response.status === 200 && !data.status) {
           return data; // 处理Excel数据导出没有包装响应格式
@@ -125,7 +126,7 @@ class PureHttp {
         if (data.status === 401) {
           message.error(data.message);
           const timer = setTimeout(() => {
-            useStore.logOut();
+            userStore.logOut();
             clearTimeout(timer);
           }, 1500);
         } else if (STATUS_CODE[data.status]) {

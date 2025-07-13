@@ -25,4 +25,15 @@ async function getMenu(ctx: Context) {
     ctx.body = responseStatus(400, "获取失败!");
   }
 }
-export { createMenu, getMenu };
+
+async function updateMenu(ctx: Context) {
+  try {
+    const res = await dbModel.updateMenu(ctx.request.body);
+    if (!res) return (ctx.body = responseStatus(400, "操作失败"));
+    ctx.body = responseStatus(200, res, "操作成功");
+  } catch (error) {
+    error = error.toString();
+    ctx.body = responseStatus(400, error || "操作失败!");
+  }
+}
+export { createMenu, getMenu, updateMenu };

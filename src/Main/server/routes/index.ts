@@ -1,5 +1,5 @@
 import { closeServer, startServer } from "../controllers/common/websoket";
-import { createMenu, getMenu } from "../controllers/system";
+import { createMenu, getMenu, updateMenu } from "../controllers/system";
 import { createUser, getUserById, getUsers } from "../controllers/common/user";
 import { download, getMarkdown, getVersion } from "../controllers/common/download";
 import { getUserList, login, register } from "../controllers/user/index";
@@ -19,6 +19,7 @@ const indexRouter = new Router({ prefix: "/home" });
 /** 1.应用 */
 systemRouter.post("/menu/create", bodyParser(), createMenu);
 systemRouter.get("/menu/list", getMenu);
+systemRouter.post("/menu/update", bodyParser(), updateMenu);
 
 /** 1.用户 */
 userRouter.post("/login", bodyParser(), login);

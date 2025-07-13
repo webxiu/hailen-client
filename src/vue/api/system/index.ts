@@ -9,3 +9,7 @@ export type { LoginInfoType, UserInfoType, UserItemType };
 export function menuList(params: Partial<UserItemType>) {
   return http.request<UserItemType[]>("get", "/system/menu/list", { params });
 }
+/** 修改菜单 */
+export function updateMenu(data: Partial<UserItemType>) {
+  return http.request<UserItemType[]>("post", "/system/menu/update", { data });
+}
