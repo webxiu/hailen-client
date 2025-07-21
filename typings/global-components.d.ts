@@ -12,6 +12,7 @@ declare module "vue" {
     Auth: typeof import("../src/components/ReAuth")["Auth"];
     HxIcon: typeof import("../src/vue//components/HxIcon")["HxIcon"];
     HxTable: typeof import("../src/vue/components/HxTable")["HxTable"];
+    HxForm: typeof import("../src/vue/components/HxForm/index.vue")["HxForm"];
     AgGridTable: typeof import("../src/vue/components/AgGridTable/index.vue")["AgGridTable"];
     ButtonList: DefineComponent<ButtonListProps>;
     HxSearchHighlight: DefineComponent<SearchHighlightProps>;
