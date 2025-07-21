@@ -12,13 +12,17 @@
         </code>
       </pre>
     </div>
+    <Webview :src="src" :useragent="weixinUserAgent" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
 import { addList, getList } from "@/vue/api/home/dashboard";
+import Webview from "@/vue/components/Webview/index.vue";
+import { weixinUserAgent } from "@/vue/config/constant";
 
+const src = "https://channels.weixin.qq.com/platform";
 const count = ref(0);
 const userData = ref([]);
 console.log("$$", $$);

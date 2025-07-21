@@ -22,3 +22,6 @@ export const PAGE_CONFIG: PaginationProps = {
   /** 分页选择 */
   pageSizes: [30, 100, 500, 1000, 100000]
 } as PaginationProps;
+
+// 微信浏览器标识
+export const weixinUserAgent ="Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36 MicroMessenger/2.9.0.1080(0x6209004A) Process/MMDownloadProcess WindowsWechat";

@@ -46,8 +46,9 @@ function createWindow(param: WindowProp) {
     autoHideMenuBar: true,
     icon: nativeImage.createFromPath(sysConfig.faviconPath),
     webPreferences: {
-      webSecurity: false, // 允许加载本地文件
-      nodeIntegration: true,
+      webviewTag: true,
+      webSecurity: false, // 是否启用网页安全(false: 允许跨域请求, 可能暴露用户数据给恶意网站。增加 XSS 和 CSRF 攻击的风险)
+      nodeIntegration: true, // 是否启用 Node.js 集成
       contextIsolation: true, // 是否启用上下文隔离
       preload: path.resolve(__dirname, "./preload.js")
     },

@@ -28,12 +28,12 @@ function mkdirSync(dirName) {
 }
 
 function getJsonFiles(jsonPath, fn) {
-  let jsonFiles = [];
+  const jsonFiles = [];
   function findJsonFile(dir) {
-    let files = fs.readdirSync(dir);
-    files.forEach(function (item, index) {
-      let fPath = path.join(dir, item);
-      let stat = fs.statSync(fPath);
+    const files = fs.readdirSync(dir);
+    files.forEach(function (item) {
+      const fPath = path.join(dir, item);
+      const stat = fs.statSync(fPath);
       if (stat.isDirectory() === true) {
         findJsonFile(fPath); //目录
       } else if (stat.isFile() === true) {

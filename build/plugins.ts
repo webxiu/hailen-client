@@ -19,7 +19,12 @@ import vueJsx from "@vitejs/plugin-vue-jsx";
 
 export function getPlugins({ isVue, isReact, modeObj, VITE_COMPRESSION }) {
   return [
-    vue(),
+    vue({
+      template: {
+        // 将 webview 视为原生自定义元素
+        compilerOptions: { isCustomElement: (tag) =>["webview"].includes(tag) }
+      }
+    }),
     isVue
       ? vueJsx({
           // 如果需要 Babel 特定功能，可以在这里配置
