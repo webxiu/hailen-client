@@ -1,7 +1,35 @@
 <script setup lang="tsx">
-import { ref, reactive, onMounted } from "vue";
-import { menuList, updateMenu, UserItemType } from "@/vue/api/system";
+import { ref, reactive, onMounted, watch } from "vue";
+import { menuList, updateMenu, MenuItemType } from "@/vue/api/system";
 import { QueryParamsType, SearchOptionType } from "@/vue/components/BlendedSearch/index.vue";
+import type { PaginationProps } from "element-plus";
+
+const formData = reactive({
+  page: 1,
+  pageSize: 3,
+  title: "",
+  path: "",
+  create_date: ""
+});
+
+watch(
+  formData,
+  (value) => {
+    console.log("表单数据:", value);
+  },
+  { deep: true }
+);
+
+const queryParams = reactive({
+  title: "Mac指令",
+  // path: ""
+});
+
+const pagination = reactive<PaginationProp>({
+  page: formData.page,
+  pageSize: formData.pageSize,
+  total: 0
+});
 
 const searchOptions = reactive<SearchOptionType[]>([
   { label: "菜单名称", value: "title" },
@@ -16,32 +44,17 @@ const searchOptions = reactive<SearchOptionType[]>([
     ]
   }
 ]);
-const queryParams = reactive({
-  page: 1,
-  pageSize: 3,
-  title: "你看了",
-  path: "是否"
-});
 
-const pagination = reactive({
-  // page: queryParams.page,
-  currentPage: queryParams.page,
-  pageSize: queryParams.pageSize,
-  total: 0
-});
-
-const columns = ref<TableColumnList[]>([
-  {
-    label: "菜单名称",
-    prop: "title"
-  },
+const columns = ref<TableColumnType[]>([
+  { label: "菜单名称", prop: "title" },
   { label: "菜单路径", prop: "path" },
   { label: "菜单图标", prop: "icon" },
   { label: "创建时间", prop: "create_date" },
   {
     label: "操作",
     prop: "operation",
-    formatter: ({ row }) => {
+    render: (data: RenderParamType<MenuItemType>) => {
+      const { row } = data;
       return (
         <el-link type="primary" onClick={() => onEdit(row)}>
           {row.title}卧槽
@@ -50,7 +63,7 @@ const columns = ref<TableColumnList[]>([
     }
   }
 ]);
-const dataList = ref<UserItemType[]>([]);
+const dataList = ref<MenuItemType[]>([]);
 
 const formConfigs = () => {
   return [
@@ -64,13 +77,16 @@ onMounted(() => {
   getTableList();
 });
 
-const onTagSearch = (v) => {
-  console.log("v", v);
+const onTagSearch = (values) => {
+    Object.assign(formData, values);
+  console.log("搜索:", values);
+  console.log("最新表单formData:", formData);
+  getTableList();
 };
 let timer = null;
 // 获取数据
 function getTableList() {
-  menuList({}).then(({ data }) => {
+  menuList(formData).then(({ data }) => {
     dataList.value = data;
     pagination.total = data.length;
     // timer && clearInterval(timer);
@@ -88,20 +104,24 @@ function onEdit(row) {
   updateMenu(row);
 }
 
-function handleSizeChange(val: number) {
-  console.log(`${val} items per page`);
-}
-function handleCurrentChange(val: number) {
-  console.log(`current page: ${val}`);
+function onPaginationChange({ page, pageSize }) {
+  console.log(page, pageSize);
 }
 </script>
 
 <template>
   <div>
     用户
-    <HxTable :dataList="dataList" :columns="columns" :pagination="pagination" @size-change="handleSizeChange" @current-change="handleCurrentChange">
+    <HxTable
+      :dataList="dataList"
+      v-model:page="formData.page"
+      v-model:pageSize="formData.pageSize"
+      :columns="columns"
+      :pagination="pagination"
+      @paginationChange="onPaginationChange"
+    >
       <template #query>
-        <BlendedSearch @tagSearch="onTagSearch" :queryParams="queryParams" :searchOptions="searchOptions" placeholder="请选择" searchField="search" :immediate="false" />
+        <BlendedSearch @tagSearch="onTagSearch" :queryParams="queryParams" :searchOptions="searchOptions" placeholder="请选择" searchField="title" :immediate="true" />
       </template>
       <template #operation> 666 </template>
       <template #footer></template>

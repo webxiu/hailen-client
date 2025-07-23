@@ -1,10 +1,3 @@
-<!-- /*
- * @Author: Hailen
- * @Date: 2023-06-29 11:27:55
- * @Last Modified by:   Hailen
- * @Last Modified time: 2023-06-29 11:27:55
- */ -->
-
 <template>
   <div class="filter-field border-line">
     <div v-show="searchOptions.length > 0">
@@ -244,11 +237,13 @@ const placeholderText = computed(() => {
 });
 
 watch(props, initData, { immediate: true, deep: true });
-watch(resultMaps, (val) => {
-  if (props.immediate && Object.keys(val).length > 0) {
-    onFinish(val); // // 初始化结果返回
-  }
-});
+watch(
+  resultMaps,
+  (val) => {
+    if (props.immediate) onFinish(val); // 结果返回
+  },
+  { immediate: props.immediate }
+);
 
 // 初始化查询内容
 function initData(val) {

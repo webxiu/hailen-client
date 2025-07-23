@@ -1,4 +1,5 @@
-import { Database } from "../../database/db";
+import { Database, SQLGenerator } from "../../database/db";
+
 import { MenuItemType } from "./types";
 
 export type { MenuItemType };
@@ -40,32 +41,30 @@ export default class DbModel {
     }
   }
 
-  async getMenu(): Promise<MenuItemType[]> {
+  async getMenu(params): Promise<MenuItemType[]> {
     const db = this.db;
-    const result = await db.all("SELECT * FROM menus");
+    const { sql, values } = SQLGenerator.select("menus", params, { order: "create_date ASC" });
+    console.log("sql", sql, values);
+    const result = await db.all(sql, values);
     return result as MenuItemType[];
   }
 
   async updateMenu(data: { id: number; [key: string]: any }): Promise<boolean> {
-    try {
-      const { id, ...rest } = data;
-      if (!id) throw new Error("菜单ID不能为空");
+    const { id, ...rest } = data;
+    if (!id) throw new Error("菜单ID不能为空");
 
-      const keyValues = Object.entries(rest).filter(([_, value]) => value !== undefined);
-      if (keyValues.length === 0) throw new Error("没有要更新的字段");
+    const keyValues = Object.entries(rest).filter(([_, value]) => value !== undefined);
+    if (keyValues.length === 0) throw new Error("没有要更新的字段");
 
-      const hasId = await this.db.get("SELECT id FROM menus WHERE id = ?", [id]);
-      if (!hasId) throw new Error(`菜单ID:${id}不存在`);
+    const hasId = await this.db.get("SELECT id FROM menus WHERE id = ?", [id]);
+    if (!hasId) throw new Error(`菜单ID:${id}不存在`);
 
-      const setFields = keyValues.map(([key]) => `${key} = ?`);
-      const queryParams = keyValues.map(([_, value]) => value);
-      queryParams.push(id); // 添加WHERE条件参数
-      const sql = `UPDATE menus SET ${setFields.join(", ")} WHERE id = ?`;
-      await this.db.run(sql, queryParams);
+    const setFields = keyValues.map(([key]) => `${key} = ?`);
+    const queryParams = keyValues.map(([_, value]) => value);
+    queryParams.push(id); // 添加WHERE条件参数
+    const sql = `UPDATE menus SET ${setFields.join(", ")} WHERE id = ?`;
+    await this.db.run(sql, queryParams);
 
-      return true;
-    } catch (error) {
-      throw error; // 或者 return false 根据业务需求
-    }
+    return true;
   }
 }

@@ -19,7 +19,9 @@ const createMenu = async (ctx: Context) => {
 
 async function getMenu(ctx: Context) {
   try {
-    const res = await dbModel.getMenu();
+    // 获取get参数
+    const params = ctx.query;
+    const res = await dbModel.getMenu(params);
     if (!res) return (ctx.body = responseStatus(400, "获取失败"));
     ctx.body = responseStatus(200, res);
   } catch (error) {
@@ -32,9 +34,8 @@ async function updateMenu(ctx: Context) {
     const res = await dbModel.updateMenu(ctx.request.body);
     if (!res) return (ctx.body = responseStatus(400, "操作失败"));
     ctx.body = responseStatus(200, res, "操作成功");
-  } catch (error) {
-    error = error.toString();
-    ctx.body = responseStatus(400, error || "操作失败!");
+  } catch (error) { 
+    ctx.body = responseStatus(400, error.toString() || "操作失败!");
   }
 }
 export { createMenu, getMenu, updateMenu };

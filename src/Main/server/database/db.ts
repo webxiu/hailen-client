@@ -49,29 +49,29 @@ export class Database {
    * 初始化数据库表
    */
   private async init(): Promise<void> {
-    // const tables = [
-    //   `CREATE TABLE IF NOT EXISTS users (
-    //     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    //     username varchar(50) NOT NULL UNIQUE,
-    //     password varchar(50) NOT NULL,
-    //     email varchar(50) NOT NULL,
-    //     phone varchar(20),
-    //     create_date DATETIME DEFAULT CURRENT_TIMESTAMP
-    //   )`
-    //   // 其他表...
-    // ];
-
     for (const sql of tables) {
       await this.run(sql);
     }
   }
 
   /**
-   * 执行 SQL 语句
+   * 运行 SQL 语句
    */
   public async run(sql: string, params: any[] = []): Promise<void> {
     return new Promise((resolve, reject) => {
       this.db.run(sql, params, (err) => {
+        if (err) reject(err);
+        else resolve();
+      });
+    });
+  }
+
+  /**
+   * 执行 SQL 语句
+   */
+  public async exec(sql: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.db.exec(sql, (err) => {
         if (err) reject(err);
         else resolve();
       });
@@ -112,5 +112,57 @@ export class Database {
         else resolve();
       });
     });
+  }
+}
+export class SQLGenerator {
+  /** 生成查询语句 */
+  static select(table, where, options) {
+    const { page, pageSize, ...rest } = where;
+    const { whereStr, values } = this.getWhere(rest);
+    let sql = `SELECT * FROM ${table}${whereStr ? ` WHERE ${whereStr}` : ""}`;
+
+    const pageNum = +page || 1;
+    const limit = +pageSize || 30;
+    const offset = (pageNum - 1) * pageSize;
+    if (options.order) sql += ` ORDER BY ${options.order}`;
+    if (pageSize) sql += ` LIMIT ${limit}`;
+    if (page) sql += ` OFFSET ${offset}`;
+    return { sql, values: values };
+  }
+
+  /** 生成插入语句 */
+  static inset(table, data) {
+    const keys = Object.keys(data);
+    const values = Object.values(data);
+    const sql = `INSERT INTO ${table} (${keys.join(", ")}) VALUES (${keys.map(() => "?").join(", ")})`;
+    return { sql, values };
+  }
+
+  /** 生成更新语句 */
+  static update(table, data, where) {
+    const { whereStr, values } = this.getWhere(where);
+    const keys = Object.keys(data);
+    const setFields = keys.map((key) => `${key} = ?`).join(", ");
+    const queryParams = Object.values(data);
+    queryParams.push(...Object.values(where));
+    const sql = `UPDATE ${table} SET ${setFields} ${whereStr ? `WHERE ${whereStr}` : ""}`;
+    return { sql, values: queryParams };
+  }
+  /** 生成删除语句 */
+  static delete(table, where) {
+    const { whereStr, values } = this.getWhere(where);
+    const queryParams = Object.values(where);
+    const sql = `DELETE FROM ${table} ${whereStr ? `WHERE ${whereStr}` : ""}`;
+    return { sql, values: queryParams };
+  }
+
+  /** 获取 where 语句 */
+  static getWhere(where) {
+    const filterFn = (value) => ![undefined, null, ""].includes(value);
+    const keys = Object.keys(where).filter((key) => filterFn(where[key]));
+    const values = Object.values(where).filter((value) => filterFn(value));
+    const whereStr = keys.map((key) => `${key} = ?`).join(" AND ");
+
+    return { whereStr, values };
   }
 }

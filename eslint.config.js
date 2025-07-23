@@ -20,7 +20,8 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+      '@typescript-eslint/no-explicit-any': 'off',
+      "react-refresh/only-export-components": ["off", { allowConstantExport: true }],
       "@typescript-eslint/no-unused-vars": [
         "off",
         {
@@ -28,8 +29,8 @@ export default tseslint.config(
           varsIgnorePattern: "^_"
         }
       ],
-      "no-unused-vars": "warn",
-      "no-ex-assign": "off" // 关闭给参数赋值的时候报错
+      "no-unused-vars": "off",
+      "no-ex-assign": "warn" // 关闭给参数赋值的时候报错
     }
   }
 );

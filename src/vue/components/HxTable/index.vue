@@ -1,32 +1,34 @@
 <script lang="tsx">
-import { PropType, defineComponent, h, ref, VNode, watch } from "vue";
+import { PropType, defineComponent, h, ref, VNode, watch, defineEmits, reactive } from "vue";
 import { ElPagination, ElTableColumn } from "element-plus";
-import type { TableColumnCtx, PaginationProps } from "element-plus";
+import type { TableColumnCtx } from "element-plus";
+import defaultProps from "element-plus/es/components/table/src/table/defaults";
 
 interface FormatterParams {
   row: any;
-  column: TableColumnCtx<any>;
+  column: TableColumnType;
   cellValue: any;
   rowIndex: number;
   columnIndex?: number;
 }
 
 const props = {
+  ...defaultProps,
   title: { type: String, default: "" },
-  border: { type: String, default: "" },
-  pagination: { type: Object as PropType<PaginationProps>, default: () => ({}) },
-  dataList: { type: Array as PropType<any[]>, default: () => [] },
-  columns: { type: Array as PropType<TableColumnList[]>, default: () => [] },
+  size: { type: String, default: "" },
   loading: { type: Boolean, default: false },
-  onSizeChange: { type: Function, default: () => {} },
-  onCurrentChange: { type: Function, default: () => {} }
+  pagination: { type: Object as PropType<PaginationProp>, default: () => ({}) },
+  dataList: { type: Array as PropType<any[]>, default: () => [] },
+  columns: { type: Array as PropType<TableColumnType[]>, default: () => [] }
 };
 
 export default defineComponent({
   props: props,
   name: "HxTable",
-  emits: ["submit", "reset", "change"],
-  setup(props, { slots }) {
+  emits: ["update:page", "update:pageSize", "paginationChange"],
+  setup(props, { attrs, slots, emit }) {
+    const pagination = reactive({ ...props.pagination });
+
     watch(
       () => props,
       () => {
@@ -35,34 +37,26 @@ export default defineComponent({
       { deep: true }
     );
 
-    function renderColumn(col, colIndex) {
+    // 改变页码
+    function onCurrentChange(page) {
+      pagination.page = page;
+      emit("paginationChange", pagination);
+    }
+
+    // 改变每页条数
+    function onSizeChange(pageSize) {
+      pagination.pageSize = pageSize;
+      emit("paginationChange", pagination);
+    }
+
+    // 渲染表格列
+    function renderColumn(col: TableColumnType, colIndex) {
       const formatter = (row, column, cellValue, rowIndex) => {
-        if (!col.formatter) return h("span", { class: "hx-cell" }, cellValue);
-        return col.formatter({ row, column, cellValue, rowIndex, colIndex });
+        if (!col.render) return h("span", { class: "hx-cell" }, cellValue);
+        return col.render({ row, column, cellValue, rowIndex, colIndex });
       };
       return h(ElTableColumn, { ...col, key: col.prop, formatter }, slots);
     }
-
-    function renderPagination(): VNode {
-      const { onSizeChange, onCurrentChange } = props;
-      return h(
-        ElPagination,
-        {
-          ...props.pagination,
-          // "current-page": props.pagination.page,
-          "v-model:currentPage": props.pagination.page,
-          "v-model:pageSize": props.pagination.pageSize,
-          pageSize: props.pagination.pageSize,
-          pageSizes: props.pagination.pageSizes || [30, 100, 200, 500, 1000],
-          layout: "total, sizes, prev, pager, next, jumper",
-          onSizeChange,
-          onCurrentChange
-        },
-        slots
-      );
-    }
-
-    console.log("slots", slots);
 
     return () => (
       <div className="hx-table">
@@ -71,7 +65,7 @@ export default defineComponent({
           <div className="hx-header-right">{slots?.operation ? (slots.operation() as any) : null}</div>
         </div>
         <div className="hx-table">
-          <el-table data={props.dataList} border>
+          <el-table {...attrs} data={props.dataList} border>
             {props.columns.map(renderColumn)}
           </el-table>
         </div>
@@ -80,7 +74,19 @@ export default defineComponent({
             <slot name="footerLeft">提示信息</slot>
           </div>
           <div className="hx-footer-right">
-            <slot name="footerRight">{renderPagination() as any}</slot>
+            <slot name="footerRight">
+              <el-pagination
+                {...props.pagination}
+                v-model:current-page={pagination.page}
+                v-model:page-size={pagination.pageSize}
+                page-sizes={[100, 200, 300, 400]}
+                size={props.size}
+                layout="sizes, prev, pager, next"
+                total={1000}
+                onSizeChange={onSizeChange}
+                onCurrentChange={onCurrentChange}
+              />
+            </slot>
           </div>
         </div>
       </div>

@@ -24,7 +24,7 @@ const tagsViews = reactive<Array<any>>([
   { icon: "FullScreen", text: "内容全屏", divided: false, disabled: false, show: true }
 ]);
 const tags = computed(() => useTagStore().getTagList);
-console.log("useTagStore", useTagStore().getTagList);
+// console.log("useTagStore", useTagStore().getTagList);
 const linkIsActive = computed(() => {
   return (item, previous, next) => {
     // 判断路由及参数来激活当前Tag标签
@@ -72,7 +72,7 @@ function getScrollTagPosition() {
   // 找到当前高亮的路由
   const index = tags.value.findIndex((item) => linkIsActive.value(item, true, false));
   const activeRef = instance.refs["dynamic" + index];
-  console.log("============route", activeRef, route);
+  // console.log("============route", activeRef, route);
   if (!activeRef) return;
   const activeTabEl = activeRef[0];
   const tabItemElOffsetLeft = (activeTabEl as HTMLElement)?.offsetLeft;

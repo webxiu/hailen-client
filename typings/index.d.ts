@@ -10,15 +10,14 @@ import { AppEventNames } from "@/Types/EventTypes";
 import type { VNode, FunctionalComponent, PropType as VuePropType, ComponentPublicInstance } from "vue";
 import type { ECharts } from "echarts";
 import type { IconifyIcon } from "@iconify/vue";
-import type { TableColumns } from "@pureadmin/table";
+import type { TableColumnCtx, PaginationProps } from "element-plus";
 import type { ElOption, UploadProps } from "element-plus";
 import { CheckOnlineWebsocket } from "@/hooks/websocketOnline";
 import { EventName } from "@/Main/client/utils/eventName";
 import React from "react";
-const PackageJson = require("~/package.json");
-const pkg = JSON.parse(JSON.stringify(PackageJson));
-
-type ValueOf<T> = T[keyof T];
+// const PackageJson = require("~/package.json");
+// const pkg = JSON.parse(JSON.stringify(PackageJson));
+// console.log('pkg', pkg)
 
 interface ElectronProcessVersions extends NodeJS.ProcessVersions {
   brotli: string;
@@ -70,7 +69,7 @@ declare global {
   };
   export const electronAPI: ElectronAPI;
 
-  module NodeJS {
+  namespace NodeJS {
     interface Global {
       globalData: {
         showCloseModal: boolean;
@@ -90,6 +89,13 @@ declare global {
       constructor(lng: number, lat: number);
     }
   }
+
+  type ValueOf<T> = T[keyof T];
+
+  /** 只读属性转可读写 */
+  type Mutable<T> = {
+    -readonly [P in keyof T]: T[P];
+  };
 
   /** 全局变量$$ */
   export namespace $$ {
@@ -232,44 +238,50 @@ declare global {
     VITE_REACT_PORT: number;
   }
 
-  /**
-   *  继承 `@pureadmin/table` 的 `TableColumns` ，方便全局直接调用
-   */
-  interface TableColumnList extends TableColumns {
-    label: string;
-    prop: string;
-    /** 表格行编辑表单网格占比 */
-    span?: number;
-    /** 禁止编辑 */
-    disabled?: boolean;
-    /** 输入提示 */
-    placeholder?: string;
-    /** 下拉选项列表 */
-    options?: Array<ElOption>;
-    /** 导出时间格式 (yyyy-MM-dd HH:mm:ss) */
-    format?: string;
-    /** 格式化处理方式(json字符串) */
-    formatType?: string;
+  interface RenderParamType<T> {
+    row: T;
+    column: TableColumnType<T>;
+    cellValue: any;
+    rowIndex: number;
+    colIndex?: number;
+  }
 
-    id?: string;
-    menuId?: number;
-    sortable?: boolean;
-    minWidth?: number | string;
-    width?: number | string;
-    seq?: number;
-    className?: string;
-    columnname?: string;
-    tablename?: string;
-    groupCode?: string;
-    groupName?: string;
-    columnGroupId?: string;
-    formatter?: (row: any) => JSX.Element;
-    // type?: string;
-    // align?: string;
-    // fixed?: string;
-    // headerAlign?: string;
-    /** 是否新建 */
-    isNew?: boolean;
+  /**
+   *  表格列配置属性
+   */
+  interface TableColumnType<T = any> extends Partial<TableColumnCtx<T>> {
+    label: string;
+    // prop: string;
+    // /** 表格行编辑表单网格占比 */
+    // span?: number;
+    // /** 禁止编辑 */
+    // disabled?: boolean;
+    // /** 输入提示 */
+    // placeholder?: string;
+    // /** 下拉选项列表 */
+    // options?: Array<ElOption>;
+    // /** 导出时间格式 (yyyy-MM-dd HH:mm:ss) */
+    // format?: string;
+    // /** 格式化处理方式(json字符串) */
+    // formatType?: string;
+    // minWidth?: number | string;
+    // width?: number | string;
+    render?: (data: RenderParamType<T>) => VNode | string;
+    // // type?: string;
+    // // align?: string;
+    // // fixed?: string;
+    // // headerAlign?: string;
+    // /** 是否新建 */
+    // isNew?: boolean;
+  }
+
+  /**
+   *  表格列配置属性
+   */
+  interface PaginationProp extends Partial<PaginationProps> {
+    page: number;
+    pageSize: number;
+    total: number;
   }
 
   type LayoutStyle = "horizontal" | "vertical" | "mix";
@@ -341,12 +353,7 @@ declare global {
     records: T[];
     total: number;
     size: number;
-    current: number;
-    orders: number[];
-    optimizeCountSql: boolean;
-    searchCount: boolean;
-    countId: number;
-    maxLimit: number;
+    page: number; 
     pages: number;
   }
 
