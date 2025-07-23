@@ -79,10 +79,9 @@ export default defineComponent({
                 {...props.pagination}
                 v-model:current-page={pagination.page}
                 v-model:page-size={pagination.pageSize}
-                page-sizes={[100, 200, 300, 400]}
+                page-sizes={[30, 50, 200, 500, 1000]}
                 size={props.size}
-                layout="sizes, prev, pager, next"
-                total={1000}
+                layout="sizes, prev, pager, next" 
                 onSizeChange={onSizeChange}
                 onCurrentChange={onCurrentChange}
               />

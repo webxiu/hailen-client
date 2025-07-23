@@ -2,24 +2,16 @@
 import { ref, reactive, onMounted, watch } from "vue";
 import { menuList, updateMenu, MenuItemType } from "@/vue/api/system";
 import { QueryParamsType, SearchOptionType } from "@/vue/components/BlendedSearch/index.vue";
-import type { PaginationProps } from "element-plus";
 
 const formData = reactive({
   page: 1,
-  pageSize: 3,
+  pageSize: 30,
   title: "",
   path: "",
   create_date: ""
 });
 
-watch(
-  formData,
-  (value) => {
-    console.log("表单数据:", value);
-  },
-  { deep: true }
-);
-
+ 
 const queryParams = reactive({
   title: "Mac指令",
   // path: ""
@@ -73,10 +65,7 @@ const formConfigs = () => {
   ];
 };
 
-onMounted(() => {
-  getTableList();
-});
-
+ 
 const onTagSearch = (values) => {
     Object.assign(formData, values);
   console.log("搜索:", values);
@@ -105,7 +94,9 @@ function onEdit(row) {
 }
 
 function onPaginationChange({ page, pageSize }) {
-  console.log(page, pageSize);
+  formData.page = page;
+  formData.pageSize = pageSize;
+  getTableList();
 }
 </script>
 
