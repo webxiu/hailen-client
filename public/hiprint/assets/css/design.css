@@ -1,0 +1,166 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/** 滚动条 */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.4);
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.just-between {
+  justify-content: space-between;
+}
+
+.align-start {
+  align-items: flex-start;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.just-center {
+  justify-content: center;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.fz-22 {
+  font-size: 22px;
+}
+.fz-22 {
+  font-size: 22px;
+}
+
+.w-100 {
+  width: 100%;
+}
+.h-100 {
+  height: 100%;
+}
+
+.p-10 {
+  padding: 10px;
+}
+
+.mb-8 {
+  margin-bottom: 8px;
+}
+.mr-8 {
+  margin-right: 8px;
+}
+.mr-10 {
+  margin-right: 10px;
+}
+
+.border {
+  border: 1px solid var(--borderColor);
+}
+
+.border-right {
+  border-right: 1px solid var(--borderColor);
+}
+
+.border-left {
+  border-left: 1px solid var(--borderColor);
+}
+
+.color-red {
+  color: red;
+}
+
+.color-blue {
+  color: blue;
+}
+
+.color-f60 {
+  color: #f60;
+}
+.color-green {
+  color: green;
+}
+
+.ui-va-t {
+  vertical-align: top;
+}
+.ui-ovy-a {
+  overflow-y: auto;
+}
+.ui-ov-h {
+  overflow: hidden;
+}
+
+.scale-input .el-input__inner {
+  cursor: pointer;
+}
+
+.footer {
+  height: 18px;
+  line-height: 18px;
+  padding: 0 10px;
+  font-size: 12px;
+  color: #6b6b6b;
+}
+
+/** 拖拽画布面板 */
+.drag-panel {
+  width: 100%;
+  height: 60px;
+  background: #e3e3e3b3;
+  font-size: 12px;
+  text-align: center;
+  line-height: 60px;
+  user-select: none;
+  border: 1px dotted #00f;
+  margin-top: 5px;
+}
+
+/* 打印背景 */
+@media print {
+  * {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}

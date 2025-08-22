@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>打印设计</title>
+    <link rel="stylesheet" href="./assets/fonts/bootstrap-icons.css" />
+    <link rel="stylesheet" href="./lib/element-plus.css" />
+    <link rel="stylesheet" href="./assets/css/hiprint.css" />
+    <link rel="stylesheet" href="./assets/css/print-lock.css" />
+    <link rel="stylesheet" href="./assets/css/design.css" />
+
+    <script src="./lib/vue3.prod.js"></script>
+    <script src="./lib/element-plus.js"></script>
+
+    <script src="./plugins/jquery@1.11.3.min.js"></script>
+    <script src="./polyfill.min.js"></script>
+    <script src="./plugins/jquery.minicolors.min.js"></script>
+    <script src="./plugins/JsBarcode.all.min.js"></script>
+    <script src="./plugins/qrcode.js"></script>
+    <!-- <script src="./plugins/socket.io.js"></script> -->
+    <script src="./utils/watermark.js"></script>
+    <script src="./hiprint.bundle.js"></script>
+    <script src="./plugins/jquery.hiwprint.js"></script>
+    <script src="./plugins/jspdf/canvas2image.js"></script>
+    <script src="./plugins/jspdf/canvg.min.js"></script>
+    <script src="./plugins/jspdf/html2canvas.min.js"></script>
+    <script src="./plugins/jspdf/jspdf.min.js"></script>
+
+    <script src="./utils/config-etype-provider.js"></script>
+    <script src="./utils/design.js" charset="utf-8"></script>
+    <script src="./utils/template.js"></script>
+    <script src="./utils/component.js" defer></script>
+  </head>
+
+  <body>
+    <div id="app"></div>
+
+    <script type="text/html" id="designTemplate">
+      <el-container class="w-100 h-100">
+        <el-header style="height: 50px; line-height: 50px; padding: 0 10px">
+          <MyHeader ref="tableRef" @updateTemplate="onUpdateTemplate" />
+        </el-header>
+        <el-container class="h-100 ui-ov-h border" style="margin: 0 10px">
+          <el-aside width="200px" class="ui-ovy-a p-10">
+            <div class="rect-printElement-types hiprintEpContainer">
+              <!-- 拖拽列表按钮 -->
+              <ul class="hiprint-printElement-type">
+                <li v-for="item in elements">
+                  <span class="title">{{item.title}}</span>
+                  <ul>
+                    <li v-for="cell in item.children">
+                      <a class="ep-draggable-item" :tid="cell.tid">
+                        <span class="glyphicon" :class="cell.icon"></span>
+                        <span class="glyphicon-class" title="文本">{{cell.title}}</span>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </el-aside>
+          <el-main class="h-100 border-left border-right flex-col" style="padding: 0">
+            <div class="tool-buttons" style="margin: 8px 0 5px 8px">
+              <!-- 工具按钮 -->
+              <MyTool ref="toolRef" @resetDesign="onResetDesign">
+            </div>
+            <div class="h-100 flex-1 print-scroll-wrap">
+              <div id="designer"><!-- 打印区域 --></div>
+            </div>
+          </el-main>
+          <el-aside width="20%" style="min-width: 280px; overflow-y: auto">
+            <div id="PrintElementOptionSetting"></div>
+          </el-aside>
+        </el-container>
+        <el-footer class="footer">
+          <div class="flex-between">
+            <span>模板名称: {{templateName}}</span>
+            <span> HiPrint Designer V2.5.4</span>
+          </div>
+        </el-footer>
+      </el-container>
+    </script>
+
+    <script type="text/html" id="headerTemplate">
+      <div class="flex-between">
+        <div class="fz-22 color-blue pointer" @click="onHome" title="回到首页">打印设计</div>
+        <span>
+          <span @click="onOpenNew" title="新窗口打开" class="fz-22 pointer mr-10">❇️</span>
+          <span @click="docVisible = true" title="打印配置" class="fz-22 pointer mr-10">🔔</span>
+          <el-popover class="box-item" :title="`模板列表(${tableData.length})`" placement="bottom-end" width="360px" trigger="click">
+            <template #reference>
+              <span title="模板列表" class="fz-22 pointer color-f60">Ⓜ️</span>
+            </template>
+            <el-table :data="tableData" row-key="name" @current-change="onCurrentChange" style="width: 100%" size="small" max-height="300" border highlight-current-row empty-text="暂无数据">
+              <el-table-column label="模板名称" prop="name" show-overflow-tooltip />
+              <el-table-column label="创建时间" prop="createDate" width="130" />
+              <el-table-column label="操作"  width="70">
+                <template #default="{ row }">
+                  <el-button type="danger" size="small" @click.stop="onDelete(row)">删除</el-button>
+                </el-table-column>
+            </el-table>
+          </el-popover>
+        </span>
+      </div>
+      <el-dialog v-model="docVisible" title="打印配置" width="50%" top="5vh">
+        <el-input v-model="docText" spellcheck="false" type="textarea" style="width: 100%;line-height: 22px;" rows="20" readonly placeholder="暂无数据" />
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button @click="docVisible = false">取消</el-button>
+          </div>
+        </template>
+      </el-dialog>
+    </script>
+
+    <script type="text/html" id="toolTemplate">
+      <div class="buttons">
+        <span v-for="item in toolButtons">
+          <span v-if="['widthInput', 'heightInput'].includes(item.action) ">
+            <el-input
+              v-model.number="formData[item.action]"
+              :placeholder="item.action === 'widthInput' ? '宽/mm' : '高/mm'"
+              size="small"
+              class="mb-8 mr-8"
+              style="width: 50px"
+            />
+          </span>
+          <span v-else-if="['scaleInput'].includes(item.action) ">
+            <el-popover class="box-item" placement="bottom" width="120px" trigger="hover">
+              <template #reference>
+                <el-input
+                  v-model.number="formData.scale"
+                  placeholder="100%"
+                  readonly
+                  size="small"
+                  :title="item.title"
+                  @click="onResetScale"
+                  class="scale-input mb-8 mr-8"
+                  style="width: 50px;"
+                />
+              </template>
+              <el-slider
+                v-model="scaleValue"
+                :show-tooltip="false"
+                :step="drawDef.step"
+                :min="drawDef.min"
+                :max="drawDef.max"
+                :debounce="0"
+                size="small"
+                @input="setScale"
+              />
+              <div class="drag-panel">点击拖拽画布</div>
+            </el-popover>
+          </span>
+          <el-button
+            v-else
+            size="small"
+            :title="item.title"
+            :type="getType(item)"
+            @click="onSetSize(item)"
+            class="mb-8 mr-8"
+            style="margin-left: auto; margin-right: 8px"
+          >
+            <template #default="row">
+              <span v-if="item.action !== 'more'">{{item.name}}</span>
+              <el-dropdown v-else>
+                <span :style="{  color: isMore ? '#fff' : '', outline: 'none'}">
+                  <span class="ui-va-t">{{item.name}} </span>
+                  <el-icon class="el-icon--right">
+                    <svg data-v-ec522aeb="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+                      <path
+                        fill="currentColor"
+                        d="M831.872 340.864 512 652.672 192.128 340.864a30.592 30.592 0 0 0-42.752 0 29.12 29.12 0 0 0 0 41.6L489.664 714.24a32 32 0 0 0 44.672 0l340.288-331.712a29.12 29.12 0 0 0 0-41.728 30.592 30.592 0 0 0-42.752 0z"
+                      ></path>
+                    </svg>
+                  </el-icon>
+                </span>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item
+                      v-for="cell in item.children"
+                      :key="cell.name"
+                      :divided="cell.divided"
+                      :title="cell.title"
+                      :style="{ color: active === cell.action ? '#fff' : '', background: active === cell.action ? '#95d475' : '' }"
+                      @click="onSetSize(cell, true)"
+                    >
+                      {{ cell.name }}
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+            </template>
+          </el-button>
+        </span>
+      </div>
+      <div class="hiprint-printPagination"></div>
+      <!-- 打印预览 -->
+      <el-dialog v-model="printVisible" title="打印预览" width="fit-content" top="5vh">
+        <div class="dialog-body" style="max-height: 75vh; overflow-y: auto">
+          <div class="prevViewDiv"></div>
+        </div>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button @click="printVisible = false">取消</el-button>
+            <el-button type="success" @click="onExportPdf">PDF</el-button>
+            <el-button type="primary" @click="onPrint">打印</el-button>
+          </div>
+        </template>
+      </el-dialog>
+
+      <!-- 配置弹窗 -->
+      <el-dialog v-model="dialogVisible" draggable title="配置模板" width="40%" top="4vh">
+        <el-form :model="tplForm" label-width="0px" inline>
+          <el-form-item style="margin-bottom: 0px">
+            <el-checkbox v-model="tplForm.compress" @change="(v)=>onTplChange('compress', v)">压缩配置</el-checkbox>
+          </el-form-item>
+          <el-form-item style="margin-bottom: 0px">
+            <el-checkbox v-model="tplForm.disabled" @change="(v)=>onTplChange('disabled', v)">禁用拖拽</el-checkbox>
+          </el-form-item>
+          <div>
+            <el-form-item style="width: 100%">
+              <el-input
+                v-model="tplForm.code"
+                type="textarea"
+                style="width: 100%"
+                input-style="height: calc(100vh - 266px)"
+                resize="none"
+                placeholder="暂无数据"
+              />
+            </el-form-item>
+          </div>
+        </el-form>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button @click="dialogVisible = false">关闭</el-button>
+            <el-button type="warning" @click="onSave">保存</el-button>
+            <el-button type="success" @click="onRewirite">修改</el-button>
+            <el-button type="primary" @click="onCopy">复制</el-button>
+          </div>
+        </template>
+      </el-dialog>
+    </script>
+
+    <script>
+      const { ElMessage, ElMessageBox } = ElementPlus;
+      const { createApp, defineComponent, ref, onMounted, reactive, computed } = Vue;
+      const { setPaperSize, onPrint, onRotate, onClear, onGridLine, onResetScale, isIframe } = Design;
+
+      var isPress = false; // 全局变量
+      var tempTemplate = {};
+      var hiprintTemplate = null;
+      const scaleValue = ref(1);
+      const tableRef = ref();
+      const active = ref(null);
+      const templateName = ref("默认");
+      const printVisible = ref(false);
+      const btnActive = reactive({
+        isGrid: false,
+        isRotate: false,
+      });
+      const formData = reactive({ heightInput: "", widthInput: "", scale: "100%" });
+
+      window.onload = () => {
+        const App = defineComponent({
+          name: "App",
+          template: getTemplate("designTemplate"),
+          setup(props, {}) {
+            onMounted(() => {
+              if (isIframe()) {
+                window.addEventListener("message", onMessageOnce);
+              } else {
+                // 1.新建空模板
+                onInitHiPrint(printConfig);
+              }
+            });
+
+            /** 监听数据消息 */
+            const onMessageOnce = (ev) => {
+              const { type, data } = ev.data;
+              if (type !== "HiPrint") return;
+              tempTemplate = data;
+              // 2.加载用户数据模板
+              onInitHiPrint(data);
+              window.removeEventListener("message", onMessageOnce);
+            };
+
+            function onResetDesign() {
+              // 3.重置用户数据模板
+              onInitHiPrint(tempTemplate);
+            }
+
+            /** 创建模板 */
+            function onInitHiPrint(data = {}) {
+              Object.assign(printConfig, data);
+              const { size, printType, showLandscape, showGridLine, history, template, testData } = printConfig;
+
+              // 1.自动分页处理
+              if (printType === "auto" && Array.isArray(template.panels)) {
+                printConfig.template.panels.forEach((f, index) => {
+                  f.paperType = size;
+                  let _testData = testData;
+                  if (Array.isArray(testData)) _testData = testData[index] || {};
+                  f.printElements.forEach((el) => {
+                    const { field } = el.options || {};
+                    if (!field) return;
+                    const { type } = el.printElementType;
+                    let value = _testData[field];
+                    if (value && type === "image") el.options.src = value;
+                    else if (value && field) el.options.testData = value;
+                  });
+                });
+              }
+              // 2.固定分页处理
+              function fixed() {
+                onCreateFixedPage(data);
+              }
+
+              createTemplate(printConfig)
+                .then(() => {
+                  setPaperSize(size);
+                  const printHander = { fixed };
+                  printHander[printType]?.();
+                  const { showPrint } = getQuery(location.href);
+                  if (showGridLine) {
+                    btnActive.isGrid = true;
+                    onGridLine(true);
+                  }
+                  if (showLandscape) {
+                    btnActive.isRotate = true;
+                    onRotate();
+                  }
+                  if (showPrint === "true") onPrint();
+                })
+                .catch((err) => console.error("模板初始化失败", err));
+            }
+
+            // 新增、移动、删除、修改(参数调整)、大小、旋转
+            function onDataChanged(type, json) {
+              console.log(type, json);
+            }
+
+            /** 创建模板 */
+            function createTemplate(options = {}) {
+              const { template, showGridLine, dataMode, history, fontList, onDataChange = onDataChanged } = options;
+              return new Promise((resolve) => {
+                $("#designer").html("");
+                //初始化打印插件
+                hiprint.init({ providers: [new customElementTypeProvider()] });
+                //设置左侧拖拽事件
+                hiprint.PrintElementTypeManager.buildByHtml($(".ep-draggable-item"));
+                hiprintTemplate = new hiprint.PrintTemplate({
+                  template: template,
+                  fontList: fontList,
+                  dataMode: dataMode,
+                  gridLine: showGridLine,
+                  history: history,
+                  onDataChange: onDataChange,
+                  settingContainer: "#PrintElementOptionSetting",
+                  paginationContainer: ".hiprint-printPagination",
+                });
+                hiprintTemplate.design("#designer"); // 渲染设计器
+                requestAnimationFrame(() => resolve());
+              });
+            }
+
+            // 固定分页内容
+            function onCreateFixedPage(data) {
+              const { pages, isAllPaper, showLandscape } = data;
+              const defaultPanelHeight = 297; // mm
+              const _pages = pages.filter((f) => !(f.pageHeader || f.pageFooter));
+              const _papers = pages.filter((f) => f.pageHeader || f.pageFooter);
+
+              // 添加页眉页脚
+              function addHeaderFooter(_papers, panel, isLastPage = false) {
+                _papers.forEach((f) => {
+                  if (f.pageHeader) addElement(f.elements, panel); // 页眉
+                  if (f.pageFooter && isLastPage) addElement(f.elements, panel); // 页尾
+                });
+              }
+              // 遍历数据生成每一页
+              _pages.forEach((item, index) => {
+                // 添加分页
+                if (index > 0) {
+                  hiprintTemplate.addPrintPanel({
+                    height: showLandscape ? 210 : defaultPanelHeight,
+                    width: showLandscape ? defaultPanelHeight : 210,
+                    paperNumberDisabled: true,
+                    paperNumberFormat: "paperNo-paperCount",
+                    pageBreak: index < _pages.length - 1,
+                  });
+                }
+                const panel = hiprintTemplate.getPanel(index); // 获取当前页
+                addHeaderFooter(_papers, panel, isAllPaper || index === _pages.length - 1);
+                addElement(item.elements, panel);
+              });
+              hiprintTemplate.design("#designer");
+            }
+
+            /** 添加元素 */
+            function addElement(elements = [], panel) {
+              elements.forEach(({ method, templateType, testData, options }) => {
+                if (templateType === "table") options.content = createPrint(testData).outerHTML;
+                panel[method]({ options });
+              });
+            }
+
+            /** 选择模板 */
+            function onUpdateTemplate(row) {
+              templateName.value = row.name;
+              // 4.修改模板配置
+              onInitHiPrint(row.code);
+            }
+
+            return {
+              tableRef,
+              templateName,
+              elements,
+              papers,
+              toolButtons,
+              printVisible,
+              onResetScale,
+              onInitHiPrint,
+              onResetDesign,
+              onUpdateTemplate,
+            };
+          },
+        });
+        const app = createApp(App);
+        app.use(ElementPlus);
+        registerComponents(app);
+        app.mount("#app");
+      };
+    </script>
+  </body>
+</html>

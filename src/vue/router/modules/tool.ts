@@ -1,3 +1,10 @@
+/*
+ * @Author: Hailen
+ * @Date: 2025-06-09 10:47:56
+ * @LastEditors: Hailen
+ * @LastEditTime: 2025-08-22 11:40:10
+ * @Description: 
+ */
 import Layout from "@/vue/layout/index.vue";
 
 export default {
@@ -29,6 +36,12 @@ export default {
       name: "DrawTools",
       component: () => import("@/vue/views/home/tool/drawTools/index.vue"),
       meta: { title: "画图工具", icon: "SetUp" }
+    },
+    {
+      path: "/tool/hiprint",
+      name: "Hiprint",
+      component: () => import("@/vue/views/home/tool/hiprint/index.vue"),
+      meta: { title: "打印工具", icon: "SetUp" }
     },
     {
       path: "/tool/screenRecord",
