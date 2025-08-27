@@ -1,3 +1,10 @@
+/*
+ * @Author: Hailen
+ * @Date: 2025-07-14 09:08:05
+ * @LastEditors: Hailen
+ * @LastEditTime: 2025-08-27 09:03:49
+ * @Description: 
+ */
 /** 创建数据库表SQL语句 */
 const tables = [
   /* 用户表 */
@@ -7,16 +14,17 @@ const tables = [
       password varchar(50) NOT NULL,
       email varchar(50) NOT NULL,
       phone varchar(20),
-      create_date DATETIME DEFAULT CURRENT_TIMESTAMP
+      createDate DATETIME DEFAULT CURRENT_TIMESTAMP
     )`,
   /* 菜单表 */
   `CREATE TABLE IF NOT EXISTS menus (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      parent_id INTEGER,
+      id INTEGER PRIMARY KEY,
+      parentId INTEGER,
       title varchar(50),
       path varchar(50) NOT NULL UNIQUE,
+      name varchar(50),
       icon varchar(50),
-      create_date DATETIME DEFAULT CURRENT_TIMESTAMP
+      createDate DATETIME DEFAULT CURRENT_TIMESTAMP
     )`,
   /* 权限表 */
   `CREATE TABLE IF NOT EXISTS permissions (
@@ -24,7 +32,7 @@ const tables = [
       title varchar(50) NOT NULL,
       icon varchar(50) NOT NULL,
       path varchar(50) NOT NULL,
-      create_date DATETIME DEFAULT CURRENT_TIMESTAMP
+      createDate DATETIME DEFAULT CURRENT_TIMESTAMP
     )`
   // 其他表...
 ];

@@ -6,14 +6,14 @@ import { QueryParamsType, SearchOptionType } from "@/vue/components/BlendedSearc
 const formData = reactive({
   page: 1,
   pageSize: 30,
+  name: "",
   title: "",
   path: "",
-  create_date: ""
+  createDate: ""
 });
 
- 
 const queryParams = reactive({
-  title: "Mac指令",
+  title: "Mac指令"
   // path: ""
 });
 
@@ -24,9 +24,10 @@ const pagination = reactive<PaginationProp>({
 });
 
 const searchOptions = reactive<SearchOptionType[]>([
-  { label: "菜单名称", value: "title" },
+  { label: "菜单标题", value: "title" },
+  { label: "菜单名称", value: "name" },
   { label: "菜单路径", value: "path" },
-  { label: "创建时间", value: "create_date", type: "year", format: "YYYY" },
+  { label: "创建时间", value: "createDate", type: "year", format: "YYYY" },
   {
     label: "部门",
     value: "deptName",
@@ -39,6 +40,7 @@ const searchOptions = reactive<SearchOptionType[]>([
 
 const columns = ref<TableColumnType[]>([
   { label: "菜单名称", prop: "title" },
+  { label: "菜单名称", prop: "name" },
   { label: "菜单路径", prop: "path" },
   { label: "菜单图标", prop: "icon" },
   { label: "创建时间", prop: "create_date" },
@@ -65,19 +67,46 @@ const formConfigs = () => {
   ];
 };
 
- 
 const onTagSearch = (values) => {
-    Object.assign(formData, values);
+  Object.assign(formData, values);
   console.log("搜索:", values);
   console.log("最新表单formData:", formData);
   getTableList();
 };
 let timer = null;
+
+function arrayToTree(array, options) {
+  const { idKey = "id", parentKey = "parentId", childrenKey = "children", rootParentValue = 0 } = options || {};
+  const map = new Map();
+  const result = []; 
+  array.forEach((item) => {
+    map.set(item[idKey], { ...item, [childrenKey]: [] });
+  });
+
+  array.forEach((item) => {
+    const node = map.get(item[idKey]);
+    const parentId = item[parentKey];
+
+    if (parentId === rootParentValue || !map.has(parentId)) {
+      result.push(node);
+    } else {
+      const parent = map.get(parentId);
+      parent[childrenKey].push(node);
+    }
+  });
+
+  return result;
+}
+
 // 获取数据
 function getTableList() {
   menuList(formData).then(({ data }) => {
-    dataList.value = data;
     pagination.total = data.length;
+    console.log("data", data);
+    const res = arrayToTree(data);
+    dataList.value = res;
+    console.log("res", res);
+
     // timer && clearInterval(timer);
     // timer = setInterval(() => {
     //   pagination.total++;
@@ -107,9 +136,11 @@ function onPaginationChange({ page, pageSize }) {
       :dataList="dataList"
       v-model:page="formData.page"
       v-model:pageSize="formData.pageSize"
+      row-key="id"
       :columns="columns"
       :pagination="pagination"
       @paginationChange="onPaginationChange"
+      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
     >
       <template #query>
         <BlendedSearch @tagSearch="onTagSearch" :queryParams="queryParams" :searchOptions="searchOptions" placeholder="请选择" searchField="title" :immediate="true" />

@@ -1,4 +1,11 @@
-import { getJsonFiles, readFile } from "../utils/fs";
+/*
+ * @Author: Hailen
+ * @Date: 2025-07-14 09:08:05
+ * @LastEditors: Hailen
+ * @LastEditTime: 2025-08-27 10:06:11
+ * @Description:
+ */
+import { getRoutePaths } from "../utils/fs";
 
 import { app } from "electron";
 import axios from "axios";
@@ -9,7 +16,7 @@ function post(data, host) {
   axios
     .post("/system/menu/create", data)
     .then((response) => {
-      console.log(8888, response.data);
+      console.log("保存路由:", response.data);
     })
     .catch((error) => {
       console.error("axios请求失败");
@@ -26,25 +33,9 @@ app.whenReady().then(() => {
 
   createServer(config).then(() => {
     if (process.env.NODE_ENV === "development") {
-      const jsonFiles = getJsonFiles(pagePath, (dir) => dir.endsWith("index.vue") && dir.indexOf("component") === -1);
-      const result = jsonFiles.map((item) => {
-        const code = readFile(item);
-        const path = item.split(pagePath)[1].replace(/\\/g, "/").replace(".vue", "");
-        const match = code.match(/defineOptions\s*\(\s*({[^}]*})\s*\)/);
-        let option = {};
-        if (match) {
-          const optionsObject = match[1];
-          try {
-            option = eval(`(${optionsObject})`);
-          } catch (e) {
-            console.error("解析对象出错:", e);
-          }
-        }
-        return { path, ...option };
-      });
-      post({ menus: result }, config.host);
-      console.log("__filename:\n", __filename);
-      console.log("====项目菜单路径:\n", result);
+      const excludes = ["notFound", "component", "components", "utils"]; // 排除目录
+      const result = getRoutePaths(pagePath, excludes, (item) => item.endsWith("index.vue"));
+      post({ menus: result }, config.host); 
     }
   });
 });

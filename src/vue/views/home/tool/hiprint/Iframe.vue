@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-22 11:27:52
  * @LastEditors: Hailen
- * @LastEditTime: 2025-08-22 18:07:12
+ * @LastEditTime: 2025-08-22 18:09:31
  * @Description: 
 -->
 <template>
@@ -326,7 +326,7 @@ const loaded = () => {
                   { width: 77, title: "年龄", field: "age", align: "center" },
                   { width: 77, title: "电话", field: "phone", align: "center" },
                   { width: 84, title: "邮箱", field: "email", align: "center" },
-                  { width: 77, title: "地址", field: "address", align: "center", width: 130 },
+                  { width: 77, title: "地址", field: "address", align: "center" },
                   { width: 77, title: "类型", field: "type", align: "center" },
                   { width: 77, title: "爱好", field: "hobbies", align: "center" }
                 ]

@@ -13,7 +13,7 @@ interface FormatterParams {
 }
 
 const props = {
-  ...defaultProps,
+  // ...defaultProps, // 添加后就不会存在attrs里面了
   title: { type: String, default: "" },
   size: { type: String, default: "" },
   loading: { type: Boolean, default: false },
@@ -57,7 +57,6 @@ export default defineComponent({
       };
       return h(ElTableColumn, { ...col, key: col.prop, formatter }, slots);
     }
-
     return () => (
       <div className="hx-table">
         <div className="hx-header">
@@ -65,7 +64,7 @@ export default defineComponent({
           <div className="hx-header-right">{slots?.operation ? (slots.operation() as any) : null}</div>
         </div>
         <div className="hx-table">
-          <el-table {...attrs} data={props.dataList} border>
+          <el-table border row-key="id" show-overflow-tooltip {...attrs} data={props.dataList}>
             {props.columns.map(renderColumn)}
           </el-table>
         </div>
@@ -81,7 +80,7 @@ export default defineComponent({
                 v-model:page-size={pagination.pageSize}
                 page-sizes={[30, 50, 200, 500, 1000]}
                 size={props.size}
-                layout="sizes, prev, pager, next" 
+                layout="sizes, prev, pager, next"
                 onSizeChange={onSizeChange}
                 onCurrentChange={onCurrentChange}
               />
