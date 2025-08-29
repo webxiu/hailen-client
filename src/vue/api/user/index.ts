@@ -1,5 +1,5 @@
 import { LoginInfoType, UserInfoType } from "./types";
-import { User, UserItemType } from "@/Main/server/models/user/user";
+import { User, UserItemType } from "@/Main/server/controllers/user/model";
 
 import { http } from "@/vue/utils/http";
 

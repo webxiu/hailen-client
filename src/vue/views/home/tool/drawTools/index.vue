@@ -2,14 +2,14 @@
  * @Author: Hailen
  * @Date: 2025-05-26 12:52:52
  * @LastEditors: Hailen
- * @LastEditTime: 2025-08-26 18:10:06
+ * @LastEditTime: 2025-08-29 10:19:01
  * @Description: 
 -->
 <script setup lang="ts">
 import { useConfig } from "./utils/hook";
 import Mxgraph from "./mxgraph/Iframe.vue";
 
-defineOptions({ name: "Mxgraph" });
+defineOptions({ name: "HomeToolDrawToolsIndex" });
 
 const { tableRef, columns, dataList } = useConfig();
 </script>

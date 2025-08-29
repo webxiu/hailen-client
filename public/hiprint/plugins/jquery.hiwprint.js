@@ -4,7 +4,7 @@
         if (usedFrame) usedFrame.parentNode.removeChild(usedFrame);
         var opt = $.extend({}, $.fn.hiwprint.defaults, options);
         var $element = this;
-        var $iframe = $('<iframe id="hiwprint_iframe"  style="visibility: hidden; height: 0; width: 0; position: absolute;"></iframe>');
+        var $iframe = $('<iframe id="hiwprint_iframe"  style="visibility: hidden; height: 0; width: 0; position: absolute;display:none"></iframe>');
         var css = '';
         if (opt.importCss) {
             if ($("link[media=print]").length > 0) {

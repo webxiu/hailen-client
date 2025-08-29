@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-08-22 18:01:11
+ * @LastEditTime: 2025-08-27 14:13:18
  * @Description: 初始化模板
  */
 
@@ -14,15 +14,15 @@ var watermarkOptions = {
   format: "YYYY-MM-DD HH:mm",
 };
 
-var printConfig = {
-  title: "测试模板",
+var defaultConfig = {
+  title: "默认",
   size: "A4",
-  printType: "auto", 
-  showLandscape: false, 
-  showGridLine: true, 
-  history: true, 
-  dataMode: true, 
-  // fontList: [{ title: "苹果黑体", value: "STHeitiSC-Light" }], 
+  printType: "auto",
+  showLandscape: false,
+  showGridLine: true,
+  history: true,
+  dataMode: true,
+  // fontList: [{ title: "苹果黑体", value: "STHeitiSC-Light" }],
   // onDataChange: (type, json) => {console.log(type, json); },
   testData: {},
   template: {
@@ -44,10 +44,15 @@ var printConfig = {
 
 var testTemplate = [
   {
-    name: "测试模板",
+    name: "默认",
     createDate: new Date().toLocaleString(),
-    code: {
-      title: "测试打印",
+    content: Object.assign({}, defaultConfig),
+  },
+  {
+    name: "内置模板",
+    createDate: new Date().toLocaleString(),
+    content: {
+      title: "内置模板",
       size: "A4",
       showGridLine: true,
       showLandscape: false,
@@ -55,8 +60,8 @@ var testTemplate = [
       testData: {
         barcode: "123456789",
         name: "古力娜扎",
-        logo: "./assets/image/hi.png",
-        logoName: "./assets/image/company.png",
+        logo: "https://dlpctest.deogra.com/static/png/logo-0c9a0132.1751693932184.png",
+        logoName: "https://dlpctest.deogra.com/static/png/titleLogo-d6d96c8f.1751693932184.png",
         longText:
           "浙江在线3月29日讯最近，\n一篇小学五年级学生写的作文引起了钱报记者的关注这篇作文的题目叫做《脏话风波》，讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文《脏话风波》浙江在线3月29日讯最近，一篇小学五年级学生写的作文引起了钱报记者的关注。这篇作文的题目叫做《脏话风波》，讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文《脏话风波》浙江在线3月29日讯最近，一篇小学五年级学生写的作文引起了钱报记者的关注。这篇作文的题目叫做《脏话风波》，讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文《脏话风波》浙江在线3月29日讯最近，一篇小学五年级学生写的作文引起了钱报记者的关注。这篇作文的题目叫做《脏话风波》，讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文《脏话风波》浙江在线3月29日讯最近，一篇小学五年级学生写的作文引起了钱报记者的关注。这篇作文的题目叫做《脏话风波》，讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文",
         table: new Array(3).fill(1).map((_, i) => {
@@ -296,37 +301,19 @@ var testTemplate = [
                   columns: [
                     [
                       { title: "基本信息", width: 100, align: "center", colspan: 2, rowspan: 1, checked: true },
-                      { title: "性别", field: "sex", width: 54.87356321839081, align: "center", colspan: 1, rowspan: 2, checked: true, columnId: "sex" },
+                      { title: "性别", field: "sex", width: 54, align: "center", colspan: 1, rowspan: 2, checked: true, columnId: "sex" },
                       { title: "检查信息", width: 84, align: "center", colspan: 3, rowspan: 1, checked: true },
-                      { title: "状态", field: "status", width: 65.32567049808429, align: "center", colspan: 1, rowspan: 2, checked: true, columnId: "status" },
+                      { title: "状态", field: "status", width: 65, align: "center", colspan: 1, rowspan: 2, checked: true, columnId: "status" },
                       { title: "其他信息", width: 100, align: "center", colspan: 2, rowspan: 1, checked: true },
                     ],
                     [
-                      { title: "姓名", field: "name", width: 50.30076628352491, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "name" },
-                      { title: "年龄", field: "age", width: 50.30076628352491, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "age" },
-                      { title: "电话", field: "phone", width: 50.30076628352491, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "phone" },
-                      { title: "邮箱", field: "email", width: 54.87356321839081, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "email" },
-                      {
-                        title: "地址",
-                        field: "address",
-                        width: 84.92337164750957,
-                        align: "center",
-                        colspan: 1,
-                        rowspan: 1,
-                        checked: true,
-                        columnId: "address",
-                      },
-                      { title: "类型", field: "type", width: 50.30076628352491, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "type" },
-                      {
-                        title: "爱好",
-                        field: "hobbies",
-                        width: 50.30076628352491,
-                        align: "center",
-                        colspan: 1,
-                        rowspan: 1,
-                        checked: true,
-                        columnId: "hobbies",
-                      },
+                      { title: "姓名", field: "name", width: 50, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "name" },
+                      { title: "年龄", field: "age", width: 50, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "age" },
+                      { title: "电话", field: "phone", width: 50, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "phone" },
+                      { title: "邮箱", field: "email", width: 54, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "email" },
+                      { title: "地址", field: "address", width: 84, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "address" },
+                      { title: "类型", field: "type", width: 50, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "type" },
+                      { title: "爱好", field: "hobbies", width: 50, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "hobbies" },
                     ],
                   ],
                 },

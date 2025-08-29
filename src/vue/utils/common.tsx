@@ -4,8 +4,11 @@ import { dayjs } from "element-plus";
 import { http } from "@/vue/utils/http";
 import { message } from "@/vue/utils/message";
 
+export type PrimitiveType = "number" | "string" | "boolean" | "object" | "array" | "undefined" | "null" | "function" | "date";
+
+
 /** JSON字符串转换对象 */
-export function toParse(str) {
+function toParse(str) {
   try {
     const parsed = JSON.parse(str || "{}");
     return parsed;
@@ -14,15 +17,14 @@ export function toParse(str) {
   }
 }
 
-export type PrimitiveType = "number" | "string" | "boolean" | "object" | "array" | "undefined" | "null" | "function" | "date";
 
 /** 获取数据类型 */
-export function getType(data): PrimitiveType {
+function getType(data): PrimitiveType {
   return Object.prototype.toString.call(data).slice(8, -1).toLowerCase();
 }
 
 /** 路由地址转驼峰 */
-export function toCamelCase(url: string) {
+function toCamelCase(url: string) {
   return url
     .split("/")
     .filter(Boolean)
@@ -31,7 +33,7 @@ export function toCamelCase(url: string) {
 }
 
 /** 时间格日期 */
-export function formatDate(date: string | number, fmt = "YYYY-MM-DD HH:mm:ss") {
+function formatDate(date: string | number, fmt = "YYYY-MM-DD HH:mm:ss") {
   return date ? dayjs(date).format(fmt) : "";
 }
 
@@ -61,7 +63,7 @@ export const resetData = <T, K extends keyof T>(formData: T, prop: K): T => {
   if (dataType === "string") formData[prop] = undefined as T[K];
   if (dataType === "number") formData[prop] = undefined as T[K];
   if (dataType === "boolean") formData[prop] = false as T[K];
-  if (dataType === "function") formData[prop] = (() => {}) as T[K];
+  if (dataType === "function") formData[prop] = (() => { }) as T[K];
   return formData;
 };
 
@@ -94,9 +96,7 @@ export const throttle = (fn: Function, delay = 300) => {
   };
 };
 
-/**
- * 精确判断数据类型
- */
+/** 精确判断数据类型 */
 export const typeOf = (obj) => {
   const toString = Reflect.toString; // Object.prototype.toString;
   const map = {
@@ -119,9 +119,7 @@ export const typeOf = (obj) => {
   };
   return map[toString.call(obj)];
 };
-/**
- * 深度克隆
- */
+/** 深度克隆 */
 export const cloneDeep = (value) => {
   if (value === null || typeof value !== "object") {
     return value;
@@ -144,7 +142,8 @@ export const cloneDeep = (value) => {
   return objCopy;
 };
 
-export function isExternal(path) {
+/** 是否是外部链接 */
+function isExternal(path) {
   return /^(https?:|mailto:|tel:)/.test(path);
 }
 
@@ -172,7 +171,7 @@ export const downloadFile = (url: string, fileName: string, NoNeedTimeNow = fals
     .catch(console.error);
 };
 
-// 下载文件
+/** 下载文件 */
 export const onDownload = (blob: Blob, fileName: string) => {
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
@@ -193,7 +192,7 @@ export const base64ToBlob = (data: string, mime: string) => {
 };
 
 /** 文件转base64 */
-export function fileToBase64(file: File) {
+function fileToBase64(file: File) {
   return new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -282,7 +281,7 @@ export const getChildIDs = <T extends Record<string, any>, R>(arr: T[], field: s
 };
 
 // 根据某个id查找树节点顶级节点
-export function findTopLevelNode<T extends Record<string, any>>(tree: T[], field: string, targetId: string | number): T {
+function findTopLevelNode<T extends Record<string, any>>(tree: T[], field: string, targetId: string | number): T {
   for (const node of tree) {
     if (node[field] === targetId) return node;
     if (node.children?.length > 0) {
@@ -294,7 +293,7 @@ export function findTopLevelNode<T extends Record<string, any>>(tree: T[], field
 }
 
 /** 复制文本 */
-export function copyText(text: string, msg?: string) {
+function copyText(text: string, msg?: string) {
   navigator.clipboard.writeText(text).then(
     () => message.success(msg || "复制成功"),
     (error: Error) => message.error("复制失败!" + error.message)
@@ -302,14 +301,14 @@ export function copyText(text: string, msg?: string) {
 }
 
 // 读取剪切板
-export function readClipboard() {
+function readClipboard() {
   return new Promise<string>((resolve, reject) => {
     navigator.clipboard.readText().then(resolve, reject);
   });
 }
 
 /** 替换树形列表字段 */
-export function treeArrayTraverse(tree, fieldMap) {
+function treeArrayTraverse(tree, fieldMap) {
   function traverseField(nodes) {
     nodes.forEach((node) => {
       for (const oldField in fieldMap) {
@@ -328,7 +327,7 @@ export function treeArrayTraverse(tree, fieldMap) {
 }
 
 /** 深度对比 */
-export function deepEqual(obj1, obj2) {
+function deepEqual(obj1, obj2) {
   if (obj1 === obj2) return true;
   if (typeof obj1 !== "object" || obj1 === null || typeof obj2 !== "object" || obj2 === null) {
     return false;
@@ -351,7 +350,7 @@ export function deepEqual(obj1, obj2) {
  * @param findArr 找到的数据
  * @param recursion 是否递归查找
  */
-export function findTreeNodes<T extends Record<string, any>>(tree: T[], func: (f: T) => boolean, findArr = [], recursion = true): T[] {
+function findTreeNodes<T extends Record<string, any>>(tree: T[], func: (f: T) => boolean, findArr = [], recursion = true): T[] {
   if (!tree?.length) return [];
   for (const item of tree) {
     if (func(item as T)) {
@@ -416,9 +415,7 @@ export const readXlsx = (file: File, sheetConfig = {}) => {
   });
 };
 
-/**
- * 在vscode中打开
- */
+/** 在vscode中打开 */
 export const openInVScode = (vscodeMain, { path }) => {
   path = !path.includes("index") ? `${path}/index` : path;
   const openURL = vscodeMain + __ROOT__ + `/src/views${path}.vue`;
@@ -430,7 +427,7 @@ export const openInVScode = (vscodeMain, { path }) => {
 };
 
 /** 获取随机颜色 */
-export function getRandomColor() {
+function getRandomColor() {
   const r = Math.floor(Math.random() * 256);
   const g = Math.floor(Math.random() * 256);
   const b = Math.floor(Math.random() * 256);
@@ -438,11 +435,48 @@ export function getRandomColor() {
 }
 
 /** 获取随机字符 */
-export function getRandomChar() {
+function getRandomChar() {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let str = "";
   for (let i = 0; i < 6; i++) {
     str = chars.charAt(Math.floor(Math.random() * chars.length));
   }
   return str;
+}
+
+
+/** 数组转树结构 */
+function arrayToTree(array, options?) {
+  const { idKey = "id", parentKey = "parentId", childrenKey = "children", rootParentValue = 0 } = options || {};
+  const map = new Map(), result = [];
+  array.forEach((item) => map.set(item[idKey], { ...item, [childrenKey]: [] }));
+  array.forEach((item) => {
+    const node = map.get(item[idKey]);
+    const parentId = item[parentKey];
+    if (parentId === rootParentValue || !map.has(parentId)) {
+      result.push(node);
+    } else {
+      const parent = map.get(parentId);
+      parent[childrenKey].push(node);
+    }
+  }); 
+  return result;
+}
+
+export {
+  toParse,
+  getType,
+  toCamelCase,
+  formatDate,
+  isExternal,
+  fileToBase64,
+  findTopLevelNode,
+  copyText,
+  readClipboard,
+  treeArrayTraverse,
+  deepEqual,
+  findTreeNodes,
+  getRandomColor,
+  getRandomChar,
+  arrayToTree
 }

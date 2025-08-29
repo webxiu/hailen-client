@@ -2,13 +2,13 @@
  * @Author: Hailen
  * @Date: 2025-08-22 11:23:03
  * @LastEditors: Hailen
- * @LastEditTime: 2025-08-22 11:48:21
+ * @LastEditTime: 2025-08-29 10:23:33
  * @Description: 
 -->
 <script setup lang="ts"> 
 import Iframe from "./Iframe.vue";
 
-defineOptions({ name: "Hiprint" });
+defineOptions({ name: "HomeToolHiprintIndex", title: "打印设计", icon: "SetUp" });
  
 </script>
 

@@ -1,3 +1,10 @@
+<!--
+ * @Author: Hailen
+ * @Date: 2025-06-09 10:47:56
+ * @LastEditors: Hailen
+ * @LastEditTime: 2025-08-29 09:43:28
+ * @Description: 
+-->
 <template>
   <div class="dashboard">
     <el-button type="primary" @click="onClick">count is {{ count }}</el-button>
@@ -21,6 +28,7 @@ import { onMounted, ref } from "vue";
 import { addList, getList } from "@/vue/api/home/dashboard";
 import Webview from "@/vue/components/Webview/index.vue";
 import { weixinUserAgent } from "@/vue/config/constant";
+import { initRouter } from "@/vue/router/utils";
 
 const src = "https://channels.weixin.qq.com/platform";
 const count = ref(0);
@@ -49,6 +57,7 @@ function onPing() {
 
 // 获取数据
 function onGet() {
+  initRouter();
   getList({ username: "123", email: "123@qq.com" }).then(({ data }) => {
     console.log("data", data);
     userData.value = data;

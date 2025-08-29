@@ -27,7 +27,7 @@
     <script src="./plugins/jspdf/jspdf.min.js"></script>
 
     <script src="./utils/config-etype-provider.js"></script>
-    <script src="./utils/design.js" charset="utf-8"></script>
+    <script src="./utils/design.js"></script>
     <script src="./utils/template.js"></script>
     <script src="./utils/component.js" defer></script>
   </head>
@@ -43,7 +43,7 @@
         <el-container class="h-100 ui-ov-h border" style="margin: 0 10px">
           <el-aside width="200px" class="ui-ovy-a p-10">
             <div class="rect-printElement-types hiprintEpContainer">
-              <!-- 拖拽列表按钮 -->
+              <!-- 拖拽列表 -->
               <ul class="hiprint-printElement-type">
                 <li v-for="item in elements">
                   <span class="title">{{item.title}}</span>
@@ -62,13 +62,15 @@
           <el-main class="h-100 border-left border-right flex-col" style="padding: 0">
             <div class="tool-buttons" style="margin: 8px 0 5px 8px">
               <!-- 工具按钮 -->
-              <MyTool ref="toolRef" @resetDesign="onResetDesign">
+              <MyTool ref="toolRef" @resetDesign="onResetDesign" @updateDesign="onUpdateDesign">
             </div>
             <div class="h-100 flex-1 print-scroll-wrap">
-              <div id="designer"><!-- 打印区域 --></div>
+              <!-- 设计区域 -->
+              <div id="designer"></div>
             </div>
           </el-main>
           <el-aside width="20%" style="min-width: 280px; overflow-y: auto">
+            <!-- 属性配置 -->
             <div id="PrintElementOptionSetting"></div>
           </el-aside>
         </el-container>
@@ -83,9 +85,9 @@
 
     <script type="text/html" id="headerTemplate">
       <div class="flex-between">
-        <div class="fz-22 color-blue pointer" @click="onHome" title="回到首页">打印设计</div>
+        <div class="fz-22 color-blue">打印设计</div>
         <span>
-          <span @click="onOpenNew" title="新窗口打开" class="fz-22 pointer mr-10">❇️</span>
+          <span @click="onOpenNew" title="新窗口预览" class="fz-22 pointer mr-10">❇️</span>
           <span @click="docVisible = true" title="打印配置" class="fz-22 pointer mr-10">🔔</span>
           <el-popover class="box-item" :title="`模板列表(${tableData.length})`" placement="bottom-end" width="360px" trigger="click">
             <template #reference>
@@ -209,7 +211,7 @@
       </el-dialog>
 
       <!-- 配置弹窗 -->
-      <el-dialog v-model="dialogVisible" draggable title="配置模板" width="40%" top="4vh">
+      <el-dialog v-model="dialogVisible" draggable title="模板配置" width="40%" top="4vh">
         <el-form :model="tplForm" label-width="0px" inline>
           <el-form-item style="margin-bottom: 0px">
             <el-checkbox v-model="tplForm.compress" @change="(v)=>onTplChange('compress', v)">压缩配置</el-checkbox>
@@ -220,7 +222,7 @@
           <div>
             <el-form-item style="width: 100%">
               <el-input
-                v-model="tplForm.code"
+                v-model="tplForm.content"
                 type="textarea"
                 style="width: 100%"
                 input-style="height: calc(100vh - 266px)"
@@ -247,56 +249,59 @@
       const { setPaperSize, onPrint, onRotate, onClear, onGridLine, onResetScale, isIframe } = Design;
 
       var isPress = false; // 全局变量
-      var tempTemplate = {};
+      var printConfig = {};
       var hiprintTemplate = null;
-      const scaleValue = ref(1);
       const tableRef = ref();
       const active = ref(null);
-      const templateName = ref("默认");
+      const scaleValue = ref(1);
+      const templateName = ref("");
       const printVisible = ref(false);
-      const btnActive = reactive({
-        isGrid: false,
-        isRotate: false,
-      });
+      const btnActive = reactive({ isGrid: false, isRotate: false });
       const formData = reactive({ heightInput: "", widthInput: "", scale: "100%" });
 
       window.onload = () => {
         const App = defineComponent({
           name: "App",
-          template: getTemplate("designTemplate"),
+          template: genTemplate("designTemplate"),
           setup(props, {}) {
             onMounted(() => {
               if (isIframe()) {
+                // 在iframe中打开, 监听消息
                 window.addEventListener("message", onMessageOnce);
               } else {
-                // 1.新建空模板
-                onInitHiPrint(printConfig);
+                // 单独打开时, 新建空模板
+                onInitHiPrint(defaultConfig);
               }
             });
 
-            /** 监听数据消息 */
+            /** 监听消息 初始化数据模板 */
             const onMessageOnce = (ev) => {
               const { type, data } = ev.data;
               if (type !== "HiPrint") return;
-              tempTemplate = data;
-              // 2.加载用户数据模板
               onInitHiPrint(data);
               window.removeEventListener("message", onMessageOnce);
             };
 
+            // 重置数据模板
             function onResetDesign() {
-              // 3.重置用户数据模板
-              onInitHiPrint(tempTemplate);
+              onInitHiPrint(printConfig);
+            }
+
+            // 修改数据模板
+            function onUpdateDesign(data) {
+              onInitHiPrint(data);
             }
 
             /** 创建模板 */
             function onInitHiPrint(data = {}) {
-              Object.assign(printConfig, data);
-              const { size, printType, showLandscape, showGridLine, history, template, testData } = printConfig;
+              const options = Object.assign({}, defaultConfig, data);
+              const { title, size, printType, showLandscape, showGridLine, template, testData } = options;
+              templateName.value = title;
+              printConfig = options;
 
               // 1.自动分页处理
               if (printType === "auto" && Array.isArray(template.panels)) {
-                printConfig.template.panels.forEach((f, index) => {
+                options.template.panels.forEach((f, index) => {
                   f.paperType = size;
                   let _testData = testData;
                   if (Array.isArray(testData)) _testData = testData[index] || {};
@@ -315,7 +320,7 @@
                 onCreateFixedPage(data);
               }
 
-              createTemplate(printConfig)
+              createTemplate(options)
                 .then(() => {
                   setPaperSize(size);
                   const printHander = { fixed };
@@ -404,11 +409,9 @@
               });
             }
 
-            /** 选择模板 */
+            /** 选中列表模板 */
             function onUpdateTemplate(row) {
-              templateName.value = row.name;
-              // 4.修改模板配置
-              onInitHiPrint(row.code);
+              onInitHiPrint(row.content);
             }
 
             return {
@@ -421,6 +424,7 @@
               onResetScale,
               onInitHiPrint,
               onResetDesign,
+              onUpdateDesign,
               onUpdateTemplate,
             };
           },

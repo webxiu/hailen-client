@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-20 10:44:54
  * @LastEditors: Hailen
- * @LastEditTime: 2025-08-21 10:54:02
+ * @LastEditTime: 2025-08-25 17:13:32
  * @Description: 水印插件
  */
 
@@ -95,8 +95,7 @@ function _createWatermark(param) {
 
   let __vm = containerDom.querySelector(".__vm__" + id);
   const watermarkDiv = __vm || document.createElement("div");
-  const withHeightStr = containerDom.getAttribute("style");
-  const styleStr = `position:absolute;user-select:none;top:0;left:0;${withHeightStr};z-index:${zIndex};pointer-events:none !important;background-repeat:repeat;background-image:url('${canvas.toDataURL()}');-webkit-print-color-adjust: exact;`;
+  const styleStr = `position:absolute;user-select:none;top:0;left:0;width:100%;height:100%;z-index:${zIndex};pointer-events:none !important;background-repeat:repeat;background-image:url('${canvas.toDataURL()}');-webkit-print-color-adjust: exact;`;
 
   watermarkDiv.setAttribute("style", styleStr);
   watermarkDiv.classList.add("__vm__" + id);

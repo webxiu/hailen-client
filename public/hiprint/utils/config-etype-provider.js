@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-18 18:17:30
  * @LastEditors: Hailen
- * @LastEditTime: 2025-08-19 16:40:23
+ * @LastEditTime: 2025-08-29 15:28:27
  * @Description: 拖拽元素配置
  */
 
@@ -151,9 +151,11 @@ var customElementTypeProvider = (function () {
           {
             tid: "configModule.html",
             title: "html",
-            width: 300,
+            width: 200,
             type: "html",
-            formatter: (data, options) => $('<div style="font-size:16px; color:green">HTML文本</div>'),
+            formatter: function (data, options) {
+              return '<div style="font-size:16px; color:green">HTML文本</div>';
+            },
           },
         ]),
       ]);

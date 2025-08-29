@@ -5,6 +5,7 @@ import { defineStore } from "pinia";
 import router from "@/vue/router";
 import { store } from "@/vue/store";
 import { userType } from "./types";
+import { initRouter } from "@/vue/router/utils";
 
 export const useUserStore = defineStore({
   id: "pure-user",
@@ -23,6 +24,7 @@ export const useUserStore = defineStore({
           .then(({ data }) => {
             setUserInfo(data);
             this.updateUserInfo(data.user);
+            initRouter();
             router.push({ path: "/" });
             resolve(data);
           })

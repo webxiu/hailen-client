@@ -11,8 +11,8 @@
 
 <script lang="ts" setup>
 defineOptions({
+  name: "HomeCommandMacIndex",
   title: "Mac指令",
-  name: "MacCommand"
 });
 </script>
 

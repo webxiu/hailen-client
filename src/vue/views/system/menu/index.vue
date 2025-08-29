@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 import { ref, reactive, onMounted, watch } from "vue";
 import { menuList, updateMenu, MenuItemType } from "@/vue/api/system";
+import { arrayToTree } from "@/vue/utils/common";
 import { QueryParamsType, SearchOptionType } from "@/vue/components/BlendedSearch/index.vue";
 
 const formData = reactive({
@@ -24,9 +25,10 @@ const pagination = reactive<PaginationProp>({
 });
 
 const searchOptions = reactive<SearchOptionType[]>([
-  { label: "菜单标题", value: "title" },
-  { label: "菜单名称", value: "name" },
-  { label: "菜单路径", value: "path" },
+  { label: "标题", value: "title" },
+  { label: "名称", value: "name" },
+  { label: "路径", value: "path" },
+  { label: "类型", value: "type" },
   { label: "创建时间", value: "createDate", type: "year", format: "YYYY" },
   {
     label: "部门",
@@ -39,11 +41,12 @@ const searchOptions = reactive<SearchOptionType[]>([
 ]);
 
 const columns = ref<TableColumnType[]>([
-  { label: "菜单名称", prop: "title" },
-  { label: "菜单名称", prop: "name" },
-  { label: "菜单路径", prop: "path" },
-  { label: "菜单图标", prop: "icon" },
-  { label: "创建时间", prop: "create_date" },
+  { label: "名称", prop: "title" },
+  { label: "名称", prop: "name" },
+  { label: "路径", prop: "path" },
+  { label: "图标", prop: "icon" },
+  { label: "类型", prop: "type" }, 
+  { label: "创建时间", prop: "createDate" },
   {
     label: "操作",
     prop: "operation",
@@ -73,30 +76,6 @@ const onTagSearch = (values) => {
   console.log("最新表单formData:", formData);
   getTableList();
 };
-let timer = null;
-
-function arrayToTree(array, options) {
-  const { idKey = "id", parentKey = "parentId", childrenKey = "children", rootParentValue = 0 } = options || {};
-  const map = new Map();
-  const result = []; 
-  array.forEach((item) => {
-    map.set(item[idKey], { ...item, [childrenKey]: [] });
-  });
-
-  array.forEach((item) => {
-    const node = map.get(item[idKey]);
-    const parentId = item[parentKey];
-
-    if (parentId === rootParentValue || !map.has(parentId)) {
-      result.push(node);
-    } else {
-      const parent = map.get(parentId);
-      parent[childrenKey].push(node);
-    }
-  });
-
-  return result;
-}
 
 // 获取数据
 function getTableList() {

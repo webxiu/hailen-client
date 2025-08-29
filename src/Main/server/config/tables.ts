@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-07-14 09:08:05
  * @LastEditors: Hailen
- * @LastEditTime: 2025-08-27 09:03:49
+ * @LastEditTime: 2025-08-29 09:48:19
  * @Description: 
  */
 /** 创建数据库表SQL语句 */
@@ -24,6 +24,7 @@ const tables = [
       path varchar(50) NOT NULL UNIQUE,
       name varchar(50),
       icon varchar(50),
+      type varchar(10),
       createDate DATETIME DEFAULT CURRENT_TIMESTAMP
     )`,
   /* 权限表 */

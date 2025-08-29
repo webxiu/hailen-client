@@ -2,19 +2,19 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-08-22 17:03:15
+ * @LastEditTime: 2025-08-29 18:06:26
  * @Description: 布局组件模块
  */
 
-const _TEMPLATES = "_templates"; // 模板记录
+const _Templates = "_templates"; // 模板记录
 
-function setTemplateRecord(data) {
-  localStorage.setItem(_TEMPLATES, JSON.stringify(data));
+function setTemplate(data) {
+  localStorage.setItem(_Templates, JSON.stringify(data));
 }
 
-function getTemplateRecord() {
+function getTemplate() {
   try {
-    const data = localStorage.getItem(_TEMPLATES);
+    const data = localStorage.getItem(_Templates);
     return JSON.parse(data || "[]");
   } catch (e) {
     return [];
@@ -24,14 +24,14 @@ function getTemplateRecord() {
 const MyHeader = {
   name: "MyHeader",
   emits: ["updateTemplate"],
-  template: getTemplate("headerTemplate"),
+  template: genTemplate("headerTemplate"),
   setup(props, { expose, emit, slots, attrs }) {
     const docVisible = ref(false);
     const templateArr = computed(() => {
-      const data = getTemplateRecord();
+      const data = getTemplate();
       if (data.length) return data;
       data.push(...testTemplate);
-      return setTemplateRecord(data), data;
+      return setTemplate(data), data;
     });
     const tableData = ref(templateArr.value);
 
@@ -41,9 +41,11 @@ const MyHeader = {
           3. 导出PDF需使用base64图片,或 选择图片转base64上传
           4. 禁止元素拖动: 在options中配置draggable为false
           5. 快捷键: 
-              ① 按 Alt + 空格键\t拖拽画布
-              ② 按 Alt + 鼠标滚轮\t缩放画布
-              ③ 按 Shift + 鼠标滚轮 横向滚动(出现横向滚动条时)
+              ① 按 Space + 鼠标拖拽\t拖拽画布
+              ② 按 Alt + 鼠标滚轮\t\t缩放画布
+              ③ 按 Shift + 鼠标滚轮\t横向滚动
+              ④ 按 ctrl + z\t\t\t\t撤销画布
+              ⑤ 按 ctrl + shift + z\t\t恢复画布
 
     2️⃣.创建打印窗口:
           var postMsg = {
@@ -89,14 +91,14 @@ const MyHeader = {
                         timestamp: true,
                         format: "YYYY-MM-DD HH:mm"
                     },
-                    printElements: [ ... ]\t\t\t// 打印元素, 查看4️⃣
+                    printElements: [ ... ]\t\t\t// 表格函数配置, 查看4️⃣
                   },
                   // 继续配置其他分页
                   { ... }
                 ]
               }
 
-    4️⃣.函数配置: 配置在options中(注意options中的函数为字符串函数):
+    4️⃣.表格函数配置: 配置在options中(注意options中的函数为字符串函数):
         printElements: [
          {
             options: { 
@@ -130,28 +132,23 @@ const MyHeader = {
       localStorage.setItem("_templates", JSON.stringify(tableData.value));
     }
 
-    // 回到首页
-    function onHome() {
-      location.href = location.origin;
-    }
-
     function onOpenNew() {
       window.open(location.href, "_blank");
     }
 
     expose({ updateTableData });
-    return { docVisible, docText, tableData, onCurrentChange, onDelete, onHome, onOpenNew };
+    return { docVisible, docText, tableData, onCurrentChange, onDelete, onOpenNew };
   },
 };
 
 const MyTool = {
   name: "MyTool",
-  emits: ["resetDesign"],
-  template: getTemplate("toolTemplate"),
+  emits: ["resetDesign", "updateDesign"],
+  template: genTemplate("toolTemplate"),
   setup(props, { emit }) {
     const isMore = ref(null);
     const dialogVisible = ref(false);
-    const tplForm = reactive({ compress: false, disabled: false, code: "" });
+    const tplForm = reactive({ compress: false, disabled: false, content: "" });
 
     function getType(item) {
       const { action, type } = item;
@@ -192,14 +189,6 @@ const MyTool = {
       if (btnClick[action]) btnClick[action]();
     }
 
-    // 预览
-    function onPreview() {
-      printVisible.value = true;
-      requestAnimationFrame(() => {
-        $(".prevViewDiv").html(hiprintTemplate.getHtml(printConfig.testData)); // printData;
-      });
-    }
-
     // 导出PDF
     function onExportPdf() {
       const panel = hiprintTemplate.getPanel();
@@ -228,7 +217,7 @@ const MyTool = {
       const pressJson = JSON.stringify(template);
 
       // 1.更新压缩状态
-      tplForm.code = tplForm.compress ? pressJson : json;
+      tplForm.content = tplForm.compress ? pressJson : json;
       // 2.更新禁用状态
       updateCheck(getDragStatus());
 
@@ -247,11 +236,11 @@ const MyTool = {
 
     // 设置到输入框
     function onPressCode(press, template) {
-      if (!template) template = JSON.parse(tplForm.code);
+      if (!template) template = JSON.parse(tplForm.content);
       if (press) {
-        tplForm.code = JSON.stringify(template);
+        tplForm.content = JSON.stringify(template);
       } else {
-        tplForm.code = JSON.stringify(template, null, 2);
+        tplForm.content = JSON.stringify(template, null, 2);
       }
     }
 
@@ -266,7 +255,7 @@ const MyTool = {
 
     // 设置禁用
     function onDisabled(disabled) {
-      const template = JSON.parse(tplForm.code);
+      const template = JSON.parse(tplForm.content);
       template.panels.forEach((f) => {
         f.printElements.forEach((el) => {
           if (disabled) {
@@ -283,7 +272,7 @@ const MyTool = {
     function onSave() {
       ElMessageBox.prompt("", "保存模板", {
         inputValue: templateName.value,
-        inputPlaceholder: "请输入模板名称",
+        inputPlaceholder: "请输入模板名称, 若存在则覆盖",
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         inputPattern: /\S/,
@@ -292,19 +281,20 @@ const MyTool = {
         value = value.trim();
         const item = {
           name: value,
-          code: {
-            template: JSON.parse(tplForm.code),
-            testData: {},
+          content: {
+            title: value,
+            testData: printConfig.testData,
+            template: JSON.parse(tplForm.content),
           },
           createDate: new Date().toLocaleString(),
         };
         templateName.value = value;
-        const localData = getTemplateRecord();
+        const localData = getTemplate();
         const index = localData.findIndex((el) => el.name === value);
         // 已存在则删除再重新添加
         if (index > -1) localData.splice(index, 1);
         localData.unshift(item);
-        setTemplateRecord(localData);
+        setTemplate(localData);
         tableRef.value.updateTableData(localData);
         ElMessage.success("保存成功");
         dialogVisible.value = false;
@@ -314,8 +304,8 @@ const MyTool = {
     // 修改
     function onRewirite() {
       try {
-        const template = JSON.parse(tplForm.code);
-        emit("resetDesign", { template });
+        const template = JSON.parse(tplForm.content);
+        emit("updateDesign", { template });
         ElMessage.success("修改成功");
         dialogVisible.value = false;
       } catch (error) {
@@ -326,8 +316,8 @@ const MyTool = {
 
     // 复制
     function onCopy() {
-      const code = tplForm.code || "{}";
-      const templateCode = JSON.parse(code);
+      const content = tplForm.content || "{}";
+      const templateCode = JSON.parse(content);
       const testData = {};
 
       templateCode.panels.forEach((f) => {
@@ -340,7 +330,7 @@ const MyTool = {
         });
       });
       const _testData = JSON.stringify(testData, null, 2);
-      const result = ` var testData = ${_testData};\n var template = ${code};`;
+      const result = ` var testData = ${_testData};\n var template = ${content};`;
       copyText(result, (err) => {
         if (err) return ElMessage.warning("复制失败");
         ElMessage.success("复制成功");

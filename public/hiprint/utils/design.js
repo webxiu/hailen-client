@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-08-22 10:32:54
+ * @LastEditTime: 2025-08-27 15:34:08
  * @Description: 设计JS主文件
  */
 
@@ -89,7 +89,7 @@ var elements = [
   },
 ];
 
-function getTemplate(selector) {
+function genTemplate(selector) {
   const tpl = document.getElementById(selector);
   tpl.parentElement.removeChild(tpl);
   return tpl.innerHTML;
@@ -343,6 +343,12 @@ var Design = {
     $(".hiprint-printPaper.design").each(function () {
       if (isGrid) $(this).addClass("grid");
       else $(this).removeClass("grid");
+    });
+  },
+  onPreview: function () {
+    printVisible.value = true;
+    requestAnimationFrame(() => {
+      $(".prevViewDiv").html(hiprintTemplate.getHtml(printConfig.testData)); // printData;
     });
   },
   // 打印

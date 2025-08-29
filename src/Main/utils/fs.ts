@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-05-26 12:52:52
  * @LastEditors: Hailen
- * @LastEditTime: 2025-08-27 10:03:26
+ * @LastEditTime: 2025-08-29 10:15:54
  * @Description:
  */
 import axios from "axios";
@@ -54,6 +54,15 @@ function getJsonFiles(jsonPath, fn) {
   }
   findJsonFile(jsonPath);
   return jsonFiles;
+}
+
+/** 路由地址转驼峰 */
+function toCamelCase(url: string) {
+  return url
+    .split("/")
+    .filter(Boolean)
+    .map((dir) => dir.charAt(0).toUpperCase() + dir.slice(1))
+    .join("");
 }
 
 /**
@@ -115,14 +124,14 @@ function getRoutePaths(dir, excludes = [], fileFilterFn) {
             option = eval(`(${optionsObject})`);
           } catch (e) {}
         }
-        result.push({ id: id++, path: `${fullPath}/index`, parentId, type: "菜单", ...option });
+        result.push({ id: id++, path: `${fullPath}/index`, parentId, type: "menu", ...option });
         return;
       }
       // 如果没有 index.vue，说明它是“容器目录”，可以添加为目录
       if (fullPath !== "/") {
         const dirId = id++;
         dirPathToId.set(currentPath, dirId);
-        result.push({ id: dirId, path: fullPath, parentId, type: "目录" });
+        result.push({ id: dirId, path: fullPath, parentId, type: "dirctory" });
         parentId = dirId;
       }
       for (const subDir of subDirs) {
@@ -132,7 +141,7 @@ function getRoutePaths(dir, excludes = [], fileFilterFn) {
   }
 
   traverse(dir, 0);
-
+  result.forEach((item) => (item.name = toCamelCase(item.path)));
   return result;
 }
 

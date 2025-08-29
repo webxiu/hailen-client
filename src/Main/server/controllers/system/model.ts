@@ -1,3 +1,10 @@
+/*
+ * @Author: Hailen
+ * @Date: 2025-07-14 09:08:05
+ * @LastEditors: Hailen
+ * @LastEditTime: 2025-08-29 10:01:16
+ * @Description:
+ */
 import { Database, SQLGenerator } from "../../database/db";
 
 import { MenuItemType } from "./types";
@@ -30,8 +37,8 @@ export default class DbModel {
 
       // 5. 插入合并后的数据（ID 会从 1 开始重新分配）
       for (const item of mergedData) {
-        const { id, parentId, name, title, path, icon } = item;
-        await db.run("INSERT INTO menus (id, parentId, name, title, path, icon) VALUES (?, ?, ?, ?, ?, ?)", [id, parentId, name, title, path, icon]);
+        const { id, parentId, name, title, path, icon, type } = item;
+        await db.run("INSERT INTO menus (id, parentId, name, title, path, icon, type) VALUES (?, ?, ?, ?, ?, ?, ?)", [id, parentId, name, title, path, icon, type]);
       }
       await db.run("COMMIT");
       return true;
