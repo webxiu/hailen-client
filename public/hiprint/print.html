@@ -19,6 +19,7 @@
     <script src="./plugins/qrcode.js"></script>
     <!-- <script src="./plugins/socket.io.js"></script> -->
     <script src="./utils/watermark.js"></script>
+    <!-- <script src="./hiprint.config.js"></script> -->
     <script src="./hiprint.bundle.js"></script>
     <script src="./plugins/jquery.hiwprint.js"></script>
     <script src="./plugins/jspdf/canvas2image.js"></script>
@@ -44,7 +45,7 @@
           <el-aside width="200px" class="ui-ovy-a p-10">
             <div class="rect-printElement-types hiprintEpContainer">
               <!-- 拖拽列表 -->
-              <ul class="hiprint-printElement-type">
+              <ul class="hiprint-printElement-type no-select">
                 <li v-for="item in elements">
                   <span class="title">{{item.title}}</span>
                   <ul>
@@ -86,9 +87,8 @@
     <script type="text/html" id="headerTemplate">
       <div class="flex-between">
         <div class="fz-22 color-blue">打印设计</div>
-        <span>
-          <span @click="onOpenNew" title="新窗口预览" class="fz-22 pointer mr-10">❇️</span>
-          <span @click="docVisible = true" title="打印配置" class="fz-22 pointer mr-10">🔔</span>
+        <span class="no-select">
+          <span v-for="item in iconList" :key="item.title" @click="item.click" :title="item.title" class="fz-22 pointer mr-10">{{item.icon}}</span>
           <el-popover class="box-item" :title="`模板列表(${tableData.length})`" placement="bottom-end" width="360px" trigger="click">
             <template #reference>
               <span title="模板列表" class="fz-22 pointer color-f60">Ⓜ️</span>
@@ -158,7 +158,7 @@
             size="small"
             :title="item.title"
             :type="getType(item)"
-            @click="onSetSize(item)"
+            @click="onOperate(item)"
             class="mb-8 mr-8"
             style="margin-left: auto; margin-right: 8px"
           >
@@ -184,7 +184,7 @@
                       :divided="cell.divided"
                       :title="cell.title"
                       :style="{ color: active === cell.action ? '#fff' : '', background: active === cell.action ? '#95d475' : '' }"
-                      @click="onSetSize(cell, true)"
+                      @click="onOperate(cell, true)"
                     >
                       {{ cell.name }}
                     </el-dropdown-item>
@@ -246,17 +246,17 @@
     <script>
       const { ElMessage, ElMessageBox } = ElementPlus;
       const { createApp, defineComponent, ref, onMounted, reactive, computed } = Vue;
-      const { setPaperSize, onPrint, onRotate, onClear, onGridLine, onResetScale, isIframe } = Design;
+      const { onPreview, onPrint, onRotate, onClear, onGridLine, onResetScale, isIframe } = Design;
 
       var isPress = false; // 全局变量
-      var printConfig = {};
+      var printConfig = {}; // 重置数据创建时记录一次
       var hiprintTemplate = null;
       const tableRef = ref();
       const active = ref(null);
       const scaleValue = ref(1);
       const templateName = ref("");
       const printVisible = ref(false);
-      const btnActive = reactive({ isGrid: false, isRotate: false });
+      const designData = reactive({ gridLine: false, landscape: false });
       const formData = reactive({ heightInput: "", widthInput: "", scale: "100%" });
 
       window.onload = () => {
@@ -295,14 +295,13 @@
             /** 创建模板 */
             function onInitHiPrint(data = {}) {
               const options = Object.assign({}, defaultConfig, data);
-              const { title, size, printType, showLandscape, showGridLine, template, testData } = options;
+              const { title, printType, showLandscape, showGridLine, template, testData } = options;
               templateName.value = title;
               printConfig = options;
 
               // 1.自动分页处理
-              if (printType === "auto" && Array.isArray(template.panels)) {
+              if (printType !== "fixed" && Array.isArray(template.panels)) {
                 options.template.panels.forEach((f, index) => {
-                  f.paperType = size;
                   let _testData = testData;
                   if (Array.isArray(testData)) _testData = testData[index] || {};
                   f.printElements.forEach((el) => {
@@ -322,18 +321,12 @@
 
               createTemplate(options)
                 .then(() => {
-                  setPaperSize(size);
                   const printHander = { fixed };
                   printHander[printType]?.();
-                  const { showPrint } = getQuery(location.href);
-                  if (showGridLine) {
-                    btnActive.isGrid = true;
-                    onGridLine(true);
-                  }
-                  if (showLandscape) {
-                    btnActive.isRotate = true;
-                    onRotate();
-                  }
+                  const { showPrint, preview } = getQuery(location.href);
+                  if (showGridLine) (designData.gridLine = true), onGridLine(true);
+                  if (showLandscape) (designData.landscape = true), onRotate();
+                  if (preview === "true") onPreview();
                   if (showPrint === "true") onPrint();
                 })
                 .catch((err) => console.error("模板初始化失败", err));

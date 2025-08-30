@@ -5042,7 +5042,8 @@ var hiprint = function (t) {
         }
 
         function r(e) {
-            t.fn.hidraggable.isDragging = !1, o(e);
+            // t.fn.hidraggable.isDragging = !1, o(e);  //  注释o(e)调用,避免原地点击, 添加无用的历史记录
+            t.fn.hidraggable.isDragging = !1;
             var n,
                 i,
                 r = t.data(e.data.target, "hidraggable"),
@@ -5079,7 +5080,8 @@ var hiprint = function (t) {
 
                     if (!i.hidroppable("options").disabled) {
                         var o = i.offset();
-                        return e.pageX > o.left && e.pageX < o.left + i.outerWidth() && e.pageY > o.top && e.pageY < o.top + i.outerHeight() ? (p.revert && t(e.data.target).css({
+                        var { scaleX: ptr } = _getScale($('.hiprint-printPaper.design')[0]);
+                        return e.pageX > o.left && e.pageX < o.left + i.outerWidth()* ptr && e.pageY > o.top && e.pageY < o.top + i.outerHeight()* ptr ? (p.revert && t(e.data.target).css({
                             position: e.data.startPosition,
                             left: e.data.startLeft,
                             top: e.data.startTop
@@ -5104,12 +5106,12 @@ var hiprint = function (t) {
                     var n = t.data(e.data.target, "hidraggable"),
                         i = n.handle,
                         o = t(i).offset(),
-												ptr = n.options.getScale(),
+                        ptr = n.options.getScale(),
                         r = t(i).outerWidth(),
                         a = t(i).outerHeight();
-												if (ptr) {
-													(r *= ptr), (a *= ptr);
-												}
+                        if (ptr) {
+                            (r *= ptr), (a *= ptr);
+                        }
                         var p = e.pageY - o.top,
                         s = o.left + r - e.pageX,
                         l = o.top + a - e.pageY,
@@ -5135,50 +5137,50 @@ var hiprint = function (t) {
                     target: this
                 }, function (e) {
                     if (0 != s(e)) {
-											t(this).css("cursor", "");
-											var n = t(e.data.target).position(),
-												a = t(e.data.target).offset(),
-												p = {
-													startPosition: t(e.data.target).css("position"),
-													startLeft: n.left,
-													startTop: n.top,
-													left: n.left,
-													top: n.top,
-													startX: e.pageX,
-													startY: e.pageY,
-													offsetWidth: e.pageX - a.left,
-													offsetHeight: e.pageY - a.top,
-													target: e.data.target,
-													parent: t(e.data.target).parent()[0]
-												};
-											var ops = t.data(e.data.target, "hidraggable");
-											// item禁止移动
-											if (ops.options.draggable === false) {
-												return;
-											}
-											// 旋转时不允许移动
-											if ('r resizebtn' == e.target.className) {
-												return;
-											}
-											var ptr = ops.options.getScale()
-											if (ptr) {
-												p.left /= ptr, p.top /= ptr, p.startLeft /= ptr, p.startTop /= ptr;
-											}
-											var tr = p.target.style.transform && parseInt(p.target.style.transform.slice(7, -1));
-											if (tr) {
-												var rad = tr * Math.PI / 180,
-													width = t(e.data.target).outerWidth(),
-													height = t(e.data.target).outerHeight(),
-													sin = Math.sin(rad),
-													cos = Math.cos(rad);
-												var w = Math.abs(width * cos) + Math.abs(height * sin),
-													h = Math.abs(width * sin) + Math.abs(height * cos);
-												var diffW = (w - width) / 2, diffH = (h - height) / 2;
-												p.left += diffW, p.top += diffH, p.startLeft += diffW, p.startTop += diffH;
-											}
-											t.extend(e.data, p);
-											0 != t.data(e.data.target, "hidraggable").options.onBeforeDrag.call(e.data.target, e) && (t(document).bind("mousedown.hidraggable", e.data, i), t(document).bind("mousemove.hidraggable", e.data, o), t(document).bind("mouseup.hidraggable", e.data, r));
-										}
+                        t(this).css("cursor", "");
+                        var n = t(e.data.target).position(),
+                            a = t(e.data.target).offset(),
+                            p = {
+                                startPosition: t(e.data.target).css("position"),
+                                startLeft: n.left,
+                                startTop: n.top,
+                                left: n.left,
+                                top: n.top,
+                                startX: e.pageX,
+                                startY: e.pageY,
+                                offsetWidth: e.pageX - a.left,
+                                offsetHeight: e.pageY - a.top,
+                                target: e.data.target,
+                                parent: t(e.data.target).parent()[0]
+                            };
+                        var ops = t.data(e.data.target, "hidraggable");
+                        // item禁止移动
+                        if (ops.options.draggable === false) {
+                            return;
+                        }
+                        // 旋转时不允许移动
+                        if ('r resizebtn' == e.target.className) {
+                            return;
+                        }
+                        var ptr = ops.options.getScale()
+                        if (ptr) {
+                            p.left /= ptr, p.top /= ptr, p.startLeft /= ptr, p.startTop /= ptr;
+                        }
+                        var tr = p.target.style.transform && parseInt(p.target.style.transform.slice(7, -1));
+                        if (tr) {
+                            var rad = tr * Math.PI / 180,
+                                width = t(e.data.target).outerWidth(),
+                                height = t(e.data.target).outerHeight(),
+                                sin = Math.sin(rad),
+                                cos = Math.cos(rad);
+                            var w = Math.abs(width * cos) + Math.abs(height * sin),
+                                h = Math.abs(width * sin) + Math.abs(height * cos);
+                            var diffW = (w - width) / 2, diffH = (h - height) / 2;
+                            p.left += diffW, p.top += diffH, p.startLeft += diffW, p.startTop += diffH;
+                        }
+                        t.extend(e.data, p);
+                        0 != t.data(e.data.target, "hidraggable").options.onBeforeDrag.call(e.data.target, e) && (t(document).bind("mousedown.hidraggable", e.data, i), t(document).bind("mousemove.hidraggable", e.data, o), t(document).bind("mouseup.hidraggable", e.data, r));
+                    }
                 });
             });
         }, t.fn.hidraggable.methods = {

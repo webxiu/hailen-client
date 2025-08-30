@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-08-27 14:13:18
+ * @LastEditTime: 2025-08-30 17:51:12
  * @Description: 初始化模板
  */
 
@@ -16,8 +16,6 @@ var watermarkOptions = {
 
 var defaultConfig = {
   title: "默认",
-  size: "A4",
-  printType: "auto",
   showLandscape: false,
   showGridLine: true,
   history: true,
@@ -53,10 +51,8 @@ var testTemplate = [
     createDate: new Date().toLocaleString(),
     content: {
       title: "内置模板",
-      size: "A4",
       showGridLine: true,
       showLandscape: false,
-      printType: "auto",
       testData: {
         barcode: "123456789",
         name: "古力娜扎",

@@ -132,6 +132,9 @@ body {
 .ui-ov-h {
   overflow: hidden;
 }
+.no-select {
+  user-select: none;
+}
 
 .scale-input .el-input__inner {
   cursor: pointer;

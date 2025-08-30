@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-08-29 18:06:26
+ * @LastEditTime: 2025-08-30 18:22:55
  * @Description: 布局组件模块
  */
 
@@ -27,6 +27,12 @@ const MyHeader = {
   template: genTemplate("headerTemplate"),
   setup(props, { expose, emit, slots, attrs }) {
     const docVisible = ref(false);
+    const iconList = reactive([
+      { title: "保存", icon: "⚛️", click: onSubmit },
+      { title: "新窗口预览", icon: "❇️", click: onOpenNew },
+      { title: "打印配置", icon: "🔔", click: onInfo }
+    ]);
+
     const templateArr = computed(() => {
       const data = getTemplate();
       if (data.length) return data;
@@ -51,10 +57,8 @@ const MyHeader = {
           var postMsg = {
               // 基础配置
               title: "文件标题",\t\t// 导出PDF标题
-              size: "A4",\t\t\t\t// 纸张尺寸(默认false)
               showGridLine: true,\t\t// 是否显示网格
               showLandscape: false,\t// 是否横向打印(默认false)
-              printType: "auto",\t\t// 打印类型(auto:自动分页)
               testData: testData,\t\t// 打印数据 (默认数据对象, 打印多份传入数组)
               template: template,\t\t// 打印模板 查看3️⃣ 或 文档地址: http://hiprint.io/demo
               // 其他可选配置
@@ -136,9 +140,19 @@ const MyHeader = {
       window.open(location.href, "_blank");
     }
 
+    function onInfo() {
+      docVisible.value = true;
+    }
+
+    function onSubmit() {
+      const template = hiprintTemplate.getJson();
+      const data = { ...designData, template };
+      window.parent.postMessage({ event: "HiPrint", data }, "*");
+    }
+
     expose({ updateTableData });
-    return { docVisible, docText, tableData, onCurrentChange, onDelete, onOpenNew };
-  },
+    return { docVisible, docText, tableData, iconList, onCurrentChange, onDelete };
+  }
 };
 
 const MyTool = {
@@ -152,12 +166,12 @@ const MyTool = {
 
     function getType(item) {
       const { action, type } = item;
-      if (action === "onRotate") return btnActive.isRotate ? "success" : "default";
-      if (action === "onGridLine") return btnActive.isGrid ? "success" : "default";
+      if (action === "onRotate") return designData.landscape ? "success" : "default";
+      if (action === "onGridLine") return designData.gridLine ? "success" : "default";
       return active.value === action || (isMore.value && action === "more") ? "success" : type;
     }
 
-    function onSetSize(item, moreFlag = false) {
+    function onOperate(item, moreFlag = false) {
       const { action } = item;
       isMore.value = moreFlag;
       if (action === "more") return;
@@ -168,7 +182,7 @@ const MyTool = {
       const btnClick = { onGridLine, onClear, onReset, onPreview, onExportPdf, onPrint, onTemplate, getPanels };
       // 设置纸张
       if (window.papers.includes(action)) return setPaperSize(action);
-      // 设置纸张宽高
+      // 自定义纸张
       if (["customSize"].includes(action)) {
         if (!formData.widthInput || !formData.heightInput) return ElMessage.error("请输入宽高");
         return setPaperSize(formData.widthInput, formData.heightInput);
@@ -177,13 +191,13 @@ const MyTool = {
       if (["scaleMinus", "scalePlus"].includes(action)) setScale(action);
       // 旋转
       if (["onRotate"].includes(action)) {
-        btnActive.isRotate = !btnActive.isRotate;
-        return onRotate(btnActive.isRotate);
+        designData.landscape = !designData.landscape;
+        return onRotate(designData.landscape);
       }
       // 网格
       if (["onGridLine"].includes(action)) {
-        btnActive.isGrid = !btnActive.isGrid;
-        return onGridLine(btnActive.isGrid);
+        designData.gridLine = !designData.gridLine;
+        return onGridLine(designData.gridLine);
       }
       // 按钮点击时间
       if (btnClick[action]) btnClick[action]();
@@ -270,13 +284,13 @@ const MyTool = {
 
     // 保存
     function onSave() {
-      ElMessageBox.prompt("", "保存模板", {
+      ElMessageBox.prompt("", "保存到本地", {
         inputValue: templateName.value,
-        inputPlaceholder: "请输入模板名称, 若存在则覆盖",
+        inputPlaceholder: "请输入模板名称 (若存在则覆盖)",
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         inputPattern: /\S/,
-        inputErrorMessage: "模板名称不能为空",
+        inputErrorMessage: "模板名称不能为空"
       }).then(({ value }) => {
         value = value.trim();
         const item = {
@@ -284,9 +298,9 @@ const MyTool = {
           content: {
             title: value,
             testData: printConfig.testData,
-            template: JSON.parse(tplForm.content),
+            template: JSON.parse(tplForm.content)
           },
-          createDate: new Date().toLocaleString(),
+          createDate: new Date().toLocaleString()
         };
         templateName.value = value;
         const localData = getTemplate();
@@ -351,15 +365,15 @@ const MyTool = {
       onResetScale,
       getType,
       setScale,
-      onSetSize,
+      onOperate,
       onExportPdf,
       onPrint,
       onTplChange,
       onSave,
       onRewirite,
-      onCopy,
+      onCopy
     };
-  },
+  }
 };
 
 const components = [MyHeader, MyTool];
