@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-08-30 18:22:55
+ * @LastEditTime: 2025-09-05 16:15:40
  * @Description: 布局组件模块
  */
 
@@ -21,6 +21,26 @@ function getTemplate() {
   }
 }
 
+/** 根据模板获取打印数据 */
+function getPrintData(template) {
+  const _testData = {};
+  if (Array.isArray(template?.panels)) {
+    template.panels.forEach((f) => {
+      f.printElements.forEach((el) => {
+        const { field, testData, src } = el.options || {};
+        if (field) {
+          _testData[field] = src || testData;
+          if (typeof testData === "object") {
+            // 数组对象数据量大, 删除数据字段
+            delete el.options.testData;
+          }
+        }
+      });
+    });
+  }
+  return _testData;
+}
+
 const MyHeader = {
   name: "MyHeader",
   emits: ["updateTemplate"],
@@ -28,16 +48,16 @@ const MyHeader = {
   setup(props, { expose, emit, slots, attrs }) {
     const docVisible = ref(false);
     const iconList = reactive([
-      { title: "保存", icon: "⚛️", click: onSubmit },
+      { title: "保存模板", icon: "⚛️", click: onSubmit, hide: !isIframe() },
       { title: "新窗口预览", icon: "❇️", click: onOpenNew },
-      { title: "打印配置", icon: "🔔", click: onInfo }
+      { title: "打印配置", icon: "🔔", click: onInfo },
     ]);
-
     const templateArr = computed(() => {
       const data = getTemplate();
-      if (data.length) return data;
-      data.push(...testTemplate);
-      return setTemplate(data), data;
+      const _newData = testTemplate.filter((f) => !data.some((s) => f.name === s.name));
+      const _data = data.map((m) => ({ ...m, ...(testTemplate.find((f) => m.name === f.name) || {}) }));
+      _data.unshift(..._newData);
+      return setTemplate(_data), _data;
     });
     const tableData = ref(templateArr.value);
 
@@ -57,6 +77,7 @@ const MyHeader = {
           var postMsg = {
               // 基础配置
               title: "文件标题",\t\t// 导出PDF标题
+              printCount: 1,\t\t\t// 打印份数(默认1), 若testData为数组, 按testData的长度打印份数
               showGridLine: true,\t\t// 是否显示网格
               showLandscape: false,\t// 是否横向打印(默认false)
               testData: testData,\t\t// 打印数据 (默认数据对象, 打印多份传入数组)
@@ -76,8 +97,10 @@ const MyHeader = {
           }); 
 
     3️⃣.模板配置: 
-          1. 多页配置: panels数组项中的每项都是一个分页, 配置多项即为多页
-          2. 自动分页: 仅表格和长文本支持自动分页
+          1. 配置多页: panels数组项中的每项都是一个分页, 表格和长文本超出页码自动新增分页
+          2. 打印多份: 所有分页打印数据集中配置在testData对象中, 每页字段名不能重复
+                      testData为对象时, 按printCount设置的值打印份数
+                      testData为数组时, 按testData数组的长度打印份数
           3. 模板配置: 
               template: {
                 panels: [
@@ -107,8 +130,10 @@ const MyHeader = {
          {
             options: { 
               ...省略其他配置
+              title: "",\t\t\t\t\t\t\t\t\t// 标题默认显示冒号(：), 设置title为""则不显示冒号
               styler: \`()=>{}\`,\t\t\t\t\t\t\t// 样式函数
               rowStyler: \`()=>{}\`,\t\t\t\t\t\t// 行样式函数
+              formatter: \`()=>{}\`,\t\t\t\t\t\t// 格式化函数
               rowsColumnsMerge: \`()=>{}\`,\t\t\t// 行/列合并函数
               footerFormatter: \`()=>{}\`,\t\t\t\t// 表格脚函数 (方式1, 优先级高)
               gridColumnsFooterFormatter: \`()=>{}\`,\t// 多组表格脚函数 (方式1, 优先级高)
@@ -146,13 +171,14 @@ const MyHeader = {
 
     function onSubmit() {
       const template = hiprintTemplate.getJson();
-      const data = { ...designData, template };
+      const testData = getPrintData(template);
+      const data = { ...designData, testData, template };
       window.parent.postMessage({ event: "HiPrint", data }, "*");
     }
 
     expose({ updateTableData });
     return { docVisible, docText, tableData, iconList, onCurrentChange, onDelete };
-  }
+  },
 };
 
 const MyTool = {
@@ -290,7 +316,7 @@ const MyTool = {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         inputPattern: /\S/,
-        inputErrorMessage: "模板名称不能为空"
+        inputErrorMessage: "模板名称不能为空",
       }).then(({ value }) => {
         value = value.trim();
         const item = {
@@ -298,9 +324,9 @@ const MyTool = {
           content: {
             title: value,
             testData: printConfig.testData,
-            template: JSON.parse(tplForm.content)
+            template: JSON.parse(tplForm.content),
           },
-          createDate: new Date().toLocaleString()
+          createDate: new Date().toLocaleString(),
         };
         templateName.value = value;
         const localData = getTemplate();
@@ -331,20 +357,10 @@ const MyTool = {
     // 复制
     function onCopy() {
       const content = tplForm.content || "{}";
-      const templateCode = JSON.parse(content);
-      const testData = {};
-
-      templateCode.panels.forEach((f) => {
-        f.printElements.forEach((el) => {
-          const { field } = el.options;
-          const { type } = el.printElementType;
-          if (field) testData[field] = "";
-          if (type === "image") el.options.src = "";
-          else if (field) el.options.testData = "";
-        });
-      });
+      const template = JSON.parse(content);
+      const testData = getPrintData(template);
       const _testData = JSON.stringify(testData, null, 2);
-      const result = ` var testData = ${_testData};\n var template = ${content};`;
+      const result = `testData: ${_testData},\n template: ${content}`;
       copyText(result, (err) => {
         if (err) return ElMessage.warning("复制失败");
         ElMessage.success("复制成功");
@@ -371,9 +387,9 @@ const MyTool = {
       onTplChange,
       onSave,
       onRewirite,
-      onCopy
+      onCopy,
     };
-  }
+  },
 };
 
 const components = [MyHeader, MyTool];

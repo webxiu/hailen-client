@@ -3,12 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <title>打印设计</title>
+    <link rel="shortcut icon" href="./assets/image/favicon.png" />
     <link rel="stylesheet" href="./assets/fonts/bootstrap-icons.css" />
     <link rel="stylesheet" href="./lib/element-plus.css" />
     <link rel="stylesheet" href="./assets/css/hiprint.css" />
     <link rel="stylesheet" href="./assets/css/print-lock.css" />
     <link rel="stylesheet" href="./assets/css/design.css" />
-
     <script src="./lib/vue3.prod.js"></script>
     <script src="./lib/element-plus.js"></script>
 
@@ -88,7 +88,9 @@
       <div class="flex-between">
         <div class="fz-22 color-blue">打印设计</div>
         <span class="no-select">
-          <span v-for="item in iconList" :key="item.title" @click="item.click" :title="item.title" class="fz-22 pointer mr-10">{{item.icon}}</span>
+          <template v-for="item in iconList" :key="item.title">
+            <span v-if="!item.hide" @click="item.click" :title="item.title" class="fz-22 pointer mr-10" >{{item.icon}}</span>
+          </template>
           <el-popover class="box-item" :title="`模板列表(${tableData.length})`" placement="bottom-end" width="360px" trigger="click">
             <template #reference>
               <span title="模板列表" class="fz-22 pointer color-f60">Ⓜ️</span>
@@ -246,7 +248,7 @@
     <script>
       const { ElMessage, ElMessageBox } = ElementPlus;
       const { createApp, defineComponent, ref, onMounted, reactive, computed } = Vue;
-      const { onPreview, onPrint, onRotate, onClear, onGridLine, onResetScale, isIframe } = Design;
+      const { setPaperSize, onPreview, onPrint, onRotate, onClear, onGridLine, onResetScale, isIframe } = Design;
 
       var isPress = false; // 全局变量
       var printConfig = {}; // 重置数据创建时记录一次
@@ -295,7 +297,7 @@
             /** 创建模板 */
             function onInitHiPrint(data = {}) {
               const options = Object.assign({}, defaultConfig, data);
-              const { title, printType, showLandscape, showGridLine, template, testData } = options;
+              const { title, printCount, printType, showLandscape, showGridLine, template, testData } = options;
               templateName.value = title;
               printConfig = options;
 
@@ -314,6 +316,10 @@
                   });
                 });
               }
+              // 打印多份
+              if (printCount > 1 && !Array.isArray(testData)) {
+                options.testData = new Array(printCount).fill(testData);
+              }
               // 2.固定分页处理
               function fixed() {
                 onCreateFixedPage(data);
@@ -324,6 +330,8 @@
                   const printHander = { fixed };
                   printHander[printType]?.();
                   const { showPrint, preview } = getQuery(location.href);
+                  const { paperType } = options.template.panels[0] || {};
+                  if (paperType) setPaperSize(paperType);
                   if (showGridLine) (designData.gridLine = true), onGridLine(true);
                   if (showLandscape) (designData.landscape = true), onRotate();
                   if (preview === "true") onPreview();
