@@ -8,6 +8,8 @@ import Star from "@/vue/components/Star.vue";
 import { useUserStore } from "@/vue/store/modules/user";
 import Tag from "./component/Tag/index.vue";
 
+defineOptions({ name: "Layout" });
+
 const useStore = useUserStore();
 const names = ref<string[]>([]);
 const theme = ref("light");

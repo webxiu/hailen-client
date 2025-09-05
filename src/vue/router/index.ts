@@ -3,6 +3,7 @@ import { getUserInfo, removeUserInfo } from "@/vue/utils/storage";
 
 import NProgress from "@/vue/utils/progress";
 import { useTagStoreHook } from "@/vue/store/modules/tag";
+import { initRouter } from "@/vue/router/utils";
 
 /** 路由白名单 */
 export const whiteList = ["/login", "/404"];
@@ -29,7 +30,7 @@ const commonRoute: RouteRecordRawType[] = [
   }
 ];
 // 动态加载
-const modules: Record<string, any> = import.meta.glob(["./modules/**/*.ts", "!./modules/**/test.ts"], { eager: true });
+const modules: Record<string, any> = import.meta.glob(["./modules/home.ts", "!./modules/**/test.ts"], { eager: true });
 
 // 路由模块列表
 const routeList: Required<RouteRecordRawType>[] = [];
@@ -42,7 +43,7 @@ Object.keys(modules).forEach((key) => {
 // 合并路由
 export const asyncRoutes = []; // 动态路由
 export const routeCateList = routeList.sort((a, b) => a.meta.order - b.meta.order);
-export const routes = [...commonRoute, ...routeCateList, ...asyncRoutes] as RouteRecordRaw[];
+export const routes = [...routeCateList, ...commonRoute, ...asyncRoutes] as RouteRecordRaw[];
 
 const router = createRouter({
   history: createWebHashHistory("./"),
@@ -57,13 +58,22 @@ router.beforeEach((to, from, next) => {
   const title = to.meta?.title as string;
   if (title) document.title = title;
 
+  function toCorrectRoute() {
+    whiteList.includes(to.path) ? next(from.fullPath) : next();
+  }
   if (loginInfo.token) {
     if (to.path === "/login") {
       next({ path: "/" });
       NProgress.done();
-    } else {
+    } else if (from?.name) {
+      console.log("from.name", from.name);
       addTagPath(to);
       next();
+    } else {
+      initRouter().then(() => {
+        console.log("222", to.path);
+        toCorrectRoute();
+      });
     }
   } else {
     if (whiteList.indexOf(to.path) !== -1) {
