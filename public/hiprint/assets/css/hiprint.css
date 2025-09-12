@@ -358,7 +358,7 @@ font-weight: normal;*/
   background: white;
   border: solid 1px #ccc;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-  z-index: 99999;
+  z-index: 999;
   box-sizing: content-box;
   display: none;
 }
@@ -847,10 +847,15 @@ font-weight: normal;*/
   transform: scale(0.4) !important;
 }
 
+.print-designer {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0px 0px 1px 1px #ccc;
+}
+
 .print-scroll-wrap {
   overflow: auto;
   padding: 30px;
-  box-shadow: 0px 0px 1px 1px #ccc;
 }
 
 .hiprint-printPaper.design.grid {
@@ -951,4 +956,203 @@ font-weight: normal;*/
 
 .resize-panel .size-box .hide {
   display: none;
+}
+
+#ElementLayer {
+  position: absolute;
+  top: 35px;
+  right: 10px;
+  width: 50px;
+  max-height: 50px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0px;
+  z-index: 123;
+  border: none;
+  overflow: hidden;
+  background: transparent;
+}
+
+#ElementLayer .layer-head {
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  line-height: 100%;
+  border-radius: 50%;
+  box-sizing: border-box;
+  background: #409eff;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  font-size: 14px;
+}
+
+#ElementLayer .layer-head .start {
+  font-size: 20px;
+  margin: 0px 0px 1px;
+}
+#ElementLayer .layer-head .title,
+#ElementLayer .layer-head .fold {
+  display: none;
+}
+#ElementLayer .layer-body {
+  flex: 1;
+  overflow-y: auto;
+  display: none;
+  transition: all 0.3s ease;
+}
+
+/*=============*/
+
+#ElementLayer.show {
+  width: 220px;
+  max-height: 90%;
+  background: #fff;
+  border: 1px solid #1e80ff;
+  transition: all 0.3s ease;
+}
+
+#ElementLayer.show .layer-head {
+  width: 100%;
+  height: auto;
+  padding: 3px 5px;
+  cursor: move;
+  justify-content: space-between;
+  border-radius: 0px;
+}
+#ElementLayer.show .layer-head .title,
+#ElementLayer.show .layer-head .fold {
+  display: block;
+}
+#ElementLayer.show .layer-head .title {
+  color: #fff;
+  font-size: 14px;
+  cursor: move;
+}
+#ElementLayer.show .layer-head .start {
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: 5px;
+  font-size: 14px;
+  display: inline-block;
+}
+#ElementLayer .layer-head .start.is-open {
+  transform: rotate(180deg);
+}
+
+#ElementLayer.show .layer-head .fold {
+  transition: transform 0.3s ease;
+  display: inline-block;
+  cursor: pointer;
+}
+#ElementLayer.show .layer-head .fold.is-open {
+  transform: rotate(180deg);
+}
+
+#ElementLayer.show .layer-body {
+  display: block;
+}
+#ElementLayer.show .layer-body.hide {
+  opacity: 0;
+  max-height: 0 !important;
+}
+
+/* 列表布局 */
+.layer-body .layer-item {
+  color: #3d3d3d;
+  display: flex;
+  overflow: hidden;
+  align-items: center;
+  padding-right: 5px;
+  font-size: 14px;
+}
+.layer-body .layer-item.active {
+  background: #d5daff;
+}
+.layer-body .layer-item:not(:last-child) {
+  box-shadow: 0px 1px 0px 0px #1e80ff81;
+}
+
+.layer-body .layer-item .content {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+.layer-body .layer-item .field {
+  color: #43355d;
+  background: #ffd482;
+  padding: 0 2px;
+  line-height: 15px;
+  border-radius: 2px;
+}
+.layer-body .layer-item .drag {
+  margin-left: 2px;
+  margin-right: 5px;
+  color: #bbb;
+}
+.layer-body .layer-item .glyphicon {
+  margin-right: 4px;
+}
+
+.layer-body .layer-item .drag.disabled {
+  color: #f60;
+}
+.layer-body .layer-item .icon {
+  color: #5a7e9d;
+  margin-left: 5px;
+}
+.layer-body .layer-item .option {
+  color: #4896fb;
+  cursor: pointer;
+}
+.layer-body .layer-item .option:hover {
+  color: #f60;
+}
+.hailen-code {
+  position: fixed;
+  background: #d2d2ff;
+  border-radius: 5px;
+  padding: 8px 10px;
+  z-index: 999999;
+  display: none;
+}
+.hailen-code pre {
+  max-width: 260px;
+  max-height: 345px;
+  overflow: auto;
+  white-space: pre-wrap
+}
+
+.hailen-code .closed {
+  position: absolute;
+  right: 5px;
+  top: -2px;
+  cursor: pointer;
+  user-select: none;
+}
+.hailen-code .closed:hover {
+  color: #f00;
+}
+
+.layer-body .layer-item .delete {
+  color: #f00;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.3s ease;
+}
+.layer-body .layer-item .delete:hover {
+  color: #00f;
+}
+
+.layer-body::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.layer-body::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.4);
 }

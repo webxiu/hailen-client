@@ -2,11 +2,12 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-09-05 16:15:40
+ * @LastEditTime: 2025-09-05 09:11:42
  * @Description: 布局组件模块
  */
 
 const _Templates = "_templates"; // 模板记录
+const _Preview = "_preview"; // 模板预览
 
 function setTemplate(data) {
   localStorage.setItem(_Templates, JSON.stringify(data));
@@ -18,6 +19,19 @@ function getTemplate() {
     return JSON.parse(data || "[]");
   } catch (e) {
     return [];
+  }
+}
+
+function setPreview(data, s) {
+  sessionStorage.setItem(_Preview, JSON.stringify(data));
+}
+
+function getPreview() {
+  try {
+    const data = sessionStorage.getItem(_Preview);
+    return JSON.parse(data);
+  } catch (e) {
+    return;
   }
 }
 
@@ -162,7 +176,13 @@ const MyHeader = {
     }
 
     function onOpenNew() {
-      window.open(location.href, "_blank");
+      const host = location.origin + location.pathname;
+      if (isIframe()) {
+        setPreview(printConfig);
+        window.open(host + "?showPrint=false&preview=true", "_blank");
+      } else {
+        window.open(host + "?showPrint=false", "_blank");
+      }
     }
 
     function onInfo() {

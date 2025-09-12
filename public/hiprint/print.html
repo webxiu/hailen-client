@@ -17,8 +17,8 @@
     <script src="./plugins/jquery.minicolors.min.js"></script>
     <script src="./plugins/JsBarcode.all.min.js"></script>
     <script src="./plugins/qrcode.js"></script>
-    <!-- <script src="./plugins/socket.io.js"></script> -->
     <script src="./utils/watermark.js"></script>
+    <!-- <script src="./plugins/socket.io.js"></script> -->
     <!-- <script src="./hiprint.config.js"></script> -->
     <script src="./hiprint.bundle.js"></script>
     <script src="./plugins/jquery.hiwprint.js"></script>
@@ -65,14 +65,17 @@
               <!-- 工具按钮 -->
               <MyTool ref="toolRef" @resetDesign="onResetDesign" @updateDesign="onUpdateDesign">
             </div>
-            <div class="h-100 flex-1 print-scroll-wrap">
+            <div class="h-100 flex-1 flex print-designer">
               <!-- 设计区域 -->
-              <div id="designer"></div>
+              <div class="flex-1 print-scroll-wrap">
+                <div id="designer"></div>
+              </div>
+              <div id="ElementLayer"></div>
             </div>
           </el-main>
           <el-aside width="20%" style="min-width: 280px; overflow-y: auto">
             <!-- 属性配置 -->
-            <div id="PrintElementOptionSetting"></div>
+            <div id="PrintOptionSetting"></div>
           </el-aside>
         </el-container>
         <el-footer class="footer">
@@ -197,7 +200,7 @@
           </el-button>
         </span>
       </div>
-      <div class="hiprint-printPagination"></div>
+      <div class="PrintPagination"></div>
       <!-- 打印预览 -->
       <el-dialog v-model="printVisible" title="打印预览" width="fit-content" top="5vh">
         <div class="dialog-body" style="max-height: 75vh; overflow-y: auto">
@@ -272,7 +275,8 @@
                 window.addEventListener("message", onMessageOnce);
               } else {
                 // 单独打开时, 新建空模板
-                onInitHiPrint(defaultConfig);
+                const data = getPreview() || defaultConfig;
+                onInitHiPrint(data);
               }
             });
 
@@ -361,8 +365,9 @@
                   gridLine: showGridLine,
                   history: history,
                   onDataChange: onDataChange,
-                  settingContainer: "#PrintElementOptionSetting",
-                  paginationContainer: ".hiprint-printPagination",
+                  layerOption: { icons: icons, el: "#ElementLayer" },
+                  settingContainer: "#PrintOptionSetting",
+                  paginationContainer: ".PrintPagination",
                 });
                 hiprintTemplate.design("#designer"); // 渲染设计器
                 requestAnimationFrame(() => resolve());

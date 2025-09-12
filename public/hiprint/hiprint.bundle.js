@@ -293,6 +293,7 @@ var hiprint = function (t) {
                         { name: "dataType", hidden: !1},
                         { name: "fontFamily", hidden: !1},
                         { name: "fontSize", hidden: !1},
+                        { name: "draggable", hidden: !1},
                         { name: "fontWeight", hidden: !1},
                         { name: "letterSpacing", hidden: !1},
                         { name: "color", hidden: !1},
@@ -345,6 +346,7 @@ var hiprint = function (t) {
                         { name: "borderRadius", hidden: !1},
                         { name: "showInPage", hidden: !1},
                         { name: "fixed", hidden: !1},
+                        { name: "draggable", hidden: !1},
                         { name: "axis", hidden: !1},
                         { name: "transform", hidden: !1},
                         { name: "formatter", hidden: !1},
@@ -359,6 +361,7 @@ var hiprint = function (t) {
                         { name: "testData", hidden: !1},
                         { name: "fontFamily", hidden: !1},
                         { name: "fontSize", hidden: !1},
+                        { name: "draggable", hidden: !1},
                         { name: "fontWeight", hidden: !1},
                         { name: "letterSpacing", hidden: !1},
                         { name: "textAlign", hidden: !1},
@@ -406,6 +409,7 @@ var hiprint = function (t) {
                         { name: "fontFamily", hidden: !1},
                         { name: "fontSize", hidden: !1},
                         { name: "lineHeight", hidden: !1},
+                        { name: "draggable", hidden: !1},
                         { name: "textAlign", hidden: !1},
                         { name: "gridColumns", hidden: !1},
                         { name: "gridColumnsGutter", hidden: !1},
@@ -453,6 +457,7 @@ var hiprint = function (t) {
                         { name: "field", hidden: !1},
                         { name: "fontFamily", hidden: !1},
                         { name: "fontSize", hidden: !1},
+                        { name: "draggable", hidden: !1},
                         { name: "textAlign", hidden: !1},
                         { name: "tableBorder", hidden: !1},
                         { name: "tableHeaderBorder", hidden: !1},
@@ -498,6 +503,7 @@ var hiprint = function (t) {
                         { name: "borderWidth", hidden: !1},
                         { name: "showInPage", hidden: !1},
                         { name: "fixed", hidden: !1},
+                        { name: "draggable", hidden: !1},
                         { name: "axis", hidden: !1},
                         { name: "transform", hidden: !1},
                         { name: "borderStyle", hidden: !1
@@ -512,8 +518,9 @@ var hiprint = function (t) {
                     supportOptions: [
                         { name: "borderColor", hidden: !1},
                         { name: "borderWidth", hidden: !1},
-                        { name: "showInPage", hidden: !1},
                         { name: "fixed", hidden: !1},
+                        { name: "showInPage", hidden: !1},
+                        { name: "draggable", hidden: !1},
                         { name: "axis", hidden: !1},
                         { name: "transform", hidden: !1},
                         { name: "borderStyle", hidden: !1
@@ -528,6 +535,7 @@ var hiprint = function (t) {
                     supportOptions: [
                         { name: "borderColor", hidden: !1},
                         { name: "borderWidth", hidden: !1},
+                        { name: "draggable", hidden: !1},
                         { name: "showInPage", hidden: !1},
                         { name: "fixed", hidden: !1},
                         { name: "axis", hidden: !1},
@@ -545,6 +553,7 @@ var hiprint = function (t) {
                     supportOptions: [
                         { name: "borderColor", hidden: !1},
                         { name: "borderWidth", hidden: !1},
+                        { name: "draggable", hidden: !1},
                         { name: "showInPage", hidden: !1},
                         { name: "fixed", hidden: !1},
                         { name: "axis", hidden: !1},
@@ -564,6 +573,7 @@ var hiprint = function (t) {
                         { name: "unShowInPage", hidden: !1},
                         { name: "fixed", hidden: !1},
                         { name: "axis", hidden: !1},
+                        { name: "draggable", hidden: !1},
                         { name: "formatter", hidden: !1
                     }],
                     default: {
@@ -577,6 +587,7 @@ var hiprint = function (t) {
                         { name: "align", hidden: !1},
                         { name: "halign", hidden: !1},
                         { name: "vAlign", hidden: !1},
+                        { name: "draggable", hidden: !1},
                         { name: "paddingLeft", hidden: !1},
                         { name: "paddingRight", hidden: !1},
                         { name: "formatter2", hidden: !1},
@@ -985,7 +996,9 @@ var hiprint = function (t) {
                     n && "object" == _typeof(n) ? Object.keys(n).forEach(function (e) {
                         t.options[e] = n[e];
                     }) : t.options[e.name] = n;
-                }), this.updateDesignViewFromOptions(), hinnn.event.trigger("hiprintTemplateDataChanged_" + this.templateId, "元素修改");
+                }), this.updateDesignViewFromOptions();
+                this.designTarget?.hidraggable('update', { draggable: this.options.draggable });// 更新拖拽设置
+                hinnn.event.trigger("hiprintTemplateDataChanged_" + this.templateId, "元素修改");
             }, BasePrintElement.prototype.updateOption = function (o, v, b) {
                 try {
                     var e = this.getConfigOptions();
@@ -1471,6 +1484,7 @@ var hiprint = function (t) {
                     if (this.tableOptions.options.isEnableEditField) {
                         var n = e.split("#");
                         t.title = this.title = n[0], n.length > 0 && (t.field = this.field = n[1]);
+                        hinnn.event.trigger("hiprintTemplateDataChanged_" + this.tableOptions.options.templateId, "调整表格列字段");
                     } else t.title = this.title = e;
                 } else this.tableOptions.options.isEnableEditField ? (t.title = this.title = "", t.field = this.field = "") : t.title = this.title = "";
                 this.editor.destroy(), t.getTarget().html(this.title);
@@ -3193,6 +3207,32 @@ var hiprint = function (t) {
                 this.target.remove();
             }, t;
         }(),
+        DraggableElement = function () {
+            function t() {
+                this.name = "draggable";
+            }
+
+            return t.prototype.css = function (t, e) { 
+                if (t && t.length) { 
+                    t.css({"zIndex": e == false ? 0 : ""});// 将层级降级
+                }
+                return null;
+            }, t.prototype.createTarget = function () {
+                return this.target = $(`<div class="hiprint-option-item">
+                        <div class="hiprint-option-item-label">是否拖动</div>
+                    <div class="hiprint-option-item-field">
+                        <label><input type="radio" name="option" value="true" class="auto-submit" style="width:16px;height:16px;vertical-align: text-top">是</label>
+                        <label><input type="radio" name="option" value="false" class="auto-submit" style="width:16px;height:16px;vertical-align: text-top; margin-left:10px;">否</label>
+                    </div></div>`), this.target;
+            }, t.prototype.getValue = function () {
+                var v = this.target.find('input:checked').val();
+                return { true: !0, false: !1 }[v];
+            }, t.prototype.setValue = function (t) { 
+                this.target.find('input[value="' + String(t) + '"]').prop("checked", true);
+            }, t.prototype.destroy = function () {
+                this.target.remove();
+            }, t;
+        }(),
         nt = function () {
             function t() {
                 this.name = "backgroundColor";
@@ -3738,7 +3778,7 @@ var hiprint = function (t) {
             t.init(), t.printElementOptionItems[e.name] = e;
         }, t.getItem = function (e) {
             return t.init(), t.printElementOptionItems[e];
-        }, t._printElementOptionItems = [new o(), new r(), new a(), new p(), new i(), new s(), new l(), new pt(), new u(), new d(), new c(), new h(), new f(), new g(), new m(), new v(), new y(), new b(), new E(), new qrCodeLevel(), new T(), new P(), new _(), new w(), new x(), new C(), new imageFit(), new borderRadius(), new O(), new watermarkOptions(), new H(), new D(), new I(), new R(), new M(), new S(), new B(), new F(), new L(), new A(), new z(), new k(), new st(), new N(), new V(), new W(), new j(), new U(), new K(), new G(), new q(), new X(), new Y(), new Q(), new J(), new Z(), new tt(), new et(), new lockWidthHeight(), new nt(), new it(), new ot(), new at(), new lt(), new ut(), new dt(), new ct(), new ht(), new ft(), new gt(), new mt(), new rowcolumns(), new vt(), new yt(), new bt(), new Tt(), new Et(), new Pt(), new _t(), new wt(), new xt()], t;
+        }, t._printElementOptionItems = [new o(), new r(), new a(), new p(), new i(), new s(), new l(), new pt(), new u(), new d(), new c(), new h(), new f(), new g(), new m(), new v(), new y(), new b(), new E(), new qrCodeLevel(), new T(), new P(), new _(), new w(), new x(), new C(), new imageFit(), new borderRadius(), new O(), new watermarkOptions(), new H(), new D(), new I(), new R(), new M(), new S(), new B(), new F(), new L(), new A(), new z(), new k(), new st(), new N(), new V(), new W(), new j(), new U(), new K(), new G(), new q(), new X(), new Y(), new Q(), new J(), new Z(), new tt(), new et(), new lockWidthHeight(), new DraggableElement(), new nt(), new it(), new ot(), new at(), new lt(), new ut(), new dt(), new ct(), new ht(), new ft(), new gt(), new mt(), new rowcolumns(), new vt(), new yt(), new bt(), new Tt(), new Et(), new Pt(), new _t(), new wt(), new xt()], t;
     }();
 }, function (t, e, n) {
     "use strict";
@@ -4163,15 +4203,21 @@ var hiprint = function (t) {
                 this.designTarget.hidraggable({
                     handle: this.designTarget.find(".hiprint-printElement-table-handle"),
                     axis: n.options.axis && t && t.axisEnabled ? n.options.axis : void 0,
+                    designTarget: n,
                     onDrag: function onDrag(t, i, o) {
                         n.updateSizeAndPositionOptions(i, o), n.createLineOfPosition(e);
+                        _HiPrintlib__WEBPACK_IMPORTED_MODULE_9__.a.instance.changed = !0;
                     },
                     moveUnit: "pt",
                     minMove: _HiPrintConfig__WEBPACK_IMPORTED_MODULE_1__.a.instance.movingDistance,
                     onBeforeDrag: function onBeforeDrag(t) {
                         _HiPrintlib__WEBPACK_IMPORTED_MODULE_9__.a.instance.draging = !0, n.createLineOfPosition(e);
                     },
+                    getScale: function getScale() {
+                        return n.designPaper.scale || 1;
+                    },
                     onStopDrag: function onStopDrag(t) {
+                        if (_HiPrintlib__WEBPACK_IMPORTED_MODULE_9__.a.instance.changed) _assets_plugins_hinnn__WEBPACK_IMPORTED_MODULE_3__.a.event.trigger("hiprintTemplateDataChanged_" + n.templateId, "移动");
                         _HiPrintlib__WEBPACK_IMPORTED_MODULE_9__.a.instance.draging = !1, n.removeLineOfPosition();
                     }
                 }), this.printElementType.editable && this.setHitable(), this.setColumnsOptions(), this.designTarget.hireizeable({
@@ -4190,6 +4236,7 @@ var hiprint = function (t) {
             }, TablePrintElement.prototype.setHitable = function () {
                 var t = this;
                 this.hitable = new _hitable_HiTale__WEBPACK_IMPORTED_MODULE_7__.a({
+                    templateId: t.templateId,
                     table: this.designTarget.find(".hiprint-printElement-tableTarget:eq(0)"),
                     rows: this.getColumns(),
                     resizeRow: !1,
@@ -6244,12 +6291,12 @@ var hiprint = function (t) {
                 this.target = $('<div class="hiprint-printPaper"><div class="hiprint-printPaper-content"></div></div>'), this.paperContentTarget = this.target.find(".hiprint-printPaper-content"), this.target.css("width", this.mmwidth + "mm"), this.target.css("height", this.mmheight - p.a.instance.paperHeightTrim + "mm"), this.target.attr("original-height", this.mmheight), this.zoom(this.scale);
             }, t.prototype.createHeaderLine = function () {
                 var t = this;
-                this.headerLinetarget = $('<div class="hiprint-headerLine"  style="position: absolute;width: 100%;border-top: 1px dashed #c9bebe;height: 7pt;"></div>'), this.headerLinetarget.css("top", (this.paperHeader || -1) + "pt"), 0 == this.paperHeader && this.headerLinetarget.addClass("hideheaderLinetarget"), this.paperContentTarget.append(this.headerLinetarget), this.dragHeadLineOrFootLine(this.headerLinetarget, function (e, n) {
+                this.headerLinetarget = $('<div class="hiprint-headerLine" title="页眉线: 以上内容每页重复打印" style="position: absolute;width: 100%;border-top: 1px dashed #c9bebe;height: 7pt;"></div>'), this.headerLinetarget.css("top", (this.paperHeader || -1) + "pt"), 0 == this.paperHeader && this.headerLinetarget.addClass("hideheaderLinetarget"), this.paperContentTarget.append(this.headerLinetarget), this.dragHeadLineOrFootLine(this.headerLinetarget, function (e, n) {
                     t.paperHeader = n, t.triggerOnPaperBaseInfoChanged();
                 });
             }, t.prototype.createFooterLine = function () {
                 var t = this;
-                this.footerLinetarget = $('<div class="hiprint-footerLine"  style="position: absolute;width: 100%;border-top: 1px dashed #c9bebe;height: 7pt;"></div>'), this.footerLinetarget.css("top", parseInt(this.paperFooter.toString()) + "pt"), this.paperFooter == this.height && (this.footerLinetarget.css("top", this.mmheight - p.a.instance.paperHeightTrim + "mm"), this.footerLinetarget.addClass("hidefooterLinetarget")), this.paperContentTarget.append(this.footerLinetarget), this.dragHeadLineOrFootLine(this.footerLinetarget, function (e, n) {
+                this.footerLinetarget = $('<div class="hiprint-footerLine" title="页尾线: 以下内容每页重复打印" style="position: absolute;width: 100%;border-top: 1px dashed #c9bebe;height: 7pt;"></div>'), this.footerLinetarget.css("top", parseInt(this.paperFooter.toString()) + "pt"), this.paperFooter == this.height && (this.footerLinetarget.css("top", this.mmheight - p.a.instance.paperHeightTrim + "mm"), this.footerLinetarget.addClass("hidefooterLinetarget")), this.paperContentTarget.append(this.footerLinetarget), this.dragHeadLineOrFootLine(this.footerLinetarget, function (e, n) {
                     t.paperFooter = n, t.triggerOnPaperBaseInfoChanged();
                 });
             }, t.prototype.createPaperNumber = function (t) {
@@ -7964,7 +8011,7 @@ var hiprint = function (t) {
 
                         var n = t.createTarget(i, i.options, i.printElementType);
                         e.printElementOptionSettingPanel[t.name] = n, r.append(n), 
-                        t.setValue(i.options[t.name] || i.printElementType[t.name], i.options, i.printElementType);
+                        t.setValue(i.options[t.name] ?? i.printElementType[t.name], i.options, i.printElementType);
                     });
                     var a = $('<button class="hiprint-option-item-settingBtn hiprint-option-item-submitBtn" type="button">确定</button>'),
                         p = $('<button  class="hiprint-option-item-settingBtn hiprint-option-item-deleteBtn"\n        type="button">删除</button>');
@@ -8056,6 +8103,7 @@ var hiprint = function (t) {
                 this.printPanels = [];
                 this.dataMode = n.dataMode || !0;
                 this.onDataChange = n.onDataChange;
+                this.layerOption = n.layerOption;
                 this.lastJson = n.template || {};
                 this.history = n.history != void 0 ? n.history : !0;
                 this.historyList = [{ id: s.a.instance.guid(), type: '初始', json: this.lastJson }];
@@ -8166,13 +8214,17 @@ var hiprint = function (t) {
             }, t.prototype.addPrintPanel = function (t, e) {
                 var s = this;
                 var n = t ? new pt(new rt(t), s) : this.createDefaultPanel();
+                hinnn.event.trigger("hiprintTemplateDataChanged_" + n.templateId, "新增页面");
                 return t && (t.index = this.printPanels.length), e && (this.container.append(n.getTarget()), n.design()), this.printPanels.push(n), e && this.selectPanel(n.index), n;
             }, t.prototype.selectPanel = function (t) {
                 var e = this;
                 this.printPanels.forEach(function (n, i) {
                     t == i ? (n.enable(), e.editingPanel = n) : n.disable();
                 });
+                hinnn.event.trigger("hiprintTemplateDataChanged_" + e.editingPanel.templateId, "切换页面");
             }, t.prototype.deletePanel = function (t) {
+                var e = this;
+                hinnn.event.trigger("hiprintTemplateDataChanged_" + e.addPrintPanel.templateId, "删除页面");
                 this.printPanels[t].clear(), this.printPanels[t].getTarget().remove(), this.printPanels.splice(t, 1);
             }, t.prototype.getPaneltotal = function () {
                 return this.printPanels.length;
@@ -8477,7 +8529,147 @@ var hiprint = function (t) {
                         }
                         t.onDataChange && t.onDataChange(type, j);
                     }
+
+                    var handerOptions = ["新增", "删除", "元素修改", "调整大小", "新增页面","删除页面", "切换页面"]
+                    if(handerOptions.some(item => type.includes(item))) {
+                        renderLayer(type);
+                    } 
                 });
+
+                var layerHead = $(`<div class="layer-head"><span class="title">元素列表</span></div>`);
+                var openIcon = $(`<span class="start glyphicon glyphicon-step-forward"></span>`);
+                var downIcon = $(`<span class="fold glyphicon glyphicon-menu-down is-open"></span>`);
+                var elOption = $(`<div class="hailen-code"><pre><code></code></pre><span class="closed" title="关闭">×</span></div>`);
+                
+                function renderLayer(type) {
+                    var index = t.editingPanel.index;
+                    var elements = t.printPanels[index]?.printElements || [];
+                    var layerBody = $(`<div class="layer-body"></div>`);
+                    var $container = $(t.layerOption.el);
+                    layerHead.append(openIcon);
+                    layerHead.append(downIcon);
+                    // 代码预览元素
+                    if (!t.editingPanel.target.find('.hailen-code').length) {
+                        t.editingPanel.target.append(elOption)
+                    }
+                    var isDrag = false;
+
+                    // 元素列表
+                    $container.empty().append(layerHead);
+                    elements.forEach(function (el, idx) {
+                        var testData = el.options.testData || "";
+                        var isDraggable = el.options.draggable == false
+                        var draggable = isDraggable ? "disabled glyphicon-minus-sign" : "glyphicon-ok-sign";
+                        var type = el.options.textType || el.printElementType.type;
+                        var title = el.options.title || el.printElementType.title || el.printElementType.text || type || "";
+                        var icon = t.layerOption.icons.find((item) => item.tid.split(".")[1] === type).icon || "";
+                        var content = title + (testData && typeof testData === "string" ? `: ${testData}` : "");
+                        var itemDom = $(`<div class="layer-item">
+                                            <span class="icon glyphicon ${icon}"></span>
+                                            <span class="field">${el.options.field || ""}</span>
+                                            <span class="content" title="${idx + 1 + ". " + content}">${content}</span>
+                                            <span class="drag glyphicon ${draggable}" title="${isDraggable ? "不可拖动" : "可拖动"}"></span>
+                                            <span class="option glyphicon glyphicon-certificate"></span>
+                                            <span class="delete" title="删除">×</span>
+                                        </div>`);
+                        itemDom.data("layer-data", el);
+                        layerBody.append(itemDom);
+                    });
+                    $container.append(layerBody);
+                    layerBody.css({ maxHeight: layerBody.height() + "px" }); // 设置最大高度
+                    if (type == "新增") layerBody.scrollTop(layerBody.height()); // 新增时滚动到底部
+
+                    // 拖拽
+                    layerHead.off("mousedown").on("mousedown", function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        var offsetX = e.clientX - $container.offset().left;
+                        var offsetY = e.clientY - $container.offset().top;
+                        $(document).on("mousemove.drag", function (e) {
+                            isDrag = true;
+                            if ($container.hasClass("show") && $(e.target).closest(".start").length) return;
+                            var parentOffset = $container.offsetParent().offset();
+                            var left = e.clientX - parentOffset.left - offsetX;
+                            var top = e.clientY - parentOffset.top - offsetY;
+                            $container.css({ left: left + "px", top: top + "px", transition: "none" });
+                        }).on("mouseup.drag", function () {
+                            isDrag = false;
+                            $(document).off(".drag");
+                        });
+                    }).on("mouseup", function (e) {
+                        // 放大缩小
+                        if (isDrag || $(e.target).closest(".fold").length) return;
+                        $container.css({ transition: "all 0.3s" });
+                        openIcon.toggleClass("is-open");
+                        if (openIcon.hasClass("is-open")) {
+                            $container.addClass("show");
+                        } else {
+                            $container.removeClass("show");
+                        }
+                        isDrag = false;
+                    });
+
+                    // 折叠展开
+                    downIcon.off("click").on("click", function (e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        downIcon.toggleClass("is-open");
+                        layerBody.toggleClass("hide");
+                    });
+
+                    // 点击元素行
+                    layerBody.off("click", ".layer-item, .delete").on("click", ".layer-item, .delete", function (e) {
+                        var $target = $(e.target);
+                        var $item = $target.closest(".layer-item");
+                        var el = $item.data("layer-data");
+                        if ($target.is(".delete")) { 
+                            e.stopPropagation(), t.deletePrintElement(el), $item.remove();// 删除
+                            return;
+                        }
+                        if ($target.is(".layer-item") || $target.closest(".icon, .content, .field").length) {
+                            layerBody.find(".layer-item").removeClass("active");// 选中
+                            elOption.hide();
+                            $item.addClass("active"); 
+                            setTimeout(function () { el.designTarget.trigger("click") });
+                        }
+                    });
+                    // 显示配置代码
+                    layerBody.off("click", ".layer-item, .option").on("click", ".layer-item, .option", function (e) {
+                        var $item = $(this); 
+                        if (!$item.is('.option')) return;  
+                        var $layerItem = $item.closest('.layer-item');
+                        var el = $layerItem.data("layer-data");
+                        if (!$layerItem.length || !el) return;
+                        var {right, top} = $item[0].getBoundingClientRect();
+                        var optionCode = JSON.stringify(el.options || {}, null, 2);
+                        elOption.css({ left: right + 32, top, display: "block" });
+
+                        // 避免超出底部
+                        requestAnimationFrame(() => { 
+                            const windowHeight = $(window).height();
+                            const elOptionHeight = elOption.outerHeight();
+                            const rectOption = elOption[0].getBoundingClientRect();
+                            const optionBottom = rectOption.top + elOptionHeight;
+                            if (optionBottom > windowHeight) {
+                                const margin = 20;
+                                const newTop = windowHeight - elOptionHeight - margin;
+                                elOption.css({ top: newTop });
+                            }
+                        });
+
+                        elOption.find('code').empty().html(optionCode);
+                        elOption.show();
+                        elOption.off("click").on("click", function (e) {
+                            e.stopPropagation();
+                            e.preventDefault(); 
+                        })
+                        elOption.off("click", ".closed").on("click", ".closed", function (e) {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            elOption.hide();
+                        })
+                    });
+                }             
             }, t;
         }();
 

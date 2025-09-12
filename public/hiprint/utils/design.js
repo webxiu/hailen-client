@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-08-27 15:34:08
+ * @LastEditTime: 2025-09-09 16:09:20
  * @Description: 设计JS主文件
  */
 
@@ -52,9 +52,9 @@ var elements = [
   {
     title: "🌵文本",
     children: [
-      { title: "文本", tid: "configModule.text", icon: "glyphicon-text-width" },
-      { title: "长文本", tid: "configModule.longText", icon: "glyphicon-subscript" },
-      { title: "自定义文本", tid: "configModule.customText", icon: "glyphicon-text-size" },
+      { title: "文本", tid: "configModule.text", icon: "glyphicon-text-size" },
+      { title: "长文本", tid: "configModule.longText", icon: "glyphicon-text-width" },
+      { title: "自定义文本", tid: "configModule.customText", icon: "glyphicon-subscript" },
     ],
   },
   {
@@ -88,6 +88,8 @@ var elements = [
     children: [{ title: "html字符串", tid: "configModule.html", icon: "glyphicon-tree-conifer" }],
   },
 ];
+
+var icons = elements.reduce((prev, el) => (prev.push(...el.children), prev), []);
 
 function genTemplate(selector) {
   const tpl = document.getElementById(selector);

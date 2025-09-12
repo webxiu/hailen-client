@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-09-05 16:05:31
+ * @LastEditTime: 2025-09-04 15:44:54
  * @Description: 初始化模板
  */
 
@@ -34,7 +34,85 @@ var defaultConfig = {
         paperHeader: 49.5,
         paperFooter: 800,
         paperNumberDisabled: true,
-        printElements: [],
+        printElements: [ 
+        {
+          "options": {
+            "left": 35,
+            "top": 19,
+            "height": 9.75,
+            "width": 120,
+            "fontSize": 9,
+            "textType": "text",
+            "hideTitle": false,
+            "lineHeight": 9.75
+          },
+          "printElementType": {
+            "title": "文本",
+            "type": "text"
+          }
+        },
+        {
+          "options": {
+            "left": 43,
+            "top": 39,
+            "height": 42,
+            "width": 550,
+            "fontSize": 9,
+            "hideTitle": false,
+            "lineHeight": 9.75
+          },
+          "printElementType": {
+            "title": "长文本",
+            "type": "longText"
+          }
+        },
+        {
+          "options": {
+            "left": 59,
+            "top": 99,
+            "height": 9.75,
+            "width": 120,
+            "fontSize": 9,
+            "textType": "text",
+            "hideTitle": false,
+            "lineHeight": 9.75
+          },
+          "printElementType": {
+            "title": "自定义文本",
+            "type": "text"
+          }
+        },
+        {
+          "options": {
+            "left": 51,
+            "top": 135,
+            "height": 80,
+            "width": 80,
+            "hideTitle": false,
+            "src": "./assets/image/hi.png"
+          },
+          "printElementType": {
+            "type": "image"
+          }
+        },
+        {
+          "options": {
+            "left": 179,
+            "top": 163,
+            "height": 80,
+            "width": 80,
+            "fontSize": 9,
+            "textType": "qrcode",
+            "hideTitle": false,
+            "lineHeight": 9.75
+          },
+          "printElementType": {
+            "title": "123546789",
+            "type": "text"
+          }
+        }
+
+        ],
         watermarkOptions: watermarkOptions,
       },
     ],
