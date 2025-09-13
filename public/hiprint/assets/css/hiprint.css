@@ -10,19 +10,19 @@ body {
 }
 
 /* hiprint-pagination */
-.hiprint-printPagination {
+.PrintPagination {
   white-space: nowrap;
   width: 100%;
   overflow-y: auto;
 }
-.hiprint-printPagination .hiprint-pagination li:last-child {
+.PrintPagination .hiprint-pagination li:last-child {
   position: sticky;
   right: 5px;
   top: 0px;
   background: #fff;
   z-index: 3;
 }
-.hiprint-printPagination .hiprint-pagination li:last-child::before {
+.PrintPagination .hiprint-pagination li:last-child::before {
   content: "";
   width: 4px;
   height: 28px;
@@ -32,7 +32,7 @@ body {
   left: -5px;
   z-index: 2;
 }
-.hiprint-printPagination .hiprint-pagination li:last-child::after {
+.PrintPagination .hiprint-pagination li:last-child::after {
   content: "";
   width: 6px;
   height: 28px;
@@ -971,6 +971,10 @@ font-weight: normal;*/
   border: none;
   overflow: hidden;
   background: transparent;
+  transition: width 0.3s, max-height 0.3s;
+}
+#ElementLayer.no-transition {
+  transition: none;
 }
 
 #ElementLayer .layer-head {
@@ -987,31 +991,29 @@ font-weight: normal;*/
   justify-content: center;
   padding: 0 5px;
   font-size: 14px;
+  transition: width 0.3s;
 }
 
 #ElementLayer .layer-head .start {
   font-size: 20px;
-  margin: 0px 0px 1px;
 }
-#ElementLayer .layer-head .title,
-#ElementLayer .layer-head .fold {
+#ElementLayer .layer-head .title {
   display: none;
 }
 #ElementLayer .layer-body {
   flex: 1;
   overflow-y: auto;
   display: none;
-  transition: all 0.3s ease;
+  transition: all 0.3s;
 }
 
-/*=============*/
+/*======= show ======*/
 
 #ElementLayer.show {
   width: 220px;
   max-height: 90%;
   background: #fff;
   border: 1px solid #1e80ff;
-  transition: all 0.3s ease;
 }
 
 #ElementLayer.show .layer-head {
@@ -1022,41 +1024,25 @@ font-weight: normal;*/
   justify-content: space-between;
   border-radius: 0px;
 }
-#ElementLayer.show .layer-head .title,
-#ElementLayer.show .layer-head .fold {
-  display: block;
-}
 #ElementLayer.show .layer-head .title {
+  display: block;
   color: #fff;
   font-size: 14px;
   cursor: move;
+  white-space: nowrap;
+  transition: all 0.3s;
 }
 #ElementLayer.show .layer-head .start {
   cursor: pointer;
-  margin-left: auto;
-  margin-right: 5px;
   font-size: 14px;
-  display: inline-block;
+  margin-left: auto;
 }
 #ElementLayer .layer-head .start.is-open {
   transform: rotate(180deg);
 }
 
-#ElementLayer.show .layer-head .fold {
-  transition: transform 0.3s ease;
-  display: inline-block;
-  cursor: pointer;
-}
-#ElementLayer.show .layer-head .fold.is-open {
-  transform: rotate(180deg);
-}
-
 #ElementLayer.show .layer-body {
   display: block;
-}
-#ElementLayer.show .layer-body.hide {
-  opacity: 0;
-  max-height: 0 !important;
 }
 
 /* 列表布局 */
@@ -1124,7 +1110,7 @@ font-weight: normal;*/
   max-width: 260px;
   max-height: 345px;
   overflow: auto;
-  white-space: pre-wrap
+  white-space: pre-wrap;
 }
 
 .hailen-code .closed {
@@ -1142,7 +1128,7 @@ font-weight: normal;*/
   color: #f00;
   cursor: pointer;
   user-select: none;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s;
 }
 .layer-body .layer-item .delete:hover {
   color: #00f;

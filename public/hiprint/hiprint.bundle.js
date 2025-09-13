@@ -284,159 +284,151 @@ var hiprint = function (t) {
     var i = n(9),
         o = function () {
             function t() {
-                this.providers = [], this.movingDistance = 1, this.paperHeightTrim = 1, 
+                this.providers = [], this.movingDistance = 1.5, this.paperHeightTrim = 1;
                 this.text = {
                     supportOptions: [
-                        { name: "title", hidden: !1, title: ""},
-                        { name: "field", hidden: !1},
-                        { name: "testData", hidden: !1},
-                        { name: "dataType", hidden: !1},
-                        { name: "fontFamily", hidden: !1},
-                        { name: "fontSize", hidden: !1},
-                        { name: "draggable", hidden: !1},
-                        { name: "fontWeight", hidden: !1},
-                        { name: "letterSpacing", hidden: !1},
-                        { name: "color", hidden: !1},
-                        { name: "textDecoration", hidden: !1},
-                        { name: "textAlign", hidden: !1},
-                        { name: "textContentVerticalAlign", hidden: !1},
-                        { name: "lineHeight", hidden: !1},
-                        { name: "textType", hidden: !1},
-                        { name: "qrCodeLevel", hidden: !1},
-                        { name: "barcodeMode", hidden: !1},
-                        { name: "hideTitle", hidden: !1},
-                        { name: "showInPage", hidden: !1},
-                        { name: "unShowInPage", hidden: !1},
-                        { name: "fixed", hidden: !1},
-                        { name: "axis", hidden: !1},
-                        { name: "transform", hidden: !1},
-                        { name: "optionsGroup", hidden: !1},
-                        { name: "borderLeft", hidden: !1},
-                        { name: "borderTop", hidden: !1},
-                        { name: "borderRight", hidden: !1},
-                        { name: "borderBottom", hidden: !1},
-                        { name: "borderWidth", hidden: !1},
-                        { name: "borderColor", hidden: !1},
-                        { name: "contentPaddingLeft", hidden: !1},
-                        { name: "contentPaddingTop", hidden: !1},
-                        { name: "contentPaddingRight", hidden: !1},
-                        { name: "contentPaddingBottom", hidden: !1},
-                        { name: "backgroundColor", hidden: !1},
-                        { name: "formatter", hidden: !1},
-                        { name: "styler", hidden: !1
-                    }],
+                        { name: "title", hidden: !1, title: "" },
+                        { name: "field", hidden: !1 },
+                        { name: "testData", hidden: !1 },
+                        { name: "dataType", hidden: !1 },
+                        { name: "fontFamily", hidden: !1 },
+                        { name: "fontSize", hidden: !1 },
+                        { name: "fontWeight", hidden: !1 },
+                        { name: "letterSpacing", hidden: !1 },
+                        { name: "color", hidden: !1 },
+                        { name: "textDecoration", hidden: !1 },
+                        { name: "textAlign", hidden: !1 },
+                        { name: "textContentVerticalAlign", hidden: !1 },
+                        { name: "lineHeight", hidden: !1 },
+                        { name: "textType", hidden: !1 },
+                        { name: "barcodeMode", hidden: !1 },
+                        { name: "hideTitle", hidden: !1 },
+                        { name: "showInPage", hidden: !1 },
+                        { name: "unShowInPage", hidden: !1 },
+                        { name: "fixed", hidden: !1 },
+                        { name: "axis", hidden: !1 },
+                        { name: "transform", hidden: !1 },
+                        { name: "optionsGroup", hidden: !1 },
+                        { name: "borderLeft", hidden: !1 },
+                        { name: "borderTop", hidden: !1 },
+                        { name: "borderRight", hidden: !1 },
+                        { name: "borderBottom", hidden: !1 },
+                        { name: "borderWidth", hidden: !1 },
+                        { name: "borderColor", hidden: !1 },
+                        { name: "contentPaddingLeft", hidden: !1 },
+                        { name: "contentPaddingTop", hidden: !1 },
+                        { name: "contentPaddingRight", hidden: !1 },
+                        { name: "contentPaddingBottom", hidden: !1 },
+                        { name: "backgroundColor", hidden: !1 },
+                        { name: "formatter", hidden: !1 },
+                        { name: "styler", hidden: !1 },
+                    ],
                     default: {
                         fontFamily: void 0,
-                        fontSize: 9,
+                        fontSize: void 0,
                         fontWeight: "",
                         letterSpacing: void 0,
                         textAlign: void 0,
                         textType: "text",
                         hideTitle: !1,
                         height: 9.75,
-                        lineHeight: 9.75,
-                        width: 120
-                    }
-                },
+                        lineHeight: void 0,
+                        width: 120,
+                    },
+                };
                 this.image = {
                     supportOptions: [
-                        { name: "field", hidden: !1},
-                        { name: "src", hidden: !1},
-                        { name: "fit", hidden: !1},
-                        { name: "borderRadius", hidden: !1},
-                        { name: "showInPage", hidden: !1},
-                        { name: "fixed", hidden: !1},
-                        { name: "draggable", hidden: !1},
-                        { name: "axis", hidden: !1},
-                        { name: "transform", hidden: !1},
-                        { name: "formatter", hidden: !1},
-                        { name: "styler", hidden: !1
-                    }],
-                    default: {}
-                },
+                        { name: "field", hidden: !1 },
+                        { name: "src", hidden: !1 },
+                        { name: "showInPage", hidden: !1 },
+                        { name: "fixed", hidden: !1 },
+                        { name: "axis", hidden: !1 },
+                        { name: "transform", hidden: !1 },
+                        { name: "formatter", hidden: !1 },
+                        { name: "styler", hidden: !1 },
+                    ],
+                    default: {},
+                };
                 this.longText = {
                     supportOptions: [
-                        { name: "title", hidden: !1},
-                        { name: "field", hidden: !1},
-                        { name: "testData", hidden: !1},
-                        { name: "fontFamily", hidden: !1},
-                        { name: "fontSize", hidden: !1},
-                        { name: "draggable", hidden: !1},
-                        { name: "fontWeight", hidden: !1},
-                        { name: "letterSpacing", hidden: !1},
-                        { name: "textAlign", hidden: !1},
-                        { name: "lineHeight", hidden: !1},
-                        { name: "color", hidden: !1},
-                        { name: "hideTitle", hidden: !1},
-                        { name: "longTextIndent", hidden: !1},
-                        { name: "leftSpaceRemoved", hidden: !1},
-                        { name: "showInPage", hidden: !1},
-                        { name: "unShowInPage", hidden: !1},
-                        { name: "fixed", hidden: !1},
-                        { name: "axis", hidden: !1},
-                        { name: "lHeight", hidden: !1},
-                        { name: "transform", hidden: !1},
-                        { name: "optionsGroup", hidden: !1},
-                        { name: "borderLeft", hidden: !1},
-                        { name: "borderTop", hidden: !1},
-                        { name: "borderRight", hidden: !1},
-                        { name: "borderBottom", hidden: !1},
-                        { name: "borderWidth", hidden: !1},
-                        { name: "borderColor", hidden: !1},
-                        { name: "contentPaddingLeft", hidden: !1},
-                        { name: "contentPaddingTop", hidden: !1},
-                        { name: "contentPaddingRight", hidden: !1},
-                        { name: "contentPaddingBottom", hidden: !1},
-                        { name: "backgroundColor", hidden: !1},
-                        { name: "formatter", hidden: !1},
-                        { name: "styler", hidden: !1
-                    }],
+                        { name: "title", hidden: !1 },
+                        { name: "field", hidden: !1 },
+                        { name: "testData", hidden: !1 },
+                        { name: "fontFamily", hidden: !1 },
+                        { name: "fontSize", hidden: !1 },
+                        { name: "fontWeight", hidden: !1 },
+                        { name: "letterSpacing", hidden: !1 },
+                        { name: "textAlign", hidden: !1 },
+                        { name: "lineHeight", hidden: !1 },
+                        { name: "color", hidden: !1 },
+                        { name: "hideTitle", hidden: !1 },
+                        { name: "longTextIndent", hidden: !1 },
+                        { name: "leftSpaceRemoved", hidden: !1 },
+                        { name: "showInPage", hidden: !1 },
+                        { name: "unShowInPage", hidden: !1 },
+                        { name: "fixed", hidden: !1 },
+                        { name: "axis", hidden: !1 },
+                        { name: "lHeight", hidden: !1 },
+                        { name: "transform", hidden: !1 },
+                        { name: "optionsGroup", hidden: !1 },
+                        { name: "borderLeft", hidden: !1 },
+                        { name: "borderTop", hidden: !1 },
+                        { name: "borderRight", hidden: !1 },
+                        { name: "borderBottom", hidden: !1 },
+                        { name: "borderWidth", hidden: !1 },
+                        { name: "borderColor", hidden: !1 },
+                        { name: "contentPaddingLeft", hidden: !1 },
+                        { name: "contentPaddingTop", hidden: !1 },
+                        { name: "contentPaddingRight", hidden: !1 },
+                        { name: "contentPaddingBottom", hidden: !1 },
+                        { name: "backgroundColor", hidden: !1 },
+                        { name: "formatter", hidden: !1 },
+                        { name: "styler", hidden: !1 },
+                    ],
                     default: {
                         fontFamily: void 0,
-                        fontSize: 9,
+                        fontSize: void 0,
                         fontWeight: "",
                         letterSpacing: void 0,
                         textAlign: void 0,
                         hideTitle: !1,
                         height: 42,
-                        lineHeight: 9.75,
-                        width: 550
-                    }
-                },
+                        lineHeight: void 0,
+                        width: 550,
+                    },
+                };
                 this.table = {
                     supportOptions: [
-                        { name: "field", hidden: !1},
-                        { name: "fontFamily", hidden: !1},
-                        { name: "fontSize", hidden: !1},
-                        { name: "lineHeight", hidden: !1},
-                        { name: "draggable", hidden: !1},
-                        { name: "textAlign", hidden: !1},
-                        { name: "gridColumns", hidden: !1},
-                        { name: "gridColumnsGutter", hidden: !1},
-                        { name: "tableBorder", hidden: !1},
-                        { name: "tableHeaderBorder", hidden: !1},
-                        { name: "tableHeaderCellBorder", hidden: !1},
-                        { name: "tableHeaderRowHeight", hidden: !1},
-                        { name: "tableHeaderBackground", hidden: !1},
-                        { name: "tableHeaderFontSize", hidden: !1},
-                        { name: "tableHeaderFontWeight", hidden: !1},
-                        { name: "tableBodyRowHeight", hidden: !1},
-                        { name: "tableBodyRowBorder", hidden: !1},
-                        { name: "tableBodyCellBorder", hidden: !1},
-                        { name: "axis", hidden: !1},
-                        { name: "lHeight", hidden: !1},
-                        { name: "tableFooterRepeat", hidden: !1},
-                        { name: "autoCompletion", hidden: !1},
-                        { name: "columns", hidden: !1},
-                        { name: "styler", hidden: !1},
-                        { name: "rowStyler", hidden: !1},
-                        { name: "footerFormatter", hidden: !1},
-                        { name: "rowsColumnsMerge", hidden: !1},
-                        { name: "gridColumnsFooterFormatter", hidden: !1
-                    }],
+                        { name: "field", hidden: !1 },
+                        { name: "fontFamily", hidden: !1 },
+                        { name: "fontSize", hidden: !1 },
+                        { name: "lineHeight", hidden: !1 },
+                        { name: "textAlign", hidden: !1 },
+                        { name: "gridColumns", hidden: !1 },
+                        { name: "gridColumnsGutter", hidden: !1 },
+                        { name: "tableBorder", hidden: !1 },
+                        { name: "tableHeaderBorder", hidden: !1 },
+                        { name: "tableHeaderCellBorder", hidden: !1 },
+                        { name: "tableHeaderRowHeight", hidden: !1 },
+                        { name: "tableHeaderBackground", hidden: !1 },
+                        { name: "tableHeaderFontSize", hidden: !1 },
+                        { name: "tableHeaderFontWeight", hidden: !1 },
+                        { name: "tableBodyRowHeight", hidden: !1 },
+                        { name: "tableBodyRowBorder", hidden: !1 },
+                        { name: "tableBodyCellBorder", hidden: !1 },
+                        { name: "axis", hidden: !1 },
+                        { name: "lHeight", hidden: !1 },
+                        { name: "autoCompletion", hidden: !1 },
+                        { name: "columns", hidden: !1 },
+                        { name: "styler", hidden: !1 },
+                        { name: "rowStyler", hidden: !1 },
+                        { name: "tableFooterRepeat", hidden: !1 },
+                        { name: "footerFormatter", hidden: !1 },
+                        { name: "gridColumnsFooterFormatter", hidden: !1 },
+                    ],
                     default: {
                         fontFamily: void 0,
-                        fontSize: 9,
+                        fontSize: void 0,
                         fontWeight: "",
                         textAlign: void 0,
                         tableBorder: void 0,
@@ -448,155 +440,119 @@ var hiprint = function (t) {
                         tableBodyCellBorder: void 0,
                         tableBodyRowHeight: void 0,
                         letterSpacing: "",
-                        lineHeight: 9,
-                        width: 550
-                    }
-                },
+                        lineHeight: void 0,
+                        width: 550,
+                    },
+                };
                 this.tableCustom = {
-                    supportOptions: [
-                        { name: "field", hidden: !1},
-                        { name: "fontFamily", hidden: !1},
-                        { name: "fontSize", hidden: !1},
-                        { name: "draggable", hidden: !1},
-                        { name: "textAlign", hidden: !1},
-                        { name: "tableBorder", hidden: !1},
-                        { name: "tableHeaderBorder", hidden: !1},
-                        { name: "tableHeaderCellBorder", hidden: !1},
-                        { name: "tableHeaderRowHeight", hidden: !1},
-                        { name: "tableHeaderFontSize", hidden: !1},
-                        { name: "tableHeaderFontWeight", hidden: !1},
-                        { name: "tableHeaderBackground", hidden: !1},
-                        { name: "tableBodyRowHeight", hidden: !1},
-                        { name: "tableBodyRowBorder", hidden: !1},
-                        { name: "tableBodyCellBorder", hidden: !1},
-                        { name: "axis", hidden: !1},
-                        { name: "lHeight", hidden: !1},
-                        { name: "autoCompletion", hidden: !1},
-                        { name: "tableFooterRepeat", hidden: !1},
-                        { name: "styler", hidden: !1},
-                        { name: "rowStyler", hidden: !1},
-                        { name: "footerFormatter", hidden: !1},
-                        { name: "rowsColumnsMerge", hidden: !1},
-                        { name: "gridColumnsFooterFormatter", hidden: !1
-                    }],
-                    default: {
-                        fontFamily: void 0,
-                        fontSize: 9,
-                        fontWeight: "",
-                        textAlign: void 0,
-                        tableBorder: void 0,
-                        tableHeaderBorder: void 0,
-                        tableHeaderCellBorder: void 0,
-                        tableHeaderBackground: void 0,
-                        tableHeaderRowHeight: void 0,
-                        tableHeaderFontWeight: void 0,
-                        tableBodyCellBorder: void 0,
-                        tableBodyRowHeight: void 0,
-                        letterSpacing: "",
-                        lineHeight: 9,
-                        width: 550
-                    }
+                supportOptions: [
+                    { name: "field", hidden: !1 },
+                    { name: "fontFamily", hidden: !1 },
+                    { name: "fontSize", hidden: !1 },
+                    { name: "textAlign", hidden: !1 },
+                    { name: "tableBorder", hidden: !1 },
+                    { name: "tableHeaderBorder", hidden: !1 },
+                    { name: "tableHeaderCellBorder", hidden: !1 },
+                    { name: "tableHeaderRowHeight", hidden: !1 },
+                    { name: "tableHeaderFontSize", hidden: !1 },
+                    { name: "tableHeaderFontWeight", hidden: !1 },
+                    { name: "tableHeaderBackground", hidden: !1 },
+                    { name: "tableBodyRowHeight", hidden: !1 },
+                    { name: "tableBodyRowBorder", hidden: !1 },
+                    { name: "tableBodyCellBorder", hidden: !1 },
+                    { name: "axis", hidden: !1 },
+                    { name: "lHeight", hidden: !1 },
+                    { name: "autoCompletion", hidden: !1 },
+                    { name: "tableFooterRepeat", hidden: !1 },
+                ],
+                default: {
+                    fontFamily: void 0,
+                    fontSize: void 0,
+                    fontWeight: "",
+                    textAlign: void 0,
+                    tableBorder: void 0,
+                    tableHeaderBorder: void 0,
+                    tableHeaderCellBorder: void 0,
+                    tableHeaderBackground: void 0,
+                    tableHeaderRowHeight: void 0,
+                    tableHeaderFontWeight: void 0,
+                    tableBodyCellBorder: void 0,
+                    tableBodyRowHeight: void 0,
+                    letterSpacing: "",
+                    lineHeight: void 0,
+                    width: 550,
                 },
+                };
                 this.hline = {
-                    supportOptions: [
-                        { name: "borderColor", hidden: !1},
-                        { name: "borderWidth", hidden: !1},
-                        { name: "showInPage", hidden: !1},
-                        { name: "fixed", hidden: !1},
-                        { name: "draggable", hidden: !1},
-                        { name: "axis", hidden: !1},
-                        { name: "transform", hidden: !1},
-                        { name: "borderStyle", hidden: !1
-                    }],
-                    default: {
-                        borderWidth: .75,
-                        height: 9,
-                        width: 90
-                    }
-                },
+                supportOptions: [
+                    { name: "borderColor", hidden: !1 },
+                    { name: "borderWidth", hidden: !1 },
+                    { name: "showInPage", hidden: !1 },
+                    { name: "fixed", hidden: !1 },
+                    { name: "axis", hidden: !1 },
+                    { name: "transform", hidden: !1 },
+                    { name: "borderStyle", hidden: !1 },
+                ],
+                default: { borderWidth: 0.75, height: 9, width: 90 },
+                };
                 this.vline = {
-                    supportOptions: [
-                        { name: "borderColor", hidden: !1},
-                        { name: "borderWidth", hidden: !1},
-                        { name: "fixed", hidden: !1},
-                        { name: "showInPage", hidden: !1},
-                        { name: "draggable", hidden: !1},
-                        { name: "axis", hidden: !1},
-                        { name: "transform", hidden: !1},
-                        { name: "borderStyle", hidden: !1
-                    }],
-                    default: {
-                        borderWidth: void 0,
-                        height: 90,
-                        width: 9
-                    }
-                },
+                supportOptions: [
+                    { name: "borderColor", hidden: !1 },
+                    { name: "borderWidth", hidden: !1 },
+                    { name: "showInPage", hidden: !1 },
+                    { name: "fixed", hidden: !1 },
+                    { name: "axis", hidden: !1 },
+                    { name: "transform", hidden: !1 },
+                    { name: "borderStyle", hidden: !1 },
+                ],
+                default: { borderWidth: void 0, height: 90, width: 9 },
+                };
                 this.rect = {
-                    supportOptions: [
-                        { name: "borderColor", hidden: !1},
-                        { name: "borderWidth", hidden: !1},
-                        { name: "draggable", hidden: !1},
-                        { name: "showInPage", hidden: !1},
-                        { name: "fixed", hidden: !1},
-                        { name: "axis", hidden: !1},
-                        { name: "transform", hidden: !1},
-                        { name: "borderStyle", hidden: !1},
-                        { name: "lockWidthHeight", hidden: !1
-                    }],
-                    default: {
-                        borderWidth: void 0,
-                        height: 90,
-                        width: 90
-                    }
-                },
+                supportOptions: [
+                    { name: "borderColor", hidden: !1 },
+                    { name: "borderWidth", hidden: !1 },
+                    { name: "showInPage", hidden: !1 },
+                    { name: "fixed", hidden: !1 },
+                    { name: "axis", hidden: !1 },
+                    { name: "transform", hidden: !1 },
+                    { name: "borderStyle", hidden: !1 },
+                ],
+                default: { borderWidth: void 0, height: 90, width: 90 },
+                };
                 this.oval = {
-                    supportOptions: [
-                        { name: "borderColor", hidden: !1},
-                        { name: "borderWidth", hidden: !1},
-                        { name: "draggable", hidden: !1},
-                        { name: "showInPage", hidden: !1},
-                        { name: "fixed", hidden: !1},
-                        { name: "axis", hidden: !1},
-                        { name: "transform", hidden: !1},
-                        { name: "borderStyle", hidden: !1},
-                        { name: "lockWidthHeight", hidden: !1
-                    }],
-                    default: {
-                        borderWidth: void 0,
-                        height: 90,
-                        width: 90
-                    }
-                },
+                supportOptions: [
+                    { name: "borderColor", hidden: !1 },
+                    { name: "borderWidth", hidden: !1 },
+                    { name: "showInPage", hidden: !1 },
+                    { name: "fixed", hidden: !1 },
+                    { name: "axis", hidden: !1 },
+                    { name: "transform", hidden: !1 },
+                    { name: "borderStyle", hidden: !1 },
+                ],
+                default: { borderWidth: void 0, height: 90, width: 90 },
+                };
                 this.html = {
-                    supportOptions: [
-                        { name: "showInPage", hidden: !1},
-                        { name: "unShowInPage", hidden: !1},
-                        { name: "fixed", hidden: !1},
-                        { name: "axis", hidden: !1},
-                        { name: "draggable", hidden: !1},
-                        { name: "formatter", hidden: !1
-                    }],
-                    default: {
-                        height: 90,
-                        width: 90
-                    }
-                },
+                supportOptions: [
+                    { name: "showInPage", hidden: !1 },
+                    { name: "unShowInPage", hidden: !1 },
+                    { name: "fixed", hidden: !1 },
+                    { name: "axis", hidden: !1 },
+                    { name: "formatter", hidden: !1 },
+                ],
+                default: { height: 90, width: 90 },
+                };
                 this.tableColumn = {
-                    supportOptions: [
-                        { name: "title", hidden: !1},
-                        { name: "align", hidden: !1},
-                        { name: "halign", hidden: !1},
-                        { name: "vAlign", hidden: !1},
-                        { name: "draggable", hidden: !1},
-                        { name: "paddingLeft", hidden: !1},
-                        { name: "paddingRight", hidden: !1},
-                        { name: "formatter2", hidden: !1},
-                        { name: "styler2", hidden: !1
-                    }],
-                    default: {
-                        height: 90,
-                        width: 90
-                    }
+                supportOptions: [
+                    { name: "title", hidden: !1 },
+                    { name: "align", hidden: !1 },
+                    { name: "halign", hidden: !1 },
+                    { name: "vAlign", hidden: !1 },
+                    { name: "paddingLeft", hidden: !1 },
+                    { name: "paddingRight", hidden: !1 },
+                    { name: "formatter2", hidden: !1 },
+                    { name: "styler2", hidden: !1 },
+                ],
+                default: { height: 90, width: 90 },
                 };
             }
 
@@ -8111,6 +8067,8 @@ var hiprint = function (t) {
                 this.qtDesigner = n.qtDesigner != void 0 ? n.qtDesigner : !0;
                 this.qtDesignerMap = {}
                 this.gridLine = n.gridLine || !1;
+                this.fontList = (n.fontList || []).concat(p.a.instance.fontList);
+
                 this.qtDesignderFunction = function (field) {
                     this.qtDesignerMap = {}
                     const fieldTitle = field.split("_")[0]
@@ -8132,32 +8090,6 @@ var hiprint = function (t) {
                     }
                 }
                 var i = new st(n.template || []);
-                var fontList = [
-                    { title: "默认", value: "" },
-                    { title: "微软雅黑", value: "Microsoft YaHei" },
-                    { title: "黑体", value: "SimHei" },
-                    { title: "宋体", value: "SimSun" },
-                    { title: "仿宋", value: "FangSong" },
-                    { title: "思源黑体", value: "SourceHanSansCN-Normal" },
-                    { title: "华文仿宋", value: "STFangsong" },
-                    { title: "楷体", value: "KaiTi" },
-                    { title: "华文楷体", value: "STKaiti" },
-                    { title: "华文行楷", value: "STXingkai" },
-                    { title: "隶书", value: "LiSu" },
-                    { title: "幼圆", value: "YouYuan" },
-                    { title: "方正舒体", value: "FZShuTi" },
-                    { title: "方正姚体", value: "FZYaoti" },
-                    { title: "Arial", value: "Arial" },
-                    { title: "serif", value: "serif" },
-                    { title: "sans-serif", value: "sans-serif" },
-                    { title: "Times New Roman", value: "Times New Roman" },
-                    { title: "cursive", value: "cursive" },
-                    { title: "fantasy", value: "fantasy" },
-                    { title: "monospace", value: "monospace" },
-                    { title: "Consolas", value: "Consolas" },
-                    { title: "PingFang", value: "PingFang SC" }
-                ];
-                this.fontList = (n.fontList || []).concat(fontList);
                 n.template && i.panels.forEach(function (t) {
                     e.printPanels.push(new pt(t, e));
                 }),
@@ -8221,10 +8153,9 @@ var hiprint = function (t) {
                 this.printPanels.forEach(function (n, i) {
                     t == i ? (n.enable(), e.editingPanel = n) : n.disable();
                 });
-                hinnn.event.trigger("hiprintTemplateDataChanged_" + e.editingPanel.templateId, "切换页面");
+                hinnn.event.trigger("hiprintTemplateDataChanged_" + this.id, "切换页面");
             }, t.prototype.deletePanel = function (t) {
-                var e = this;
-                hinnn.event.trigger("hiprintTemplateDataChanged_" + e.addPrintPanel.templateId, "删除页面");
+                hinnn.event.trigger("hiprintTemplateDataChanged_" + this.id, "删除页面");
                 this.printPanels[t].clear(), this.printPanels[t].getTarget().remove(), this.printPanels.splice(t, 1);
             }, t.prototype.getPaneltotal = function () {
                 return this.printPanels.length;
@@ -8262,6 +8193,7 @@ var hiprint = function (t) {
                         e && e.length && e.remove();
                     }
                 }), this.printPanels = [this.printPanels[0]], this.printPaginationCreator && this.printPaginationCreator.buildPagination();
+                hinnn.event.trigger("hiprintTemplateDataChanged_" + this.id, "清空");
             }, t.prototype.getPaperType = function (t) {
                 return null == t && (t = 0), this.printPanels[0].paperType;
             }, t.prototype.getOrient = function (t) {
@@ -8530,7 +8462,7 @@ var hiprint = function (t) {
                         t.onDataChange && t.onDataChange(type, j);
                     }
 
-                    var handerOptions = ["新增", "删除", "元素修改", "调整大小", "新增页面","删除页面", "切换页面"]
+                    var handerOptions = ["新增", "删除","清空", "元素修改", "调整大小", "新增页面","删除页面", "切换页面"]
                     if(handerOptions.some(item => type.includes(item))) {
                         renderLayer(type);
                     } 
@@ -8538,23 +8470,22 @@ var hiprint = function (t) {
 
                 var layerHead = $(`<div class="layer-head"><span class="title">元素列表</span></div>`);
                 var openIcon = $(`<span class="start glyphicon glyphicon-step-forward"></span>`);
-                var downIcon = $(`<span class="fold glyphicon glyphicon-menu-down is-open"></span>`);
                 var elOption = $(`<div class="hailen-code"><pre><code></code></pre><span class="closed" title="关闭">×</span></div>`);
                 
                 function renderLayer(type) {
+                    var isDrag = false;
                     var index = t.editingPanel.index;
                     var elements = t.printPanels[index]?.printElements || [];
-                    var layerBody = $(`<div class="layer-body"></div>`);
                     var $container = $(t.layerOption.el);
-                    layerHead.append(openIcon);
-                    layerHead.append(downIcon);
+                    var layerBody = $(`<div class="layer-body"></div>`);
                     // 代码预览元素
                     if (!t.editingPanel.target.find('.hailen-code').length) {
                         t.editingPanel.target.append(elOption)
                     }
-                    var isDrag = false;
-
+                    
                     // 元素列表
+                    layerBody.empty()
+                    layerHead.append(openIcon);
                     $container.empty().append(layerHead);
                     elements.forEach(function (el, idx) {
                         var testData = el.options.testData || "";
@@ -8569,14 +8500,14 @@ var hiprint = function (t) {
                                             <span class="field">${el.options.field || ""}</span>
                                             <span class="content" title="${idx + 1 + ". " + content}">${content}</span>
                                             <span class="drag glyphicon ${draggable}" title="${isDraggable ? "不可拖动" : "可拖动"}"></span>
-                                            <span class="option glyphicon glyphicon-certificate"></span>
+                                            <span class="option glyphicon glyphicon-certificate" title="属性配置"></span>
                                             <span class="delete" title="删除">×</span>
                                         </div>`);
                         itemDom.data("layer-data", el);
                         layerBody.append(itemDom);
                     });
                     $container.append(layerBody);
-                    layerBody.css({ maxHeight: layerBody.height() + "px" }); // 设置最大高度
+                    layerBody.css({ maxHeight: layerBody.height() }); // 设置最大高度
                     if (type == "新增") layerBody.scrollTop(layerBody.height()); // 新增时滚动到底部
 
                     // 拖拽
@@ -8587,34 +8518,26 @@ var hiprint = function (t) {
                         var offsetY = e.clientY - $container.offset().top;
                         $(document).on("mousemove.drag", function (e) {
                             isDrag = true;
+                            $container.addClass("no-transition");
                             if ($container.hasClass("show") && $(e.target).closest(".start").length) return;
                             var parentOffset = $container.offsetParent().offset();
-                            var left = e.clientX - parentOffset.left - offsetX;
+                            var left = e.clientX - parentOffset.left - offsetX ;
                             var top = e.clientY - parentOffset.top - offsetY;
-                            $container.css({ left: left + "px", top: top + "px", transition: "none" });
+                            
+                            var gap = 30; // 画布边距 (限制拖拽范围)
+                            var eRect = layerHead[0].getBoundingClientRect();
+                            var bRect = t.container.parent()[0].getBoundingClientRect();
+                            left = Math.min(Math.max(left, gap), bRect.width - eRect.width);
+                            top = Math.min(Math.max(top, gap), bRect.height - eRect.height);
+                            $container.css({ left: left, top: top});
                         }).on("mouseup.drag", function () {
                             isDrag = false;
+                            $container.removeClass("no-transition");
                             $(document).off(".drag");
                         });
-                    }).on("mouseup", function (e) {
-                        // 放大缩小
-                        if (isDrag || $(e.target).closest(".fold").length) return;
-                        $container.css({ transition: "all 0.3s" });
-                        openIcon.toggleClass("is-open");
-                        if (openIcon.hasClass("is-open")) {
-                            $container.addClass("show");
-                        } else {
-                            $container.removeClass("show");
-                        }
-                        isDrag = false;
-                    });
-
-                    // 折叠展开
-                    downIcon.off("click").on("click", function (e) {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        downIcon.toggleClass("is-open");
-                        layerBody.toggleClass("hide");
+                    }).off("mouseup").on("mouseup", function (e) {
+                        if (isDrag) return; // 放大缩小
+                        $container.toggleClass("show");
                     });
 
                     // 点击元素行
@@ -8633,6 +8556,7 @@ var hiprint = function (t) {
                             setTimeout(function () { el.designTarget.trigger("click") });
                         }
                     });
+
                     // 显示配置代码
                     layerBody.off("click", ".layer-item, .option").on("click", ".layer-item, .option", function (e) {
                         var $item = $(this); 
@@ -8657,8 +8581,7 @@ var hiprint = function (t) {
                             }
                         });
 
-                        elOption.find('code').empty().html(optionCode);
-                        elOption.show();
+                        elOption.find('code').empty().html(optionCode).show();
                         elOption.off("click").on("click", function (e) {
                             e.stopPropagation();
                             e.preventDefault(); 

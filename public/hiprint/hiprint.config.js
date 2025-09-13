@@ -1,763 +1,333 @@
 (function () {
-    window.HIPRINT_CONFIG = {
-        //optionItems: [hiprintCustomOptionItem],//自定义选项
-        movingDistance: 1.5, //鼠标拖动一次移动的距离,默认1.5pt
-        paperHeightTrim: 1, //纸张html 的高度等于真实高度-1
-        showPosition: true, //显示坐标位置
-        positionLineMode: false, //坐标显示在线上的
-        positionUnit: true, //显示坐标单位
-        showSizeBox: true, //显示宽高box
-        adsorbMin: 3, //吸附最小距离pt
-        showAdsorbLine: true, //显示吸附线
-        adsorbLineMin: 6, //吸附线显示最小距离pt
-        paperNumberContinue: true, //连续打印页码
-        text: any = {
-            supportOptions: [
+  window.HIPRINT_CONFIG = {
+    // optionItems: [hiprintCustomOptionItem],//自定义选项
+    // showPosition: true, //显示坐标位置
+    // positionLineMode: false, //坐标显示在线上的
+    // positionUnit: true, //显示坐标单位
+    // showSizeBox: true, //显示宽高box
+    // adsorbMin: 3, //吸附最小距离pt
+    // showAdsorbLine: true, //显示吸附线
+    // adsorbLineMin: 6, //吸附线显示最小距离pt
+    // paperNumberContinue: true, //连续打印页码
 
+    providers: [],
+    movingDistance: 1, // 鼠标拖动一次移动的距离,默认1.5pt
+    paperHeightTrim: 1, // 纸张html 的高度等于真实高度1
 
-                // {
-                //     name: 'hiprintCustomOptionItem',
-                //     hidden: false
-                // },
-                {
-                    name: 'title',
-                    hidden: false
-                },
-                {
-                    name: 'field',
-                    hidden: false
-                },
-                {
-                    name: 'testData',
-                    hidden: false
-                },
-                {
-                    name: 'dataType',
-                    hidden: false
-                },
-                {
-                    name: 'fontFamily',
-                    hidden: false
-                },
-                {
-                    name: 'fontSize',
-                    hidden: false
-                },
-                {
-                    name: 'fontWeight',
-                    hidden: false
-                },
-                {
-                    name: 'letterSpacing',
-                    hidden: false
-                },
-                {
-                    name: 'color',
-                    hidden: false
-                },
-                {
-                    name: 'textDecoration',
-                    hidden: false
-                },
-                {
-                    name: 'textAlign',
-                    hidden: false
-                },
-                {
-                    name: 'textContentVerticalAlign',
-                    hidden: false
-                },
-
-                {
-                    name: 'lineHeight',
-                    hidden: false
-                },
-                {
-                    name: 'textType',
-                    hidden: false
-                },
-                {
-                    name: 'barcodeMode',
-                    hidden: false
-                },
-                {
-                    name: 'hideTitle',
-                    hidden: false
-                },
-                {
-                    name: 'showInPage',
-                    hidden: false
-                },
-                {
-                    name: 'unShowInPage',
-                    hidden: false
-                },
-                {
-                    name: 'fixed',
-                    hidden: false
-                },
-                {
-                    name: 'axis',
-                    hidden: false
-                },
-                {
-                    name: 'transform',
-                    hidden: false
-                },
-                {
-                    name: 'optionsGroup',
-                    hidden: false
-                },
-                {
-                    name: 'borderLeft',
-                    hidden: false
-                },
-                {
-                    name: 'borderTop',
-                    hidden: false
-                },
-                {
-                    name: 'borderRight',
-                    hidden: false
-                },
-                {
-                    name: 'borderBottom',
-                    hidden: false
-                },
-                {
-                    name: 'borderWidth',
-                    hidden: false
-                },
-                {
-                    name: 'borderColor',
-                    hidden: false
-                },
-                {
-                    name: 'contentPaddingLeft',
-                    hidden: false
-                },
-                {
-                    name: 'contentPaddingTop',
-                    hidden: false
-                },
-                {
-                    name: 'contentPaddingRight',
-                    hidden: false
-                },
-                {
-                    name: 'contentPaddingBottom',
-                    hidden: false
-                },
-                {
-                    name: 'backgroundColor',
-                    hidden: false
-                },
-                {
-                    name: 'formatter',
-                    hidden: false
-                },
-                {
-                    name: 'styler',
-                    hidden: false
-                }
-
-            ],
-            default: {
-                width: 120,
-                height: 9.75,
-            }
-        },
-        image: any = {
-            supportOptions: [{
-                name: 'field',
-                hidden: false
-            },
-            {
-                name: 'src',
-                hidden: false
-            },
-            {
-                name: 'showInPage',
-                hidden: false
-            },
-            {
-                name: 'fixed',
-                hidden: false
-            },
-            {
-                name: 'axis',
-                hidden: false
-            },
-            {
-                name: 'transform',
-                hidden: false
-            },
-            {
-                name: 'formatter',
-                hidden: false
-            },
-            {
-                name: 'styler',
-                hidden: false
-            }
-            ],
-            default: {
-
-            }
-        },
-        longText: any = {
-            supportOptions: [{
-                name: 'title',
-                hidden: false
-            },
-            {
-                name: 'field',
-                hidden: false
-            },
-            {
-                name: 'testData',
-                hidden: false
-            },
-            {
-                name: 'fontFamily',
-                hidden: false
-            },
-            {
-                name: 'fontSize',
-                hidden: false
-            },
-            {
-                name: 'fontWeight',
-                hidden: false
-            },
-            {
-                name: 'letterSpacing',
-                hidden: false
-            },
-
-            {
-                name: 'textAlign',
-                hidden: false
-            },
-            {
-                name: 'lineHeight',
-                hidden: false
-            },
-            {
-                name: 'color',
-                hidden: false
-            },
-            {
-                name: 'hideTitle',
-                hidden: false
-            },
-
-            {
-                name: 'longTextIndent',
-                hidden: false
-            },
-
-            {
-                name: 'leftSpaceRemoved',
-                hidden: false
-            },
-            {
-                name: 'showInPage',
-                hidden: false
-            },
-            {
-                name: 'unShowInPage',
-                hidden: false
-            },
-            {
-                name: 'fixed',
-                hidden: false
-            },
-            {
-                name: 'axis',
-                hidden: false
-            },
-            {
-                name: 'lHeight',
-                hidden: false
-            },
-            {
-                name: 'transform',
-                hidden: false
-            },
-            {
-                name: 'optionsGroup',
-                hidden: false
-            },
-            {
-                name: 'borderLeft',
-                hidden: false
-            },
-            {
-                name: 'borderTop',
-                hidden: false
-            },
-            {
-                name: 'borderRight',
-                hidden: false
-            },
-            {
-                name: 'borderBottom',
-                hidden: false
-            },
-            {
-                name: 'borderWidth',
-                hidden: false
-            },
-            {
-                name: 'borderColor',
-                hidden: false
-            },
-            {
-                name: 'contentPaddingLeft',
-                hidden: false
-            },
-            {
-                name: 'contentPaddingTop',
-                hidden: false
-            },
-            {
-                name: 'contentPaddingRight',
-                hidden: false
-            },
-            {
-                name: 'contentPaddingBottom',
-                hidden: false
-            },
-            {
-                name: 'backgroundColor',
-                hidden: false
-            },
-            {
-                name: 'formatter',
-                hidden: false
-            },
-            {
-                name: 'styler',
-                hidden: false
-            }
-
-            ],
-            default: {
-                height: 42,
-                width: 550
-            }
-        },
-        table: any = {
-            supportOptions: [{
-                name: 'field',
-                hidden: false
-            },
-            {
-                name: 'fontFamily',
-                hidden: false
-            },
-            {
-                name: 'fontSize',
-                hidden: false
-            },
-            {
-                name: 'lineHeight',
-                hidden: false
-            },
-            {
-                name: 'textAlign',
-                hidden: false
-            },
-            {
-                name: 'gridColumns',
-                hidden: false
-            },
-            {
-                name: 'gridColumnsGutter',
-                hidden: false
-            },
-
-            {
-                name: 'tableBorder',
-                hidden: false
-            },
-            {
-                name: 'tableHeaderBorder',
-                hidden: false
-            },
-            {
-                name: 'tableHeaderCellBorder',
-                hidden: false
-            },
-            {
-                name: 'tableHeaderRowHeight',
-                hidden: false
-            },
-            {
-                name: 'tableHeaderBackground',
-                hidden: false
-            },
-            {
-                name: 'tableHeaderFontSize',
-                hidden: false
-            },
-            {
-                name: 'tableHeaderFontWeight',
-                hidden: false
-            },
-
-            {
-                name: 'tableBodyRowHeight',
-                hidden: false
-            },
-            {
-                name: 'tableBodyRowBorder',
-                hidden: false
-            },
-            {
-                name: 'tableBodyCellBorder',
-                hidden: false
-            },
-
-            {
-                name: 'axis',
-                hidden: false
-            },
-            {
-                name: 'lHeight',
-                hidden: false
-            },
-
-            {
-                name: 'autoCompletion',
-                hidden: false
-            },
-            {
-                name: 'columns',
-                hidden: false
-            },
-            {
-
-                name: 'styler',
-                hidden: false
-            },
-            {
-
-                name: 'rowStyler',
-                hidden: false
-            },
-
-            {
-
-                name: 'tableFooterRepeat',
-                hidden: false
-            },
-            {
-
-                name: 'footerFormatter',
-                hidden: false
-            },
-            {
-                name: 'gridColumnsFooterFormatter',
-                hidden: false
-
-            }
-
-
-            ],
-            default: {
-
-                width: 550
-            }
-        },
-        tableCustom: any = {
-            supportOptions: [{
-                name: 'field',
-                hidden: false
-            },
-            {
-                name: 'fontFamily',
-                hidden: false
-            },
-            {
-                name: 'fontSize',
-                hidden: false
-            },
-            {
-                name: 'textAlign',
-                hidden: false
-            },
-            {
-                name: 'tableBorder',
-                hidden: false
-            },
-            {
-                name: 'tableHeaderBorder',
-                hidden: false
-            },
-            {
-                name: 'tableHeaderCellBorder',
-                hidden: false
-            },
-            {
-                name: 'tableHeaderRowHeight',
-                hidden: false
-            },
-            {
-                name: 'tableHeaderFontSize',
-                hidden: false
-            },
-            {
-                name: 'tableHeaderFontWeight',
-                hidden: false
-            },
-            {
-                name: 'tableHeaderBackground',
-                hidden: false
-            },
-
-            {
-                name: 'tableBodyRowHeight',
-                hidden: false
-            },
-            {
-                name: 'tableBodyRowBorder',
-                hidden: false
-            },
-            {
-                name: 'tableBodyCellBorder',
-                hidden: false
-            },
-            {
-                name: 'axis',
-                hidden: false
-            },
-            {
-                name: 'lHeight',
-                hidden: false
-            },
-            {
-                name: 'autoCompletion',
-                hidden: false
-            }, {
-
-                name: 'tableFooterRepeat',
-                hidden: false
-            }
-            ],
-            default: {
-
-                width: 550
-            }
-        },
-
-
-        hline: any = {
-            supportOptions: [{
-                name: 'borderColor',
-                hidden: false
-            }, {
-                name: 'borderWidth',
-                hidden: false
-            }, {
-                name: 'showInPage',
-                hidden: false
-            },
-            {
-                name: 'fixed',
-                hidden: false
-            },
-            {
-                name: 'axis',
-                hidden: false
-            },
-            {
-                name: 'transform',
-                hidden: false
-            },
-            {
-                name: 'borderStyle',
-                hidden: false
-            }
-
-            ],
-            default: {
-                borderWidth: 0.75,
-                height: 9,
-                width: 90
-            }
-        },
-        vline: any = {
-            supportOptions: [{
-                name: 'borderColor',
-                hidden: false
-            }, {
-                name: 'borderWidth',
-                hidden: false
-            }, {
-                name: 'showInPage',
-                hidden: false
-            },
-            {
-                name: 'fixed',
-                hidden: false
-            },
-            {
-                name: 'axis',
-                hidden: false
-            },
-            {
-                name: 'transform',
-                hidden: false
-            },
-            {
-                name: 'borderStyle',
-                hidden: false
-            }
-            ],
-            default: {
-                borderWidth: undefined,
-                height: 90,
-                width: 9
-            }
-        },
-        rect: any = {
-            supportOptions: [{
-                name: 'borderColor',
-                hidden: false
-            }, {
-                name: 'borderWidth',
-                hidden: false
-            }, {
-                name: 'showInPage',
-                hidden: false
-            },
-            {
-                name: 'fixed',
-                hidden: false
-            },
-            {
-                name: 'axis',
-                hidden: false
-            },
-            {
-                name: 'transform',
-                hidden: false
-            },
-            {
-                name: 'borderStyle',
-                hidden: false
-            }
-            ],
-            default: {
-                borderWidth: undefined,
-                height: 90,
-                width: 90
-            }
-        },
-        oval: any = {
-            supportOptions: [{
-                name: 'borderColor',
-                hidden: false
-            }, {
-                name: 'borderWidth',
-                hidden: false
-            }, {
-                name: 'showInPage',
-                hidden: false
-            },
-            {
-                name: 'fixed',
-                hidden: false
-            },
-            {
-                name: 'axis',
-                hidden: false
-            }, {
-                name: 'transform',
-                hidden: false
-            },
-            {
-                name: 'borderStyle',
-                hidden: false
-            }
-            ],
-            default: {
-                borderWidth: undefined,
-                height: 90,
-                width: 90
-            }
-        },
-        html: any = {
-            supportOptions: [{
-                name: 'showInPage',
-                hidden: false
-            },
-            {
-                name: 'unShowInPage',
-                hidden: false
-            },
-            {
-                name: 'fixed',
-                hidden: false
-            },
-            {
-                name: 'axis',
-                hidden: false
-            },
-            {
-                name: 'formatter',
-                hidden: false
-            }
-            ],
-            default: {
-
-                height: 90,
-                width: 90
-            }
-        },
-        tableColumn: any = {
-            supportOptions: [
-                {
-                    name: 'title',
-                    hidden: false
-                },
-                {
-                    name: 'align',
-                    hidden: false
-                },
-                {
-                    name: 'halign',
-                    hidden: false
-                },
-                {
-                    name: 'vAlign',
-                    hidden: false
-                },
-
-
-                {
-                    name: 'paddingLeft',
-                    hidden: false
-                },
-                {
-                    name: 'paddingRight',
-                    hidden: false
-                },
-                {
-                    name: 'formatter2',
-                    hidden: false
-                }, {
-                    name: 'styler2',
-                    hidden: false
-                }
-            ],
-            default: {
-
-                height: 90,
-                width: 90
-            }
-        }
-    }
+    fontList: [
+      { title: "默认", value: "" },
+      { title: "微软雅黑", value: "Microsoft YaHei" },
+      { title: "黑体", value: "SimHei" },
+      { title: "宋体", value: "SimSun" },
+      { title: "仿宋", value: "FangSong" },
+      { title: "思源黑体", value: "SourceHanSansCN-Normal" },
+      { title: "华文仿宋", value: "STFangsong" },
+      { title: "楷体", value: "KaiTi" },
+      { title: "华文楷体", value: "STKaiti" },
+      { title: "华文行楷", value: "STXingkai" },
+      { title: "隶书", value: "LiSu" },
+      { title: "幼圆", value: "YouYuan" },
+      { title: "方正舒体", value: "FZShuTi" },
+      { title: "方正姚体", value: "FZYaoti" },
+      { title: "Arial", value: "Arial" },
+      { title: "serif", value: "serif" },
+      { title: "sans-serif", value: "sans-serif" },
+      { title: "Times New Roman", value: "Times New Roman" },
+      { title: "cursive", value: "cursive" },
+      { title: "fantasy", value: "fantasy" },
+      { title: "monospace", value: "monospace" },
+      { title: "Consolas", value: "Consolas" },
+      { title: "PingFang", value: "PingFang SC" },
+    ],
+    text: {
+      supportOptions: [
+        { name: "title", hidden: !1, title: "" },
+        { name: "field", hidden: !1 },
+        { name: "testData", hidden: !1 },
+        { name: "dataType", hidden: !1 },
+        { name: "fontFamily", hidden: !1 },
+        { name: "fontSize", hidden: !1 },
+        { name: "draggable", hidden: !1 },
+        { name: "fontWeight", hidden: !1 },
+        { name: "letterSpacing", hidden: !1 },
+        { name: "color", hidden: !1 },
+        { name: "textDecoration", hidden: !1 },
+        { name: "textAlign", hidden: !1 },
+        { name: "textContentVerticalAlign", hidden: !1 },
+        { name: "lineHeight", hidden: !1 },
+        { name: "textType", hidden: !1 },
+        { name: "qrCodeLevel", hidden: !1 },
+        { name: "barcodeMode", hidden: !1 },
+        { name: "hideTitle", hidden: !1 },
+        { name: "showInPage", hidden: !1 },
+        { name: "unShowInPage", hidden: !1 },
+        { name: "fixed", hidden: !1 },
+        { name: "axis", hidden: !1 },
+        { name: "transform", hidden: !1 },
+        { name: "optionsGroup", hidden: !1 },
+        { name: "borderLeft", hidden: !1 },
+        { name: "borderTop", hidden: !1 },
+        { name: "borderRight", hidden: !1 },
+        { name: "borderBottom", hidden: !1 },
+        { name: "borderWidth", hidden: !1 },
+        { name: "borderColor", hidden: !1 },
+        { name: "contentPaddingLeft", hidden: !1 },
+        { name: "contentPaddingTop", hidden: !1 },
+        { name: "contentPaddingRight", hidden: !1 },
+        { name: "contentPaddingBottom", hidden: !1 },
+        { name: "backgroundColor", hidden: !1 },
+        { name: "formatter", hidden: !1 },
+        { name: "styler", hidden: !1 },
+      ],
+      default: {
+        fontFamily: void 0,
+        fontSize: 9,
+        fontWeight: "",
+        letterSpacing: void 0,
+        textAlign: void 0,
+        textType: "text",
+        hideTitle: !1,
+        height: 9.75,
+        lineHeight: 9.75,
+        width: 120,
+      },
+    },
+    image: {
+      supportOptions: [
+        { name: "field", hidden: !1 },
+        { name: "src", hidden: !1 },
+        { name: "fit", hidden: !1 },
+        { name: "borderRadius", hidden: !1 },
+        { name: "showInPage", hidden: !1 },
+        { name: "fixed", hidden: !1 },
+        { name: "draggable", hidden: !1 },
+        { name: "axis", hidden: !1 },
+        { name: "transform", hidden: !1 },
+        { name: "formatter", hidden: !1 },
+        { name: "styler", hidden: !1 },
+      ],
+      default: {},
+    },
+    longText: {
+      supportOptions: [
+        { name: "title", hidden: !1 },
+        { name: "field", hidden: !1 },
+        { name: "testData", hidden: !1 },
+        { name: "fontFamily", hidden: !1 },
+        { name: "fontSize", hidden: !1 },
+        { name: "draggable", hidden: !1 },
+        { name: "fontWeight", hidden: !1 },
+        { name: "letterSpacing", hidden: !1 },
+        { name: "textAlign", hidden: !1 },
+        { name: "lineHeight", hidden: !1 },
+        { name: "color", hidden: !1 },
+        { name: "hideTitle", hidden: !1 },
+        { name: "longTextIndent", hidden: !1 },
+        { name: "leftSpaceRemoved", hidden: !1 },
+        { name: "showInPage", hidden: !1 },
+        { name: "unShowInPage", hidden: !1 },
+        { name: "fixed", hidden: !1 },
+        { name: "axis", hidden: !1 },
+        { name: "lHeight", hidden: !1 },
+        { name: "transform", hidden: !1 },
+        { name: "optionsGroup", hidden: !1 },
+        { name: "borderLeft", hidden: !1 },
+        { name: "borderTop", hidden: !1 },
+        { name: "borderRight", hidden: !1 },
+        { name: "borderBottom", hidden: !1 },
+        { name: "borderWidth", hidden: !1 },
+        { name: "borderColor", hidden: !1 },
+        { name: "contentPaddingLeft", hidden: !1 },
+        { name: "contentPaddingTop", hidden: !1 },
+        { name: "contentPaddingRight", hidden: !1 },
+        { name: "contentPaddingBottom", hidden: !1 },
+        { name: "backgroundColor", hidden: !1 },
+        { name: "formatter", hidden: !1 },
+        { name: "styler", hidden: !1 },
+      ],
+      default: {
+        fontFamily: void 0,
+        fontSize: 9,
+        fontWeight: "",
+        letterSpacing: void 0,
+        textAlign: void 0,
+        hideTitle: !1,
+        height: 42,
+        lineHeight: 9.75,
+        width: 550,
+      },
+    },
+    table: {
+      supportOptions: [
+        { name: "field", hidden: !1 },
+        { name: "fontFamily", hidden: !1 },
+        { name: "fontSize", hidden: !1 },
+        { name: "lineHeight", hidden: !1 },
+        { name: "draggable", hidden: !1 },
+        { name: "textAlign", hidden: !1 },
+        { name: "gridColumns", hidden: !1 },
+        { name: "gridColumnsGutter", hidden: !1 },
+        { name: "tableBorder", hidden: !1 },
+        { name: "tableHeaderBorder", hidden: !1 },
+        { name: "tableHeaderCellBorder", hidden: !1 },
+        { name: "tableHeaderRowHeight", hidden: !1 },
+        { name: "tableHeaderBackground", hidden: !1 },
+        { name: "tableHeaderFontSize", hidden: !1 },
+        { name: "tableHeaderFontWeight", hidden: !1 },
+        { name: "tableBodyRowHeight", hidden: !1 },
+        { name: "tableBodyRowBorder", hidden: !1 },
+        { name: "tableBodyCellBorder", hidden: !1 },
+        { name: "axis", hidden: !1 },
+        { name: "lHeight", hidden: !1 },
+        { name: "tableFooterRepeat", hidden: !1 },
+        { name: "autoCompletion", hidden: !1 },
+        { name: "columns", hidden: !1 },
+        { name: "styler", hidden: !1 },
+        { name: "rowStyler", hidden: !1 },
+        { name: "footerFormatter", hidden: !1 },
+        { name: "rowsColumnsMerge", hidden: !1 },
+        { name: "gridColumnsFooterFormatter", hidden: !1 },
+      ],
+      default: {
+        fontFamily: void 0,
+        fontSize: 9,
+        fontWeight: "",
+        textAlign: void 0,
+        tableBorder: void 0,
+        tableHeaderBorder: void 0,
+        tableHeaderCellBorder: void 0,
+        tableHeaderBackground: void 0,
+        tableHeaderRowHeight: void 0,
+        tableHeaderFontWeight: void 0,
+        tableBodyCellBorder: void 0,
+        tableBodyRowHeight: void 0,
+        letterSpacing: "",
+        lineHeight: 9,
+        width: 550,
+      },
+    },
+    tableCustom: {
+      supportOptions: [
+        { name: "field", hidden: !1 },
+        { name: "fontFamily", hidden: !1 },
+        { name: "fontSize", hidden: !1 },
+        { name: "draggable", hidden: !1 },
+        { name: "textAlign", hidden: !1 },
+        { name: "tableBorder", hidden: !1 },
+        { name: "tableHeaderBorder", hidden: !1 },
+        { name: "tableHeaderCellBorder", hidden: !1 },
+        { name: "tableHeaderRowHeight", hidden: !1 },
+        { name: "tableHeaderFontSize", hidden: !1 },
+        { name: "tableHeaderFontWeight", hidden: !1 },
+        { name: "tableHeaderBackground", hidden: !1 },
+        { name: "tableBodyRowHeight", hidden: !1 },
+        { name: "tableBodyRowBorder", hidden: !1 },
+        { name: "tableBodyCellBorder", hidden: !1 },
+        { name: "axis", hidden: !1 },
+        { name: "lHeight", hidden: !1 },
+        { name: "autoCompletion", hidden: !1 },
+        { name: "tableFooterRepeat", hidden: !1 },
+        { name: "styler", hidden: !1 },
+        { name: "rowStyler", hidden: !1 },
+        { name: "footerFormatter", hidden: !1 },
+        { name: "rowsColumnsMerge", hidden: !1 },
+        { name: "gridColumnsFooterFormatter", hidden: !1 },
+      ],
+      default: {
+        fontFamily: void 0,
+        fontSize: 9,
+        fontWeight: "",
+        textAlign: void 0,
+        tableBorder: void 0,
+        tableHeaderBorder: void 0,
+        tableHeaderCellBorder: void 0,
+        tableHeaderBackground: void 0,
+        tableHeaderRowHeight: void 0,
+        tableHeaderFontWeight: void 0,
+        tableBodyCellBorder: void 0,
+        tableBodyRowHeight: void 0,
+        letterSpacing: "",
+        lineHeight: 9,
+        width: 550,
+      },
+    },
+    hline: {
+      supportOptions: [
+        { name: "borderColor", hidden: !1 },
+        { name: "borderWidth", hidden: !1 },
+        { name: "showInPage", hidden: !1 },
+        { name: "fixed", hidden: !1 },
+        { name: "draggable", hidden: !1 },
+        { name: "axis", hidden: !1 },
+        { name: "transform", hidden: !1 },
+        { name: "borderStyle", hidden: !1 },
+      ],
+      default: { borderWidth: 0.75, height: 9, width: 90 },
+    },
+    vline: {
+      supportOptions: [
+        { name: "borderColor", hidden: !1 },
+        { name: "borderWidth", hidden: !1 },
+        { name: "fixed", hidden: !1 },
+        { name: "showInPage", hidden: !1 },
+        { name: "draggable", hidden: !1 },
+        { name: "axis", hidden: !1 },
+        { name: "transform", hidden: !1 },
+        { name: "borderStyle", hidden: !1 },
+      ],
+      default: { borderWidth: void 0, height: 90, width: 9 },
+    },
+    rect: {
+      supportOptions: [
+        { name: "borderColor", hidden: !1 },
+        { name: "borderWidth", hidden: !1 },
+        { name: "draggable", hidden: !1 },
+        { name: "showInPage", hidden: !1 },
+        { name: "fixed", hidden: !1 },
+        { name: "axis", hidden: !1 },
+        { name: "transform", hidden: !1 },
+        { name: "borderStyle", hidden: !1 },
+        { name: "lockWidthHeight", hidden: !1 },
+      ],
+      default: { borderWidth: void 0, height: 90, width: 90 },
+    },
+    oval: {
+      supportOptions: [
+        { name: "borderColor", hidden: !1 },
+        { name: "borderWidth", hidden: !1 },
+        { name: "draggable", hidden: !1 },
+        { name: "showInPage", hidden: !1 },
+        { name: "fixed", hidden: !1 },
+        { name: "axis", hidden: !1 },
+        { name: "transform", hidden: !1 },
+        { name: "borderStyle", hidden: !1 },
+        { name: "lockWidthHeight", hidden: !1 },
+      ],
+      default: { borderWidth: void 0, height: 90, width: 90 },
+    },
+    html: {
+      supportOptions: [
+        { name: "showInPage", hidden: !1 },
+        { name: "unShowInPage", hidden: !1 },
+        { name: "fixed", hidden: !1 },
+        { name: "axis", hidden: !1 },
+        { name: "draggable", hidden: !1 },
+        { name: "formatter", hidden: !1 },
+      ],
+      default: { height: 90, width: 90 },
+    },
+    tableColumn: {
+      supportOptions: [
+        { name: "title", hidden: !1 },
+        { name: "align", hidden: !1 },
+        { name: "halign", hidden: !1 },
+        { name: "vAlign", hidden: !1 },
+        { name: "paddingLeft", hidden: !1 },
+        { name: "paddingRight", hidden: !1 },
+        { name: "formatter2", hidden: !1 },
+        { name: "styler2", hidden: !1 },
+      ],
+      default: { height: 90, width: 90 },
+    },
+  };
 })();
