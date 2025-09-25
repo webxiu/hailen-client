@@ -123,13 +123,7 @@
       <div class="buttons">
         <span v-for="item in toolButtons">
           <span v-if="['widthInput', 'heightInput'].includes(item.action) ">
-            <el-input
-              v-model.number="formData[item.action]"
-              :placeholder="item.action === 'widthInput' ? '宽/mm' : '高/mm'"
-              size="small"
-              class="mb-8 mr-8"
-              style="width: 50px"
-            />
+            <el-input v-model.number="formData[item.action]" :placeholder="item.action === 'widthInput' ? '宽/mm' : '高/mm'" size="small" class="mb-8 mr-8" style="width: 50px" />
           </span>
           <span v-else-if="['scaleInput'].includes(item.action) ">
             <el-popover class="box-item" placement="bottom" width="120px" trigger="hover">
@@ -140,33 +134,16 @@
                   readonly
                   size="small"
                   :title="item.title"
-                  @click="onResetScale"
+                  @click="Design.onResetScale"
                   class="scale-input mb-8 mr-8"
                   style="width: 50px;"
                 />
               </template>
-              <el-slider
-                v-model="scaleValue"
-                :show-tooltip="false"
-                :step="drawDef.step"
-                :min="drawDef.min"
-                :max="drawDef.max"
-                :debounce="0"
-                size="small"
-                @input="setScale"
-              />
+              <el-slider v-model="scaleValue" :show-tooltip="false" :step="drawDef.step" :min="drawDef.min" :max="drawDef.max" :debounce="0" size="small" @input="setScale" />
               <div class="drag-panel">点击拖拽画布</div>
             </el-popover>
           </span>
-          <el-button
-            v-else
-            size="small"
-            :title="item.title"
-            :type="getType(item)"
-            @click="onOperate(item)"
-            class="mb-8 mr-8"
-            style="margin-left: auto; margin-right: 8px"
-          >
+          <el-button v-else size="small" :title="item.title" :type="getType(item)" @click="onOperate(item)" class="mb-8 mr-8" style="margin-left: auto; margin-right: 8px">
             <template #default="row">
               <span v-if="item.action !== 'more'">{{item.name}}</span>
               <el-dropdown v-else>
@@ -202,21 +179,21 @@
       </div>
       <div class="PrintPagination"></div>
       <!-- 打印预览 -->
-      <el-dialog v-model="printVisible" title="打印预览" width="fit-content" top="5vh">
+      <el-dialog v-model="printVisible" title="打印预览" draggable width="fit-content" top="5vh">
         <div class="dialog-body" style="max-height: 75vh; overflow-y: auto">
           <div class="prevViewDiv"></div>
         </div>
         <template #footer>
           <div class="dialog-footer">
             <el-button @click="printVisible = false">取消</el-button>
-            <el-button type="success" @click="onExportPdf">PDF</el-button>
-            <el-button type="primary" @click="onPrint">打印</el-button>
+            <el-button type="success" @click="Design.onExportPdf">PDF</el-button>
+            <el-button type="primary" @click="Design.onPrint">打印</el-button>
           </div>
         </template>
       </el-dialog>
 
       <!-- 配置弹窗 -->
-      <el-dialog v-model="dialogVisible" draggable title="模板配置" width="40%" top="4vh">
+      <el-dialog v-model="dialogVisible" title="模板配置" draggable width="40%" top="4vh">
         <el-form :model="tplForm" label-width="0px" inline>
           <el-form-item style="margin-bottom: 0px">
             <el-checkbox v-model="tplForm.compress" @change="(v)=>onTplChange('compress', v)">压缩配置</el-checkbox>
@@ -226,14 +203,7 @@
           </el-form-item>
           <div>
             <el-form-item style="width: 100%">
-              <el-input
-                v-model="tplForm.content"
-                type="textarea"
-                style="width: 100%"
-                input-style="height: calc(100vh - 266px)"
-                resize="none"
-                placeholder="暂无数据"
-              />
+              <el-input v-model="tplForm.content" type="textarea" style="width: 100%" input-style="height: calc(100vh - 266px)" resize="none" placeholder="暂无数据" />
             </el-form-item>
           </div>
         </el-form>
@@ -251,7 +221,6 @@
     <script>
       const { ElMessage, ElMessageBox } = ElementPlus;
       const { createApp, defineComponent, ref, onMounted, reactive, computed } = Vue;
-      const { setPaperSize, onPreview, onPrint, onRotate, onClear, onGridLine, onResetScale, isIframe } = Design;
 
       var isPress = false; // 全局变量
       var printConfig = {}; // 重置数据创建时记录一次
@@ -270,13 +239,12 @@
           template: genTemplate("designTemplate"),
           setup(props, {}) {
             onMounted(() => {
-              if (isIframe()) {
+              if (Design.isIframe()) {
                 // 在iframe中打开, 监听消息
                 window.addEventListener("message", onMessageOnce);
               } else {
                 // 单独打开时, 新建空模板
-                const data = getPreview() || defaultConfig;
-                onInitHiPrint(data);
+                onInitHiPrint(defaultConfig);
               }
             });
 
@@ -335,11 +303,11 @@
                   printHander[printType]?.();
                   const { showPrint, preview } = getQuery(location.href);
                   const { paperType } = options.template.panels[0] || {};
-                  if (paperType) setPaperSize(paperType);
-                  if (showGridLine) (designData.gridLine = true), onGridLine(true);
-                  if (showLandscape) (designData.landscape = true), onRotate();
-                  if (preview === "true") onPreview();
-                  if (showPrint === "true") onPrint();
+                  if (paperType) Design.setPaperSize(paperType);
+                  if (showGridLine) (designData.gridLine = true), Design.onGridLine(true);
+                  if (showLandscape) (designData.landscape = true), Design.onRotate();
+                  if (preview === "true") Design.onPreview();
+                  if (showPrint === "true") Design.onPrint();
                 })
                 .catch((err) => console.error("模板初始化失败", err));
             }
@@ -367,7 +335,7 @@
                   onDataChange: onDataChange,
                   layerOption: { icons: icons, el: "#ElementLayer" },
                   settingContainer: "#PrintOptionSetting",
-                  paginationContainer: ".PrintPagination",
+                  paginationContainer: ".PrintPagination"
                 });
                 hiprintTemplate.design("#designer"); // 渲染设计器
                 requestAnimationFrame(() => resolve());
@@ -397,7 +365,7 @@
                     width: showLandscape ? defaultPanelHeight : 210,
                     paperNumberDisabled: true,
                     paperNumberFormat: "paperNo-paperCount",
-                    pageBreak: index < _pages.length - 1,
+                    pageBreak: index < _pages.length - 1
                   });
                 }
                 const panel = hiprintTemplate.getPanel(index); // 获取当前页
@@ -427,13 +395,12 @@
               papers,
               toolButtons,
               printVisible,
-              onResetScale,
               onInitHiPrint,
               onResetDesign,
               onUpdateDesign,
-              onUpdateTemplate,
+              onUpdateTemplate
             };
-          },
+          }
         });
         const app = createApp(App);
         app.use(ElementPlus);

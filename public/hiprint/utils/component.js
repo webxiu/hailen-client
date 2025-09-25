@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-09-05 09:11:42
+ * @LastEditTime: 2025-09-25 10:11:16
  * @Description: 布局组件模块
  */
 
@@ -19,19 +19,6 @@ function getTemplate() {
     return JSON.parse(data || "[]");
   } catch (e) {
     return [];
-  }
-}
-
-function setPreview(data, s) {
-  sessionStorage.setItem(_Preview, JSON.stringify(data));
-}
-
-function getPreview() {
-  try {
-    const data = sessionStorage.getItem(_Preview);
-    return JSON.parse(data);
-  } catch (e) {
-    return;
   }
 }
 
@@ -62,7 +49,7 @@ const MyHeader = {
   setup(props, { expose, emit, slots, attrs }) {
     const docVisible = ref(false);
     const iconList = reactive([
-      { title: "保存模板", icon: "⚛️", click: onSubmit, hide: !isIframe() },
+      { title: "保存模板", icon: "⚛️", click: onSubmit, hide: !Design.isIframe() },
       { title: "新窗口预览", icon: "❇️", click: onOpenNew },
       { title: "打印配置", icon: "🔔", click: onInfo },
     ]);
@@ -176,13 +163,7 @@ const MyHeader = {
     }
 
     function onOpenNew() {
-      const host = location.origin + location.pathname;
-      if (isIframe()) {
-        setPreview(printConfig);
-        window.open(host + "?showPrint=false&preview=true", "_blank");
-      } else {
-        window.open(host + "?showPrint=false", "_blank");
-      }
+      window.open(location.href, "_blank");
     }
 
     function onInfo() {
@@ -190,7 +171,7 @@ const MyHeader = {
     }
 
     function onSubmit() {
-      const template = hiprintTemplate.getJson();
+      const template = Design.getJson();
       const testData = getPrintData(template);
       const data = { ...designData, testData, template };
       window.parent.postMessage({ event: "HiPrint", data }, "*");
@@ -225,53 +206,41 @@ const MyTool = {
       if (sizes.includes(action)) {
         active.value = action; // 是纸张才设置激活状态
       }
-      const btnClick = { onGridLine, onClear, onReset, onPreview, onExportPdf, onPrint, onTemplate, getPanels };
       // 设置纸张
-      if (window.papers.includes(action)) return setPaperSize(action);
+      if (window.papers.includes(action)) return Design.setPaperSize(action);
       // 自定义纸张
       if (["customSize"].includes(action)) {
         if (!formData.widthInput || !formData.heightInput) return ElMessage.error("请输入宽高");
-        return setPaperSize(formData.widthInput, formData.heightInput);
+        return Design.setPaperSize(formData.widthInput, formData.heightInput);
       }
       // 缩放比例
       if (["scaleMinus", "scalePlus"].includes(action)) setScale(action);
       // 旋转
       if (["onRotate"].includes(action)) {
         designData.landscape = !designData.landscape;
-        return onRotate(designData.landscape);
+        return Design.onRotate(designData.landscape);
       }
       // 网格
       if (["onGridLine"].includes(action)) {
         designData.gridLine = !designData.gridLine;
-        return onGridLine(designData.gridLine);
+        return Design.onGridLine(designData.gridLine);
       }
+      if (action === "onReset") return onReset();
+      if (action === "onTemplate") return onTemplate();
       // 按钮点击时间
-      if (btnClick[action]) btnClick[action]();
+      if (Design[action]) Design[action]();
     }
-
-    // 导出PDF
-    function onExportPdf() {
-      const panel = hiprintTemplate.getPanel();
-      hiprintTemplate.toPdf(printConfig.testData, printConfig.title); // printData
-    }
-
     // 重置
     function onReset() {
-      onResetScale();
-      onClear();
+      Design.onResetScale();
+      Design.onClear();
       emit("resetDesign");
-    }
-
-    // 获取所有元素:
-    function getPanels() {
-      const panel = hiprintTemplate.getPanel();
-      console.log("所有元素:", panel);
     }
 
     // 模板配置
     function onTemplate() {
       dialogVisible.value = true;
-      const jsonData = hiprintTemplate.getJson();
+      const jsonData = Design.getJson();
       const template = removeEmpty(jsonData, ["paperNumberLeft", "paperNumberTop"]);
       const json = JSON.stringify(template, null, 2);
       const pressJson = JSON.stringify(template);
@@ -398,12 +367,10 @@ const MyTool = {
       toolButtons,
       formData,
       isMore,
-      onResetScale,
+      Design,
       getType,
       setScale,
       onOperate,
-      onExportPdf,
-      onPrint,
       onTplChange,
       onSave,
       onRewirite,

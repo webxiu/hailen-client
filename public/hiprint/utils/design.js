@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-09-09 16:09:20
+ * @LastEditTime: 2025-09-25 10:06:28
  * @Description: 设计JS主文件
  */
 
@@ -90,80 +90,6 @@ var elements = [
 ];
 
 var icons = elements.reduce((prev, el) => (prev.push(...el.children), prev), []);
-
-function genTemplate(selector) {
-  const tpl = document.getElementById(selector);
-  tpl.parentElement.removeChild(tpl);
-  return tpl.innerHTML;
-}
-
-/** 获取地址参数 */
-function getQuery(url) {
-  const params = url.match(/([^?=&]+)(=([^&]*))/g) || [];
-  const res = params.reduce(function (a, v) {
-    const val = decodeURIComponent(v.slice(v.indexOf("=") + 1));
-    a[v.slice(0, v.indexOf("="))] = val;
-    return a;
-  }, {});
-  return res;
-}
-
-/**
- * 递归移除空值字段
- * @param data 要处理的数据
- * @param excludeKeys 需要排除的字段名
- */
-function removeEmpty(data, excludeKeys = []) {
-  function isEmpty(value) {
-    if (value === null || value === undefined || value === "") return true;
-    return false;
-  }
-  if (Array.isArray(data)) {
-    return data.map((item) => removeEmpty(item, excludeKeys)).filter((item) => !isEmpty(item));
-  } else if (typeof data === "object" && data !== null) {
-    const result = {};
-    for (const key in data) {
-      if (data.hasOwnProperty(key)) {
-        if (excludeKeys.includes(key)) continue;
-        const value = removeEmpty(data[key], excludeKeys);
-        if (!isEmpty(value)) result[key] = value;
-      }
-    }
-    return result;
-  }
-  return data;
-}
-
-/** 复制文本 */
-function copyText(text, callback) {
-  if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(text).then(
-      () => callback(),
-      (error) => callback(error)
-    );
-    return;
-  }
-  const textarea = document.createElement("textarea");
-  textarea.value = text;
-  textarea.style.position = "fixed";
-  textarea.style.opacity = 0;
-  textarea.style.top = "-100%";
-  document.body.appendChild(textarea);
-  textarea.focus();
-  textarea.select();
-  try {
-    const success = document.execCommand("copy");
-    if (success) {
-      callback();
-    } else {
-      callback(new Error("复制失败，请手动复制"));
-    }
-  } catch (err) {
-    callback(err);
-  } finally {
-    document.body.removeChild(textarea);
-  }
-}
 
 const drawDef = { min: 0.3, max: 5, step: 0.1, scale: 1 };
 let isDragging = false;
@@ -298,77 +224,167 @@ function onDragPanelMouseDown(ev) {
   document.addEventListener("mouseup", onPanelMouseUp);
 }
 
-/** 等待所有图片加载 */
-function loadedAllImage(selector, callback = () => {}) {
-  const imgWrapper = document.querySelector(selector);
-  const images = Array.from(imgWrapper.querySelectorAll("img:not(.h_img):not(.v_img)"));
-  if (images.length === 0) {
-    return callback(), Promise.resolve();
-  }
-  const promises = images.map((img) => {
-    return new Promise((resolve) => {
-      if (img.complete && img.naturalWidth > 0) {
-        resolve();
-      } else {
-        const onLoadOrError = () => {
-          img.removeEventListener("load", onLoadOrError);
-          img.removeEventListener("error", onLoadOrError);
-          resolve();
-        };
-        img.addEventListener("load", onLoadOrError);
-        img.addEventListener("error", onLoadOrError);
-      }
-    });
-  });
-  return Promise.all(promises).then(() => callback());
+function genTemplate(selector) {
+  const tpl = document.getElementById(selector);
+  tpl.parentElement.removeChild(tpl);
+  return tpl.innerHTML;
 }
 
-var Design = {
-  /** 调整纸张 */
-  setPaperSize: function (sizeOrWidth, height) {
-    if (!sizeOrWidth) return;
-    active.value = height ? "customSize" : sizeOrWidth;
-    hiprintTemplate.setPaper(sizeOrWidth, height);
-  },
-  // 旋转
-  onRotate: function () {
-    hiprintTemplate.rotatePaper();
-  },
-  // 清空
-  onClear: function () {
-    hiprintTemplate.clear();
-    hiprintTemplate.removeTempContainer();
-  },
-  // 网格线
-  onGridLine: function (isGrid) {
-    hiprintTemplate.setGrid(isGrid); // 设置内部网格
-    $(".hiprint-printPaper.design").each(function () {
-      if (isGrid) $(this).addClass("grid");
-      else $(this).removeClass("grid");
+/** 获取地址参数 */
+function getQuery(url) {
+  const params = url.match(/([^?=&]+)(=([^&]*))/g) || [];
+  const res = params.reduce(function (a, v) {
+    const val = decodeURIComponent(v.slice(v.indexOf("=") + 1));
+    a[v.slice(0, v.indexOf("="))] = val;
+    return a;
+  }, {});
+  return res;
+}
+
+/**
+ * 递归移除空值字段
+ * @param data 要处理的数据
+ * @param excludeKeys 需要排除的字段名
+ */
+function removeEmpty(data, excludeKeys = []) {
+  function isEmpty(value) {
+    if (value === null || value === undefined || value === "") return true;
+    return false;
+  }
+  if (Array.isArray(data)) {
+    return data.map((item) => removeEmpty(item, excludeKeys)).filter((item) => !isEmpty(item));
+  } else if (typeof data === "object" && data !== null) {
+    const result = {};
+    for (const key in data) {
+      if (data.hasOwnProperty(key)) {
+        if (excludeKeys.includes(key)) continue;
+        const value = removeEmpty(data[key], excludeKeys);
+        if (!isEmpty(value)) result[key] = value;
+      }
+    }
+    return result;
+  }
+  return data;
+}
+
+/** 复制文本 */
+function copyText(text, callback) {
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(
+      () => callback(),
+      (error) => callback(error)
+    );
+    return;
+  }
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.style.position = "fixed";
+  textarea.style.opacity = 0;
+  textarea.style.top = "-100%";
+  document.body.appendChild(textarea);
+  textarea.focus();
+  textarea.select();
+  try {
+    const success = document.execCommand("copy");
+    if (success) {
+      callback();
+    } else {
+      callback(new Error("复制失败，请手动复制"));
+    }
+  } catch (err) {
+    callback(err);
+  } finally {
+    document.body.removeChild(textarea);
+  }
+}
+
+(function (window) {
+  /** 等待所有图片加载 */
+  function loadedAllImage(selector, callback = () => {}) {
+    const imgWrapper = document.querySelector(selector);
+    const images = Array.from(imgWrapper.querySelectorAll("img:not(.h_img):not(.v_img)"));
+    if (images.length === 0) {
+      return callback(), Promise.resolve();
+    }
+    const promises = images.map((img) => {
+      return new Promise((resolve) => {
+        if (img.complete && img.naturalWidth > 0) {
+          resolve();
+        } else {
+          const onLoadOrError = () => {
+            img.removeEventListener("load", onLoadOrError);
+            img.removeEventListener("error", onLoadOrError);
+            resolve();
+          };
+          img.addEventListener("load", onLoadOrError);
+          img.addEventListener("error", onLoadOrError);
+        }
+      });
     });
-  },
-  onPreview: function () {
-    printVisible.value = true;
-    requestAnimationFrame(() => {
-      $(".prevViewDiv").html(hiprintTemplate.getHtml(printConfig.testData)); // printData;
-    });
-  },
-  // 打印
-  onPrint: function () {
-    loadedAllImage("#designer", () => {
-      hiprintTemplate.print(printConfig.testData, { isDownload: true, type: "blob" }); // printData
-    });
-  },
-  // 重置缩放
-  onResetScale: function () {
-    offsetX = 0;
-    offsetY = 0;
-    drawDef.scale = 1;
-    scaleValue.value = 1;
-    onUpdateScale({ x: 0, y: 0, percent: "100%", scale: 1 });
-  },
-  /** 是否iframe加载打开 */
-  isIframe: function () {
-    return window.self !== window.top;
-  },
-};
+    return Promise.all(promises).then(() => callback());
+  }
+
+  window.Design = {
+    /** 调整纸张 */
+    setPaperSize: function (sizeOrWidth, height) {
+      if (!sizeOrWidth) return;
+      active.value = height ? "customSize" : sizeOrWidth;
+      hiprintTemplate.setPaper(sizeOrWidth, height);
+    },
+    // 旋转
+    onRotate: function () {
+      hiprintTemplate.rotatePaper();
+    },
+    // 清空
+    onClear: function () {
+      hiprintTemplate.clear();
+      hiprintTemplate.removeTempContainer();
+    },
+    // 网格线
+    onGridLine: function (isGrid) {
+      hiprintTemplate.setGrid(isGrid); // 设置内部网格
+      $(".hiprint-printPaper.design").each(function () {
+        if (isGrid) $(this).addClass("grid");
+        else $(this).removeClass("grid");
+      });
+    },
+    onPreview: function () {
+      printVisible.value = true;
+      requestAnimationFrame(() => {
+        $(".prevViewDiv").html(hiprintTemplate.getHtml(printConfig.testData)); // printData;
+      });
+    },
+    // 打印
+    onPrint: function () {
+      loadedAllImage("#designer", () => {
+        hiprintTemplate.print(printConfig.testData, { isDownload: true, type: "blob" }); // printData
+      });
+    },
+    // 导出PDF
+    onExportPdf: function () {
+      const panel = hiprintTemplate.getPanel();
+      hiprintTemplate.toPdf(printConfig.testData, printConfig.title); // printData
+    },
+    // 获取json
+    getJson: function () {
+      return hiprintTemplate.getJson();
+    }
+    // 获取所有元素:
+    getPanels: function () {
+      const panel = hiprintTemplate.getPanel();
+      console.log("所有元素:", panel);
+    },
+    // 重置缩放
+    onResetScale: function () {
+      offsetX = 0;
+      offsetY = 0;
+      drawDef.scale = 1;
+      scaleValue.value = 1;
+      onUpdateScale({ x: 0, y: 0, percent: "100%", scale: 1 });
+    },
+    /** 是否iframe加载打开 */
+    isIframe: function () {
+      return window.self !== window.top;
+    },
+  };
+})(window);
