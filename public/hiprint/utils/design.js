@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-09-25 10:06:28
+ * @LastEditTime: 2025-09-25 10:14:03
  * @Description: 设计JS主文件
  */
 
@@ -368,7 +368,7 @@ function copyText(text, callback) {
     // 获取json
     getJson: function () {
       return hiprintTemplate.getJson();
-    }
+    },
     // 获取所有元素:
     getPanels: function () {
       const panel = hiprintTemplate.getPanel();

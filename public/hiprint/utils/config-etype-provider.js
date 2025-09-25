@@ -9,7 +9,7 @@
 var customElementTypeProvider = (function () {
   return function (options) {
     // 文本样式默认配置
-    const textOptions = {
+    var textOptions = {
       // width: 140,
       // height: 26,
       // lineHeight: 26,

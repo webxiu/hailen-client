@@ -2260,7 +2260,33 @@ var hiprint = function (t) {
             }
 
             return t.prototype.createTarget = function () {
-                return this.target = $(' <div class="hiprint-option-item">\n        <div class="hiprint-option-item-label">\n        条形码格式\n        </div>\n        <div class="hiprint-option-item-field">\n        <select class="auto-submit">\n        <option value="" >默认</option>\n        <option value="CODE128A" >CODE128A</option>\n        <option value="CODE128B" >CODE128B</option>\n        <option value="CODE128C" >CODE128C</option>\n        <option value="CODE39" >CODE39</option>\n        <option value="EAN-13" >EAN-13</option>\n        <option value="EAN-8" >EAN-8</option>\n        <option value="EAN-5" >EAN-5</option>\n        <option value="EAN-2" >EAN-2</option>\n        <option value="UPC（A）" >UPC（A）</option>\n        <option value="ITF" >ITF</option>\n        <option value="ITF-14" >ITF-14</option>\n        <option value="MSI" >MSI</option>\n            <option value="MSI10" >MSI10</option>\n            <option value="MSI11" >MSI11</option>\n            <option value="MSI1010" >MSI1010</option>\n            <option value="MSI1110" >MSI1110</option>\n            <option value="Pharmacode" >Pharmacode</option>\n        </select>\n        </div>\n    </div>'), this.target;
+                const qrCodeOptions = [
+                    { name: "默认", value: "" },
+                    { name: "CODE128A", value: "CODE128A" },
+                    { name: "CODE128B", value: "CODE128B" },
+                    { name: "CODE128C", value: "CODE128C" },
+                    { name: "CODE39", value: "CODE39" },
+                    { name: "EAN-13", value: "ean13" },
+                    { name: "EAN-8", value: "ean8" },
+                    { name: "EAN-5", value: "ean5" },
+                    { name: "EAN-2", value: "ean2" },
+                    { name: "UPC", value: "upc" },
+                    { name: "ITF", value: "itf" },
+                    { name: "ITF-14", value: "itf14" },
+                    { name: "MSI", value: "msi" },
+                    { name: "MSI10", value: "msi10" },
+                    { name: "MSI11", value: "msi11" },
+                    { name: "MSI1010", value: "msi1010" },
+                    { name: "MSI1110", value: "msi1110" },
+                    { name: "Pharmacode", value: "pharmacode" }
+                ];
+                const qrCodeOpts = qrCodeOptions.map((item) => `<option value="${item.value}" title="${item.value}">${item.name}</option>`).join("");
+
+                return this.target = $(` <div class="hiprint-option-item">
+                    <div class="hiprint-option-item-label">条形码格式</div>
+                    <div class="hiprint-option-item-field">
+                        <select class="auto-submit">${qrCodeOpts}</select>
+                    </div></div>`), this.target;
             }, t.prototype.getValue = function () {
                 var t = this.target.find("select").val();
                 return t || void 0;
@@ -3170,7 +3196,7 @@ var hiprint = function (t) {
 
             return t.prototype.css = function (t, e) { 
                 if (t && t.length) { 
-                    t.css({"zIndex": e == false ? 0 : ""});// 将层级降级
+                    t.attr("forbidden", e == false);
                 }
                 return null;
             }, t.prototype.createTarget = function () {
@@ -3187,6 +3213,29 @@ var hiprint = function (t) {
                 this.target.find('input[value="' + String(t) + '"]').prop("checked", true);
             }, t.prototype.destroy = function () {
                 this.target.remove();
+            }, t;
+        }(),
+        ZIndex = function () {
+            function t() {
+                this.name = "zIndex";
+            } 
+            return t.prototype.css = function (t, e) {
+                if (t && t.length) {
+                    var isMove = t.attr("forbidden");
+                    if(isMove == "true") e = 0;// 禁用拖拽,层级设为0
+                    if (e == undefined) e = 1;
+                    t.css("z-index", e), "z-index:" + e;
+                }
+                return null;
+            }, t.prototype.createTarget = function () {
+                return this.target = $(`<div class="hiprint-option-item"><div class="hiprint-option-item-label">元素层级</div>  <div class="hiprint-option-item-field"><input type="number" step="1" class="auto-submit" /></div></div>`), this.target;
+            }, t.prototype.getValue = function () {
+                    var t = this.target.find("input").val();
+                    if (t) return parseFloat(t.toString());
+                }, t.prototype.setValue = function (t) {
+                    this.target.find("input").val(t);
+                }, t.prototype.destroy = function () {
+                    this.target.remove();
             }, t;
         }(),
         nt = function () {
@@ -3734,7 +3783,7 @@ var hiprint = function (t) {
             t.init(), t.printElementOptionItems[e.name] = e;
         }, t.getItem = function (e) {
             return t.init(), t.printElementOptionItems[e];
-        }, t._printElementOptionItems = [new o(), new r(), new a(), new p(), new i(), new s(), new l(), new pt(), new u(), new d(), new c(), new h(), new f(), new g(), new m(), new v(), new y(), new b(), new E(), new qrCodeLevel(), new T(), new P(), new _(), new w(), new x(), new C(), new imageFit(), new borderRadius(), new O(), new watermarkOptions(), new H(), new D(), new I(), new R(), new M(), new S(), new B(), new F(), new L(), new A(), new z(), new k(), new st(), new N(), new V(), new W(), new j(), new U(), new K(), new G(), new q(), new X(), new Y(), new Q(), new J(), new Z(), new tt(), new et(), new lockWidthHeight(), new DraggableElement(), new nt(), new it(), new ot(), new at(), new lt(), new ut(), new dt(), new ct(), new ht(), new ft(), new gt(), new mt(), new rowcolumns(), new vt(), new yt(), new bt(), new Tt(), new Et(), new Pt(), new _t(), new wt(), new xt()], t;
+        }, t._printElementOptionItems = [new o(), new r(), new a(), new p(), new i(), new s(), new l(), new pt(), new u(), new d(), new c(), new h(), new f(), new g(), new m(), new v(), new y(), new b(), new E(), new qrCodeLevel(), new T(), new P(), new _(), new w(), new x(), new C(), new imageFit(), new borderRadius(), new O(), new watermarkOptions(), new H(), new D(), new I(), new R(), new M(), new S(), new B(), new F(), new L(), new A(), new z(), new k(), new st(), new N(), new V(), new W(), new j(), new U(), new K(), new G(), new q(), new X(), new Y(), new Q(), new J(), new Z(), new tt(), new et(), new lockWidthHeight(), new DraggableElement(), new ZIndex(), new nt(), new it(), new ot(), new at(), new lt(), new ut(), new dt(), new ct(), new ht(), new ft(), new gt(), new mt(), new rowcolumns(), new vt(), new yt(), new bt(), new Tt(), new Et(), new Pt(), new _t(), new wt(), new xt()], t;
     }();
 }, function (t, e, n) {
     "use strict";
@@ -8538,6 +8587,7 @@ var hiprint = function (t) {
                     }).off("mouseup").on("mouseup", function (e) {
                         if (isDrag) return; // 放大缩小
                         $container.toggleClass("show");
+                        openIcon.toggleClass("is-open");
                     });
 
                     // 点击元素行
