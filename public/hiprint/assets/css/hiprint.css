@@ -958,6 +958,7 @@ font-weight: normal;*/
   display: none;
 }
 
+/** ============================= 元素层级 ============================= */
 #ElementLayer {
   position: absolute;
   top: 35px;
@@ -967,7 +968,7 @@ font-weight: normal;*/
   display: flex;
   flex-direction: column;
   border-radius: 0px;
-  z-index: 123;
+  z-index: 1000;
   border: none;
   overflow: hidden;
   background: transparent;
@@ -1007,8 +1008,6 @@ font-weight: normal;*/
   transition: all 0.3s;
 }
 
-/*======= show ======*/
-
 #ElementLayer.show {
   width: 220px;
   max-height: 90%;
@@ -1045,7 +1044,7 @@ font-weight: normal;*/
   display: block;
 }
 
-/* 列表布局 */
+/* 元素列表项 */
 .layer-body .layer-item {
   color: #3d3d3d;
   display: flex;
@@ -1098,12 +1097,14 @@ font-weight: normal;*/
 .layer-body .layer-item .option:hover {
   color: #f60;
 }
+
+/** option属性代码块 */
 .hailen-code {
   position: fixed;
   background: #d2d2ff;
   border-radius: 5px;
   padding: 8px 10px;
-  z-index: 999999;
+  z-index: 555;
   display: none;
 }
 .hailen-code pre {
@@ -1141,4 +1142,32 @@ font-weight: normal;*/
 .layer-body::-webkit-scrollbar-thumb {
   border-radius: 5px;
   box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.4);
+}
+
+/** ============================= 选区右键菜单 ============================= */
+.right-menu {
+  position: absolute;
+  z-index: 2000;
+  background: #fff;
+  border-radius: 5px;
+  border: 1px solid #cbcbcb;
+}
+.right-menu .menu-item {
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #333;
+  white-space: nowrap;
+  line-height: 1.3em;
+  user-select: none;
+  display: flex;
+  align-items: center;
+}
+.right-menu .name {
+  vertical-align: text-bottom;
+}
+
+.right-menu .menu-item:hover,
+.right-menu .menu-item.active {
+  background: #ebebeb;
 }

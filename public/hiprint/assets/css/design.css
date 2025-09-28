@@ -95,6 +95,9 @@ body {
 .mr-10 {
   margin-right: 10px;
 }
+.ml-5 {
+  margin-left: 5px;
+}
 
 .border {
   border: 1px solid var(--borderColor);

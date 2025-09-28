@@ -905,17 +905,17 @@ var hiprint = function (t) {
                         var isMultiple = els.length > 1;
                         var notSelected = !n.designTarget.children().last().hasClass('selected');
                         if (isMultiple) {
-                        var left = i - n.options.left, top = o - n.options.top;
-                        els.forEach(function (t) {
-                            t.updateSizeAndPositionOptions(left + t.options.getLeft(), top + t.options.getTop()),
-                            t.designTarget.css("left", t.options.displayLeft()), t.designTarget.css("top", t.options.displayTop());
-                            t.createLineOfPosition(e);
-                        })
-                        if (notSelected) {
-                            n.updateSizeAndPositionOptions(i, o), n.createLineOfPosition(e);
-                        }
+                            var left = i - n.options.left, top = o - n.options.top;
+                            els.forEach(function (t) {
+                                t.updateSizeAndPositionOptions(left + t.options.getLeft(), top + t.options.getTop()),
+                                t.designTarget.css("left", t.options.displayLeft()), t.designTarget.css("top", t.options.displayTop());
+                                t.createLineOfPosition(e);
+                            })
+                            if (notSelected) {
+                                n.updateSizeAndPositionOptions(i, o), n.createLineOfPosition(e);
+                            }
                         } else {
-                        n.updateSizeAndPositionOptions(i, o), n.createLineOfPosition(e);
+                            n.updateSizeAndPositionOptions(i, o), n.createLineOfPosition(e);
                         }
                         _HiPrintlib__WEBPACK_IMPORTED_MODULE_6__.a.instance.changed = !0;
                     },
@@ -1198,8 +1198,11 @@ var hiprint = function (t) {
                     var copyArea = $('#copyArea');
                     if (!copyArea.length) copyArea = $('<textarea id="copyArea" style="position: absolute; left: 0px; top: 0px;opacity: 0"></textarea>');
                     $("body").append(copyArea);
-                    let copyElements = this.panel.printElements.filter(ele => {
-                        return 'block' == ele.designTarget.children().last().css('display') && !ele.printElementType.type.includes('table');
+                    var selectEles = this.panel.mouseRect?.mouseRectSelectedElement;
+                    var copyEle = selectEles || this.panel.printElements || [];
+                    let copyElements = copyEle.filter(ele => { 
+                        var showEle = ele.designTarget.children().last().css('display');// 选区复制忽略是否选择
+                        return (showEle == 'block' || selectEles?.length) && !ele.printElementType.type.includes('table');
                     })
                     copyElements = copyElements.map(ele => {
                         return {
@@ -1210,12 +1213,6 @@ var hiprint = function (t) {
                         }
                     })
                     var json = JSON.stringify(copyElements)
-                    // var json = JSON.stringify({
-                    //   options: n.options,
-                    //   printElementType: n.printElementType,
-                    //   id: n.id,
-                    //   templateId: n.templateId
-                    // });
                     copyArea.text(json);
                     // 元素需可见才能选中复制到剪切板
                     copyArea.css('visibility', 'visible');
@@ -1367,9 +1364,12 @@ var hiprint = function (t) {
                 return ex1 < x2 && ex2 > x1 && y1 < ey2 && y2 > ey1;
             }, BasePrintElement.prototype.multipleSelect = function (t) {
                 t ? this.designTarget.addClass("multipleSelect") : this.designTarget.removeClass("multipleSelect");
-            }, BasePrintElement.prototype.updatePositionByMultipleSelect = function (t, e) {
-                if (false === this.options.draggable) return;
-                this.updateSizeAndPositionOptions(t + this.options.getLeft(), e + this.options.getTop()), this.designTarget.css("left", this.options.displayLeft()), this.designTarget.css("top", this.options.displayTop());
+            }, BasePrintElement.prototype.updatePositionByMultipleSelect = function (l, t) {
+                if (false === this.options.draggable) return; // 移动
+                this.updateSizeAndPositionOptions(l + this.options.getLeft(), t + this.options.getTop()), this.designTarget.css("left", this.options.displayLeft()), this.designTarget.css("top", this.options.displayTop());
+            }, BasePrintElement.prototype.setPositionByMultipleSelect = function (l, t) {
+                if (false === this.options.draggable) return; // 设置
+                this.updateSizeAndPositionOptions(l || this.options.getLeft(), t || this.options.getTop()), this.designTarget.css("left", this.options.displayLeft()), this.designTarget.css("top", this.options.displayTop());
             }, BasePrintElement;
         }();
 }, function (t, e, n) {
@@ -3201,15 +3201,16 @@ var hiprint = function (t) {
                 return null;
             }, t.prototype.createTarget = function () {
                 return this.target = $(`<div class="hiprint-option-item">
-                        <div class="hiprint-option-item-label">是否拖动</div>
+                        <div class="hiprint-option-item-label">锁定</div>
                     <div class="hiprint-option-item-field">
-                        <label><input type="radio" name="option" value="true" class="auto-submit" style="width:16px;height:16px;vertical-align: text-top">是</label>
-                        <label><input type="radio" name="option" value="false" class="auto-submit" style="width:16px;height:16px;vertical-align: text-top; margin-left:10px;">否</label>
+                        <label><input type="radio" name="option" value="false" class="auto-submit" style="width:16px;height:16px;vertical-align: text-top">是</label>
+                        <label><input type="radio" name="option" value="true" class="auto-submit" style="width:16px;height:16px;vertical-align: text-top; margin-left:10px;">否</label>
                     </div></div>`), this.target;
             }, t.prototype.getValue = function () {
                 var v = this.target.find('input:checked').val();
                 return { true: !0, false: !1 }[v];
             }, t.prototype.setValue = function (t) { 
+                if(t == undefined) t = true;
                 this.target.find('input[value="' + String(t) + '"]').prop("checked", true);
             }, t.prototype.destroy = function () {
                 this.target.remove();
@@ -7486,7 +7487,167 @@ var hiprint = function (t) {
                     });
                 }), this.bindShortcutKeyEvent();
                 this.bingPasteEvent();
-                this.bindBatchMoveElement();
+                this.bindBatchMoveElement(); 
+
+                // 右键菜单
+                e.target.contextmenu(function (ev) {
+                    ev.preventDefault();
+                    var _e = e;
+                    var $element = $(ev.target).closest(".hiprint-printElement");
+                    var $mouseRect = $(ev.target).closest(".hiprint-mouseRect");
+                    var type =  "designPaper";                      // 设计区右键菜单
+                    if ($element.length > 0)  type = "element";     // 元素右键菜单
+                    if ($mouseRect.length > 0)  type = "mouseRect"; // 选区右键菜单
+
+                    // 获取元素
+                    function getElements() {
+                        var mouseRectEls = _e.mouseRect ? _e.mouseRect.mouseRectSelectedElement : null;
+                        const elements = _e.printElements.filter(function (el) {
+                            if(type == "designPaper") return true
+                            if(type == "mouseRect" && mouseRectEls) {
+                                return mouseRectEls.some((ele) => ele.id == el.id);
+                            }
+                            var clickEl = el.designTarget.children().last().css("display");
+                            return clickEl == "block" && !el.printElementType.type.includes("table");
+                        });
+                        return elements;
+                    }
+                    // 右键菜单列表
+                    function getMenuList() {
+                        var menuConfig = [
+                            { name: "清空", key: "clear", icon: "glyphicon-remove" },
+                            { name: "删除", key: "delete", icon: "glyphicon-trash" },
+                            { name: "复制", key: "copy", icon: "glyphicon-copy" },
+                            { name: "粘贴", key: "paste", icon: "glyphicon-paste" },
+                            { name: "上对齐", key: "top", icon: "glyphicon-arrow-up" },
+                            { name: "下对齐", key: "bottom", icon: "glyphicon-arrow-down" },
+                            { name: "左对齐", key: "left", icon: "glyphicon-arrow-left" },
+                            { name: "右对齐", key: "right", icon: "glyphicon-arrow-right" },
+                            { name: "水平居中", key: "hCenter", icon: "glyphicon-resize-horizontal" },
+                            { name: "垂直居中", key: "vCenter", icon: "glyphicon-resize-vertical" },
+                            { name: "水平垂直居中", key: "center", icon: "glyphicon-plus" },
+                            { name: "重置", key: "reset", icon: "glyphicon-repeat" },
+                        ];
+                        const menuCate = {
+                            designPaper: ["clear"],
+                            element: ["delete", "copy", "paste"], 
+                            mouseRect: menuConfig.filter(item => !["clear"].includes(item.key)).map(item => item.key) 
+                        };
+                        return menuConfig.filter(item => menuCate[type].includes(item.key));
+                    }
+
+                    var elements = getElements();
+                    var $menuBox = e.target.find(".right-menu");
+                    
+                    if (!$menuBox.length) { 
+                        var menuList = getMenuList();
+                        $menuBox = $(`<div class="right-menu" />`);
+                        menuList.forEach(function (menu, idx) {
+                            var itemDom = $(`<div class="menu-item">
+                                                <span class="glyphicon ${menu.icon}" />
+                                                <span class="ml-5">${menu.name}</span>
+                                            </div>`);
+                            itemDom.data("menu-data", menu);
+                            $menuBox.append(itemDom);
+                        });
+                        e.target.append($menuBox);
+                    }
+                    var rect = e.target[0].getBoundingClientRect();
+                    var top = ev.clientY - rect.top + 30;
+                    var left = ev.clientX - rect.left + 30;
+                    $menuBox.css({ top, left });
+
+                    // 避免超出底部
+                    requestAnimationFrame(function () {
+                        var winH = $(window).height();
+                        var outerH = $menuBox.outerHeight();
+                        var rect = $menuBox[0].getBoundingClientRect();
+                        var optionBottom = rect.top + outerH;
+                        if (optionBottom > winH) {
+                        var newTop = o.a.px.toPt(winH) - outerH;
+                        $menuBox.css({ top: newTop });
+                        }
+                    });
+
+                    // 保存原始位置
+                    var originPos = {};
+                    elements.forEach(function (el, index) {
+                        if (originPos[index]) return;
+                        var $self = el.designTarget[0];
+                        originPos[index] = { top: $self.offsetTop, left: $self.offsetLeft };
+                    });
+
+                    function onClose() {
+                        $menuBox.remove();
+                        return null;
+                    }
+
+                    // 点击操作项
+                    $menuBox.off("click", ".menu-item").on("click", ".menu-item", function (ev) {
+                        ev.preventDefault();
+                        ev.stopPropagation();
+                        var $item = $(ev.target).closest(".menu-item");
+                        var prop = $item.data("menu-data").key;
+                        var box = _e.mouseRect?.target ? _e.mouseRect.target[0] : {};
+                        $menuBox.find(".menu-item").removeClass("active");
+                        $item.addClass("active");
+
+                        var boxTop = box.offsetTop;
+                        var boxLeft = box.offsetLeft;
+                        var boxBottom = boxTop + box.offsetHeight;
+                        var boxRight = boxLeft + box.offsetWidth;
+                        var boxCenterX = boxLeft + box.offsetWidth / 2;
+                        var boxCenterY = boxTop + box.offsetHeight / 2;
+                        if (!elements.length) return ElMessage.error("没有可操作的元素");
+
+                        // [方法]
+                        var Method = {
+                            clear: function ( ) { 
+                                elements.forEach((el) => _e.deletePrintElement(el)) 
+                                ElMessage.success("清空成功");
+                            },
+                            paste: function () {
+                                _e.pasteJson(_e), onClose();
+                            },
+                        }
+                        if(Method[prop]) return Method[prop]();
+
+                        elements.forEach(function (el, index) {
+                            var $self = el.designTarget[0];
+                            var selfHeight = $self.offsetHeight;
+                            var selfWidth = $self.offsetWidth;
+                            var selfCenterX = selfWidth / 2;
+                            var selfCenterY = selfHeight / 2;
+                            // [对齐]
+                            var Alignment = {
+                                top: ()=>({ top: boxTop, left: 0 }),
+                                bottom: ()=>({ top: boxBottom - selfHeight, left: 0 }),
+                                left: ()=>({ top: 0, left: boxLeft }),
+                                right: ()=>({ top: 0, left: boxRight - selfWidth }),
+                                hCenter: ()=>({ top: $self.offsetTop, left: boxCenterX - selfCenterX }),
+                                vCenter: ()=>({ top: boxCenterY - selfCenterY, left: $self.offsetLeft }),
+                                center: ()=>({ top: boxCenterY - selfCenterY, left: boxCenterX - selfCenterX }),
+                                reset: ()=>({ top: originPos[index].top, left: originPos[index].left }),
+                                delete: function () {
+                                    _e.deletePrintElement(el);
+                                    return onClose();
+                                },
+                                copy: function (isLast) {
+                                    if (!isLast) return null;
+                                    el.copyJson();
+                                    ElMessage.success("复制成功");
+                                    return null;
+                                },
+                            };
+                            if (!Alignment[prop]) return;
+                            var lastIdx = elements.length > 1 ? elements.length == index + 1 : true;
+                            // 元素大于1个 且 是最后一个
+                            var pos = Alignment[prop](lastIdx);
+                            if (!pos) return;
+                            el.setPositionByMultipleSelect(o.a.px.toPt(pos.left), o.a.px.toPt(pos.top));
+                        });
+                    });
+                });
             }, t.prototype.update = function (t) {
                 try {
                     var e = this;
@@ -7583,7 +7744,7 @@ var hiprint = function (t) {
                                 x: obj.options.left,
                                 y: obj.options.top
                             }
-                            var useMouse = e.currentTarget.className != e.target.className;
+                            var useMouse = e.currentTarget?.className != e.target.className;
                             left = (!useMouse && n.mouseOffsetX && o.a.px.toPt(n.mouseOffsetX)) || (r.left += 10);
                             top = (!useMouse && n.mouseOffsetY && o.a.px.toPt(n.mouseOffsetY)) || (r.top += 10);
                             replacePosition = {
@@ -7868,7 +8029,7 @@ var hiprint = function (t) {
                 var e = this,
                   n = this.designPaper.getTarget();
                 var ptr = this.designPaper.scale || 1;
-                this.mouseRect.target || (this.mouseRect.target = $('<div tabindex="1" style="z-index:2;position: absolute;opacity:0.2;border: 1px dashed #000;background-color:#31676f;"><span></span></div>'), n.find(".hiprint-printPaper-content").append(this.mouseRect.target), this.bingKeyboardMoveEvent(this.mouseRect.target), this.mouseRect.target.hidraggable({
+                this.mouseRect.target || (this.mouseRect.target = $('<div tabindex="1" class="hiprint-mouseRect" style="z-index:999;position: absolute;opacity:0.2;border: 1px dashed #000;background-color:#31676f;"><span></span></div>'), n.find(".hiprint-printPaper-content").append(this.mouseRect.target), this.bingKeyboardMoveEvent(this.mouseRect.target), this.mouseRect.target.hidraggable({
                     onDrag: function onDrag(t, n, i) {
                         e.mouseRect.lastLeft = e.mouseRect.lastLeft ? o.a.px.toPt(e.mouseRect.target[0].offsetLeft) : n / ptr, e.mouseRect.lastTop = e.mouseRect.lastTop ? o.a.px.toPt(e.mouseRect.target[0].offsetTop) : i / ptr
                         , (e.mouseRect.mouseRectSelectedElement || []).forEach(function (t) {
@@ -7981,6 +8142,9 @@ var hiprint = function (t) {
                 t.prototype.clearSettingContainer = function () {
                     this.clearLastPrintElement(), this.settingContainer.html("");
                 }, t.prototype.clearLastPrintElement = function () {
+                    var $rightMenu = this.printTemplate.container.find(".right-menu");
+                    if ($rightMenu.length > 0) $rightMenu.remove();// 删除右键菜单 
+                    
                     if (this.lastPrintElement) {
                         if (this.lastPrintElement._editing) {
                             this.lastPrintElement.updateByContent(true);
@@ -8511,7 +8675,7 @@ var hiprint = function (t) {
                         t.onDataChange && t.onDataChange(type, j);
                     }
 
-                    var handerOptions = ["新增", "删除","清空", "元素修改", "调整大小", "新增页面","删除页面", "切换页面"]
+                    var handerOptions = ["新增", "删除","清空", "元素修改", "调整大小", "新增页面","删除页面", "切换页面", "移动"]
                     if(handerOptions.some(item => type.includes(item))) {
                         renderLayer(type);
                     } 
@@ -8520,6 +8684,12 @@ var hiprint = function (t) {
                 var layerHead = $(`<div class="layer-head"><span class="title">元素列表</span></div>`);
                 var openIcon = $(`<span class="start glyphicon glyphicon-step-forward"></span>`);
                 var elOption = $(`<div class="hailen-code"><pre><code></code></pre><span class="closed" title="关闭">×</span></div>`);
+                var elItemObj = {
+                    el: {}, // 选中元素
+                    seq: -1, // 选中元素序号
+                    $item: null, // 属性看板
+                    showOption: false,// 是否显示属性看板
+                };
                 
                 function renderLayer(type) {
                     var isDrag = false;
@@ -8531,7 +8701,7 @@ var hiprint = function (t) {
                     if (!t.editingPanel.target.find('.hailen-code').length) {
                         t.editingPanel.target.append(elOption)
                     }
-                    
+
                     // 元素列表
                     layerBody.empty()
                     layerHead.append(openIcon);
@@ -8544,15 +8714,16 @@ var hiprint = function (t) {
                         var title = el.options.title || el.printElementType.title || el.printElementType.text || type || "";
                         var icon = t.layerOption.icons.find((item) => item.tid.split(".")[1] === type).icon || "";
                         var content = title + (testData && typeof testData === "string" ? `: ${testData}` : "");
-                        var itemDom = $(`<div class="layer-item">
+                        var itemDom = $(`<div class="layer-item" data-seq="${idx}">
                                             <span class="icon glyphicon ${icon}"></span>
                                             <span class="field">${el.options.field || ""}</span>
                                             <span class="content" title="${idx + 1 + ". " + content}">${content}</span>
-                                            <span class="drag glyphicon ${draggable}" title="${isDraggable ? "不可拖动" : "可拖动"}"></span>
+                                            <span class="drag glyphicon ${draggable}" title="${isDraggable ? "锁定" : "未锁定"}"></span>
                                             <span class="option glyphicon glyphicon-certificate" title="属性配置"></span>
                                             <span class="delete" title="删除">×</span>
                                         </div>`);
-                        itemDom.data("layer-data", el);
+                        itemDom.data("data-el", el);
+                        itemDom.data("data-seq", idx);
                         layerBody.append(itemDom);
                     });
                     $container.append(layerBody);
@@ -8591,32 +8762,38 @@ var hiprint = function (t) {
                     });
 
                     // 点击元素行
-                    layerBody.off("click", ".layer-item, .delete").on("click", ".layer-item, .delete", function (e) {
+                    layerBody.off("click", ".layer-item").on("click", ".layer-item", function (e) {
                         var $target = $(e.target);
                         var $item = $target.closest(".layer-item");
-                        var el = $item.data("layer-data");
-                        if ($target.is(".delete")) { 
+                        var el = $item.data("data-el");
+                        var seq = $item.data("data-seq");
+                        layerBody.find(".layer-item").removeClass("active");
+                        $item.addClass("active"); 
+
+                        if ($target.is(".delete")) {
                             e.stopPropagation(), t.deletePrintElement(el), $item.remove();// 删除
                             return;
                         }
-                        if ($target.is(".layer-item") || $target.closest(".icon, .content, .field").length) {
-                            layerBody.find(".layer-item").removeClass("active");// 选中
-                            elOption.hide();
-                            $item.addClass("active"); 
-                            setTimeout(function () { el.designTarget.trigger("click") });
+                        // 显示配置代码
+                        if ($target.is(".option")) { 
+                            e.stopPropagation()
+                            Object.assign(elItemObj, { el, seq, $item, showOption: true });
+                            showOption(elItemObj);
+                            return;
                         }
+                        setTimeout(function () { el.designTarget.trigger("click") });
                     });
 
-                    // 显示配置代码
-                    layerBody.off("click", ".layer-item, .option").on("click", ".layer-item, .option", function (e) {
-                        var $item = $(this); 
-                        if (!$item.is('.option')) return;  
-                        var $layerItem = $item.closest('.layer-item');
-                        var el = $layerItem.data("layer-data");
-                        if (!$layerItem.length || !el) return;
+                    showOption(elItemObj); // 显示配置
+                    
+                    function showOption(elItemObj) {
+                        var $item = layerBody.find(`.layer-item[data-seq="${elItemObj.seq}"]`)
+                        if(!$item?.length || !elItemObj.el) return;
+                        $item.addClass("active");
                         var {right, top} = $item[0].getBoundingClientRect();
-                        var optionCode = JSON.stringify(el.options || {}, null, 2);
-                        elOption.css({ left: right + 32, top, display: "block" });
+                        var optionCode = JSON.stringify(elItemObj.el.options || {}, null, 2);
+                        elOption.css({ left: right + 5, top, display:  elItemObj.showOption ? "block" : "none" });
+                        if(!elItemObj.showOption) return;
 
                         // 避免超出底部
                         requestAnimationFrame(() => { 
@@ -8640,8 +8817,9 @@ var hiprint = function (t) {
                             e.stopPropagation();
                             e.preventDefault();
                             elOption.hide();
+                            elItemObj.showOption = false;
                         })
-                    });
+                    }
                 }             
             }, t;
         }();
