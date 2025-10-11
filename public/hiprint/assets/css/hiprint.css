@@ -1,5 +1,21 @@
 :root {
+  /** color */
+  --bgColor: #fff;
+  --color: #333;
+  --primary: #1e80ff;
+  --sliderColor: #5a7e9d;
+
+  /** paper */
+  --gridLine: rgba(0, 0, 0, 0.1);
+  --midLine: rgba(0, 0, 255, 0.2);
+  --midWidth: 0.5px;
+  --size: 5mm;
+  --mouseRectBg: rgba(49, 103, 111, 0.2);
+
+  --elementListColor: #3d3d3d;
+  /* rightMenu */
   --borderColor: #bdc3c7;
+  --rightMenuBg: #ebebeb;
 }
 
 body {
@@ -19,14 +35,14 @@ body {
   position: sticky;
   right: 5px;
   top: 0px;
-  background: #fff;
+  background: var(--bgColor);
   z-index: 3;
 }
 .PrintPagination .hiprint-pagination li:last-child::before {
   content: "";
   width: 4px;
   height: 28px;
-  background-color: #fff;
+  background: var(--bgColor);
   position: absolute;
   top: -2px;
   left: -5px;
@@ -36,7 +52,7 @@ body {
   content: "";
   width: 6px;
   height: 28px;
-  background-color: #fff;
+  background: var(--bgColor);
   position: absolute;
   top: -2px;
   right: -7px;
@@ -63,7 +79,7 @@ body {
   vertical-align: middle;
 }
 .hiprint-pagination > li.selected {
-  border-color: #6f4cff;
+  border-color: var(--primary);
 }
 
 .hiprint-pagination > li > span {
@@ -102,7 +118,7 @@ body {
   display: block;
   padding: 4px 0px;
   clear: both;
-  color: #3b78ff;
+  color: var(--primary);
 }
 
 .rect-printElement-types .hiprint-printElement-type > li > ul {
@@ -124,9 +140,9 @@ body {
   line-height: 30px;
   padding: 4px 4px 4px 10px;
   margin-left: -2px;
-  color: #5a7e9d;
+  color: var(--sliderColor);
   text-decoration: none;
-  background-color: #fff;
+  background: var(--bgColor);
   width: 100%;
   box-sizing: border-box;
   border-radius: 3px;
@@ -166,7 +182,7 @@ body {
   line-height: 20px;
   color: #337ab7;
   text-decoration: none;
-  background-color: #fff;
+  background: var(--bgColor);
   border: 1px solid #ddd;
   margin-right: 5px;
   width: 100%;
@@ -198,7 +214,7 @@ body {
   line-height: 16px;
   color: #337ab7;
   text-decoration: none;
-  background-color: #fff;
+  background: var(--bgColor);
   border: 1px solid #ddd;
   margin-right: 4px;
   cursor: pointer;
@@ -277,6 +293,11 @@ font-weight: normal;*/
 .hiprint-option-item-field {
   flex: 1;
   width: 100%;
+}
+.hiprint-option-item-field input,
+.hiprint-option-item-field select,
+.hiprint-option-item-field textarea {
+  outline-color: var(--primary);
 }
 
 .hiprint-option-items .hiprint-option-item-field input,
@@ -421,7 +442,7 @@ font-weight: normal;*/
 }
 
 .hiprint-option-items .minicolors-slider-brightness .minicolors-grid-inner {
-  background-color: black;
+  background-color: #000;
 }
 
 .hiprint-option-items .minicolors-slider-wheel .minicolors-grid {
@@ -469,7 +490,7 @@ font-weight: normal;*/
   left: 70px;
   width: 12px;
   height: 12px;
-  border: solid 1px black;
+  border: solid 1px #000;
   border-radius: 10px;
   margin-top: -6px;
   margin-left: -6px;
@@ -494,7 +515,7 @@ font-weight: normal;*/
   width: 18px;
   height: 2px;
   background: white;
-  border: solid 1px black;
+  border: solid 1px #000;
   margin-top: -2px;
   box-sizing: content-box;
 }
@@ -600,12 +621,8 @@ font-weight: normal;*/
   border-bottom-left-radius: 0;
 }
 
-/*hitable reizer*/
-.hitable {
-}
-
 .hitable .selected {
-  background: #3e66ad;
+  background: var(--primary);
 }
 
 /*resizer*/
@@ -613,7 +630,7 @@ font-weight: normal;*/
 .hitable .resizerRow td {
   border: 0pt dashed;
   height: 0pt;
-  background: #fff;
+  background: var(--bgColor);
 }
 
 .hitable tr.resizerRow + tr,
@@ -624,7 +641,7 @@ font-weight: normal;*/
 .hitable td.resizerColumn {
   border: 0pt dashed;
   width: 0.000001px !important;
-  background: #fff;
+  background: var(--bgColor);
 }
 
 .hitable td.resizerColumn + td {
@@ -656,7 +673,7 @@ font-weight: normal;*/
 }
 
 .columngripDraging {
-  border-left: 1px dotted black;
+  border-left: 1px dotted #000;
 }
 
 .rowgrips {
@@ -683,7 +700,7 @@ font-weight: normal;*/
 }
 
 .rowgripDraging {
-  border-top: 1px dotted black;
+  border-top: 1px dotted #000;
 }
 
 .hitable .hitable-editor-text {
@@ -859,10 +876,6 @@ font-weight: normal;*/
 }
 
 .hiprint-printPaper.design.grid {
-  --gridLine: rgba(0, 0, 0, 0.1);
-  --midLine: rgba(0, 0, 255, 0.2);
-  --midWidth: 0.5px;
-  --size: 5mm;
   background-image: linear-gradient(90deg, var(--gridLine) 3%, transparent 0), linear-gradient(1turn, var(--gridLine) 3%, transparent 0),
     linear-gradient(
       90deg,
@@ -915,6 +928,13 @@ font-weight: normal;*/
   z-index: 11;
 }
 
+.hiprint-mouseRect {
+  z-index: 999;
+  position: absolute;
+  border: 1px dashed var(--primary);
+  background-color: var(--mouseRectBg);
+}
+
 /* 元素宽高 */
 .resize-panel .size-box {
   border: 1px solid;
@@ -948,6 +968,16 @@ font-weight: normal;*/
   box-sizing: border-box;
   cursor: pointer;
   text-align: center;
+}
+
+/** hover遮罩可点击穿透 */
+.hiprint-printElement-echarts .resize-panel {
+  pointer-events: none;
+}
+
+/** 拖拽点及删除按钮 保留鼠标事件 */
+.hiprint-printElement-echarts .resize-panel * {
+  pointer-events: auto;
 }
 
 .hiprint-printElement.design:hover .del-btn {
@@ -985,7 +1015,7 @@ font-weight: normal;*/
   line-height: 100%;
   border-radius: 50%;
   box-sizing: border-box;
-  background: #409eff;
+  background: var(--primary);
   color: #fff;
   display: flex;
   align-items: center;
@@ -1011,8 +1041,8 @@ font-weight: normal;*/
 #ElementLayer.show {
   width: 220px;
   max-height: 90%;
-  background: #fff;
-  border: 1px solid #1e80ff;
+  background: var(--bgColor);
+  border: 1px solid var(--primary);
 }
 
 #ElementLayer.show .layer-head {
@@ -1046,7 +1076,7 @@ font-weight: normal;*/
 
 /* 元素列表项 */
 .layer-body .layer-item {
-  color: #3d3d3d;
+  color: var(--elementListColor);
   display: flex;
   overflow: hidden;
   align-items: center;
@@ -1087,11 +1117,11 @@ font-weight: normal;*/
   color: #f60;
 }
 .layer-body .layer-item .icon {
-  color: #5a7e9d;
+  color: var(--sliderColor);
   margin-left: 5px;
 }
 .layer-body .layer-item .option {
-  color: #4896fb;
+  color: var(--primary);
   cursor: pointer;
 }
 .layer-body .layer-item .option:hover {
@@ -1148,15 +1178,15 @@ font-weight: normal;*/
 .right-menu {
   position: absolute;
   z-index: 2000;
-  background: #fff;
+  background: var(--bgColor);
   border-radius: 5px;
-  border: 1px solid #cbcbcb;
+  border: 1px solid var(--borderColor);
 }
 .right-menu .menu-item {
   padding: 5px 10px;
   font-size: 14px;
   cursor: pointer;
-  color: #333;
+  color: var(--color);
   white-space: nowrap;
   line-height: 1.3em;
   user-select: none;
@@ -1166,8 +1196,13 @@ font-weight: normal;*/
 .right-menu .name {
   vertical-align: text-bottom;
 }
+.right-menu .divider {
+  height: 0px;
+  margin: 2px 0;
+  border-bottom: 1px solid var(--borderColor);
+}
 
 .right-menu .menu-item:hover,
 .right-menu .menu-item.active {
-  background: #ebebeb;
+  background: var(--rightMenuBg);
 }

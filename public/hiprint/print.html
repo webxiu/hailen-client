@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="./assets/css/design.css" />
     <script src="./lib/vue3.prod.js"></script>
     <script src="./lib/element-plus.js"></script>
+    <script src="./lib/echarts.min.js"></script>
 
     <script src="./plugins/jquery@1.11.3.min.js"></script>
     <script src="./polyfill.min.js"></script>
@@ -284,6 +285,7 @@
                     const { type } = el.printElementType;
                     let value = _testData[field];
                     if (value && type === "image") el.options.src = value;
+                    else if (value && type === "echarts") el.options.echartsOption = value;
                     else if (value && field) el.options.testData = value;
                   });
                 });

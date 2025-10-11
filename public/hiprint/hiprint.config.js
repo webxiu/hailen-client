@@ -339,5 +339,26 @@
       ],
       default: { height: 90, width: 90 },
     },
+    echarts: {
+      supportOptions: [
+        { name: "field", hidden: !1 },
+        { name: "zIndex", hidden: !1 },
+        { name: "draggable", hidden: !1 },
+        { name: "borderLeft", hidden: !1 },
+        { name: "borderTop", hidden: !1 },
+        { name: "borderRight", hidden: !1 },
+        { name: "borderBottom", hidden: !1 },
+        { name: "borderWidth", hidden: !1 },
+        { name: "borderColor", hidden: !1 },
+        { name: "backgroundColor", hidden: !1 },
+        { name: "showInPage", hidden: !1 },
+        { name: "unShowInPage", hidden: !1 },
+        { name: "fixed", hidden: !1 },
+        { name: "axis", hidden: !1 },
+        { name: "echartsOption", hidden: !1 },
+        { name: "formatter", hidden: !1 },
+      ],
+      default: { height: 300, width: 150 },
+    },
   };
 })();

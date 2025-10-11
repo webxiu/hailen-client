@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-09-13 11:04:42
+ * @LastEditTime: 2025-10-11 09:39:20
  * @Description: 初始化模板
  */
 
@@ -10,6 +10,7 @@
 var watermarkOptions = {
   content: "内部文件 请勿外传",
   rotate: 25,
+  show: true,
   timestamp: true,
   format: "YYYY-MM-DD HH:mm",
 };

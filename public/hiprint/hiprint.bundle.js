@@ -16,6 +16,7 @@ function _instanceof(left, right) { if (right != null && typeof Symbol !== "unde
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+/** 将Blob转换为DataURL */
 function _blobToDataURL(blob, callback) {
     const reader = new FileReader();
     reader.onload = () => callback( null, reader.result);
@@ -23,6 +24,7 @@ function _blobToDataURL(blob, callback) {
     reader.readAsDataURL(blob);
 }
 
+/** 获取元素的缩放 */
 function _getScale(element) {
     try {
         var style = window.getComputedStyle(element);
@@ -33,6 +35,30 @@ function _getScale(element) {
     } catch (error) {
         return { scaleX: 1, scaleY: 1 };
     }
+}
+
+/** 等待所有图片加载 */
+function loadedAllImage(container, callback = () => {}) {
+    const images = Array.from(container.querySelectorAll("img:not(.h_img):not(.v_img)"));
+    if (images.length === 0) {
+        return callback(), Promise.resolve();
+    }
+    const promises = images.map((img) => {
+        return new Promise((resolve) => {
+            if (img.complete && img.naturalWidth > 0) {
+                resolve();
+            } else {
+                const onLoadOrError = () => {
+                    img.removeEventListener("load", onLoadOrError);
+                    img.removeEventListener("error", onLoadOrError);
+                    resolve();
+                };
+                img.addEventListener("load", onLoadOrError);
+                img.addEventListener("error", onLoadOrError);
+            }
+        });
+    });
+    return Promise.all(promises).then(() => callback());
 }
 
 var hiprint = function (t) {
@@ -445,114 +471,135 @@ var hiprint = function (t) {
                     },
                 };
                 this.tableCustom = {
-                supportOptions: [
-                    { name: "field", hidden: !1 },
-                    { name: "fontFamily", hidden: !1 },
-                    { name: "fontSize", hidden: !1 },
-                    { name: "textAlign", hidden: !1 },
-                    { name: "tableBorder", hidden: !1 },
-                    { name: "tableHeaderBorder", hidden: !1 },
-                    { name: "tableHeaderCellBorder", hidden: !1 },
-                    { name: "tableHeaderRowHeight", hidden: !1 },
-                    { name: "tableHeaderFontSize", hidden: !1 },
-                    { name: "tableHeaderFontWeight", hidden: !1 },
-                    { name: "tableHeaderBackground", hidden: !1 },
-                    { name: "tableBodyRowHeight", hidden: !1 },
-                    { name: "tableBodyRowBorder", hidden: !1 },
-                    { name: "tableBodyCellBorder", hidden: !1 },
-                    { name: "axis", hidden: !1 },
-                    { name: "lHeight", hidden: !1 },
-                    { name: "autoCompletion", hidden: !1 },
-                    { name: "tableFooterRepeat", hidden: !1 },
-                ],
-                default: {
-                    fontFamily: void 0,
-                    fontSize: void 0,
-                    fontWeight: "",
-                    textAlign: void 0,
-                    tableBorder: void 0,
-                    tableHeaderBorder: void 0,
-                    tableHeaderCellBorder: void 0,
-                    tableHeaderBackground: void 0,
-                    tableHeaderRowHeight: void 0,
-                    tableHeaderFontWeight: void 0,
-                    tableBodyCellBorder: void 0,
-                    tableBodyRowHeight: void 0,
-                    letterSpacing: "",
-                    lineHeight: void 0,
-                    width: 550,
-                },
+                    supportOptions: [
+                        { name: "field", hidden: !1 },
+                        { name: "fontFamily", hidden: !1 },
+                        { name: "fontSize", hidden: !1 },
+                        { name: "textAlign", hidden: !1 },
+                        { name: "tableBorder", hidden: !1 },
+                        { name: "tableHeaderBorder", hidden: !1 },
+                        { name: "tableHeaderCellBorder", hidden: !1 },
+                        { name: "tableHeaderRowHeight", hidden: !1 },
+                        { name: "tableHeaderFontSize", hidden: !1 },
+                        { name: "tableHeaderFontWeight", hidden: !1 },
+                        { name: "tableHeaderBackground", hidden: !1 },
+                        { name: "tableBodyRowHeight", hidden: !1 },
+                        { name: "tableBodyRowBorder", hidden: !1 },
+                        { name: "tableBodyCellBorder", hidden: !1 },
+                        { name: "axis", hidden: !1 },
+                        { name: "lHeight", hidden: !1 },
+                        { name: "autoCompletion", hidden: !1 },
+                        { name: "tableFooterRepeat", hidden: !1 },
+                    ],
+                    default: {
+                        fontFamily: void 0,
+                        fontSize: void 0,
+                        fontWeight: "",
+                        textAlign: void 0,
+                        tableBorder: void 0,
+                        tableHeaderBorder: void 0,
+                        tableHeaderCellBorder: void 0,
+                        tableHeaderBackground: void 0,
+                        tableHeaderRowHeight: void 0,
+                        tableHeaderFontWeight: void 0,
+                        tableBodyCellBorder: void 0,
+                        tableBodyRowHeight: void 0,
+                        letterSpacing: "",
+                        lineHeight: void 0,
+                        width: 550,
+                    },
                 };
                 this.hline = {
-                supportOptions: [
-                    { name: "borderColor", hidden: !1 },
-                    { name: "borderWidth", hidden: !1 },
-                    { name: "showInPage", hidden: !1 },
-                    { name: "fixed", hidden: !1 },
-                    { name: "axis", hidden: !1 },
-                    { name: "transform", hidden: !1 },
-                    { name: "borderStyle", hidden: !1 },
-                ],
-                default: { borderWidth: 0.75, height: 9, width: 90 },
+                    supportOptions: [
+                        { name: "borderColor", hidden: !1 },
+                        { name: "borderWidth", hidden: !1 },
+                        { name: "showInPage", hidden: !1 },
+                        { name: "fixed", hidden: !1 },
+                        { name: "axis", hidden: !1 },
+                        { name: "transform", hidden: !1 },
+                        { name: "borderStyle", hidden: !1 },
+                    ],
+                    default: { borderWidth: 0.75, height: 9, width: 90 },
                 };
                 this.vline = {
-                supportOptions: [
-                    { name: "borderColor", hidden: !1 },
-                    { name: "borderWidth", hidden: !1 },
-                    { name: "showInPage", hidden: !1 },
-                    { name: "fixed", hidden: !1 },
-                    { name: "axis", hidden: !1 },
-                    { name: "transform", hidden: !1 },
-                    { name: "borderStyle", hidden: !1 },
-                ],
-                default: { borderWidth: void 0, height: 90, width: 9 },
+                    supportOptions: [
+                        { name: "borderColor", hidden: !1 },
+                        { name: "borderWidth", hidden: !1 },
+                        { name: "showInPage", hidden: !1 },
+                        { name: "fixed", hidden: !1 },
+                        { name: "axis", hidden: !1 },
+                        { name: "transform", hidden: !1 },
+                        { name: "borderStyle", hidden: !1 },
+                    ],
+                    default: { borderWidth: void 0, height: 90, width: 9 },
                 };
                 this.rect = {
-                supportOptions: [
-                    { name: "borderColor", hidden: !1 },
-                    { name: "borderWidth", hidden: !1 },
-                    { name: "showInPage", hidden: !1 },
-                    { name: "fixed", hidden: !1 },
-                    { name: "axis", hidden: !1 },
-                    { name: "transform", hidden: !1 },
-                    { name: "borderStyle", hidden: !1 },
-                ],
-                default: { borderWidth: void 0, height: 90, width: 90 },
+                    supportOptions: [
+                        { name: "borderColor", hidden: !1 },
+                        { name: "borderWidth", hidden: !1 },
+                        { name: "showInPage", hidden: !1 },
+                        { name: "fixed", hidden: !1 },
+                        { name: "axis", hidden: !1 },
+                        { name: "transform", hidden: !1 },
+                        { name: "borderStyle", hidden: !1 },
+                    ],
+                    default: { borderWidth: void 0, height: 90, width: 90 },
                 };
                 this.oval = {
-                supportOptions: [
-                    { name: "borderColor", hidden: !1 },
-                    { name: "borderWidth", hidden: !1 },
-                    { name: "showInPage", hidden: !1 },
-                    { name: "fixed", hidden: !1 },
-                    { name: "axis", hidden: !1 },
-                    { name: "transform", hidden: !1 },
-                    { name: "borderStyle", hidden: !1 },
-                ],
-                default: { borderWidth: void 0, height: 90, width: 90 },
+                    supportOptions: [
+                        { name: "borderColor", hidden: !1 },
+                        { name: "borderWidth", hidden: !1 },
+                        { name: "showInPage", hidden: !1 },
+                        { name: "fixed", hidden: !1 },
+                        { name: "axis", hidden: !1 },
+                        { name: "transform", hidden: !1 },
+                        { name: "borderStyle", hidden: !1 },
+                    ],
+                    default: { borderWidth: void 0, height: 90, width: 90 },
                 };
                 this.html = {
-                supportOptions: [
-                    { name: "showInPage", hidden: !1 },
-                    { name: "unShowInPage", hidden: !1 },
-                    { name: "fixed", hidden: !1 },
-                    { name: "axis", hidden: !1 },
-                    { name: "formatter", hidden: !1 },
-                ],
-                default: { height: 90, width: 90 },
+                    supportOptions: [
+                        { name: "showInPage", hidden: !1 },
+                        { name: "unShowInPage", hidden: !1 },
+                        { name: "fixed", hidden: !1 },
+                        { name: "axis", hidden: !1 },
+                        { name: "formatter", hidden: !1 },
+                    ],
+                    default: { height: 90, width: 90 },
                 };
                 this.tableColumn = {
-                supportOptions: [
-                    { name: "title", hidden: !1 },
-                    { name: "align", hidden: !1 },
-                    { name: "halign", hidden: !1 },
-                    { name: "vAlign", hidden: !1 },
-                    { name: "paddingLeft", hidden: !1 },
-                    { name: "paddingRight", hidden: !1 },
-                    { name: "formatter2", hidden: !1 },
-                    { name: "styler2", hidden: !1 },
-                ],
-                default: { height: 90, width: 90 },
+                    supportOptions: [
+                        { name: "title", hidden: !1 },
+                        { name: "align", hidden: !1 },
+                        { name: "halign", hidden: !1 },
+                        { name: "vAlign", hidden: !1 },
+                        { name: "paddingLeft", hidden: !1 },
+                        { name: "paddingRight", hidden: !1 },
+                        { name: "formatter2", hidden: !1 },
+                        { name: "styler2", hidden: !1 },
+                    ],
+                    default: { height: 90, width: 90 },
+                };
+                this.echarts = {
+                    supportOptions: [
+                        { name: "field", hidden: !1 },
+                        { name: "zIndex", hidden: !1 },
+                        { name: "draggable", hidden: !1 },
+                        { name: "borderLeft", hidden: !1 },
+                        { name: "borderTop", hidden: !1 },
+                        { name: "borderRight", hidden: !1 },
+                        { name: "borderBottom", hidden: !1 },
+                        { name: "borderWidth", hidden: !1 },
+                        { name: "borderColor", hidden: !1 },
+                        { name: "backgroundColor", hidden: !1 },
+                        { name: "showInPage", hidden: !1 },
+                        { name: "unShowInPage", hidden: !1 },
+                        { name: "fixed", hidden: !1 },
+                        { name: "axis", hidden: !1 },
+                        { name: "echartsOption", hidden: !1 },
+                        { name: "formatter", hidden: !1 },
+                    ],
+                    default: { height: 300, width: 150 },
                 };
             }
 
@@ -1005,9 +1052,10 @@ var hiprint = function (t) {
                 },
                 onResize: function onResize(t, i, o, r, a, rt) {
                     if (undefined != rt) {
-                    n.onRotate(t, rt);
+                        n.onRotate(t, rt);
                     } else {
-                    n.onResize(t, i, o, r, a)
+                        n.onResize(t, i, o, r, a)
+                        n.onUpdateSize && n.onUpdateSize(t, i, o, r, a)
                     }
                     n.createLineOfPosition(e);
                 },
@@ -2584,7 +2632,9 @@ var hiprint = function (t) {
                                     <input style="flex: 1" type="range" min="100" max="800" class="auto-submit" />
                                 </div>`);
                 this.timestamp = $(`<div class="hiprint-option-item-field" style="display: flex;">
-                                    <div class="hiprint-option-item-label" style="text-align: right;">水印时间</div><input style="width:18px;height:18px;" type="checkbox" placeholder="水印时间" class="auto-submit"></div>`);
+                                    <div class="hiprint-option-item-label" style="text-align: right;">显示时间</div><input style="width:18px;height:18px;" type="checkbox" class="auto-submit"></div>`);
+                this.show = $(`<div class="hiprint-option-item-field" style="display: flex;">
+                                    <div class="hiprint-option-item-label" style="text-align: right;">显示水印</div><input style="width:18px;height:18px;" type="checkbox" class="auto-submit"></div>`);
                 let formatlist = [
                     "YYYY-MM-DD HH:mm:ss",
                     "YYYY-MM-DD HH:mm",
@@ -2609,22 +2659,24 @@ var hiprint = function (t) {
                 this.waterContent.append(this.width);
                 this.waterContent.append(this.height);
                 this.waterContent.append(this.timestamp);
+                this.waterContent.append(this.show);
                 this.waterContent.append(this.format);
 
                 this.target.append(this.waterContent);
                 return this.target;
             }, t.prototype.getValue = function () {
-                let opt = {
+                var opt = {
                     content: this.content.find('input').val(),
                     fillStyle: this.fillStyle.find('input').val() || "rgba(184, 184, 184, 0.3)",
                     fontSize: parseInt(this.fontSize.find('input').val() || "14") + "px",
                     rotate: parseInt(this.rotate.find('input').val() || "25"),
                     width: parseInt(this.width.find('input').val() || "200"),
                     height: parseInt(this.height.find('input').val() || "200"),
+                    show: this.show.find('input').is(':checked'),
                     timestamp: this.timestamp.find('input').is(':checked'),
                     format: this.format.find('select').val() == "" ? "YYYY-MM-DD HH:mm" : this.format.find('select').val()
                 }
-                let options = Object.assign({}, this.options, opt);
+                var options = Object.assign({}, this.options, opt);
                 return options;
             }, t.prototype.setValue = function (t) {
                 this.options = t;
@@ -2636,6 +2688,7 @@ var hiprint = function (t) {
                 this.rotate.find("input").val(t.rotate || 25);
                 this.width.find("input").val(t.width || 200);
                 this.height.find("input").val(t.height || 200);
+                this.show.find("input").attr("checked", t.show == void 0 ? false : t.show);
                 this.timestamp.find("input").attr("checked", t.timestamp == void 0 ? false : t.timestamp);
                 this.format.find("select").val(t.format || "YYYY-MM-DD HH:mm");
             }, t.prototype.destroy = function () {
@@ -3239,6 +3292,26 @@ var hiprint = function (t) {
                     this.target.remove();
             }, t;
         }(),
+        EchartsOption = function () {
+            function t() {
+                this.name = "echartsOption";
+            }
+            return t.prototype.createTarget = function () {
+                return this.target = $(`<div class="hiprint-option-item hiprint-option-item-row vert">
+                    <div class="hiprint-option-item-label">Echarts配置项</div>
+                    <div class="hiprint-option-item-field">
+                        <textarea style="height:200px;resize:vertical" placeholder="${this.placeholder || "function (title, value, options, templateData, target) {\n  return value;\n}"}" class="auto-submit"></textarea>
+                    </div></div>`), this.target;
+            }, t.prototype.getValue = function () {
+                var t = this.target.find("textarea").val();
+                if (t) return t;
+            }, t.prototype.setValue = function (t) {
+                var val = typeof t == "string" ? t : JSON.stringify(t, null, 2);
+                this.target.find("textarea").val(val);
+            }, t.prototype.destroy = function () {
+                this.target.remove();
+            }, t;
+        }(),
         nt = function () {
             function t() {
                 this.name = "backgroundColor";
@@ -3542,7 +3615,7 @@ var hiprint = function (t) {
                 var t = `<div class="hiprint-option-item hiprint-option-item-row vert" >
                     <div class="hiprint-option-item-label" title="formatter">格式化函数</div>
                     <div class="hiprint-option-item-field">
-                        <textarea style="height:80px;resize:vertical" placeholder="${this.placeholder || "function (title, value, options, templateData, target) {\n  return value;\n}"}" class="auto-submit"></textarea>
+                        <textarea style="height:80px;resize:vertical" placeholder="function (title, value, options, templateData, target) {\n  return value;\n}" class="auto-submit"></textarea>
                         <div style="align-self: center;flex-wrap: wrap;">${imgBtnHtml}</div>
                     </div>
                 </div>`;
@@ -3784,7 +3857,7 @@ var hiprint = function (t) {
             t.init(), t.printElementOptionItems[e.name] = e;
         }, t.getItem = function (e) {
             return t.init(), t.printElementOptionItems[e];
-        }, t._printElementOptionItems = [new o(), new r(), new a(), new p(), new i(), new s(), new l(), new pt(), new u(), new d(), new c(), new h(), new f(), new g(), new m(), new v(), new y(), new b(), new E(), new qrCodeLevel(), new T(), new P(), new _(), new w(), new x(), new C(), new imageFit(), new borderRadius(), new O(), new watermarkOptions(), new H(), new D(), new I(), new R(), new M(), new S(), new B(), new F(), new L(), new A(), new z(), new k(), new st(), new N(), new V(), new W(), new j(), new U(), new K(), new G(), new q(), new X(), new Y(), new Q(), new J(), new Z(), new tt(), new et(), new lockWidthHeight(), new DraggableElement(), new ZIndex(), new nt(), new it(), new ot(), new at(), new lt(), new ut(), new dt(), new ct(), new ht(), new ft(), new gt(), new mt(), new rowcolumns(), new vt(), new yt(), new bt(), new Tt(), new Et(), new Pt(), new _t(), new wt(), new xt()], t;
+        }, t._printElementOptionItems = [new o(), new r(), new a(), new p(), new i(), new s(), new l(), new pt(), new u(), new d(), new c(), new h(), new f(), new g(), new m(), new v(), new y(), new b(), new E(), new qrCodeLevel(), new T(), new P(), new _(), new w(), new x(), new C(), new imageFit(), new borderRadius(), new O(), new watermarkOptions(), new H(), new D(), new I(), new R(), new M(), new S(), new B(), new F(), new L(), new A(), new z(), new k(), new st(), new N(), new V(), new W(), new j(), new U(), new K(), new G(), new q(), new X(), new Y(), new Q(), new J(), new Z(), new tt(), new et(), new lockWidthHeight(), new DraggableElement(), new ZIndex(), new EchartsOption(), new nt(), new it(), new ot(), new at(), new lt(), new ut(), new dt(), new ct(), new ht(), new ft(), new gt(), new mt(), new rowcolumns(), new vt(), new yt(), new bt(), new Tt(), new Et(), new Pt(), new _t(), new wt(), new xt()], t;
     }();
 }, function (t, e, n) {
     "use strict";
@@ -5383,7 +5456,7 @@ var hiprint = function (t) {
                         top: 0,
                         left: 0,
                         position: "absolute",
-                        "background-color": "rgba(0,0,0,0.4)",
+                        backgroundColor: "rgba(0,0,0,0.2)",
                         cursor: "move",
                         display: "none"
                     }), e.appendHandler(o, n(this));
@@ -6181,7 +6254,7 @@ var hiprint = function (t) {
             }
 
             return m(e, t), e.prototype.getReizeableShowPoints = function () {
-                return ["s", "e", "se"]; // 图片拖拽点
+                return ["s", "e", "se"];
             }, e.prototype.getData = function (t) {
                 var e = "";
                 t ? e = this.getField() ? t[this.getField()] || "" : this.options.src || this.printElementType.getData() : e = this.options.src || this.printElementType.getData();
@@ -6840,6 +6913,61 @@ var hiprint = function (t) {
                 return this.getHtml2(t, e, n);
             }, e;
         }(f.a),
+        EchartsGraph = function (t) {
+            function e(e, n) {
+                var i = t.call(this, e) || this;
+                return i.options = new R(n), i.options.setDefault(new R(p.a.instance.echarts.default).getPrintElementOptionEntity()), i;
+            }
+
+            return M(e, t), e.prototype.updateDesignViewFromOptions = function () {
+                if (this.designTarget) {
+                    var t = this.getData();
+                    this.css(this.designTarget, t), this.onUpdateSize();
+                }
+            }, e.prototype.getData = function (t) {
+               return t ? t[this.getField()] || "" : this.options.echartsOption || this.options.testData || this.printElementType.getData() || "";
+            }, e.prototype.getConfigOptions = function () {
+                return p.a.instance.echarts;
+            }, e.prototype.createTarget = function (t, e) { 
+                this.tempContainer = $(`<div  class="hiprint-printElement hiprint-printElement-echarts" style="position: absolute;">
+                    <div class="hiprint-printElement-echarts-content" style="width:100%; height:100%; box-shadow:0 0 1px 1px #ddd;"></div>
+                    </div>`);
+                this.tempDom = this.tempContainer.find(".hiprint-printElement-echarts-content")
+                if(!this.chartContainer){
+                    this.chartContainer = this.tempContainer;
+                    this.chartDom = this.tempDom;
+                }
+                var width = hinnn.pt.toPx(this.options.width);
+                var height = hinnn.pt.toPx(this.options.height);
+                this.initChart({width, height});
+                return this.tempContainer;
+            },e.prototype.initChart = function(opt) { 
+                var data = this.getData();
+                var width =  opt.width;
+                var height  = opt.height;
+                i = this.getFormatter();
+                var o = i ? i(this.getData(), this.options, this._currenttemplateData) || data : data;
+                o = typeof o == "string" ? JSON.parse(o) : o;
+                function updateOption(o) {
+                    const hasData = o.series.some(({ data }) => (data || []).length);
+                    if (!hasData) {
+                        var style = { text: "暂无数据", font: "14px Microsoft YaHei", fill: "#969799" };
+                        o.graphic = { elements: [{ type: "text", top: "50%", left: "40%", style: style }] };
+                    }
+                } 
+                updateOption(o);
+                this.chartIns = echarts.init((this.tempDom || this.chartDom)[0], 'light', { renderer: "svg" });
+                this.chartIns.setOption({animation: false, ...o});
+                this.chartIns.resize({ width, height });
+                this.tempDom = null;
+                this.chartContainer = null;
+            },e.prototype.onUpdateSize = function() {
+                var boxWrap = this.chartContainer || this.tempContainer;
+                this.initChart({width:  boxWrap.width(), height: boxWrap.height()});
+            }, e.prototype.getHtml = function (t, e, n) {
+                return this.getHtml2(t, e, n);
+            }, e;
+        }(f.a),
         B = function () {
             var _t10 = function t(e, n) {
                 return (_t10 = Object.setPrototypeOf || _instanceof({
@@ -7006,7 +7134,16 @@ var hiprint = function (t) {
             function t() { }
 
             return t.createPrintElement = function (t, e) {
-                return "text" == t.type ? new D(t, e) : "image" == t.type ? new v(t, e) : "longText" == t.type ? new w(t, e) : "table" == t.type ? new d.a(t, e) : "html" == t.type ? new S(t, e) : "vline" == t.type ? new F(t, e) : "hline" == t.type ? new A(t, e) : "rect" == t.type ? new k(t, e) : "oval" == t.type ? new V(t, e) : void 0;
+                return "text" == t.type ?  new D(t, e) : 
+                        "image" == t.type ? new v(t, e) : 
+                        "longText" == t.type ? new w(t, e) : 
+                        "table" == t.type ? new d.a(t, e) : 
+                        "html" == t.type ? new S(t, e) : 
+                        "echarts" == t.type ? new EchartsGraph(t, e) : 
+                        "vline" == t.type ? new F(t, e) : 
+                        "hline" == t.type ? new A(t, e) : 
+                        "rect" == t.type ? new k(t, e) : 
+                        "oval" == t.type ? new V(t, e) : void 0;
             }, t;
         }(),
         j = function () {
@@ -7517,8 +7654,10 @@ var hiprint = function (t) {
                         var menuConfig = [
                             { name: "清空", key: "clear", icon: "glyphicon-remove" },
                             { name: "删除", key: "delete", icon: "glyphicon-trash" },
+                            { name: "分割线", key: "line1", type: "divider" },
                             { name: "复制", key: "copy", icon: "glyphicon-copy" },
                             { name: "粘贴", key: "paste", icon: "glyphicon-paste" },
+                            { name: "分割线", key: "line2", type: "divider" },
                             { name: "上对齐", key: "top", icon: "glyphicon-arrow-up" },
                             { name: "下对齐", key: "bottom", icon: "glyphicon-arrow-down" },
                             { name: "左对齐", key: "left", icon: "glyphicon-arrow-left" },
@@ -7526,11 +7665,12 @@ var hiprint = function (t) {
                             { name: "水平居中", key: "hCenter", icon: "glyphicon-resize-horizontal" },
                             { name: "垂直居中", key: "vCenter", icon: "glyphicon-resize-vertical" },
                             { name: "水平垂直居中", key: "center", icon: "glyphicon-plus" },
+                            { name: "分割线", key: "line3", type: "divider" },
                             { name: "重置", key: "reset", icon: "glyphicon-repeat" },
                         ];
                         const menuCate = {
                             designPaper: ["clear"],
-                            element: ["delete", "copy", "paste"], 
+                            element: ["delete", "line1", "copy", "paste"], 
                             mouseRect: menuConfig.filter(item => !["clear"].includes(item.key)).map(item => item.key) 
                         };
                         return menuConfig.filter(item => menuCate[type].includes(item.key));
@@ -7547,14 +7687,16 @@ var hiprint = function (t) {
                                                 <span class="glyphicon ${menu.icon}" />
                                                 <span class="ml-5">${menu.name}</span>
                                             </div>`);
+                            if(menu.type == "divider") itemDom = $(`<div class="divider" title="${menu.name}" />`);
                             itemDom.data("menu-data", menu);
                             $menuBox.append(itemDom);
                         });
                         e.target.append($menuBox);
                     }
+                    var sDom = e.target.parent().parent();// 滚动元素
                     var rect = e.target[0].getBoundingClientRect();
-                    var top = ev.clientY - rect.top + 30;
-                    var left = ev.clientX - rect.left + 30;
+                    var top = ev.clientY - rect.top + 30 - sDom.scrollTop();
+                    var left = ev.clientX - rect.left + 30 - sDom.scrollLeft();
                     $menuBox.css({ top, left });
 
                     // 避免超出底部
@@ -7697,7 +7839,7 @@ var hiprint = function (t) {
                 }
             }, t.prototype.bindShortcutKeyEvent = function () {
                 var n = this;
-                $(document).keydown(function (e) {
+                $(document).off("keydown").on("keydown", function (e) { 
                     // ctrl/command + z 撤销 | ctrl/command + shift + z 重做
                     if ((e.ctrlKey || e.metaKey) && e.keyCode == 90) {
                         if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return; 
@@ -8008,7 +8150,7 @@ var hiprint = function (t) {
                   }
                   s.a.instance.draging || 1 === e.buttons && s.a.instance.rectDraging && (t.mouseRect && (t.mouseRect.updateRect(e.pageX, e.pageY, t), t.updateRectPanel(t.mouseRect)));
                 }).on("mousedown", function (e) {
-                    var sDom = t.target.parent().parent();// 记录上次滚动距离
+                    var sDom = t.target.parent().parent();// 记录滚动元素上次滚动距离
                     t.lastScrollTop = sDom.scrollTop(),t.lastScrollLeft = sDom.scrollLeft();
                   s.a.instance.rectDraging = true;
                   if ((e.target.className && _typeof(e.target.className) == "string" && (e.target.className.includes("editing")))) {
@@ -8029,7 +8171,7 @@ var hiprint = function (t) {
                 var e = this,
                   n = this.designPaper.getTarget();
                 var ptr = this.designPaper.scale || 1;
-                this.mouseRect.target || (this.mouseRect.target = $('<div tabindex="1" class="hiprint-mouseRect" style="z-index:999;position: absolute;opacity:0.2;border: 1px dashed #000;background-color:#31676f;"><span></span></div>'), n.find(".hiprint-printPaper-content").append(this.mouseRect.target), this.bingKeyboardMoveEvent(this.mouseRect.target), this.mouseRect.target.hidraggable({
+                this.mouseRect.target || (this.mouseRect.target = $('<div tabindex="1" class="hiprint-mouseRect"><span></span></div>'), n.find(".hiprint-printPaper-content").append(this.mouseRect.target), this.bingKeyboardMoveEvent(this.mouseRect.target), this.mouseRect.target.hidraggable({
                     onDrag: function onDrag(t, n, i) {
                         e.mouseRect.lastLeft = e.mouseRect.lastLeft ? o.a.px.toPt(e.mouseRect.target[0].offsetLeft) : n / ptr, e.mouseRect.lastTop = e.mouseRect.lastTop ? o.a.px.toPt(e.mouseRect.target[0].offsetTop) : i / ptr
                         , (e.mouseRect.mouseRectSelectedElement || []).forEach(function (t) {
@@ -8056,7 +8198,7 @@ var hiprint = function (t) {
                       s.a.instance.changed = !1;
                     }
                 }))
-                var sDom = e.target.parent().parent();// 当前滚动距离
+                var sDom = e.target.parent().parent();// 滚动元素
 				var scrollH = sDom.scrollTop() - e.lastScrollTop;
                 var scrollW = sDom.scrollLeft() - e.lastScrollLeft;
                 const sign = t.ex > t.bx && t.ey > t.by ? 1 : -1;
@@ -8359,16 +8501,13 @@ var hiprint = function (t) {
             }, t.prototype.addPrintPanel = function (t, e) {
                 var s = this;
                 var n = t ? new pt(new rt(t), s) : this.createDefaultPanel();
-                hinnn.event.trigger("hiprintTemplateDataChanged_" + n.templateId, "新增页面");
                 return t && (t.index = this.printPanels.length), e && (this.container.append(n.getTarget()), n.design()), this.printPanels.push(n), e && this.selectPanel(n.index), n;
             }, t.prototype.selectPanel = function (t) {
                 var e = this;
                 this.printPanels.forEach(function (n, i) {
                     t == i ? (n.enable(), e.editingPanel = n) : n.disable();
                 });
-                hinnn.event.trigger("hiprintTemplateDataChanged_" + this.id, "切换页面");
             }, t.prototype.deletePanel = function (t) {
-                hinnn.event.trigger("hiprintTemplateDataChanged_" + this.id, "删除页面");
                 this.printPanels[t].clear(), this.printPanels[t].getTarget().remove(), this.printPanels.splice(t, 1);
             }, t.prototype.getPaneltotal = function () {
                 return this.printPanels.length;
@@ -8414,26 +8553,30 @@ var hiprint = function (t) {
             }, t.prototype.getPrintStyle = function (t) {
                 return this.printPanels[t].getPrintStyle();
             }, t.prototype.print = function (t, e) {
-                t || (t = {}), this.getHtml(t, e).hiwprint();
+                loadedAllImage(this.container[0], () => {
+                    t || (t = {}), this.getHtml(t, e).hiwprint();
+                });
             }, t.prototype.print2 = function (t, e) {
-                if (t || (t = {}), e || (e = {}), this.clientIsOpened()) {
-                    var n = this,
-                        i = 0,
-                        o = {},
-                        r = $("link[media=print]").length > 0 ? $("link[media=print]") : $("link");
-                    r.each(function (a, p) {
-                        var s = new XMLHttpRequest();
-                        s.open("GET", $(p).attr("href")), s.onreadystatechange = function () {
-                            if (4 === s.readyState && 200 === s.status && (o[a + ""] = '<style rel="stylesheet" type="text/css">' + s.responseText + "</style>", ++i == r.length)) {
-                                for (var p = "", l = 0; l < r.length; l++) {
-                                    p += o[l + ""];
+                loadedAllImage(this.container[0], () => {
+                    if (t || (t = {}), e || (e = {}), this.clientIsOpened()) {
+                        var n = this,
+                            i = 0,
+                            o = {},
+                            r = $("link[media=print]").length > 0 ? $("link[media=print]") : $("link");
+                        r.each(function (a, p) {
+                            var s = new XMLHttpRequest();
+                            s.open("GET", $(p).attr("href")), s.onreadystatechange = function () {
+                                if (4 === s.readyState && 200 === s.status && (o[a + ""] = '<style rel="stylesheet" type="text/css">' + s.responseText + "</style>", ++i == r.length)) {
+                                    for (var p = "", l = 0; l < r.length; l++) {
+                                        p += o[l + ""];
+                                    }
+    
+                                    n.sentToClient(p, t, e);
                                 }
-
-                                n.sentToClient(p, t, e);
-                            }
-                        }, s.send();
-                    });
-                } else alert("连接客户端失败");
+                            }, s.send();
+                        });
+                    } else alert("连接客户端失败");
+                });
             }, t.prototype.imageToBase64 = function (t) {
                 var e = $(t).attr("src");
                 if (-1 == e.indexOf("base64")) try {
@@ -8670,12 +8813,12 @@ var hiprint = function (t) {
                         if (t.historyList.length > 50) {
                             t.historyList = t.historyList.slice(0, 1).concat(t.historyList.slice(1, 50));
                         } else {
-                            t.historyPos += 1;
+                            t.historyPos += 1; 
                         }
                         t.onDataChange && t.onDataChange(type, j);
                     }
-
-                    var handerOptions = ["新增", "删除","清空", "元素修改", "调整大小", "新增页面","删除页面", "切换页面", "移动"]
+                    // 包含以下操作需要更新元素列表
+                    var handerOptions = ["新增", "删除","清空", "元素修改", "调整大小", "移动"]
                     if(handerOptions.some(item => type.includes(item))) {
                         renderLayer(type);
                     } 

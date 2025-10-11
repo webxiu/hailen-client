@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-18 18:17:30
  * @LastEditors: Hailen
- * @LastEditTime: 2025-08-29 15:28:27
+ * @LastEditTime: 2025-10-11 17:51:07
  * @Description: 拖拽元素配置
  */
 
@@ -155,6 +155,60 @@ var customElementTypeProvider = (function () {
             type: "html",
             formatter: function (data, options) {
               return '<div style="font-size:16px; color:green">HTML文本</div>';
+            },
+          },
+          {
+            tid: "configModule.echarts",
+            title: "Echarts图表",
+            type: "echarts",
+            options: {
+              width: 300,
+              height: 150,
+              echartsOption: JSON.stringify({
+                title: { text: "柱状图", textStyle: { fontSize: 16 } },
+                grid: { left: "3%", right: "4%", bottom: "3%", containLabel: true },
+                xAxis: { type: "category", data: ["一月", "二月", "三月", "四月"] },
+                yAxis: { type: "value", axisLine: { show: true } },
+                legend: [{ top: "8%" }],
+                tooltip: {
+                  trigger: "item", // item axis
+                  backgroundColor: "rgba(0,0,0,0.6)",
+                  borderColor: "transparent",
+                  textStyle: { color: "#fff" },
+                },
+                toolbox: {
+                  feature: {
+                    magicType: { type: ["line", "bar"], title: { bar: "切换柱状图", line: "切换折线图" } },
+                    dataView: { show: true, title: "数据视图", lang: ["数据视图", "关闭", "刷新"] },
+                    saveAsImage: { title: "下载", show: true, type: "png", pixelRatio: 2 },
+                  },
+                },
+                series: [
+                  {
+                    type: "bar",
+                    name: "服装",
+                    label: { show: true, position: "top" },
+                    data: [
+                      { name: "衬衫", value: 150 },
+                      { name: "羊毛衫", value: 320 },
+                      { name: "雪纺衫", value: 224 },
+                      { name: "裤子", value: 410 },
+                    ],
+                  },
+                  {
+                    type: "line",
+                    name: "水果",
+                    smooth: true,
+                    label: { show: true, position: "top" },
+                    data: [
+                      { name: "苹果", value: 40 },
+                      { name: "菠萝", value: 180 },
+                      { name: "香蕉", value: 460 },
+                      { name: "橘子", value: 126 },
+                    ],
+                  },
+                ],
+              }, null, 2),
             },
           },
         ]),

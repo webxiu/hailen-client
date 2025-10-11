@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-09-25 10:14:03
+ * @LastEditTime: 2025-10-11 11:23:31
  * @Description: 设计JS主文件
  */
 
@@ -85,7 +85,10 @@ var elements = [
   },
   {
     title: "🌳HTML",
-    children: [{ title: "html字符串", tid: "configModule.html", icon: "glyphicon-tree-conifer" }],
+    children: [
+      { title: "HTML字符串", tid: "configModule.html", icon: "glyphicon-tree-conifer" },
+      { title: "Echarts图表", tid: "configModule.echarts", icon: "glyphicon-stats" },
+    ],
   },
 ];
 
@@ -299,31 +302,6 @@ function copyText(text, callback) {
 }
 
 (function (window) {
-  /** 等待所有图片加载 */
-  function loadedAllImage(selector, callback = () => {}) {
-    const imgWrapper = document.querySelector(selector);
-    const images = Array.from(imgWrapper.querySelectorAll("img:not(.h_img):not(.v_img)"));
-    if (images.length === 0) {
-      return callback(), Promise.resolve();
-    }
-    const promises = images.map((img) => {
-      return new Promise((resolve) => {
-        if (img.complete && img.naturalWidth > 0) {
-          resolve();
-        } else {
-          const onLoadOrError = () => {
-            img.removeEventListener("load", onLoadOrError);
-            img.removeEventListener("error", onLoadOrError);
-            resolve();
-          };
-          img.addEventListener("load", onLoadOrError);
-          img.addEventListener("error", onLoadOrError);
-        }
-      });
-    });
-    return Promise.all(promises).then(() => callback());
-  }
-
   window.Design = {
     /** 调整纸张 */
     setPaperSize: function (sizeOrWidth, height) {
@@ -356,9 +334,7 @@ function copyText(text, callback) {
     },
     // 打印
     onPrint: function () {
-      loadedAllImage("#designer", () => {
-        hiprintTemplate.print(printConfig.testData, { isDownload: true, type: "blob" }); // printData
-      });
+      hiprintTemplate.print(printConfig.testData, { isDownload: true, type: "blob" }); // printData
     },
     // 导出PDF
     onExportPdf: function () {
