@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-10-11 11:23:31
+ * @LastEditTime: 2025-10-13 15:50:30
  * @Description: 设计JS主文件
  */
 
@@ -41,7 +41,7 @@ var toolButtons = [
   { name: "网格", action: "onGridLine" },
   { name: "清空", action: "onClear", type: "danger" },
   { name: "重置", action: "onReset", type: "danger" },
-  { name: "PDF", action: "onExportPdf", type: "primary" },
+  { name: "PDF", action: "onExportPdf", type: "primary" }, // echarts绘制svg图表复杂, 导出PDF功能会报错, 其他组件不受影响
   { name: "打印", action: "onPrint", type: "primary" },
   { name: "预览", action: "onPreview", type: "warning" },
   { name: "模板", action: "onTemplate", type: "info" },
@@ -268,37 +268,6 @@ function removeEmpty(data, excludeKeys = []) {
     return result;
   }
   return data;
-}
-
-/** 复制文本 */
-function copyText(text, callback) {
-  if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(text).then(
-      () => callback(),
-      (error) => callback(error)
-    );
-    return;
-  }
-  const textarea = document.createElement("textarea");
-  textarea.value = text;
-  textarea.style.position = "fixed";
-  textarea.style.opacity = 0;
-  textarea.style.top = "-100%";
-  document.body.appendChild(textarea);
-  textarea.focus();
-  textarea.select();
-  try {
-    const success = document.execCommand("copy");
-    if (success) {
-      callback();
-    } else {
-      callback(new Error("复制失败，请手动复制"));
-    }
-  } catch (err) {
-    callback(err);
-  } finally {
-    document.body.removeChild(textarea);
-  }
 }
 
 (function (window) {

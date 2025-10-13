@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-18 18:17:30
  * @LastEditors: Hailen
- * @LastEditTime: 2025-10-11 17:51:07
+ * @LastEditTime: 2025-10-13 16:51:25
  * @Description: 拖拽元素配置
  */
 
@@ -164,7 +164,8 @@ var customElementTypeProvider = (function () {
             options: {
               width: 300,
               height: 150,
-              echartsOption: JSON.stringify({
+              echartsTool: true,
+              echartsOption: $tool.objToString({
                 title: { text: "柱状图", textStyle: { fontSize: 16 } },
                 grid: { left: "3%", right: "4%", bottom: "3%", containLabel: true },
                 xAxis: { type: "category", data: ["一月", "二月", "三月", "四月"] },
@@ -177,6 +178,7 @@ var customElementTypeProvider = (function () {
                   textStyle: { color: "#fff" },
                 },
                 toolbox: {
+                  show: true,
                   feature: {
                     magicType: { type: ["line", "bar"], title: { bar: "切换柱状图", line: "切换折线图" } },
                     dataView: { show: true, title: "数据视图", lang: ["数据视图", "关闭", "刷新"] },
@@ -208,7 +210,7 @@ var customElementTypeProvider = (function () {
                     ],
                   },
                 ],
-              }, null, 2),
+              }),
             },
           },
         ]),

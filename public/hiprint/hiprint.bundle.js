@@ -16,7 +16,7 @@ function _instanceof(left, right) { if (right != null && typeof Symbol !== "unde
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-/** 将Blob转换为DataURL */
+/** Blob转DataURL */
 function _blobToDataURL(blob, callback) {
     const reader = new FileReader();
     reader.onload = () => callback( null, reader.result);
@@ -24,7 +24,7 @@ function _blobToDataURL(blob, callback) {
     reader.readAsDataURL(blob);
 }
 
-/** 获取元素的缩放 */
+/** 获取元素缩放 */
 function _getScale(element) {
     try {
         var style = window.getComputedStyle(element);
@@ -35,6 +35,26 @@ function _getScale(element) {
     } catch (error) {
         return { scaleX: 1, scaleY: 1 };
     }
+}
+
+/** 对象转原始字符串 */
+function objToString(obj, level = 0) {
+    const indent = '  '.repeat(level);
+    const subIndent = '  '.repeat(level + 1);
+    if (typeof obj !== 'object' || obj === null) return JSON.stringify(obj);
+    if (Array.isArray(obj)) {
+        if (obj.length === 0) return '[]';
+        const items = obj.map(item => `${subIndent}${objToString(item, level + 1)}`).join(',\n');
+        return `[\n${items}\n${indent}]`;
+    }
+    if (Object.keys(obj).length === 0) return '{}';
+    const lines = [];
+    for (const key in obj) {
+        const value = obj[key];
+        const valueStr = objToString(value, level + 1);
+        lines.push(`${subIndent}${key}: ${valueStr}`);
+    }
+    return `{\n${lines.join(',\n')}\n${indent}}`;
 }
 
 /** 等待所有图片加载 */
@@ -596,6 +616,7 @@ var hiprint = function (t) {
                         { name: "unShowInPage", hidden: !1 },
                         { name: "fixed", hidden: !1 },
                         { name: "axis", hidden: !1 },
+                        { name: "echartsTool", hidden: !1 },
                         { name: "echartsOption", hidden: !1 },
                         { name: "formatter", hidden: !1 },
                     ],
@@ -3298,7 +3319,9 @@ var hiprint = function (t) {
             }
             return t.prototype.createTarget = function () {
                 return this.target = $(`<div class="hiprint-option-item hiprint-option-item-row vert">
-                    <div class="hiprint-option-item-label">Echarts配置项</div>
+                    <div class="hiprint-option-item-label" style="width:100%; display:flex; justify-content:space-between;">
+                        配置项 <a href="https://echarts.apache.org/examples/zh/index.html#chart-type-bar" target="_blank">查看示例</a>
+                    </div>
                     <div class="hiprint-option-item-field">
                         <textarea style="height:200px;resize:vertical" placeholder="${this.placeholder || "function (title, value, options, templateData, target) {\n  return value;\n}"}" class="auto-submit"></textarea>
                     </div></div>`), this.target;
@@ -3306,8 +3329,34 @@ var hiprint = function (t) {
                 var t = this.target.find("textarea").val();
                 if (t) return t;
             }, t.prototype.setValue = function (t) {
-                var val = typeof t == "string" ? t : JSON.stringify(t, null, 2);
-                this.target.find("textarea").val(val);
+                const code = typeof t === "string" ? t : objToString(t);
+                this.target.find("textarea").val(code);
+            }, t.prototype.destroy = function () {
+                this.target.remove();
+            }, t;
+        }(),
+        EchartsTool = function () {
+            function t() {
+                this.name = "echartsTool";
+            }
+            return t.prototype.css = function (t, e) { 
+                if (t && t.length) { 
+                    t.attr("forbidden", e == false);
+                }
+                return null;
+            }, t.prototype.createTarget = function () {
+                return this.target = $(`<div class="hiprint-option-item">
+                        <div class="hiprint-option-item-label">工具图标</div>
+                    <div class="hiprint-option-item-field">
+                        <label><input type="radio" name="option" value="true" class="auto-submit" style="width:16px;height:16px;vertical-align: text-top">显示</label>
+                        <label><input type="radio" name="option" value="false" class="auto-submit" style="width:16px;height:16px;vertical-align: text-top; margin-left:10px;">隐藏</label>
+                    </div></div>`), this.target;
+            }, t.prototype.getValue = function () {
+                var v = this.target.find('input:checked').val();
+                return { true: !0, false: !1 }[v];
+            }, t.prototype.setValue = function (t) { 
+                if(t == undefined) t = true;
+                this.target.find('input[value="' + String(t) + '"]').prop("checked", true);
             }, t.prototype.destroy = function () {
                 this.target.remove();
             }, t;
@@ -3857,7 +3906,7 @@ var hiprint = function (t) {
             t.init(), t.printElementOptionItems[e.name] = e;
         }, t.getItem = function (e) {
             return t.init(), t.printElementOptionItems[e];
-        }, t._printElementOptionItems = [new o(), new r(), new a(), new p(), new i(), new s(), new l(), new pt(), new u(), new d(), new c(), new h(), new f(), new g(), new m(), new v(), new y(), new b(), new E(), new qrCodeLevel(), new T(), new P(), new _(), new w(), new x(), new C(), new imageFit(), new borderRadius(), new O(), new watermarkOptions(), new H(), new D(), new I(), new R(), new M(), new S(), new B(), new F(), new L(), new A(), new z(), new k(), new st(), new N(), new V(), new W(), new j(), new U(), new K(), new G(), new q(), new X(), new Y(), new Q(), new J(), new Z(), new tt(), new et(), new lockWidthHeight(), new DraggableElement(), new ZIndex(), new EchartsOption(), new nt(), new it(), new ot(), new at(), new lt(), new ut(), new dt(), new ct(), new ht(), new ft(), new gt(), new mt(), new rowcolumns(), new vt(), new yt(), new bt(), new Tt(), new Et(), new Pt(), new _t(), new wt(), new xt()], t;
+        }, t._printElementOptionItems = [new o(), new r(), new a(), new p(), new i(), new s(), new l(), new pt(), new u(), new d(), new c(), new h(), new f(), new g(), new m(), new v(), new y(), new b(), new E(), new qrCodeLevel(), new T(), new P(), new _(), new w(), new x(), new C(), new imageFit(), new borderRadius(), new O(), new watermarkOptions(), new H(), new D(), new I(), new R(), new M(), new S(), new B(), new F(), new L(), new A(), new z(), new k(), new st(), new N(), new V(), new W(), new j(), new U(), new K(), new G(), new q(), new X(), new Y(), new Q(), new J(), new Z(), new tt(), new et(), new lockWidthHeight(), new DraggableElement(), new ZIndex(), new EchartsOption(), new EchartsTool(), new nt(), new it(), new ot(), new at(), new lt(), new ut(), new dt(), new ct(), new ht(), new ft(), new gt(), new mt(), new rowcolumns(), new vt(), new yt(), new bt(), new Tt(), new Et(), new Pt(), new _t(), new wt(), new xt()], t;
     }();
 }, function (t, e, n) {
     "use strict";
@@ -6941,22 +6990,33 @@ var hiprint = function (t) {
                 var height = hinnn.pt.toPx(this.options.height);
                 this.initChart({width, height});
                 return this.tempContainer;
-            },e.prototype.initChart = function(opt) { 
+            },e.prototype.initChart = function(opt) {
+                var self = this
                 var data = this.getData();
                 var width =  opt.width;
                 var height  = opt.height;
                 i = this.getFormatter();
                 var o = i ? i(this.getData(), this.options, this._currenttemplateData) || data : data;
-                o = typeof o == "string" ? JSON.parse(o) : o;
+                try {
+                    o = typeof o == "string" ? eval(`(${o})`) : o;
+                } catch (error) {
+                    o = { series: [] };
+                }
+
                 function updateOption(o) {
                     const hasData = o.series.some(({ data }) => (data || []).length);
                     if (!hasData) {
                         var style = { text: "暂无数据", font: "14px Microsoft YaHei", fill: "#969799" };
-                        o.graphic = { elements: [{ type: "text", top: "50%", left: "40%", style: style }] };
+                        o.graphic = { elements: [{ type: "text", top: "50%", left: "42%", style: style }] };
+                    }
+                    if(self.options.echartsTool !== undefined){
+                        o.toolbox = o.toolbox || {};
+                        o.toolbox.show = self.options.echartsTool === false ? false : true;
                     }
                 } 
                 updateOption(o);
                 this.chartIns = echarts.init((this.tempDom || this.chartDom)[0], 'light', { renderer: "svg" });
+                this.chartIns.clear();
                 this.chartIns.setOption({animation: false, ...o});
                 this.chartIns.resize({ width, height });
                 this.tempDom = null;
@@ -7747,6 +7807,7 @@ var hiprint = function (t) {
                             clear: function ( ) { 
                                 elements.forEach((el) => _e.deletePrintElement(el)) 
                                 ElMessage.success("清空成功");
+                                onClose();
                             },
                             paste: function () {
                                 _e.pasteJson(_e), onClose();

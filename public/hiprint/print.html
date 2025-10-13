@@ -18,6 +18,7 @@
     <script src="./plugins/jquery.minicolors.min.js"></script>
     <script src="./plugins/JsBarcode.all.min.js"></script>
     <script src="./plugins/qrcode.js"></script>
+    <script src="./utils/tool.js"></script>
     <script src="./utils/watermark.js"></script>
     <!-- <script src="./plugins/socket.io.js"></script> -->
     <script src="./hiprint.config.js"></script>
@@ -124,7 +125,13 @@
       <div class="buttons">
         <span v-for="item in toolButtons">
           <span v-if="['widthInput', 'heightInput'].includes(item.action) ">
-            <el-input v-model.number="formData[item.action]" :placeholder="item.action === 'widthInput' ? '宽/mm' : '高/mm'" size="small" class="mb-8 mr-8" style="width: 50px" />
+            <el-input
+              v-model.number="formData[item.action]"
+              :placeholder="item.action === 'widthInput' ? '宽/mm' : '高/mm'"
+              size="small"
+              class="mb-8 mr-8"
+              style="width: 50px"
+            />
           </span>
           <span v-else-if="['scaleInput'].includes(item.action) ">
             <el-popover class="box-item" placement="bottom" width="120px" trigger="hover">
@@ -140,11 +147,28 @@
                   style="width: 50px;"
                 />
               </template>
-              <el-slider v-model="scaleValue" :show-tooltip="false" :step="drawDef.step" :min="drawDef.min" :max="drawDef.max" :debounce="0" size="small" @input="setScale" />
+              <el-slider
+                v-model="scaleValue"
+                :show-tooltip="false"
+                :step="drawDef.step"
+                :min="drawDef.min"
+                :max="drawDef.max"
+                :debounce="0"
+                size="small"
+                @input="setScale"
+              />
               <div class="drag-panel">点击拖拽画布</div>
             </el-popover>
           </span>
-          <el-button v-else size="small" :title="item.title" :type="getType(item)" @click="onOperate(item)" class="mb-8 mr-8" style="margin-left: auto; margin-right: 8px">
+          <el-button
+            v-else
+            size="small"
+            :title="item.title"
+            :type="getType(item)"
+            @click="onOperate(item)"
+            class="mb-8 mr-8"
+            style="margin-left: auto; margin-right: 8px"
+          >
             <template #default="row">
               <span v-if="item.action !== 'more'">{{item.name}}</span>
               <el-dropdown v-else>
@@ -204,7 +228,14 @@
           </el-form-item>
           <div>
             <el-form-item style="width: 100%">
-              <el-input v-model="tplForm.content" type="textarea" style="width: 100%" input-style="height: calc(100vh - 266px)" resize="none" placeholder="暂无数据" />
+              <el-input
+                v-model="tplForm.content"
+                type="textarea"
+                style="width: 100%"
+                input-style="height: calc(100vh - 266px)"
+                resize="none"
+                placeholder="暂无数据"
+              />
             </el-form-item>
           </div>
         </el-form>
@@ -225,6 +256,7 @@
 
       var isPress = false; // 全局变量
       var printConfig = {}; // 重置数据创建时记录一次
+      window.printConfig = printConfig;
       var hiprintTemplate = null;
       const tableRef = ref();
       const active = ref(null);
@@ -285,7 +317,7 @@
                     const { type } = el.printElementType;
                     let value = _testData[field];
                     if (value && type === "image") el.options.src = value;
-                    else if (value && type === "echarts") el.options.echartsOption = value;
+                    else if (value && type === "echarts") el.options.echartsOption = typeof value=="string"? eval(`(${value})`) : $tool.objToString(value);
                     else if (value && field) el.options.testData = value;
                   });
                 });
@@ -337,7 +369,7 @@
                   onDataChange: onDataChange,
                   layerOption: { icons: icons, el: "#ElementLayer" },
                   settingContainer: "#PrintOptionSetting",
-                  paginationContainer: ".PrintPagination"
+                  paginationContainer: ".PrintPagination",
                 });
                 hiprintTemplate.design("#designer"); // 渲染设计器
                 requestAnimationFrame(() => resolve());
@@ -367,7 +399,7 @@
                     width: showLandscape ? defaultPanelHeight : 210,
                     paperNumberDisabled: true,
                     paperNumberFormat: "paperNo-paperCount",
-                    pageBreak: index < _pages.length - 1
+                    pageBreak: index < _pages.length - 1,
                   });
                 }
                 const panel = hiprintTemplate.getPanel(index); // 获取当前页
@@ -400,9 +432,9 @@
               onInitHiPrint,
               onResetDesign,
               onUpdateDesign,
-              onUpdateTemplate
+              onUpdateTemplate,
             };
-          }
+          },
         });
         const app = createApp(App);
         app.use(ElementPlus);

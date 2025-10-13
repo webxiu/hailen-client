@@ -343,6 +343,7 @@
       supportOptions: [
         { name: "field", hidden: !1 },
         { name: "zIndex", hidden: !1 },
+        { name: "transform", hidden: !1 },
         { name: "draggable", hidden: !1 },
         { name: "borderLeft", hidden: !1 },
         { name: "borderTop", hidden: !1 },
@@ -355,6 +356,7 @@
         { name: "unShowInPage", hidden: !1 },
         { name: "fixed", hidden: !1 },
         { name: "axis", hidden: !1 },
+        { name: "echartsTool", hidden: !1 },
         { name: "echartsOption", hidden: !1 },
         { name: "formatter", hidden: !1 },
       ],

@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-09-25 10:11:16
+ * @LastEditTime: 2025-10-13 18:43:54
  * @Description: 布局组件模块
  */
 
@@ -242,8 +242,8 @@ const MyTool = {
       dialogVisible.value = true;
       const jsonData = Design.getJson();
       const template = removeEmpty(jsonData, ["paperNumberLeft", "paperNumberTop"]);
-      const json = JSON.stringify(template, null, 2);
-      const pressJson = JSON.stringify(template);
+      const json = $tool.objToString(template, null, 2);
+      const pressJson = $tool.objToString(template);
 
       // 1.更新压缩状态
       tplForm.content = tplForm.compress ? pressJson : json;
@@ -267,9 +267,9 @@ const MyTool = {
     function onPressCode(press, template) {
       if (!template) template = JSON.parse(tplForm.content);
       if (press) {
-        tplForm.content = JSON.stringify(template);
+        tplForm.content = $tool.objToString(template);
       } else {
-        tplForm.content = JSON.stringify(template, null, 2);
+        tplForm.content = $tool.objToString(template, null, 2);
       }
     }
 
@@ -333,7 +333,7 @@ const MyTool = {
     // 修改
     function onRewirite() {
       try {
-        const template = JSON.parse(tplForm.content);
+        const template = eval(`(${tplForm.content})`); 
         emit("updateDesign", { template });
         ElMessage.success("修改成功");
         dialogVisible.value = false;
@@ -350,7 +350,7 @@ const MyTool = {
       const testData = getPrintData(template);
       const _testData = JSON.stringify(testData, null, 2);
       const result = `testData: ${_testData},\n template: ${content}`;
-      copyText(result, (err) => {
+      $tool.copyText(result, (err) => {
         if (err) return ElMessage.warning("复制失败");
         ElMessage.success("复制成功");
         dialogVisible.value = false;
