@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-10-11 09:39:20
+ * @LastEditTime: 2025-10-14 18:38:19
  * @Description: 初始化模板
  */
 
@@ -62,6 +62,14 @@ var testTemplate = [
         logoName: "https://dlpctest.deogra.com/static/png/titleLogo-d6d96c8f.1751693932184.png",
         longText:
           "浙江在线3月29日讯最近，\n一篇小学五年级学生写的作文引起了钱报记者的关注这篇作文的题目叫做《脏话风波》，讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文《脏话风波》浙江在线3月29日讯最近，一篇小学五年级学生写的作文引起了钱报记者的关注。这篇作文的题目叫做《脏话风波》，讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文《脏话风波》浙江在线3月29日讯最近，一篇小学五年级学生写的作文引起了钱报记者的关注。这篇作文的题目叫做《脏话风波》，讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文《脏话风波》浙江在线3月29日讯最近，一篇小学五年级学生写的作文引起了钱报记者的关注。这篇作文的题目叫做《脏话风波》，讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文《脏话风波》浙江在线3月29日讯最近，一篇小学五年级学生写的作文引起了钱报记者的关注。这篇作文的题目叫做《脏话风波》，讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文",
+        html: `<div class="html">${new Array(10)
+          .fill(0)
+          .map((_, i) => `<div>我是通用型HTML, 通过调整宽高限定范围, 不可分页 - ${i}</div>`)
+          .join("")}</div>`,
+        shtml: `<div class="shtml">${new Array(50)
+          .fill(0)
+          .map((_, i) => `<div>我是增强型HTML, 可限定宽度, 高度根据内容适应, 自动分页 - ${i}</div>`)
+          .join("")}</div>`,
         table: new Array(3).fill(1).map((_, i) => {
           const id = i + 1;
           return {
@@ -281,7 +289,7 @@ var testTemplate = [
                   rowsColumnsMerge: `function(row,colum,rowIndex,colIndex,tableData) {
                     if (rowIndex === 0) {
                       return {
-                        trStyle: { 'background-color': '#85e9d3' },
+                        trStyle: { 'background-color': 'skyblue' },
                         trClass: 'xxx',
                       };
                     }
@@ -289,10 +297,20 @@ var testTemplate = [
                       return {
                         rowspan: 2,
                         colspan: 1,
-                        trStyle: { 'background-color': '#cfc3c3' },
                         tdStyle: { 'background-color': '#31f5a4' },
+                        trStyle: { 'background-color': '#cfc3c3' },
                         trClass: 'xxx',
                         tdClass: 'sss',
+                      };
+                    }
+                    if (rowIndex === 2 && colIndex === 3) {
+                      return {
+                        rowspan: 1,
+                        colspan: 2,
+                        tdStyle: { 'background-color': '#cb90ff' },
+                        trStyle: { 'background-color': '#c9bd51' },
+                        trClass: 'ddd',
+                        tdClass: 'eee',
                       };
                     }
                   }`,
@@ -381,31 +399,35 @@ var testTemplate = [
                 printElementType: { title: "自定义文本", type: "text" },
               },
               {
-                options: { left: 60, top: 507, height: 40, width: 511.5, field: "longText", hideTitle: false },
-                printElementType: { title: "长文", type: "longText" },
+                options: { top: 507, left: 60, width: 510, height: 40, field: "longText", hideTitle: false },
+                printElementType: { title: "长文本", type: "longText" },
               },
-              { options: { left: 475.5, top: 565.5, height: 100, width: 100 }, printElementType: { title: "矩形", type: "rect" } },
+              { options: { top: 565, left: 475, width: 100 }, height: 100, printElementType: { title: "矩形", type: "rect" } },
               {
-                options: { left: 174, top: 568.5, height: 13, width: 90, title: "竖线", textAlign: "center", textType: "text", hideTitle: false },
+                options: { top: 568, left: 174, width: 90, height: 13, title: "竖线", textAlign: "center", textType: "text", hideTitle: false },
                 printElementType: { title: "自定义文本", type: "text" },
               },
-              { options: { left: 60, top: 574.5, height: 100, width: 10 }, printElementType: { title: "竖线", type: "vline" } },
+              { options: { top: 574, left: 60, width: 10 }, height: 100, printElementType: { title: "竖线", type: "vline" } },
               {
-                options: { left: 210, top: 604.5, height: 13, width: 120, title: "横线", textAlign: "center", textType: "text", hideTitle: false },
+                options: { top: 604, left: 210, width: 120, height: 13, title: "横线", textAlign: "center", textType: "text", hideTitle: false },
                 printElementType: { title: "自定义文本", type: "text" },
               },
-              { options: { left: 130.5, top: 625.5, height: 10, width: 277, borderWidth: 0.75 }, printElementType: { title: "横线", type: "hline" } },
+              { options: { top: 625, left: 130, width: 277, height: 10, borderWidth: 0.75 }, printElementType: { title: "横线", type: "hline" } },
               {
-                options: { left: 364.5, top: 649.5, height: 13, width: 101, title: "矩形", textAlign: "center", textType: "text", hideTitle: false },
-                printElementType: { title: "自定义文本", type: "text" },
-              },
-              {
-                options: { left: 525, top: 784.5, height: 13, width: 63, title: "页尾线", textAlign: "center", textType: "text", hideTitle: false },
+                options: { top: 649, left: 364, width: 101, height: 13, title: "矩形", textAlign: "center", textType: "text", hideTitle: false },
                 printElementType: { title: "自定义文本", type: "text" },
               },
               {
-                options: { left: 12, top: 786, height: 49, width: 49, content: '<div style="color:blue">我是HTML</div>' },
-                printElementType: { title: "html", type: "html" },
+                options: { top: 784, left: 525, width: 63, height: 13, title: "页尾线", textAlign: "center", textType: "text", hideTitle: false },
+                printElementType: { title: "自定义文本", type: "text" },
+              },
+              {
+                options: { top: 680, left: 50, width: 310, height: 50, field: "html" },
+                printElementType: { title: "HTML", type: "html" },
+              },
+              {
+                options: { top: 740, left: 50, width: 500, height: 30, field: "shtml" },
+                printElementType: { title: "SHTML", type: "shtml" },
               },
               {
                 options: {
@@ -451,7 +473,7 @@ var testTemplate = [
                   top: 13,
                   height: 27,
                   width: 366,
-                  title: "第二项配置自动开始分页",
+                  title: "第二页 内容重新开始分页",
                   fontSize: 12,
                   fontWeight: "600",
                   textAlign: "center",

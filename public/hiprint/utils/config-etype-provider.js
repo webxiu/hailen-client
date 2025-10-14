@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-18 18:17:30
  * @LastEditors: Hailen
- * @LastEditTime: 2025-10-13 16:51:25
+ * @LastEditTime: 2025-10-14 18:32:56
  * @Description: 拖拽元素配置
  */
 
@@ -26,7 +26,7 @@ var customElementTypeProvider = (function () {
          */
         new hiprint.PrintElementTypeGroup("文本", [
           { tid: "configModule.text", title: "文本", type: "text", options: textOptions },
-          { tid: "configModule.longText", title: "长文本", text: "长文", type: "longText", options: textOptions },
+          { tid: "configModule.longText", title: "长文本", text: "长文本", type: "longText", options: textOptions },
           { tid: "configModule.customText", title: "自定义文本", customText: "自定义文本", type: "text", custom: true, options: textOptions },
         ]),
         new hiprint.PrintElementTypeGroup("图片", [
@@ -147,20 +147,25 @@ var customElementTypeProvider = (function () {
           { tid: "configModule.rect", text: "矩形", type: "rect" },
           { tid: "configModule.oval", text: "椭圆", type: "oval" },
         ]),
-        new hiprint.PrintElementTypeGroup("HTML", [
+        new hiprint.PrintElementTypeGroup("扩展", [
           {
             tid: "configModule.html",
-            title: "html",
-            width: 200,
             type: "html",
+            options: { width: 200, height: 42 },
             formatter: function (data, options) {
-              return '<div style="font-size:16px; color:green">HTML文本</div>';
+              return '<div style="font-size:16px; color:#2196f3">HTML文本渲染, 不可分页</div>';
             },
           },
           {
+            tid: "configModule.shtml",
+            type: "shtml",
+            title: `<div style="font-size:16px; color:blue">增强型HTML, 内容超出自动分页</div>`,
+            options: { width: 500, height: 42 },
+          },
+          {
             tid: "configModule.echarts",
-            title: "Echarts图表",
             type: "echarts",
+            title: "Echarts图表",
             options: {
               width: 300,
               height: 150,

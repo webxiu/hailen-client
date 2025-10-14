@@ -22,6 +22,19 @@ function getTemplate() {
   }
 }
 
+function setPreview(data, s) {
+  sessionStorage.setItem(_Preview, JSON.stringify(data));
+}
+
+function getPreview() {
+  try {
+    const data = sessionStorage.getItem(_Preview);
+    return JSON.parse(data);
+  } catch (e) {
+    return;
+  }
+}
+
 /** 根据模板获取打印数据 */
 function getPrintData(template) {
   const _testData = {};

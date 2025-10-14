@@ -102,8 +102,8 @@
             </template>
             <el-table :data="tableData" row-key="name" @current-change="onCurrentChange" style="width: 100%" size="small" max-height="300" border highlight-current-row empty-text="暂无数据">
               <el-table-column label="模板名称" prop="name" show-overflow-tooltip />
-              <el-table-column label="创建时间" prop="createDate" width="130" />
-              <el-table-column label="操作"  width="70">
+              <el-table-column label="创建时间" prop="createDate" width="140" />
+              <el-table-column label="操作"  width="80">
                 <template #default="{ row }">
                   <el-button type="danger" size="small" @click.stop="onDelete(row)">删除</el-button>
                 </el-table-column>
@@ -256,7 +256,6 @@
 
       var isPress = false; // 全局变量
       var printConfig = {}; // 重置数据创建时记录一次
-      window.printConfig = printConfig;
       var hiprintTemplate = null;
       const tableRef = ref();
       const active = ref(null);
@@ -317,7 +316,8 @@
                     const { type } = el.printElementType;
                     let value = _testData[field];
                     if (value && type === "image") el.options.src = value;
-                    else if (value && type === "echarts") el.options.echartsOption = typeof value=="string"? eval(`(${value})`) : $tool.objToString(value);
+                    else if (value && type === "html") el.options.content = value;
+                    else if (value && type === "echarts") el.options.echartsOption = typeof value == "string" ? eval(`(${value})`) : $tool.objToString(value);
                     else if (value && field) el.options.testData = value;
                   });
                 });

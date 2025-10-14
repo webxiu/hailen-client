@@ -585,7 +585,44 @@ var hiprint = function (t) {
                         { name: "axis", hidden: !1 },
                         { name: "formatter", hidden: !1 },
                     ],
-                    default: { height: 90, width: 90 },
+                    default: { borderWidth: void 0, width: 100, height: 24 },
+                };
+                this.shtml = {
+                    supportOptions: [
+                        { name: "title", hidden: !1, title: "" },
+                        { name: "field", hidden: !1 },
+                        { name: "testData", hidden: !1 },
+                        { name: "draggable", hidden: !1 },
+                        { name: "zIndex", hidden: !1 },
+                        { name: "fontSize", hidden: !1 },
+                        { name: "fontFamily", hidden: !1 },
+                        { name: "fontWeight", hidden: !1 },
+                        { name: "letterSpacing", hidden: !1 },
+                        { name: "textDecoration", hidden: !1 },
+                        { name: "textAlign", hidden: !1 },
+                        { name: "lineHeight", hidden: !1 },
+                        { name: "showInPage", hidden: !1 },
+                        { name: "unShowInPage", hidden: !1 },
+                        { name: "fixed", hidden: !1 },
+                        { name: "axis", hidden: !1 },
+                        { name: "transform", hidden: !1 },
+                        { name: "color", hidden: !1 },
+                        { name: "backgroundColor", hidden: !1 },
+                        { name: "borderColor", hidden: !1 },
+                        { name: "optionsGroup", hidden: !1 },
+                        { name: "borderLeft", hidden: !1 },
+                        { name: "borderTop", hidden: !1 },
+                        { name: "borderRight", hidden: !1 },
+                        { name: "borderBottom", hidden: !1 },
+                        { name: "borderWidth", hidden: !1 },
+                        { name: "contentPaddingLeft", hidden: !1 },
+                        { name: "contentPaddingTop", hidden: !1 },
+                        { name: "contentPaddingRight", hidden: !1 },
+                        { name: "contentPaddingBottom", hidden: !1 },
+                        { name: "formatter", hidden: !1 },
+                        { name: "styler", hidden: !1 },
+                    ],
+                    default: { width: 120, height: 24 },
                 };
                 this.tableColumn = {
                     supportOptions: [
@@ -2024,13 +2061,12 @@ var hiprint = function (t) {
 
                 return null;
             }, t.prototype.createTarget = function () {
-                return this.target = $(' <div class="hiprint-option-item">\n        <div class="hiprint-option-item-label">\n        字间距\n        </div>\n        <div class="hiprint-option-item-field">\n        <select class="auto-submit">\n        <option value="" >默认</option>\n        <option value="0.75" >0.75pt</option>\n        <option value="1.5" >1.5pt</option>\n        <option value="2.25" >2.25pt</option>\n        <option value="3" >3pt</option>\n        <option value="3.75" >3.75pt</option>\n        <option value="4.5" >4.5pt</option>\n        <option value="5.25" >5.25pt</option>\n        <option value="6" >6pt</option>\n        <option value="6.75" >6.75pt</option>\n        <option value="7.5" >7.5pt</option>\n        <option value="8.25" >8.25pt</option>\n        <option value="9" >9pt</option>\n        <option value="9.75" >9.75pt</option>\n        <option value="10.5" >10.5pt</option>\n        <option value="11.25" >11.25pt</option>\n        <option value="12" >12pt</option>\n        </select>\n        </div>\n    </div>'), this.target;
+                return this.target = $(`<div class="hiprint-option-item"><div class="hiprint-option-item-label">字间距</div>  <div class="hiprint-option-item-field"><input type="number" min="0" step="0.5" class="auto-submit" /></div></div>`), this.target;
             }, t.prototype.getValue = function () {
-                var t = this.target.find("select").val();
+                var t = this.target.find("input").val();
                 if (t) return parseFloat(t.toString());
             }, t.prototype.setValue = function (t) {
-                t && (this.target.find('option[value="' + t + '"]').length || this.target.find("select").prepend('<option value="' + t + '" >' + t + "</option>"));
-                this.target.find("select").val(t);
+                this.target.find("input").val(t);
             }, t.prototype.destroy = function () {
                 this.target.remove();
             }, t;
@@ -2420,7 +2456,7 @@ var hiprint = function (t) {
             }
 
             return t.prototype.createTarget = function () {
-                return this.target = $(' <div class="hiprint-option-item">\n        <div class="hiprint-option-item-label">\n        文本修饰\n        </div>\n        <div class="hiprint-option-item-field">\n        <select class="auto-submit">\n        <option value="" >默认</option>\n            <option value="underline" >下划线。</option>\n            <option value="overline" >上划线</option>\n            <option value="line-through" >穿梭线</option>\n           \n        </select>\n        </div>\n    </div>'), this.target;
+                return this.target = $(' <div class="hiprint-option-item">\n        <div class="hiprint-option-item-label">\n        文本修饰\n        </div>\n        <div class="hiprint-option-item-field">\n        <select class="auto-submit">\n        <option value="" >默认</option>\n            <option value="underline" >下划线</option>\n            <option value="overline" >上划线</option>\n            <option value="line-through" >穿梭线</option>\n           \n        </select>\n        </div>\n    </div>'), this.target;
             }, t.prototype.css = function (t, e) {
                 if (t && t.length) {
                     if (e) return t.css("text-decoration", e), "text-decoration:" + e;
@@ -2487,13 +2523,17 @@ var hiprint = function (t) {
                 this.name = "testData";
             }
 
-            return t.prototype.createTarget = function () {
-                return this.target = $(' <div class="hiprint-option-item hiprint-option-item-row">\n        <div class="hiprint-option-item-label">\n        测试数据\n        </div>\n        <div class="hiprint-option-item-field">\n        <input type="text" placeholder="仅字段名称存在时有效" class="auto-submit" >\n        </div>\n    </div>'), this.target;
+            return t.prototype.createTarget = function (t, e, n) {
+                return this.target = $(` <div class="hiprint-option-item hiprint-option-item-row">
+                    <div class="hiprint-option-item-label">测试数据</div>
+                    <div class="hiprint-option-item-field">
+                        <textarea style="resize:vertical;height:auto" rows="${n.type=="shtml"? 5 : 1}" placeholder="仅字段名称存在时有效" class="auto-submit"></textarea>
+                    </div></div>`), this.target;
             }, t.prototype.getValue = function () {
-                var t = this.target.find("input").val();
-                if (t) return t.toString();
+                var t = this.target.find("textarea").val();
+                if (t) return t;
             }, t.prototype.setValue = function (t) {
-                this.target.find("input").val(t);
+                this.target.find("textarea").val(t ? t.toString() : null);
             }, t.prototype.destroy = function () {
                 this.target.remove();
             }, t;
@@ -3124,13 +3164,12 @@ var hiprint = function (t) {
 
                 return null;
             }, t.prototype.createTarget = function () {
-                return this.target = $(' <div class="hiprint-option-item">\n        <div class="hiprint-option-item-label">\n        左内边距\n        </div>\n        <div class="hiprint-option-item-field">\n        <select class="auto-submit">\n        <option value="" >默认</option>\n        <option value="0.75" >0.75pt</option>\n        <option value="1.5" >1.5pt</option>\n        <option value="2.25" >2.25pt</option>\n        <option value="3" >3pt</option>\n        <option value="3.75" >3.75pt</option>\n        <option value="4.5" >4.5pt</option>\n        <option value="5.25" >5.25pt</option>\n        <option value="6" >6pt</option>\n        <option value="6.75" >6.75pt</option>\n        <option value="7.5" >7.5pt</option>\n        <option value="8.25" >8.25pt</option>\n        <option value="9" >9pt</option>\n        <option value="9.75" >9.75pt</option>\n        <option value="10.5" >10.5pt</option>\n        <option value="11.25" >11.25pt</option>\n        <option value="12" >12pt</option>\n        <option value="12.75" >12.75pt</option>\n        <option value="13.5" >13.5pt</option>\n        <option value="14.25" >14.25pt</option>\n        <option value="15" >15pt</option>\n        <option value="15.75" >15.75pt</option>\n        <option value="16.5" >16.5pt</option>\n        <option value="17.25" >17.25pt</option>\n        <option value="18" >18pt</option>\n        <option value="18.75" >18.75pt</option>\n        <option value="19.5" >19.5pt</option>\n        <option value="20.25" >20.25pt</option>\n        <option value="21" >21pt</option>\n        <option value="21.75" >21.75pt</option>\n        </select>\n        </div>\n    </div>'), this.target;
+                return this.target = $(`<div class="hiprint-option-item"><div class="hiprint-option-item-label">左内边距</div>  <div class="hiprint-option-item-field"><input type="number" min="0" step="0.5" class="auto-submit" /></div></div>`), this.target;
             }, t.prototype.getValue = function () {
-                var t = this.target.find("select").val();
+                var t = this.target.find("input").val();
                 if (t) return parseFloat(t.toString());
             }, t.prototype.setValue = function (t) {
-                t && (this.target.find('option[value="' + t + '"]').length || this.target.find("select").prepend('<option value="' + t + '" >' + t + "</option>"));
-                this.target.find("select").val(t);
+                this.target.find("input").val(t);
             }, t.prototype.destroy = function () {
                 this.target.remove();
             }, t;
@@ -3150,13 +3189,12 @@ var hiprint = function (t) {
 
                 return null;
             }, t.prototype.createTarget = function () {
-                return this.target = $(' <div class="hiprint-option-item">\n        <div class="hiprint-option-item-label">\n        上内边距\n        </div>\n        <div class="hiprint-option-item-field">\n        <select>\n        <option value="" >默认</option>\n        <option value="0.75" >0.75pt</option>\n        <option value="1.5" >1.5pt</option>\n        <option value="2.25" >2.25pt</option>\n        <option value="3" >3pt</option>\n        <option value="3.75" >3.75pt</option>\n        <option value="4.5" >4.5pt</option>\n        <option value="5.25" >5.25pt</option>\n        <option value="6" >6pt</option>\n        <option value="6.75" >6.75pt</option>\n        <option value="7.5" >7.5pt</option>\n        <option value="8.25" >8.25pt</option>\n        <option value="9" >9pt</option>\n        <option value="9.75" >9.75pt</option>\n        <option value="10.5" >10.5pt</option>\n        <option value="11.25" >11.25pt</option>\n        <option value="12" >12pt</option>\n        <option value="12.75" >12.75pt</option>\n        <option value="13.5" >13.5pt</option>\n        <option value="14.25" >14.25pt</option>\n        <option value="15" >15pt</option>\n        <option value="15.75" >15.75pt</option>\n        <option value="16.5" >16.5pt</option>\n        <option value="17.25" >17.25pt</option>\n        <option value="18" >18pt</option>\n        <option value="18.75" >18.75pt</option>\n        <option value="19.5" >19.5pt</option>\n        <option value="20.25" >20.25pt</option>\n        <option value="21" >21pt</option>\n        <option value="21.75" >21.75pt</option>\n        </select>\n        </div>\n    </div>'), this.target;
+                return this.target = $(`<div class="hiprint-option-item"><div class="hiprint-option-item-label">上内边距</div>  <div class="hiprint-option-item-field"><input type="number" min="0" step="0.5" class="auto-submit" /></div></div>`), this.target;
             }, t.prototype.getValue = function () {
-                var t = this.target.find("select").val();
+                var t = this.target.find("input").val();
                 if (t) return parseFloat(t.toString());
             }, t.prototype.setValue = function (t) {
-                t && (this.target.find('option[value="' + t + '"]').length || this.target.find("select").prepend('<option value="' + t + '" >' + t + "</option>"));
-                this.target.find("select").val(t);
+                this.target.find("input").val(t);
             }, t.prototype.destroy = function () {
                 this.target.remove();
             }, t;
@@ -3176,13 +3214,12 @@ var hiprint = function (t) {
 
                 return null;
             }, t.prototype.createTarget = function () {
-                return this.target = $(' <div class="hiprint-option-item">\n        <div class="hiprint-option-item-label">\n        右内边距\n        </div>\n        <div class="hiprint-option-item-field">\n        <select>\n        <option value="" >默认</option>\n        <option value="0.75" >0.75pt</option>\n        <option value="1.5" >1.5pt</option>\n        <option value="2.25" >2.25pt</option>\n        <option value="3" >3pt</option>\n        <option value="3.75" >3.75pt</option>\n        <option value="4.5" >4.5pt</option>\n        <option value="5.25" >5.25pt</option>\n        <option value="6" >6pt</option>\n        <option value="6.75" >6.75pt</option>\n        <option value="7.5" >7.5pt</option>\n        <option value="8.25" >8.25pt</option>\n        <option value="9" >9pt</option>\n        <option value="9.75" >9.75pt</option>\n        <option value="10.5" >10.5pt</option>\n        <option value="11.25" >11.25pt</option>\n        <option value="12" >12pt</option>\n        <option value="12.75" >12.75pt</option>\n        <option value="13.5" >13.5pt</option>\n        <option value="14.25" >14.25pt</option>\n        <option value="15" >15pt</option>\n        <option value="15.75" >15.75pt</option>\n        <option value="16.5" >16.5pt</option>\n        <option value="17.25" >17.25pt</option>\n        <option value="18" >18pt</option>\n        <option value="18.75" >18.75pt</option>\n        <option value="19.5" >19.5pt</option>\n        <option value="20.25" >20.25pt</option>\n        <option value="21" >21pt</option>\n        <option value="21.75" >21.75pt</option>\n        </select>\n        </div>\n    </div>'), this.target;
+                return this.target = $(`<div class="hiprint-option-item"><div class="hiprint-option-item-label">右内边距</div>  <div class="hiprint-option-item-field"><input type="number" min="0" step="0.5" class="auto-submit" /></div></div>`), this.target;
             }, t.prototype.getValue = function () {
-                var t = this.target.find("select").val();
+                var t = this.target.find("input").val();
                 if (t) return parseFloat(t.toString());
             }, t.prototype.setValue = function (t) {
-                t && (this.target.find('option[value="' + t + '"]').length || this.target.find("select").prepend('<option value="' + t + '" >' + t + "</option>"));
-                this.target.find("select").val(t);
+                this.target.find("input").val(t);
             }, t.prototype.destroy = function () {
                 this.target.remove();
             }, t;
@@ -3202,13 +3239,12 @@ var hiprint = function (t) {
 
                 return null;
             }, t.prototype.createTarget = function () {
-                return this.target = $(' <div class="hiprint-option-item">\n        <div class="hiprint-option-item-label">\n        下内边距\n        </div>\n        <div class="hiprint-option-item-field">\n        <select>\n        <option value="" >默认</option>\n        <option value="0.75" >0.75pt</option>\n        <option value="1.5" >1.5pt</option>\n        <option value="2.25" >2.25pt</option>\n        <option value="3" >3pt</option>\n        <option value="3.75" >3.75pt</option>\n        <option value="4.5" >4.5pt</option>\n        <option value="5.25" >5.25pt</option>\n        <option value="6" >6pt</option>\n        <option value="6.75" >6.75pt</option>\n        <option value="7.5" >7.5pt</option>\n        <option value="8.25" >8.25pt</option>\n        <option value="9" >9pt</option>\n        <option value="9.75" >9.75pt</option>\n        <option value="10.5" >10.5pt</option>\n        <option value="11.25" >11.25pt</option>\n        <option value="12" >12pt</option>\n        <option value="12.75" >12.75pt</option>\n        <option value="13.5" >13.5pt</option>\n        <option value="14.25" >14.25pt</option>\n        <option value="15" >15pt</option>\n        <option value="15.75" >15.75pt</option>\n        <option value="16.5" >16.5pt</option>\n        <option value="17.25" >17.25pt</option>\n        <option value="18" >18pt</option>\n        <option value="18.75" >18.75pt</option>\n        <option value="19.5" >19.5pt</option>\n        <option value="20.25" >20.25pt</option>\n        <option value="21" >21pt</option>\n        <option value="21.75" >21.75pt</option>\n        </select>\n        </div>\n    </div>'), this.target;
+                return this.target = $(`<div class="hiprint-option-item"><div class="hiprint-option-item-label">下内边距</div>  <div class="hiprint-option-item-field"><input type="number" min="0" step="0.5" class="auto-submit" /></div></div>`), this.target;
             }, t.prototype.getValue = function () {
-                var t = this.target.find("select").val();
+                var t = this.target.find("input").val();
                 if (t) return parseFloat(t.toString());
             }, t.prototype.setValue = function (t) {
-                t && (this.target.find('option[value="' + t + '"]').length || this.target.find("select").prepend('<option value="' + t + '" >' + t + "</option>"));
-                this.target.find("select").val(t);
+                this.target.find("input").val(t);
             }, t.prototype.destroy = function () {
                 this.target.remove();
             }, t;
@@ -6928,13 +6964,155 @@ var hiprint = function (t) {
                 _t9(e, n), e.prototype = null === n ? Object.create(n) : (i.prototype = n.prototype, new i());
             };
         }(),
+        SHtml = function (t) {
+            function e(e, n) {
+                var i = t.call(this, e) || this;
+                return i.options = new b(n), i.options.setDefault(new b(p.a.instance.shtml.default).getPrintElementOptionEntity()), i;
+            }
+            return _(e, t), e.prototype.getDesignTarget = function (e) {
+                var n = t.prototype.getDesignTarget.call(this, e);
+                return n.find(".hiprint-printElement-shtml-content").css("border", "1px dashed #cebcbc"), n;
+            }, e.prototype.getProxyTarget = function (t) {
+                t && this.SetProxyTargetOption(t);
+                var e = this.getData(),
+                    n = this.createTarget(this.printElementType.getText(!0), e);
+                return this.updateTargetSize(n), this.css(n, e), n;
+            }, e.prototype.updateDesignViewFromOptions = function () {
+                if (this.designTarget) {
+                    var t = this.getData(),
+                        e = this.getHtml(this.designPaper)[0].target;
+                    this.designTarget.find(".hiprint-printElement-shtml-content").html(e.find(".hiprint-printElement-shtml-content").html()), this.css(this.designTarget, t);
+                }
+            }, e.prototype.getConfigOptions = function () {
+                return p.a.instance.shtml;
+            }, e.prototype.getTitle = function () {
+                var title = this.options.title;
+                return title == undefined ? this.printElementType.title : title || "";
+            }, e.prototype.getData = function (t) {
+                return t ? t[this.getField()] || "" : this.options.testData || this.printElementType.getData() || "";
+            }, e.prototype.updateTargetText = function (t, e, n) {
+                var i = t.find(".hiprint-printElement-shtml-content"),
+                    o = this.getText(e, n);
+                i.html(o);
+            }, e.prototype.createTarget = function (t, e) {
+                var n = $('<div  class="hiprint-printElement hiprint-printElement-shtml" style="position: absolute;"><div class="hiprint-printElement-shtml-content hiprint-printElement-content" style="height:100%;width:100%"></div></div>');
+                return this.updateTargetText(n, t, e), n;
+            }, e.prototype.getText = function (t, e) {
+                var n = this.getFormatter();
+                e && (e = 0 != this.options.leftSpaceRemoved ? e.toString().replace(/^\s*/, "") : e);
+                return (this.getField() ? (n ? n(t, e, this.options, this._currenttemplateData) : e) : n ? n(t, t, this.options, this._currenttemplateData) : t || "") || "";
+            }, e.prototype.getHtml = function (t, e) {
+                this.setCurrenttemplateData(e), this.createTempContainer();
+                var n = this.getPaperHtmlResult(t, e);
+                return this.removeTempContainer(), n;
+            }, e.prototype.getHeightByData = function (t) {
+                this.createTempContainer();
+                var e = this.getPaperHtmlResult(new T({}, 0, void 0), {}, t);
+                return this.removeTempContainer(), e[0].referenceElement.bottomInLastPaper - e[0].referenceElement.printTopInPaper;
+            }, e.prototype.getPaperHtmlResult = function (t, e, n) {
+                var i = this,
+                    o = [],
+                    r = 0,
+                    a = n || this.getData(e),
+                    p = this.getText(this.getTitle(), a),
+                    s = this.createTarget(this.getTitle(), this.options.testData || "");
+                this.css(s, a), e ? this.updateTargetWidth(s) : this.updateTargetSize(s), this.getTempContainer().html(""), this.getTempContainer().append(s);
+                var l = [],
+                    u = p.split(new RegExp("\r|\n", "g"));
+                if (u.forEach(function (t, e) {
+                    var n = 0 != i.options.leftSpaceRemoved ? (t || "").toString().replace(/^\s*/, "") : t;
+                    l = l.concat(n.split(""));
+                }), 0 == l.length && (l = [""]), this.isHeaderOrFooter() || this.isFixed() || !e) return (f = this.getStringBySpecificHeight(l, 25e3, s)).target.css("left", this.options.displayLeft()), f.target.css("top", this.options.displayTop()), f.target[0].height = "", o.push(new P.a({
+                    target: f.target,
+                    printLine: this.options.displayTop() + f.height,
+                    referenceElement: new E.a({
+                        top: this.options.getTop(),
+                        left: this.options.getLeft(),
+                        height: this.options.getHeight(),
+                        width: this.options.getWidth(),
+                        beginPrintPaperIndex: t.index,
+                        bottomInLastPaper: this.options.getTop() + f.height,
+                        printTopInPaper: this.options.getTop()
+                    })
+                })), o;
+
+                for (var d = this.getBeginPrintTopInPaperByReferenceElement(t); l.length > 0;) {
+                    var c = 0,
+                        h = t.getPaperFooter(r);
+                    0 == r && d > h && (d = d - h + t.paperHeader, o.push(new P.a({
+                        target: void 0,
+                        printLine: void 0
+                    })), r++, c = t.getContentHeight(r) - (d - t.paperHeader), h = t.getPaperFooter(r));
+                    var f = this.getStringBySpecificHeight(l, c > 0 ? c : 0 == r ? h - d : t.getContentHeight(r), s);
+                    l.splice(0, f.length);
+                    var g = void 0,
+                        m = void 0;
+                    f.target.css("left", this.options.displayLeft()), f.target[0].height = "", 0 == r || c > 0 ? (m = d, f.target.css("top", m + "pt"), g = l.length > 0 ? d + f.height : null != this.options.lHeight ? d + (f.height > this.options.lHeight ? f.height : this.options.lHeight) : d + f.height) : (m = t.paperHeader, f.target.css("top", m + "pt"), g = m + f.height), o.push(new P.a({
+                        target: f.target,
+                        printLine: g,
+                        referenceElement: new E.a({
+                            top: this.options.getTop(),
+                            left: this.options.getLeft(),
+                            height: this.options.getHeight(),
+                            width: this.options.getWidth(),
+                            beginPrintPaperIndex: t.index,
+                            bottomInLastPaper: g,
+                            printTopInPaper: m
+                        })
+                    })), r++;
+                }
+                return o;
+            }, e.prototype.getStringBySpecificHeight = function (t, e, n) {
+                var i = o.a.pt.toPx(e),
+                    r = this.IsPaginationIndex(t, t.length - 1, i, n);
+                return r.IsPagination ? r : this.BinarySearch(t, 0, t.length - 1, i, n);
+            }, e.prototype.BinarySearch = function (t, e, n, i, o) {
+                var r = Math.floor((e + n) / 2);
+                if (e > n) return o.find(".hiprint-printElement-shtml-content").html(""), {
+                    IsPagination: !0,
+                    height: 0,
+                    length: 0,
+                    target: o.clone()
+                };
+                var a = this.IsPaginationIndex(t, r, i, o);
+                return a.IsPagination ? a : "l" == a.move ? this.BinarySearch(t, e, r - 1, i, o) : this.BinarySearch(t, r + 1, n, i, o);
+            }, e.prototype.IsPaginationIndex = function (t, e, n, i) {
+                i.find(".hiprint-printElement-shtml-content").html(t.slice(0, e + 2).join(""));
+                var r = i.height();
+                i.find(".hiprint-printElement-shtml-content").html(t.slice(0, e + 1).join(""));
+                var a = i.height();
+                return e >= t.length - 1 && a < n ? {
+                    IsPagination: !0,
+                    height: o.a.px.toPt(a),
+                    length: t.length,
+                    target: i.clone()
+                } : a <= n && r >= n ? {
+                    IsPagination: !0,
+                    height: a,
+                    length: e + 1,
+                    target: i.clone()
+                } : a >= n ? {
+                    IsPagination: !1,
+                    move: "l"
+                } : r <= n ? {
+                    IsPagination: !1,
+                    move: "r"
+                } : {
+                    IsPagination: !0,
+                    result: 1
+                };
+            }, e;
+        }(f.a),
         S = function (t) {
             function e(e, n) {
                 var i = t.call(this, e) || this;
                 return i.options = new R(n), i.options.setDefault(new R(p.a.instance.html.default).getPrintElementOptionEntity()), i;
             }
 
-            return M(e, t), e.prototype.updateDesignViewFromOptions = function () {
+            return M(e, t),e.prototype.getDesignTarget = function (e) {
+                var n = t.prototype.getDesignTarget.call(this, e);
+                return n.find(".hiprint-printElement-html-content").css("border", "1px dashed #cebcbc"), n;
+            }, e.prototype.updateDesignViewFromOptions = function () {
                 if (this.designTarget) {
                     var t = this.getData();
                     this.css(this.designTarget, t), this.updateTargetHtml();
@@ -6949,7 +7127,7 @@ var hiprint = function (t) {
             }, e.prototype.getConfigOptions = function () {
                 return p.a.instance.html;
             }, e.prototype.createTarget = function (t, e) {
-                var n = $('<div  class="hiprint-printElement hiprint-printElement-html" style="position: absolute;"><div class="hiprint-printElement-html-content" style="height:100%;width:100%"></div></div>'),
+                var n = $('<div class="hiprint-printElement hiprint-printElement-html" style="position: absolute;"><div class="hiprint-printElement-html-content" style="height:100%;width:100%;overflow: hidden"></div></div>'),
                     i = this.getFormatter();
 
                 if (i) {
@@ -7198,6 +7376,7 @@ var hiprint = function (t) {
                         "image" == t.type ? new v(t, e) : 
                         "longText" == t.type ? new w(t, e) : 
                         "table" == t.type ? new d.a(t, e) : 
+                        "shtml" == t.type ? new SHtml(t, e) : 
                         "html" == t.type ? new S(t, e) : 
                         "echarts" == t.type ? new EchartsGraph(t, e) : 
                         "vline" == t.type ? new F(t, e) : 
@@ -8914,13 +9093,15 @@ var hiprint = function (t) {
                         var testData = el.options.testData || "";
                         var isDraggable = el.options.draggable == false
                         var draggable = isDraggable ? "disabled glyphicon-minus-sign" : "glyphicon-ok-sign";
-                        var type = el.options.textType || el.printElementType.type;
-                        var title = el.options.title || el.printElementType.title || el.printElementType.text || type || "";
+                        var field = el.options.field || "";
+                        var type = el.options.textType || el.printElementType.type || "";
+                        var title = el.options.title || el.printElementType.title || "";
                         var icon = t.layerOption.icons.find((item) => item.tid.split(".")[1] === type).icon || "";
-                        var content = title + (testData && typeof testData === "string" ? `: ${testData}` : "");
+                        var content = ['html', 'echarts', 'shtml'].includes(type) ? '' : title + (testData && typeof testData === "string" ? `: ${testData}` : "");
                         var itemDom = $(`<div class="layer-item" data-seq="${idx}">
                                             <span class="icon glyphicon ${icon}"></span>
-                                            <span class="field">${el.options.field || ""}</span>
+                                            <span class="type">${type}</span>
+                                            ${field ? `<span class="field">${field}</span>` : ''}
                                             <span class="content" title="${idx + 1 + ". " + content}">${content}</span>
                                             <span class="drag glyphicon ${draggable}" title="${isDraggable ? "锁定" : "未锁定"}"></span>
                                             <span class="option glyphicon glyphicon-certificate" title="属性配置"></span>

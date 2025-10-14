@@ -66,6 +66,8 @@ hiprint-printPanel {
   border: 1px dashed rgba(170, 170, 170, 0.7);
 }
 
+.design .hiprint-printElement-html-content,
+.design .hiprint-printElement-shtml-content,
 .design .hiprint-printElement-table-content,
 .design .hiprint-printElement-longText-content {
   overflow: hidden;
@@ -110,7 +112,7 @@ hiprint-printPanel {
   border: 0.75pt none rgb(0, 0, 0);
   direction: ltr;
   font-family: "SimSun";
-  font-size: 9pt;
+  font-size: 12pt;
   font-style: normal;
   font-weight: normal;
   padding-bottom: 0pt;
@@ -124,6 +126,19 @@ hiprint-printPanel {
   word-wrap: break-word;
   word-break: break-all;
   /*white-space: pre-wrap*/
+}
+
+.hiprint-printElement-html,
+.hiprint-printElement-shtml {
+  background-color: transparent;
+  background-repeat: repeat;
+  border: 0.75pt none rgb(0, 0, 0);
+  direction: ltr;
+  font-size: 12pt;
+  font-family: "SimSun";
+  box-sizing: border-box;
+  word-wrap: break-word;
+  word-break: break-all;
 }
 
 .hiprint-printElement-table {

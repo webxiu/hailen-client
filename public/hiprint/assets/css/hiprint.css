@@ -18,6 +18,12 @@
   --rightMenuBg: #ebebeb;
 }
 
+ul, li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   padding: 15px;
   width: 100vw;
@@ -139,13 +145,13 @@ body {
   align-items: center;
   line-height: 30px;
   padding: 4px 4px 4px 10px;
-  margin-left: -2px;
   color: var(--sliderColor);
   text-decoration: none;
   background: var(--bgColor);
   width: 100%;
   box-sizing: border-box;
   border-radius: 3px;
+  font-size: 14px;
   box-shadow: 0 0px 3px 0px rgba(0, 0, 0, 0.4);
 }
 
@@ -1039,7 +1045,7 @@ font-weight: normal;*/
 }
 
 #ElementLayer.show {
-  width: 220px;
+  width: 245px;
   max-height: 90%;
   background: var(--bgColor);
   border: 1px solid var(--primary);
@@ -1084,7 +1090,7 @@ font-weight: normal;*/
   font-size: 14px;
 }
 .layer-body .layer-item.active {
-  background: #d5daff;
+  background: #c0f8c4;
 }
 .layer-body .layer-item:not(:last-child) {
   box-shadow: 0px 1px 0px 0px #1e80ff81;
@@ -1097,12 +1103,20 @@ font-weight: normal;*/
   text-overflow: ellipsis;
   cursor: pointer;
 }
+.layer-body .layer-item .type {
+  color: #43355d;
+  background: #a6daff;
+  padding: 0 2px;
+  line-height: 15px;
+  border-radius: 2px;
+}
 .layer-body .layer-item .field {
   color: #43355d;
   background: #ffd482;
   padding: 0 2px;
   line-height: 15px;
   border-radius: 2px;
+  margin: 0 2px;
 }
 .layer-body .layer-item .drag {
   margin-left: 2px;
