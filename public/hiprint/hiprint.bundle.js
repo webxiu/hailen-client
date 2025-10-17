@@ -7169,6 +7169,7 @@ var hiprint = function (t) {
                     i = this.getFormatter(),
                     echartsTool = this.options.echartsTool;
                 var chartDom = option.n.find(".hiprint-printElement-echarts-content")[0]
+                if(!chartDom) return
                 var o = i ? i(this.getData(), this.options, this._currenttemplateData) || data : data;
                 try {
                     o = typeof o == "string" ? eval(`(${o})`) : o;
@@ -7193,8 +7194,11 @@ var hiprint = function (t) {
                 chartIns.clear();
                 chartIns.setOption({animation: false, ...o});
                 chartIns.resize({ width: option.width, height: option.height });
-            },e.prototype.onUpdateSize = function(n) {
-                this.initChart({width: n.width(), height: n.height(), n});
+            },e.prototype.onUpdateSize = function(t, h, w) {
+                var n = h ? this.designTarget : t;
+                var width = h ? hinnn.pt.toPx(w) : n.width();
+                var height = h ? hinnn.pt.toPx(h) : n.height(); 
+                this.initChart({width, height, n});
             }, e.prototype.getHtml = function (t, e, n) {
                 return this.getHtml2(t, e, n);
             }, e;

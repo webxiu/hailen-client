@@ -78,15 +78,13 @@
           <el-aside width="15%" class="border-right" style="min-width: 280px; overflow-y: auto">
             <!-- 属性配置 -->
             <div id="PrintOptionSetting">
-              <div class="no-wrap ui-ta-c color-ccc" style="margin-top: 143px;">暂无选中元素</div>
+              <div class="no-wrap ui-ta-c color-ccc" style="margin-top: 143px;">属性配置区域</div>
             </div>
           </el-aside>
           <el-aside class="flex-col printViewArea" :style="{width: designData.livePreview? '30%' : 0, transition: 'width .5s ease-in-out', marginLeft: designData.livePreview ? 0 : '-1px'}">
             <div class="border-bottom prviewTitle">实时预览</div>
             <div class="flex-1 ui-ovy-a m-10">
-              <div class="prevViewDiv" id="printLiveView">
-                <div class="no-wrap ui-ta-c color-ccc" style="margin-top: 100px;">暂无预览内容</div>
-              </div>
+              <div class="prevViewDiv" id="printLiveView"></div>
             </div>
           </el-aside>
         </el-container>
