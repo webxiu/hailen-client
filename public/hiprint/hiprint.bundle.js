@@ -38,23 +38,24 @@ function _getScale(element) {
 }
 
 /** 对象转原始字符串 */
-function objToString(obj, level = 0) {
-    const indent = '  '.repeat(level);
-    const subIndent = '  '.repeat(level + 1);
-    if (typeof obj !== 'object' || obj === null) return JSON.stringify(obj);
+function _objToString(obj, fmt = true, level = 0) {
+    const indent = fmt ? "  ".repeat(level) : "";
+    const subIndent = fmt ? "  ".repeat(level + 1) : "";
+    const breakLine = fmt ? "\n" : "";
+    if (typeof obj !== "object" || obj === null) return JSON.stringify(obj);
     if (Array.isArray(obj)) {
-        if (obj.length === 0) return '[]';
-        const items = obj.map(item => `${subIndent}${objToString(item, level + 1)}`).join(',\n');
-        return `[\n${items}\n${indent}]`;
+        if (obj.length === 0) return "[]";
+        const items = obj.map((item) => `${subIndent}${_objToString(item, fmt, level + 1)}`).join(`,${breakLine}`);
+        return `[${breakLine + items + breakLine + indent}]`;
     }
-    if (Object.keys(obj).length === 0) return '{}';
+    if (Object.keys(obj).length === 0) return "{}";
     const lines = [];
     for (const key in obj) {
         const value = obj[key];
-        const valueStr = objToString(value, level + 1);
+        const valueStr = _objToString(value, fmt, level + 1);
         lines.push(`${subIndent}${key}: ${valueStr}`);
     }
-    return `{\n${lines.join(',\n')}\n${indent}}`;
+    return `{${breakLine + lines.join(`,${breakLine}`)}${breakLine + indent}}`;
 }
 
 /** 等待所有图片加载 */
@@ -529,6 +530,19 @@ var hiprint = function (t) {
                         width: 550,
                     },
                 };
+                this.tableColumn = {
+                    supportOptions: [
+                        { name: "title", hidden: !1 },
+                        { name: "align", hidden: !1 },
+                        { name: "halign", hidden: !1 },
+                        { name: "vAlign", hidden: !1 },
+                        { name: "paddingLeft", hidden: !1 },
+                        { name: "paddingRight", hidden: !1 },
+                        { name: "formatter2", hidden: !1 },
+                        { name: "styler2", hidden: !1 },
+                    ],
+                    default: { height: 90, width: 90 },
+                };
                 this.hline = {
                     supportOptions: [
                         { name: "borderColor", hidden: !1 },
@@ -623,19 +637,6 @@ var hiprint = function (t) {
                         { name: "styler", hidden: !1 },
                     ],
                     default: { width: 120, height: 24 },
-                };
-                this.tableColumn = {
-                    supportOptions: [
-                        { name: "title", hidden: !1 },
-                        { name: "align", hidden: !1 },
-                        { name: "halign", hidden: !1 },
-                        { name: "vAlign", hidden: !1 },
-                        { name: "paddingLeft", hidden: !1 },
-                        { name: "paddingRight", hidden: !1 },
-                        { name: "formatter2", hidden: !1 },
-                        { name: "styler2", hidden: !1 },
-                    ],
-                    default: { height: 90, width: 90 },
                 };
                 this.echarts = {
                     supportOptions: [
@@ -3365,7 +3366,7 @@ var hiprint = function (t) {
                 var t = this.target.find("textarea").val();
                 if (t) return t;
             }, t.prototype.setValue = function (t) {
-                const code = typeof t === "string" ? t : objToString(t);
+                const code = typeof t === "string" ? t : _objToString(t);
                 this.target.find("textarea").val(code);
             }, t.prototype.destroy = function () {
                 this.target.remove();
@@ -7149,31 +7150,25 @@ var hiprint = function (t) {
             return M(e, t), e.prototype.updateDesignViewFromOptions = function () {
                 if (this.designTarget) {
                     var t = this.getData();
-                    this.css(this.designTarget, t), this.onUpdateSize();
+                    this.css(this.designTarget, t), this.onUpdateSize(this.designTarget);
                 }
             }, e.prototype.getData = function (t) {
                return t ? t[this.getField()] || "" : this.options.echartsOption || this.options.testData || this.printElementType.getData() || "";
             }, e.prototype.getConfigOptions = function () {
                 return p.a.instance.echarts;
             }, e.prototype.createTarget = function (t, e) { 
-                this.tempContainer = $(`<div  class="hiprint-printElement hiprint-printElement-echarts" style="position: absolute;">
-                    <div class="hiprint-printElement-echarts-content" style="width:100%; height:100%; box-shadow:0 0 1px 1px #ddd;"></div>
+                var n = $(`<div  class="hiprint-printElement hiprint-printElement-echarts" style="position: absolute;">
+                        <div class="hiprint-printElement-echarts-content" style="width:100%; height:100%; box-shadow:0 0 1px 1px #ddd;"></div>
                     </div>`);
-                this.tempDom = this.tempContainer.find(".hiprint-printElement-echarts-content")
-                if(!this.chartContainer){
-                    this.chartContainer = this.tempContainer;
-                    this.chartDom = this.tempDom;
-                }
                 var width = hinnn.pt.toPx(this.options.width);
                 var height = hinnn.pt.toPx(this.options.height);
-                this.initChart({width, height});
-                return this.tempContainer;
-            },e.prototype.initChart = function(opt) {
-                var self = this
-                var data = this.getData();
-                var width =  opt.width;
-                var height  = opt.height;
-                i = this.getFormatter();
+                this.initChart({width, height, n});
+                return n;
+            },e.prototype.initChart = function(option) {
+                var data = this.getData(),
+                    i = this.getFormatter(),
+                    echartsTool = this.options.echartsTool;
+                var chartDom = option.n.find(".hiprint-printElement-echarts-content")[0]
                 var o = i ? i(this.getData(), this.options, this._currenttemplateData) || data : data;
                 try {
                     o = typeof o == "string" ? eval(`(${o})`) : o;
@@ -7181,27 +7176,25 @@ var hiprint = function (t) {
                     o = { series: [] };
                 }
 
-                function updateOption(o) {
+                function updateEmpty(o) {
                     const hasData = o.series.some(({ data }) => (data || []).length);
                     if (!hasData) {
                         var style = { text: "暂无数据", font: "14px Microsoft YaHei", fill: "#969799" };
                         o.graphic = { elements: [{ type: "text", top: "50%", left: "42%", style: style }] };
                     }
-                    if(self.options.echartsTool !== undefined){
+                    if(echartsTool !== undefined){
                         o.toolbox = o.toolbox || {};
-                        o.toolbox.show = self.options.echartsTool === false ? false : true;
+                        o.toolbox.show = echartsTool === false ? false : true;
                     }
                 } 
-                updateOption(o);
-                this.chartIns = echarts.init((this.tempDom || this.chartDom)[0], 'light', { renderer: "svg" });
-                this.chartIns.clear();
-                this.chartIns.setOption({animation: false, ...o});
-                this.chartIns.resize({ width, height });
-                this.tempDom = null;
-                this.chartContainer = null;
-            },e.prototype.onUpdateSize = function() {
-                var boxWrap = this.chartContainer || this.tempContainer;
-                this.initChart({width:  boxWrap.width(), height: boxWrap.height()});
+                updateEmpty(o);
+
+                var chartIns = echarts.init(chartDom, 'light', { renderer: "svg" });
+                chartIns.clear();
+                chartIns.setOption({animation: false, ...o});
+                chartIns.resize({ width: option.width, height: option.height });
+            },e.prototype.onUpdateSize = function(n) {
+                this.initChart({width: n.width(), height: n.height(), n});
             }, e.prototype.getHtml = function (t, e, n) {
                 return this.getHtml2(t, e, n);
             }, e;
@@ -9094,13 +9087,14 @@ var hiprint = function (t) {
                         var isDraggable = el.options.draggable == false
                         var draggable = isDraggable ? "disabled glyphicon-minus-sign" : "glyphicon-ok-sign";
                         var field = el.options.field || "";
+                        var _title = el.printElementType.title || "";
                         var type = el.options.textType || el.printElementType.type || "";
-                        var title = el.options.title || el.printElementType.title || "";
+                        var title = el.options.title || _title || "";
                         var icon = t.layerOption.icons.find((item) => item.tid.split(".")[1] === type).icon || "";
                         var content = ['html', 'echarts', 'shtml'].includes(type) ? '' : title + (testData && typeof testData === "string" ? `: ${testData}` : "");
                         var itemDom = $(`<div class="layer-item" data-seq="${idx}">
                                             <span class="icon glyphicon ${icon}"></span>
-                                            <span class="type">${type}</span>
+                                            <span class="type">${_title}</span>
                                             ${field ? `<span class="field">${field}</span>` : ''}
                                             <span class="content" title="${idx + 1 + ". " + content}">${content}</span>
                                             <span class="drag glyphicon ${draggable}" title="${isDraggable ? "锁定" : "未锁定"}"></span>

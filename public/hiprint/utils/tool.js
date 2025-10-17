@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-10-13 14:20:08
  * @LastEditors: Hailen
- * @LastEditTime: 2025-10-13 14:30:06
+ * @LastEditTime: 2025-10-17 10:14:21
  * @Description: 全局方法
  */
 
@@ -38,24 +38,30 @@
         document.body.removeChild(textarea);
       }
     },
-    /** 对象转原始字符串 */
-    objToString: function (obj, level = 0) {
-      const indent = "  ".repeat(level);
-      const subIndent = "  ".repeat(level + 1);
+    /**
+     * 对象转原始字符串
+     * @param {*} obj 对象
+     * @param {*} fmt 是否格式化(默认格式化)
+     * @param {*} level 对象层级
+     */
+    objToString: function (obj, fmt = true, level = 0) {
+      const indent = fmt ? "  ".repeat(level) : "";
+      const subIndent = fmt ? "  ".repeat(level + 1) : "";
+      const breakLine = fmt ? "\n" : "";
       if (typeof obj !== "object" || obj === null) return JSON.stringify(obj);
       if (Array.isArray(obj)) {
         if (obj.length === 0) return "[]";
-        const items = obj.map((item) => `${subIndent}${objToString(item, level + 1)}`).join(",\n");
-        return `[\n${items}\n${indent}]`;
+        const items = obj.map((item) => `${subIndent}${$tool.objToString(item, fmt, level + 1)}`).join(`,${breakLine}`);
+        return `[${breakLine + items + breakLine + indent}]`;
       }
       if (Object.keys(obj).length === 0) return "{}";
       const lines = [];
       for (const key in obj) {
         const value = obj[key];
-        const valueStr = objToString(value, level + 1);
+        const valueStr = $tool.objToString(value, fmt, level + 1);
         lines.push(`${subIndent}${key}: ${valueStr}`);
       }
-      return `{\n${lines.join(",\n")}\n${indent}}`;
+      return `{${breakLine + lines.join(`,${breakLine}`)}${breakLine + indent}}`;
     },
     /** 是否iframe加载打开 */
     isIframe: function () {

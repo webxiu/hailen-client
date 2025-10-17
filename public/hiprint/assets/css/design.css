@@ -111,14 +111,19 @@ body {
   border-left: 1px solid var(--borderColor);
 }
 
+.border-bottom {
+  border-bottom: 1px solid var(--borderColor);
+}
+
+.color-ccc {
+  color: #ccc;
+}
 .color-red {
   color: red;
 }
-
 .color-blue {
   color: blue;
 }
-
 .color-f60 {
   color: #f60;
 }
@@ -135,8 +140,17 @@ body {
 .ui-ov-h {
   overflow: hidden;
 }
+
+.ui-ta-c {
+  text-align: center;
+}
+
 .no-select {
   user-select: none;
+}
+
+.no-wrap {
+  white-space: nowrap;
 }
 
 .scale-input .el-input__inner {

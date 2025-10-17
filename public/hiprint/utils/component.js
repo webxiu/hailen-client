@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-10-13 18:43:54
+ * @LastEditTime: 2025-10-17 16:51:57
  * @Description: 布局组件模块
  */
 
@@ -19,19 +19,6 @@ function getTemplate() {
     return JSON.parse(data || "[]");
   } catch (e) {
     return [];
-  }
-}
-
-function setPreview(data, s) {
-  sessionStorage.setItem(_Preview, JSON.stringify(data));
-}
-
-function getPreview() {
-  try {
-    const data = sessionStorage.getItem(_Preview);
-    return JSON.parse(data);
-  } catch (e) {
-    return;
   }
 }
 
@@ -197,7 +184,7 @@ const MyHeader = {
 
 const MyTool = {
   name: "MyTool",
-  emits: ["resetDesign", "updateDesign"],
+  emits: ["resetDesign", "updateDesign", "updateLivePreview"],
   template: genTemplate("toolTemplate"),
   setup(props, { emit }) {
     const isMore = ref(null);
@@ -208,6 +195,7 @@ const MyTool = {
       const { action, type } = item;
       if (action === "onRotate") return designData.landscape ? "success" : "default";
       if (action === "onGridLine") return designData.gridLine ? "success" : "default";
+      if (action === "onLivePreview") return designData.livePreview ? "success" : "default";
       return active.value === action || (isMore.value && action === "more") ? "success" : type;
     }
 
@@ -238,6 +226,11 @@ const MyTool = {
         designData.gridLine = !designData.gridLine;
         return Design.onGridLine(designData.gridLine);
       }
+      // 实时预览
+      if (["onLivePreview"].includes(action)) {
+        designData.livePreview = !designData.livePreview;
+        return emit("updateLiveView", designData.livePreview);
+      }
       if (action === "onReset") return onReset();
       if (action === "onTemplate") return onTemplate();
       // 按钮点击时间
@@ -255,8 +248,8 @@ const MyTool = {
       dialogVisible.value = true;
       const jsonData = Design.getJson();
       const template = removeEmpty(jsonData, ["paperNumberLeft", "paperNumberTop"]);
-      const json = $tool.objToString(template, null, 2);
-      const pressJson = $tool.objToString(template);
+      const json = $tool.objToString(template);
+      const pressJson = $tool.objToString(template, false);
 
       // 1.更新压缩状态
       tplForm.content = tplForm.compress ? pressJson : json;
@@ -278,11 +271,11 @@ const MyTool = {
 
     // 设置到输入框
     function onPressCode(press, template) {
-      if (!template) template = JSON.parse(tplForm.content);
+      if (!template) template = eval(`(${tplForm.content})`);
       if (press) {
-        tplForm.content = $tool.objToString(template);
+        tplForm.content = $tool.objToString(template, false);
       } else {
-        tplForm.content = $tool.objToString(template, null, 2);
+        tplForm.content = $tool.objToString(template);
       }
     }
 
@@ -297,7 +290,7 @@ const MyTool = {
 
     // 设置禁用
     function onDisabled(disabled) {
-      const template = JSON.parse(tplForm.content);
+      const template = eval(`(${tplForm.content})`);
       template.panels.forEach((f) => {
         f.printElements.forEach((el) => {
           if (disabled) {
@@ -326,7 +319,7 @@ const MyTool = {
           content: {
             title: value,
             testData: printConfig.testData,
-            template: JSON.parse(tplForm.content),
+            template: eval(`(${tplForm.content})`),
           },
           createDate: new Date().toLocaleString(),
         };
@@ -346,7 +339,7 @@ const MyTool = {
     // 修改
     function onRewirite() {
       try {
-        const template = eval(`(${tplForm.content})`); 
+        const template = eval(`(${tplForm.content})`);
         emit("updateDesign", { template });
         ElMessage.success("修改成功");
         dialogVisible.value = false;
@@ -359,9 +352,9 @@ const MyTool = {
     // 复制
     function onCopy() {
       const content = tplForm.content || "{}";
-      const template = JSON.parse(content);
+      const template = eval(`(${content})`);
       const testData = getPrintData(template);
-      const _testData = JSON.stringify(testData, null, 2);
+      const _testData = $tool.objToString(testData);
       const result = `testData: ${_testData},\n template: ${content}`;
       $tool.copyText(result, (err) => {
         if (err) return ElMessage.warning("复制失败");

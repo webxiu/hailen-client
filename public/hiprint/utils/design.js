@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-10-14 17:00:04
+ * @LastEditTime: 2025-10-16 17:31:25
  * @Description: 设计JS主文件
  */
 
@@ -39,9 +39,10 @@ var toolButtons = [
   { name: "scaleInput", action: "scaleInput", title: "重置缩放" },
   { name: "旋转", action: "onRotate" },
   { name: "网格", action: "onGridLine" },
+  { name: "实时预览", action: "onLivePreview" },
   { name: "清空", action: "onClear", type: "danger" },
   { name: "重置", action: "onReset", type: "danger" },
-  { name: "PDF", action: "onExportPdf", type: "primary" }, // echarts绘制svg图表复杂, 导出PDF功能会报错, 其他组件不受影响
+  { name: "PDF", action: "onExportPdf", type: "primary" }, // echarts绘制svg图表复杂, 导出PDF功能会报错, 其他组件不受影响, 可使用打印另存为PDF
   { name: "打印", action: "onPrint", type: "primary" },
   { name: "预览", action: "onPreview", type: "warning" },
   { name: "模板", action: "onTemplate", type: "info" },
@@ -296,11 +297,16 @@ function removeEmpty(data, excludeKeys = []) {
         else $(this).removeClass("grid");
       });
     },
+    // 打印预览
     onPreview: function () {
       printVisible.value = true;
       requestAnimationFrame(() => {
-        $(".prevViewDiv").html(hiprintTemplate.getHtml(printConfig.testData)); // printData;
+        $("#printView").html(hiprintTemplate.getHtml(printConfig.testData)); // printData;
       });
+    },
+    // 实时预览
+    onLiveView: function () {
+      $("#printLiveView").html(hiprintTemplate.getHtml(printConfig.testData));
     },
     // 打印
     onPrint: function () {

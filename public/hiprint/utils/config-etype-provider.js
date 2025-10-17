@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-18 18:17:30
  * @LastEditors: Hailen
- * @LastEditTime: 2025-10-14 18:32:56
+ * @LastEditTime: 2025-10-16 14:55:39
  * @Description: 拖拽元素配置
  */
 
@@ -25,16 +25,25 @@ var customElementTypeProvider = (function () {
          * field字段未配置, 也无需配置data字段
          */
         new hiprint.PrintElementTypeGroup("文本", [
-          { tid: "configModule.text", title: "文本", type: "text", options: textOptions },
+          { tid: "configModule.text", title: "文本", text: "文本", type: "text", options: textOptions },
           { tid: "configModule.longText", title: "长文本", text: "长文本", type: "longText", options: textOptions },
-          { tid: "configModule.customText", title: "自定义文本", customText: "自定义文本", type: "text", custom: true, options: textOptions },
+          {
+            tid: "configModule.customText",
+            title: "自定义文本",
+            text: "自定义文本",
+            customText: "自定义文本",
+            type: "text",
+            custom: true,
+            options: textOptions,
+          },
         ]),
         new hiprint.PrintElementTypeGroup("图片", [
           {
             tid: "configModule.image",
-            text: "图片",
-            data: "./assets/image/hi.png",
             type: "image",
+            data: "./assets/image/hi.png",
+            title: "图片",
+            text: "图片",
             options: { width: 80, height: 80, hideTitle: false, src: "./assets/image/hi.png" },
           },
           {
@@ -43,6 +52,7 @@ var customElementTypeProvider = (function () {
             // field: "qrcode", // 配置字段只能加载测试数据, 不配置字段默认显示title, 并支持设计时修改
             data: "123546789",
             type: "text",
+            text: "二维码",
             options: { width: 80, height: 80, textType: "qrcode" },
           },
           {
@@ -51,15 +61,17 @@ var customElementTypeProvider = (function () {
             // field: "barcode",
             data: "1234567890",
             type: "text",
+            text: "条形码",
             options: { width: 140, height: 35, textType: "barcode" },
           },
         ]),
         new hiprint.PrintElementTypeGroup("表格", [
           {
-            title: "表格",
             tid: "configModule.table",
             field: "table",
             type: "table",
+            title: "表格",
+            text: "表格",
             editable: true,
             columnDisplayEditable: true, //列显示是否能编辑
             columnDisplayIndexEditable: true, //列顺序显示是否能编辑
@@ -86,10 +98,11 @@ var customElementTypeProvider = (function () {
             ],
           },
           {
-            title: "表格(多表头)",
             tid: "configModule.tableMulHead",
             field: "tableMulHead",
             type: "table",
+            title: "多头表格",
+            text: "多头表格",
             editable: true,
             columnDisplayEditable: true, //列显示是否能编辑
             columnDisplayIndexEditable: true, //列顺序显示是否能编辑
@@ -117,10 +130,11 @@ var customElementTypeProvider = (function () {
             ],
           },
           {
-            text: "分组表格",
             tid: "configModule.groupTable",
             field: "groupTable",
             type: "table",
+            title: "分组表格",
+            text: "分组表格",
             groupFields: ["name"],
             groupFooterFormatter: function (group, option) {
               return "这里自定义统计脚信息";
@@ -139,36 +153,39 @@ var customElementTypeProvider = (function () {
               ],
             ],
           },
-          { tid: "configModule.tableCustom", title: "表格", type: "tableCustom" },
+          { tid: "configModule.tableCustom", text: "自定义表格", title: "自定义表格", type: "tableCustom" },
         ]),
         new hiprint.PrintElementTypeGroup("辅助", [
-          { tid: "configModule.hline", text: "横线", type: "hline" },
-          { tid: "configModule.vline", text: "竖线", type: "vline" },
-          { tid: "configModule.rect", text: "矩形", type: "rect" },
-          { tid: "configModule.oval", text: "椭圆", type: "oval" },
+          { tid: "configModule.hline", text: "横线", title: "横线", type: "hline" },
+          { tid: "configModule.vline", text: "竖线", title: "竖线", type: "vline" },
+          { tid: "configModule.rect", text: "矩形", title: "矩形", type: "rect" },
+          { tid: "configModule.oval", text: "椭圆", title: "椭圆", type: "oval" },
         ]),
         new hiprint.PrintElementTypeGroup("扩展", [
           {
             tid: "configModule.html",
             type: "html",
-            options: { width: 200, height: 42 },
+            title: "普通HTML",
+            text: "普通HTML",
             formatter: function (data, options) {
-              return '<div style="font-size:16px; color:#2196f3">HTML文本渲染, 不可分页</div>';
+              return '<div style="font-size:16px; color:#2196f3">普通型HTML文本渲染, 不可分页</div>';
             },
           },
           {
             tid: "configModule.shtml",
             type: "shtml",
-            title: `<div style="font-size:16px; color:blue">增强型HTML, 内容超出自动分页</div>`,
-            options: { width: 500, height: 42 },
+            text: "增强SHTML",
+            title: "增强SHTML",
+            formatter: function (data, options) {
+              return `<div style="font-size:16px; color:blue">增强型SHTML, 内容超出自动分页</div>`;
+            },
           },
           {
             tid: "configModule.echarts",
             type: "echarts",
             title: "Echarts图表",
+            text: "Echarts图表",
             options: {
-              width: 300,
-              height: 150,
               echartsTool: true,
               echartsOption: $tool.objToString({
                 title: { text: "柱状图", textStyle: { fontSize: 16 } },
