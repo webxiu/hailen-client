@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-18 18:17:30
  * @LastEditors: Hailen
- * @LastEditTime: 2025-10-16 14:55:39
+ * @LastEditTime: 2025-10-22 11:03:30
  * @Description: 拖拽元素配置
  */
 
@@ -165,10 +165,10 @@ var customElementTypeProvider = (function () {
           {
             tid: "configModule.html",
             type: "html",
-            title: "普通HTML",
-            text: "普通HTML",
+            title: "通用HTML",
+            text: "通用HTML",
             formatter: function (data, options) {
-              return '<div style="font-size:16px; color:#2196f3">普通型HTML文本渲染, 不可分页</div>';
+              return '<div style="font-size:16px; color:#2196f3">通用型HTML文本渲染, 不可分页</div>';
             },
           },
           {
@@ -234,6 +234,27 @@ var customElementTypeProvider = (function () {
                 ],
               }),
             },
+          },
+          {
+            tid: "configModule.canvas",
+            type: "canvas",
+            text: "Canvas画板",
+            title: "Canvas画板",
+            options: {
+              canvasDrawMode: false,
+              canvasOption: $tool.objToString({
+                eraseWidth: 10,
+                lineWidth: 2,
+                lineStyle: "rgba(0, 0, 0)",
+                fillStyle: "rgba(255, 255, 255, 0)",
+              }),
+            },
+          },
+          {
+            tid: "configModule.web",
+            type: "web",
+            title: "Web网页",
+            text: "Web网页",
           },
         ]),
       ]);

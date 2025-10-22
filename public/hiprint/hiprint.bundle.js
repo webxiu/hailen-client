@@ -66,7 +66,7 @@ function loadedAllImage(container, callback = () => {}) {
     }
     const promises = images.map((img) => {
         return new Promise((resolve) => {
-            if (img.complete && img.naturalWidth > 0) {
+            if (img.complete) {
                 resolve();
             } else {
                 const onLoadOrError = () => {
@@ -593,17 +593,21 @@ var hiprint = function (t) {
                 };
                 this.html = {
                     supportOptions: [
+                        { name: "title", hidden: !1 },
+                        { name: "field", hidden: !1 },
                         { name: "showInPage", hidden: !1 },
                         { name: "unShowInPage", hidden: !1 },
                         { name: "fixed", hidden: !1 },
                         { name: "axis", hidden: !1 },
+                        { name: "draggable", hidden: !1 },
+                        { name: "zIndex", hidden: !1 },
                         { name: "formatter", hidden: !1 },
                     ],
-                    default: { borderWidth: void 0, width: 100, height: 24 },
+                    default: { width: 300, height: 42 },
                 };
                 this.shtml = {
                     supportOptions: [
-                        { name: "title", hidden: !1, title: "" },
+                        { name: "title", hidden: !1 },
                         { name: "field", hidden: !1 },
                         { name: "testData", hidden: !1 },
                         { name: "draggable", hidden: !1 },
@@ -636,12 +640,13 @@ var hiprint = function (t) {
                         { name: "formatter", hidden: !1 },
                         { name: "styler", hidden: !1 },
                     ],
-                    default: { width: 120, height: 24 },
+                    default: { width: 500, height: 42 },
                 };
                 this.echarts = {
                     supportOptions: [
                         { name: "field", hidden: !1 },
                         { name: "zIndex", hidden: !1 },
+                        { name: "transform", hidden: !1 },
                         { name: "draggable", hidden: !1 },
                         { name: "borderLeft", hidden: !1 },
                         { name: "borderTop", hidden: !1 },
@@ -658,7 +663,44 @@ var hiprint = function (t) {
                         { name: "echartsOption", hidden: !1 },
                         { name: "formatter", hidden: !1 },
                     ],
-                    default: { height: 300, width: 150 },
+                    default: { width: 300, height: 150 },
+                };
+                this.canvas = {
+                    supportOptions: [
+                        { name: "field", hidden: !1 },
+                        { name: "zIndex", hidden: !1 },
+                        { name: "transform", hidden: !1 },
+                        { name: "draggable", hidden: !1 },
+                        { name: "borderLeft", hidden: !1 },
+                        { name: "borderTop", hidden: !1 },
+                        { name: "borderRight", hidden: !1 },
+                        { name: "borderBottom", hidden: !1 },
+                        { name: "borderWidth", hidden: !1 },
+                        { name: "borderColor", hidden: !1 },
+                        { name: "backgroundColor", hidden: !1 },
+                        { name: "showInPage", hidden: !1 },
+                        { name: "unShowInPage", hidden: !1 },
+                        { name: "fixed", hidden: !1 },
+                        { name: "axis", hidden: !1 },
+                        { name: "canvasDrawMode", hidden: !1 },
+                        { name: "canvasOption", hidden: !1 },
+                        { name: "formatter", hidden: !1 },
+                    ],
+                    default: { width: 300, height: 150 },
+                };
+                this.web = {
+                    supportOptions: [
+                        { name: "title", hidden: !1 },
+                        { name: "field", hidden: !1 },
+                        { name: "showInPage", hidden: !1 },
+                        { name: "unShowInPage", hidden: !1 },
+                        { name: "fixed", hidden: !1 },
+                        { name: "axis", hidden: !1 },
+                        { name: "draggable", hidden: !1 },
+                        { name: "zIndex", hidden: !1 },
+                        { name: "formatter", hidden: !1 },
+                    ],
+                    default: { width: 300, height: 300 },
                 };
             }
 
@@ -1159,7 +1201,7 @@ var hiprint = function (t) {
                     printLine: void 0
                 })), r = t.paperHeader, i++, a = t.getPaperFooter(i)));
                 var p = this.getData(e),
-                    s = this.createTarget(this.getTitle(), p);
+                    s = this.createTarget(this.getTitle(), p, n);
                 return this.updateTargetSize(s), this.css(s, p), s.css("position", "absolute"), s.css("left", this.options.displayLeft()), s.css("top", r + "pt"), o.push(new _dto_PaperHtmlResult__WEBPACK_IMPORTED_MODULE_3__.a({
                     target: s,
                     printLine: r + this.options.getHeight(),
@@ -3398,6 +3440,123 @@ var hiprint = function (t) {
                 this.target.remove();
             }, t;
         }(),
+        CanvasOption = function () {
+            function t() {
+                this.name = "canvasOption";
+            }
+            return t.prototype.createTarget = function (t, e, n) {
+                this.target = $(`<div class="hiprint-option-item hiprint-option-item-row vert"><div class="hiprint-option-item-label">参数配置</div></div>`);
+                this.canvasDom = $(`<div></div>`);
+                this.lineStyle = $(`<div class="hiprint-option-item-field" style="display: flex;">
+                                    <div class="hiprint-option-item-label" style="text-align: right;">画笔颜色</div>
+                                    <input style="flex: 1" data-format="rgb" data-opacity="0.3" type="text" class="auto-submit" />
+                                </div>`);
+                this.fillStyle = $(`<div class="hiprint-option-item-field" style="display: flex;">
+                                    <div class="hiprint-option-item-label" style="text-align: right;">背景颜色</div>
+                                    <input style="flex: 1" data-format="rgb" data-opacity="0.3" type="text" class="auto-submit" />
+                                </div>`);
+                this.lineWidth = $(`<div class="hiprint-option-item-field" style="display: flex;">
+                                    <div class="hiprint-option-item-label" style="text-align: right;">画笔大小</div>
+                                    <input style="flex: 1" type="range" min="1" max="20" class="auto-submit" />
+                                </div>`);
+                this.eraseWidth = $(`<div class="hiprint-option-item-field" style="display: flex;">
+                                    <div class="hiprint-option-item-label" style="text-align: right;">橡皮大小</div>
+                                    <input style="flex: 1" type="range" min="1" max="20" class="auto-submit" />
+                                    <button class="hiprint-option-item-settingBtn" data-type="erase" style="padding: 0px 6px; margin: 0 0 0 15px; background: #2196F3" title="擦除完成再点击恢复">擦除</button>
+                                </div>`);
+                this.operation = $(`<div class="hiprint-option-item-field" style="display: flex;">
+                                    <div class="hiprint-option-item-label" style="text-align: right;">画布操作</div>
+                                    <div style="flex:1;display:flex;justify-content: space-between">
+                                        <button class="hiprint-option-item-settingBtn" data-type="revoke" style="padding: 0 6px; margin: 0 2px; background: #f7843c">撤销</button>
+                                        <button class="hiprint-option-item-settingBtn" data-type="recover" style="padding: 0 6px; margin: 0 2px;background: #67c23a">恢复</button>
+                                        <button class="hiprint-option-item-settingBtn" data-type="clear" style="padding: 0 6px; margin: 0 2px; background: #ff0000">清空</button>
+                                        <button class="hiprint-option-item-settingBtn" data-type="download" style="padding: 0 6px; margin: 0;">下载</button>
+                                    </div>
+                                </div>`);
+                this.textLeft = $(`<div class="hiprint-option-item-field" style="display: flex;margin-top: 5px">
+                                    <div class="hiprint-option-item-label" style="text-align: right;">左边距</div>
+                                    <input type="number" min="0" step="0.5" class="auto-submit" />
+                                </div>`);
+                this.textTop = $(`<div class="hiprint-option-item-field" style="display: flex;margin-top: 5px">
+                                    <div class="hiprint-option-item-label" style="text-align: right;">顶边距</div>
+                                    <input type="number" min="0" step="0.5" class="auto-submit" />
+                                </div>`);
+                this.textSize = $(`<div class="hiprint-option-item-field" style="display: flex;margin-top: 5px">
+                                    <div class="hiprint-option-item-label" style="text-align: right;">文本大小</div>
+                                    <input type="number" min="6" step="0.5" class="auto-submit" />
+                                </div>`);
+                this.canvasDom.append(this.lineStyle);
+                this.canvasDom.append(this.fillStyle);
+                this.canvasDom.append(this.lineWidth);
+                this.canvasDom.append(this.eraseWidth);
+                this.canvasDom.append(this.operation);
+                this.canvasDom.append(this.textLeft);
+                this.canvasDom.append(this.textTop);
+                this.canvasDom.append(this.textSize);
+                this.target.append(this.canvasDom);
+
+                this.canvasDom.on("click", "button", function (ev) {
+                    var type = $(ev.target).attr("data-type");
+                    if(type=="erase"){
+                        var text = $(ev.target).html()
+                        $(ev.target).html(text=="擦除"?"画图":"擦除")
+                    }
+                    t.onUpdateParam(type)
+                })
+                return this.target;
+            }, t.prototype.getValue = function () {
+                var opt = {
+                    lineStyle: this.lineStyle.find('input').val(),
+                    fillStyle: this.fillStyle.find('input').val(),
+                    lineWidth: parseInt(this.lineWidth.find('input').val()),
+                    eraseWidth: parseInt(this.eraseWidth.find('input').val()),
+                    textLeft: parseInt(this.textLeft.find('input').val()),
+                    textTop: parseInt(this.textTop.find('input').val()),
+                    textSize: parseInt(this.textSize.find('input').val())
+                }
+                var options = Object.assign({}, this.options, opt);
+                return _objToString(options);
+            }, t.prototype.setValue = function (t) {
+                var t = typeof t === "string" ? eval(`(${t})`) : t;
+                this.lineStyle.find("input").val(t.lineStyle);
+                this.fillStyle.find("input").val(t.fillStyle);
+                this.fillStyle.find("input").minicolors({ format: "rgb", opacity: true, theme: "bootstrap" });
+                this.lineStyle.find("input").minicolors({ format: "rgb", opacity: true, theme: "bootstrap" });
+                this.lineWidth.find("input").val(t.lineWidth);
+                this.eraseWidth.find("input").val(t.eraseWidth);
+                this.textLeft.find("input").val(t.textLeft);
+                this.textTop.find("input").val(t.textTop);
+                this.textSize.find("input").val(t.textSize);
+            }, t.prototype.destroy = function () {
+                this.target.remove();
+            }, t;
+        }(),
+        CanvasDrawMode = function () {
+            function t() {
+                this.name = "canvasDrawMode";
+            }
+            return t.prototype.css = function (t, e) { 
+                if (t && t.length) { 
+                    t.attr("forbidden", e == false);
+                }
+                return null;
+            }, t.prototype.createTarget = function () {
+                return this.target = $(`<div class="hiprint-option-item">
+                        <div class="hiprint-option-item-label" title="按Ctrl键切换画图">操作模式</div>
+                    <div class="hiprint-option-item-field">
+                        <label><input type="radio" name="option" value="true" class="auto-submit" style="width:16px;height:16px;vertical-align: text-top">画图</label>
+                        <label><input type="radio" name="option" value="false" class="auto-submit" style="width:16px;height:16px;vertical-align: text-top; margin-left:10px;">拖拽</label>
+                    </div></div>`), this.target;
+            }, t.prototype.getValue = function () {
+                var v = this.target.find('input:checked').val();
+                return { true: !0, false: !1 }[v];
+            }, t.prototype.setValue = function (t) { 
+                if(t == undefined) t = false;
+                this.target.find('input[value="' + String(t) + '"]').prop("checked", true);
+            }, t.prototype.destroy = function () {
+                this.target.remove();
+            }, t;
+        }(),
         nt = function () {
             function t() {
                 this.name = "backgroundColor";
@@ -3943,7 +4102,7 @@ var hiprint = function (t) {
             t.init(), t.printElementOptionItems[e.name] = e;
         }, t.getItem = function (e) {
             return t.init(), t.printElementOptionItems[e];
-        }, t._printElementOptionItems = [new o(), new r(), new a(), new p(), new i(), new s(), new l(), new pt(), new u(), new d(), new c(), new h(), new f(), new g(), new m(), new v(), new y(), new b(), new E(), new qrCodeLevel(), new T(), new P(), new _(), new w(), new x(), new C(), new imageFit(), new borderRadius(), new O(), new watermarkOptions(), new H(), new D(), new I(), new R(), new M(), new S(), new B(), new F(), new L(), new A(), new z(), new k(), new st(), new N(), new V(), new W(), new j(), new U(), new K(), new G(), new q(), new X(), new Y(), new Q(), new J(), new Z(), new tt(), new et(), new lockWidthHeight(), new DraggableElement(), new ZIndex(), new EchartsOption(), new EchartsTool(), new nt(), new it(), new ot(), new at(), new lt(), new ut(), new dt(), new ct(), new ht(), new ft(), new gt(), new mt(), new rowcolumns(), new vt(), new yt(), new bt(), new Tt(), new Et(), new Pt(), new _t(), new wt(), new xt()], t;
+        }, t._printElementOptionItems = [new o(), new r(), new a(), new p(), new i(), new s(), new l(), new pt(), new u(), new d(), new c(), new h(), new f(), new g(), new m(), new v(), new y(), new b(), new E(), new qrCodeLevel(), new T(), new P(), new _(), new w(), new x(), new C(), new imageFit(), new borderRadius(), new O(), new watermarkOptions(), new H(), new D(), new I(), new R(), new M(), new S(), new B(), new F(), new L(), new A(), new z(), new k(), new st(), new N(), new V(), new W(), new j(), new U(), new K(), new G(), new q(), new X(), new Y(), new Q(), new J(), new Z(), new tt(), new et(), new lockWidthHeight(), new DraggableElement(), new ZIndex(), new EchartsOption(), new EchartsTool(), new CanvasOption(), new CanvasDrawMode(), new nt(), new it(), new ot(), new at(), new lt(), new ut(), new dt(), new ct(), new ht(), new ft(), new gt(), new mt(), new rowcolumns(), new vt(), new yt(), new bt(), new Tt(), new Et(), new Pt(), new _t(), new wt(), new xt()], t;
     }();
 }, function (t, e, n) {
     "use strict";
@@ -5653,10 +5812,10 @@ var hiprint = function (t) {
                 // 处理按住 ctrl / command 点击元素 多选
                 if (!(n.ctrlKey || n.metaKey)) {
                     t.siblings().children("div[panelindex]").removeClass('selected')
-                    t.siblings().children("div[panelindex]").css({
-                        display: "none"
-                    })
+                    t.siblings().children("div[panelindex]").css({display: "none"})
                 }
+                // 给选中的外层元素(t)添加类名标识
+                t.addClass('selected'),t.siblings().removeClass('selected');
                 t.children("div[panelindex]").addClass('selected')
                 t.children("div[panelindex]").css({ display: "block" });
                 this.refreshSizeBox(t)
@@ -7156,19 +7315,29 @@ var hiprint = function (t) {
                return t ? t[this.getField()] || "" : this.options.echartsOption || this.options.testData || this.printElementType.getData() || "";
             }, e.prototype.getConfigOptions = function () {
                 return p.a.instance.echarts;
-            }, e.prototype.createTarget = function (t, e) { 
+            }, e.prototype.createTarget = function (t, e, isPrint) { 
                 var n = $(`<div  class="hiprint-printElement hiprint-printElement-echarts" style="position: absolute;">
-                        <div class="hiprint-printElement-echarts-content" style="width:100%; height:100%; box-shadow:0 0 1px 1px #ddd;"></div>
+                        <div class="hiprint-printElement-echarts-content" style="width:100%; height:100%;overflow: hidden;box-shadow:0 0 1px 1px #ddd;">
+                            <div class="hailen-canvas"></div>
+                            <img class="hailen-img" style="width:100%;height:100%" />
+                        </div>
                     </div>`);
-                var width = hinnn.pt.toPx(this.options.width);
-                var height = hinnn.pt.toPx(this.options.height);
-                this.initChart({width, height, n});
+                    
+                if (isPrint == "printing") { // 为打印时切换为图片
+                    var imgUrl = this.designTarget.find("canvas")[0].toDataURL("image/png");
+                    n.find("canvas").css({display: "none"});
+                    n.find("img").attr("src", imgUrl);
+                }else{
+                    var width = hinnn.pt.toPx(this.options.width);
+                    var height = hinnn.pt.toPx(this.options.height);
+                    this.initChart({width, height, n});
+                }
                 return n;
             },e.prototype.initChart = function(option) {
                 var data = this.getData(),
                     i = this.getFormatter(),
                     echartsTool = this.options.echartsTool;
-                var chartDom = option.n.find(".hiprint-printElement-echarts-content")[0]
+                var chartDom = option.n.find(".hailen-canvas")[0]
                 if(!chartDom) return
                 var o = i ? i(this.getData(), this.options, this._currenttemplateData) || data : data;
                 try {
@@ -7190,15 +7359,124 @@ var hiprint = function (t) {
                 } 
                 updateEmpty(o);
 
-                var chartIns = echarts.init(chartDom, 'light', { renderer: "svg" });
+                var chartIns = echarts.init(chartDom, 'light', { renderer: "canvas" });
                 chartIns.clear();
                 chartIns.setOption({animation: false, ...o});
                 chartIns.resize({ width: option.width, height: option.height });
             },e.prototype.onUpdateSize = function(t, h, w) {
                 var n = h ? this.designTarget : t;
+                n.find("canvas").css({display: "block"});
+                n.find("img").css({display: "none"}).attr("src", n.find("canvas")[0].toDataURL("image/png"));
                 var width = h ? hinnn.pt.toPx(w) : n.width();
                 var height = h ? hinnn.pt.toPx(h) : n.height(); 
                 this.initChart({width, height, n});
+            }, e.prototype.getHtml = function (t, e, n) {
+                return this.getHtml2(t, e, n);
+            }, e;
+        }(f.a),
+        CanvasContext = function (t) {
+            function e(e, n) {
+                var i = t.call(this, e) || this;
+                return i.options = new R(n), i.options.setDefault(new R(p.a.instance.canvas.default).getPrintElementOptionEntity()), i;
+            }
+
+            return M(e, t),e.prototype.getDesignTarget = function (e) {
+                var n = t.prototype.getDesignTarget.call(this, e);
+                return n.find(".hiprint-printElement-canvas-content").css("border", "1px dashed #cebcbc"), n;
+            }, e.prototype.updateDesignViewFromOptions = function () {
+                if (this.designTarget) {
+                    var t = this.getData();
+                    if (this.getFormatter()) this.onUpdateText();
+                    this.css(this.designTarget, t), this.onUpdateSize(this.designTarget);
+                }
+            }, e.prototype.getData = function (t) {
+                var i = this.getFormatter();
+                var data = t ? t[this.getField()] || "" : this.options.title || this.options.testData || this.printElementType.getData() || "";
+               return i ? i(data, this.options, this._currenttemplateData) || data : data
+            }, e.prototype.getOption = function (t) {
+                var config = this.options.canvasOption;
+                var canvasDrawMode = this.options.canvasDrawMode
+                var options = typeof config == "string" ? eval(`(${config})`) : config;
+               return { canvasDrawMode, ...options};
+            }, e.prototype.getConfigOptions = function () {
+                return p.a.instance.canvas;
+            }, e.prototype.createTarget = function (t, e, isPrint) {
+                var n = $(`<div class="hiprint-printElement hiprint-printElement-canvas" style="position: absolute;">
+                        <div class="hiprint-printElement-canvas-content" style="height:100%;width:100%;overflow: hidden;box-shadow:0 0 1px 1px #ddd;">
+                            <canvas class="hailen-canvas" style="width:100%;height:100%"></canvas>
+                            <img class="hailen-img" style="width:100%;height:100%" />
+                        </div>
+                    </div>`),
+                    i = this.getFormatter();
+                var text = this.getData();
+                var width = hinnn.pt.toPx(this.options.width);
+                var height = hinnn.pt.toPx(this.options.height);
+                if (isPrint == "printing") { // 为打印时切换为图片
+                    var imgUrl = this.designTarget.find("canvas")[0].toDataURL("image/png");
+                    n.find("canvas").css({display: "none"});
+                    n.find("img").attr("src", imgUrl);
+                }else{
+                    this.initCanvas({width, height, text, n});
+                }
+                return n;
+            }, e.prototype.initCanvas = function(option) {
+                var {width, height, n} = option;
+                n.find(".hailen-canvas").css({width, height});
+                this.canvasIns = new $tool.drawCanvas(n.find(".hailen-canvas")[0], {n: n, ...this.getOption(), ...option});
+            }, e.prototype.onUpdateText = function(t, h, w) {
+                var text = this.getData();
+                this.canvasIns.setText({text: text, ...this.getOption()})
+            }, e.prototype.onUpdateSize = function(t, h, w) {
+                var n = h ? this.designTarget : t;
+                n.find("canvas").css({display: "block"});
+                n.find("img").css({display: "none"}).attr("src", n.find("canvas")[0].toDataURL("image/png"));
+                var width = h ? hinnn.pt.toPx(w) : n.width();
+                var height = h ? hinnn.pt.toPx(h) : n.height();
+                this.canvasIns.updateOption({n: n, width, height, ...this.getOption()});
+            }, e.prototype.onUpdateParam = function(type) {
+                this.canvasIns.onRestore(type);
+            }, e.prototype.getHtml = function (t, e, n) {
+                return this.getHtml2(t, e, n);
+            }, e;
+        }(f.a),
+        Web = function (t) {
+            function e(e, n) {
+                var i = t.call(this, e) || this;
+                return i.options = new R(n), i.options.setDefault(new R(p.a.instance.web.default).getPrintElementOptionEntity()), i;
+            }
+
+            return M(e, t),e.prototype.getDesignTarget = function (e) {
+                var n = t.prototype.getDesignTarget.call(this, e);
+                return n.find(".hiprint-printElement-web-content").css("border", "1px dashed #cebcbc"), n;
+            }, e.prototype.updateDesignViewFromOptions = function () {
+                if (this.designTarget) {
+                    var t = this.getData();
+                    this.css(this.designTarget, t), this.updateTargetHtml();
+                }
+            }, e.prototype.updateTargetHtml = function () {
+                var t = this.getFormatter();
+
+                if (t) {
+                    var e = t(this.getData(), this.options, this._currenttemplateData);
+                    this.designTarget.find(".hiprint-printElement-web-content").html(e);
+                }
+            }, e.prototype.getConfigOptions = function () {
+                return p.a.instance.web;
+            }, e.prototype.createTarget = function (t, e) {
+                var n = $(`<div class="hiprint-printElement hiprint-printElement-web" style="position: absolute;">
+                        <div class="hiprint-printElement-web-content" style="height:100%;width:100%;overflow: hidden;position:relative">
+                            <iframe width="100%" height="100%" style="pointer-events:none" src="https://www.ruanyifeng.com/blog/2019/03/grid-layout-tutorial.html" style="position:absolute"></iframe>
+                        </div></div>`),
+                    i = this.getFormatter();
+
+                var data = this.getData();
+
+                if (i) {
+                    var o = i(this.getData(), this.options, this._currenttemplateData);
+                    n.find(".hiprint-printElement-web-content iframe").attr("src", o);
+                } else this.options.title && n.find(".hiprint-printElement-web-content").attr("src", this.options.title);
+
+                return n;
             }, e.prototype.getHtml = function (t, e, n) {
                 return this.getHtml2(t, e, n);
             }, e;
@@ -7376,6 +7654,8 @@ var hiprint = function (t) {
                         "shtml" == t.type ? new SHtml(t, e) : 
                         "html" == t.type ? new S(t, e) : 
                         "echarts" == t.type ? new EchartsGraph(t, e) : 
+                        "canvas" == t.type ? new CanvasContext(t, e) : 
+                        "web" == t.type ? new Web(t, e) : 
                         "vline" == t.type ? new F(t, e) : 
                         "hline" == t.type ? new A(t, e) : 
                         "rect" == t.type ? new k(t, e) : 
@@ -8184,7 +8464,7 @@ var hiprint = function (t) {
                 }).forEach(function (e) {
                     var n = [],
                         i = p[p.length - 1];
-                    i.referenceElement.isPositionLeftOrRight(e.options.getTop()) ? (l = p[i.referenceElement.beginPrintPaperIndex], n = e.getHtml(l, t)) : (l = p[i.referenceElement.endPrintPaperIndex], n = e.getHtml(l, t)), n.forEach(function (t, i) {
+                    i.referenceElement.isPositionLeftOrRight(e.options.getTop()) ? (l = p[i.referenceElement.beginPrintPaperIndex], n = e.getHtml(l, t)) : (l = p[i.referenceElement.endPrintPaperIndex], n = e.getHtml(l, t, "printing")), n.forEach(function (t, i) {
                         t.referenceElement && (t.referenceElement.endPrintPaperIndex = t.referenceElement.beginPrintPaperIndex + n.length - 1), i > 0 && (l.index < p.length - 1 ? l = p[l.index + 1] : (l = s.createNewPage(p.length, l.referenceElement), p.push(l)), a.append(l.getTarget())), t.target && (l.append(t.target), l.updatePrintLine(t.printLine), e.onRendered(l, t.target)), i == n.length - 1 && t.referenceElement && l.updateReferenceElement(t.referenceElement);
                     });
                 }), o && o.templates.forEach(function (t, e) {

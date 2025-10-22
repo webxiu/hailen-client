@@ -327,16 +327,17 @@ font-weight: normal;*/
   font-size: 12px;
   padding: 0 24px;
   background: #00c1de;
-  border-color: transparent;
   color: #fff;
   display: inline-block;
   margin: 5px;
-  font-weight: 400;
+  cursor: pointer;
+  border-radius: 3px;
   border: 1px solid transparent;
   font-family: PingFangSC, helvetica neue, hiragino sans gb, arial, microsoft yahei ui, microsoft yahei, simsun, "sans-serif";
   vertical-align: middle;
-  transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  transform: translateZ(0);
+}
+.hiprint-option-item-settingBtn:active {
+  opacity: 0.6;
 }
 
 .hiprint-option-item-deleteBtn {
@@ -992,12 +993,14 @@ font-weight: normal;*/
 }
 
 /** hover遮罩可点击穿透 */
-.hiprint-printElement-echarts .resize-panel {
+.hiprint-printElement-echarts .resize-panel,
+.hiprint-printElement-canvas .resize-panel {
   pointer-events: none;
 }
 
 /** 拖拽点及删除按钮 保留鼠标事件 */
-.hiprint-printElement-echarts .resize-panel * {
+.hiprint-printElement-echarts .resize-panel *,
+.hiprint-printElement-canvas .resize-panel * {
   pointer-events: auto;
 }
 
