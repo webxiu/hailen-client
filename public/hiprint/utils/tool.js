@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-10-13 14:20:08
  * @LastEditors: Hailen
- * @LastEditTime: 2025-10-21 16:56:31
+ * @LastEditTime: 2025-10-25 09:31:32
  * @Description: 全局方法
  */
 
@@ -11,7 +11,7 @@
   class drawCanvas {
     // 默认配置
     defaultOption = {
-      canvasDrawMode: false,
+      operationMode: false,
       width: 200,
       height: 200,
       lineWidth: 3,
@@ -31,7 +31,7 @@
     recoverList = [];
     options = { ...this.defaultOption };
     ratio = 1;
-    isErase = false;
+    eraseMode = false;
     wrapDom;
 
     constructor(canvas, options = {}) {
@@ -74,11 +74,9 @@
       for (let i = 0; i < words.length; i++) {
         testLine = line + words[i];
         const metrics = ctx.measureText(testLine);
-
-        // 如果超出最大宽度，换行
         if (metrics.width > maxWidth && i > 0) {
           ctx.fillText(line, x, y + lineCount * lineHeight);
-          line = words[i]; // 新行从当前字符开始
+          line = words[i]; // 下一行的起始位置
           lineCount++;
         } else {
           line = testLine;
@@ -118,6 +116,7 @@
 
     // 设置canvas宽高
     setCanvasSize = ({ width, height }) => {
+      if (width === this.canvas.width && height === this.canvas.height) return;
       const tempCanvas = document.createElement("canvas");
       tempCanvas.width = this.canvas.width;
       tempCanvas.height = this.canvas.height;
@@ -138,7 +137,7 @@
 
     addEvent = (dom, option) => {
       const onDown = (ev) => {
-        if (ev.ctrlKey || this.options.canvasDrawMode) {
+        if (ev.ctrlKey || this.options.operationMode) {
           ev.preventDefault();
           ev.stopPropagation();
           dom.addEventListener("mousemove", onMove);
@@ -147,7 +146,7 @@
         }
       };
       const onMove = (ev) => {
-        if (ev.ctrlKey || this.options.canvasDrawMode) {
+        if (ev.ctrlKey || this.options.operationMode) {
           ev.preventDefault();
           ev.stopPropagation();
           option.onMouseMove(ev);
@@ -173,8 +172,7 @@
         lineStyle: this.options.lineStyle,
         move: [x, y],
         line: [],
-        isErase: this.isErase,
-        eraseWidth: this.options.eraseWidth,
+        isErase: this.eraseMode,
       });
     };
 
@@ -187,10 +185,6 @@
         this.historyList[this.historyList.length - 1].line.push({
           x: mx,
           y: my,
-          lineWidth: this.options.lineWidth,
-          lineStyle: this.options.lineStyle,
-          isErase: this.isErase,
-          eraseWidth: this.options.eraseWidth,
         });
       }
     };
@@ -201,11 +195,8 @@
 
     drawLine = (x, y, isMove) => {
       if (isMove) {
-        // 画笔宽度在消除和绘制来回切换, 所以绘制需要使用上次记录最新的参数配置的宽度
-        const lineWidth = this.isErase ? this.options.eraseWidth : this.defaultOption.lineWidth;
-        this.ctx.globalCompositeOperation = this.isErase ? "destination-out" : "source-over";
         this.ctx.beginPath();
-        this.ctx.lineWidth = lineWidth * this.ratio;
+        this.ctx.lineWidth = this.options.lineWidth * this.ratio;
         this.ctx.strokeStyle = this.options.lineStyle;
         this.ctx.lineCap = this.options.lineCap;
         this.ctx.lineJoin = "round";
@@ -219,16 +210,17 @@
     };
 
     updateOption = (options) => {
-      const { width, height } = options;
+      const fillStyle = this.options.fillStyle;
       this.options = { ...this.options, ...options };
-      this.options.lineWidth = this.isErase ? this.options.eraseWidth : this.options.lineWidth;
-      // 记录最新的参数配置
       this.defaultOption = { ...this.defaultOption, ...options };
-      if (width && height) this.setCanvasSize({ width, height });
+      if (this.eraseMode) this.options.lineWidth = this.options.eraseWidth;
+      this.setCanvasSize(this.options);
+      if (fillStyle !== options.fillStyle) this.onRestore(); // 更新背景色
     };
 
     /* 重绘所有历史记录 revoke | recover | clear */
     onRestore = (type, item) => {
+      if (!this.ctx) return;
       const { width, height } = this.canvas;
       const { fillStyle } = this.options;
 
@@ -261,29 +253,29 @@
 
       // 重绘画布
       this.ctx.clearRect(0, 0, width * this.ratio, height * this.ratio);
-      this.ctx.fillStyle = item?.fillStyle || fillStyle;
+      this.ctx.fillStyle = fillStyle; // 更新背景颜色
       this.ctx.fillRect(0, 0, width * this.ratio, height * this.ratio);
+      // 记录当前线宽和擦除类型
+      const tempLineWidth = this.options.lineWidth;
+      const tempEraseType = this.ctx.globalCompositeOperation;
 
-      const _historyList = item?.historyList || this.historyList;
-      _historyList.forEach((m) => {
+      this.historyList.forEach((m) => {
         this.ctx.beginPath();
-        // 如果是擦除操作，使用 destination-out
         if (m.isErase) {
-          this.ctx.lineWidth = m.eraseWidth * this.ratio;
           this.ctx.globalCompositeOperation = "destination-out";
-          this.ctx.strokeStyle = "rgba(0, 0, 0, 1)"; // 任意颜色，因为 destination-out 会忽略它
+          // 任意颜色，因为 destination-out 会忽略它
+          this.ctx.strokeStyle = "rgba(0, 0, 0, 1)";
         } else {
-          this.ctx.lineWidth = m.lineWidth * this.ratio;
           this.ctx.globalCompositeOperation = "source-over";
           this.ctx.strokeStyle = m.lineStyle;
         }
-
+        this.ctx.lineWidth = m.lineWidth * this.ratio;
         this.ctx.moveTo(m.move[0] * this.ratio, m.move[1] * this.ratio);
-        m.line.forEach((v) => {
-          this.ctx.lineTo(v.x * this.ratio, v.y * this.ratio);
-        });
+        m.line.forEach((v) => this.ctx.lineTo(v.x * this.ratio, v.y * this.ratio));
         this.ctx.stroke();
-        this.ctx.globalCompositeOperation = "source-over"; // 恢复默认模式
+        // 恢复当前线宽和擦除类型
+        this.options.lineWidth = tempLineWidth;
+        this.ctx.globalCompositeOperation = tempEraseType;
       });
     };
 
@@ -297,10 +289,13 @@
       this.options = { ...defaultOption };
     };
 
-    // 设置擦除
-    onEraser = () => {
-      this.isErase = !this.isErase;
-      this.ctx.globalCompositeOperation = this.isErase ? "destination-out" : "source-over";
+    // 切换擦除模式, 并可以设置擦除大小
+    onEraser = (size) => {
+      const { eraseWidth, lineWidth } = this.defaultOption;
+      this.eraseMode = !this.eraseMode;
+      this.ctx.globalCompositeOperation = this.eraseMode ? "destination-out" : "source-over";
+      this.options.lineWidth = this.eraseMode ? size || eraseWidth : lineWidth;
+      return this.eraseMode;
     };
 
     onExport = (mime = "image/png") => {

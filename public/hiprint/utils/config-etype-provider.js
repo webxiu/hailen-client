@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-18 18:17:30
  * @LastEditors: Hailen
- * @LastEditTime: 2025-10-22 11:03:30
+ * @LastEditTime: 2025-10-25 09:26:33
  * @Description: 拖拽元素配置
  */
 
@@ -241,20 +241,28 @@ var customElementTypeProvider = (function () {
             text: "Canvas画板",
             title: "Canvas画板",
             options: {
-              canvasDrawMode: false,
+              operationMode: false,
               canvasOption: $tool.objToString({
                 eraseWidth: 10,
-                lineWidth: 2,
+                lineWidth: 3,
                 lineStyle: "rgba(0, 0, 0)",
                 fillStyle: "rgba(255, 255, 255, 0)",
               }),
             },
           },
           {
-            tid: "configModule.web",
-            type: "web",
-            title: "Web网页",
-            text: "Web网页",
+            tid: "configModule.link",
+            type: "link",
+            title: "网页链接",
+            text: "网页链接",
+            options: {
+              width: 300,
+              height: 300,
+              positionOffset: {},
+            },
+            formatter: function (data, options) {
+              return `https://www.hao123.com/`;
+            },
           },
         ]),
       ]);

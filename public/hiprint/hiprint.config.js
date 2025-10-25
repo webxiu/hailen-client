@@ -88,9 +88,9 @@
         textAlign: void 0,
         textType: "text",
         hideTitle: !1,
+        width: 120,
         height: 9.75,
         lineHeight: 9.75,
-        width: 120,
       },
     },
     image: {
@@ -155,9 +155,9 @@
         letterSpacing: void 0,
         textAlign: void 0,
         hideTitle: !1,
+        width: 550,
         height: 42,
         lineHeight: 9.75,
-        width: 550,
       },
     },
     table: {
@@ -256,6 +256,19 @@
         width: 550,
       },
     },
+    tableColumn: {
+      supportOptions: [
+        { name: "title", hidden: !1 },
+        { name: "align", hidden: !1 },
+        { name: "halign", hidden: !1 },
+        { name: "vAlign", hidden: !1 },
+        { name: "paddingLeft", hidden: !1 },
+        { name: "paddingRight", hidden: !1 },
+        { name: "formatter2", hidden: !1 },
+        { name: "styler2", hidden: !1 },
+      ],
+      default: { width: 90, height: 90 },
+    },
     hline: {
       supportOptions: [
         { name: "borderColor", hidden: !1 },
@@ -268,7 +281,7 @@
         { name: "transform", hidden: !1 },
         { name: "borderStyle", hidden: !1 },
       ],
-      default: { borderWidth: 0.75, height: 9, width: 90 },
+      default: { borderWidth: 0.75, width: 90, height: 9 },
     },
     vline: {
       supportOptions: [
@@ -282,7 +295,7 @@
         { name: "transform", hidden: !1 },
         { name: "borderStyle", hidden: !1 },
       ],
-      default: { borderWidth: void 0, height: 90, width: 9 },
+      default: { width: 9, height: 90 },
     },
     rect: {
       supportOptions: [
@@ -297,7 +310,7 @@
         { name: "borderStyle", hidden: !1 },
         { name: "lockWidthHeight", hidden: !1 },
       ],
-      default: { borderWidth: void 0, height: 90, width: 90 },
+      default: { width: 90, height: 90 },
     },
     oval: {
       supportOptions: [
@@ -312,11 +325,25 @@
         { name: "borderStyle", hidden: !1 },
         { name: "lockWidthHeight", hidden: !1 },
       ],
-      default: { borderWidth: void 0, width: 100, height: 24 },
+      default: { width: 90, height: 90 },
+    },
+    html: {
+      supportOptions: [
+        { name: "title", hidden: !1 },
+        { name: "field", hidden: !1 },
+        { name: "showInPage", hidden: !1 },
+        { name: "unShowInPage", hidden: !1 },
+        { name: "fixed", hidden: !1 },
+        { name: "axis", hidden: !1 },
+        { name: "draggable", hidden: !1 },
+        { name: "zIndex", hidden: !1 },
+        { name: "formatter", hidden: !1 },
+      ],
+      default: { width: 300, height: 42 },
     },
     shtml: {
       supportOptions: [
-        { name: "title", hidden: !1, title: "" },
+        { name: "title", hidden: !1 },
         { name: "field", hidden: !1 },
         { name: "testData", hidden: !1 },
         { name: "draggable", hidden: !1 },
@@ -349,32 +376,7 @@
         { name: "formatter", hidden: !1 },
         { name: "styler", hidden: !1 },
       ],
-      default: { width: 120, height: 24 },
-    },
-    html: {
-      supportOptions: [
-        { name: "showInPage", hidden: !1 },
-        { name: "unShowInPage", hidden: !1 },
-        { name: "fixed", hidden: !1 },
-        { name: "axis", hidden: !1 },
-        { name: "draggable", hidden: !1 },
-        { name: "zIndex", hidden: !1 },
-        { name: "formatter", hidden: !1 },
-      ],
-      default: { height: 90, width: 90 },
-    },
-    tableColumn: {
-      supportOptions: [
-        { name: "title", hidden: !1 },
-        { name: "align", hidden: !1 },
-        { name: "halign", hidden: !1 },
-        { name: "vAlign", hidden: !1 },
-        { name: "paddingLeft", hidden: !1 },
-        { name: "paddingRight", hidden: !1 },
-        { name: "formatter2", hidden: !1 },
-        { name: "styler2", hidden: !1 },
-      ],
-      default: { height: 90, width: 90 },
+      default: { width: 500, height: 42 },
     },
     echarts: {
       supportOptions: [
@@ -397,7 +399,7 @@
         { name: "echartsOption", hidden: !1 },
         { name: "formatter", hidden: !1 },
       ],
-      default: { height: 300, width: 150 },
+      default: { width: 300, height: 150 },
     },
     canvas: {
       supportOptions: [
@@ -416,11 +418,37 @@
         { name: "unShowInPage", hidden: !1 },
         { name: "fixed", hidden: !1 },
         { name: "axis", hidden: !1 },
-        { name: "canvasDrawMode", hidden: !1 },
+        { name: "operationMode", hidden: !1 },
         { name: "canvasOption", hidden: !1 },
         { name: "formatter", hidden: !1 },
       ],
       default: { width: 300, height: 150 },
+    },
+    link: {
+      supportOptions: [
+        { name: "title", hidden: !1 },
+        { name: "field", hidden: !1 },
+        { name: "testData", hidden: !1 },
+        { name: "draggable", hidden: !1 },
+        { name: "zIndex", hidden: !1 },
+        { name: "showInPage", hidden: !1 },
+        { name: "unShowInPage", hidden: !1 },
+        { name: "fixed", hidden: !1 },
+        { name: "axis", hidden: !1 },
+        { name: "transform", hidden: !1 },
+        { name: "backgroundColor", hidden: !1 },
+        { name: "borderColor", hidden: !1 },
+        { name: "optionsGroup", hidden: !1 },
+        { name: "borderLeft", hidden: !1 },
+        { name: "borderTop", hidden: !1 },
+        { name: "borderRight", hidden: !1 },
+        { name: "borderBottom", hidden: !1 },
+        { name: "borderWidth", hidden: !1 },
+        { name: "operationMode", hidden: !1 },
+        { name: "elementSizePosition", hidden: !1 },
+        { name: "formatter", hidden: !1 },
+      ],
+      default: { width: 300, height: 300 },
     },
   };
 })();

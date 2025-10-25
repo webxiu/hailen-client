@@ -994,13 +994,15 @@ font-weight: normal;*/
 
 /** hover遮罩可点击穿透 */
 .hiprint-printElement-echarts .resize-panel,
-.hiprint-printElement-canvas .resize-panel {
+.hiprint-printElement-canvas .resize-panel,
+.hiprint-printElement-link .resize-panel {
   pointer-events: none;
 }
 
 /** 拖拽点及删除按钮 保留鼠标事件 */
 .hiprint-printElement-echarts .resize-panel *,
-.hiprint-printElement-canvas .resize-panel * {
+.hiprint-printElement-canvas .resize-panel *,
+.hiprint-printElement-link .resize-panel * {
   pointer-events: auto;
 }
 

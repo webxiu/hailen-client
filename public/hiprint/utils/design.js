@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-10-22 11:04:32
+ * @LastEditTime: 2025-10-25 09:22:51
  * @Description: 设计JS主文件
  */
 
@@ -91,7 +91,7 @@ var elements = [
       { title: "SHTML", tid: "configModule.shtml", icon: "glyphicon-fire" },
       { title: "图表", tid: "configModule.echarts", icon: "glyphicon-stats" },
       { title: "画布", tid: "configModule.canvas", icon: "glyphicon-cd" },
-      { title: "网页", tid: "configModule.web", icon: "glyphicon-link" },
+      { title: "链接", tid: "configModule.link", icon: "glyphicon-link" },
     ],
   },
 ];
