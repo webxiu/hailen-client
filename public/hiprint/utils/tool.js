@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-10-13 14:20:08
  * @LastEditors: Hailen
- * @LastEditTime: 2025-10-25 09:31:32
+ * @LastEditTime: 2025-10-27 12:09:13
  * @Description: 全局方法
  */
 
@@ -128,8 +128,8 @@
 
       this.options.width = newWidth;
       this.options.height = newHeight;
-      this.canvas.width = width;
-      this.canvas.height = height;
+      this.canvas.width = width * this.ratio;
+      this.canvas.height = height * this.ratio;
       this.canvas.style.width = width + "px";
       this.canvas.style.height = height + "px";
       this.ctx?.drawImage(tempCanvas, 0, 0);
@@ -137,7 +137,7 @@
 
     addEvent = (dom, option) => {
       const onDown = (ev) => {
-        if (ev.ctrlKey || this.options.operationMode) {
+        if (ev.ctrlKey || ev.metaKey || this.options.operationMode) {
           ev.preventDefault();
           ev.stopPropagation();
           dom.addEventListener("mousemove", onMove);
@@ -146,7 +146,7 @@
         }
       };
       const onMove = (ev) => {
-        if (ev.ctrlKey || this.options.operationMode) {
+        if (ev.ctrlKey || ev.metaKey || this.options.operationMode) {
           ev.preventDefault();
           ev.stopPropagation();
           option.onMouseMove(ev);
@@ -200,8 +200,8 @@
         this.ctx.strokeStyle = this.options.lineStyle;
         this.ctx.lineCap = this.options.lineCap;
         this.ctx.lineJoin = "round";
-        this.ctx.moveTo(this.lastX * this.ratio, this.lastY * this.ratio);
-        this.ctx.lineTo(x * this.ratio, y * this.ratio);
+        this.ctx.moveTo(this.lastX, this.lastY);
+        this.ctx.lineTo(x, y);
         this.ctx.stroke();
         this.ctx.closePath();
       }

@@ -692,12 +692,24 @@ var hiprint = function (t) {
                     supportOptions: [
                         { name: "title", hidden: !1 },
                         { name: "field", hidden: !1 },
+                        { name: "testData", hidden: !1 },
+                        { name: "draggable", hidden: !1 },
+                        { name: "zIndex", hidden: !1 },
                         { name: "showInPage", hidden: !1 },
                         { name: "unShowInPage", hidden: !1 },
                         { name: "fixed", hidden: !1 },
                         { name: "axis", hidden: !1 },
-                        { name: "draggable", hidden: !1 },
-                        { name: "zIndex", hidden: !1 },
+                        { name: "transform", hidden: !1 },
+                        { name: "backgroundColor", hidden: !1 },
+                        { name: "borderColor", hidden: !1 },
+                        { name: "optionsGroup", hidden: !1 },
+                        { name: "borderLeft", hidden: !1 },
+                        { name: "borderTop", hidden: !1 },
+                        { name: "borderRight", hidden: !1 },
+                        { name: "borderBottom", hidden: !1 },
+                        { name: "borderWidth", hidden: !1 },
+                        { name: "operationMode", hidden: !1 },
+                        { name: "elementSizePosition", hidden: !1 },
                         { name: "formatter", hidden: !1 },
                     ],
                     default: { width: 300, height: 300 },
@@ -3533,8 +3545,9 @@ var hiprint = function (t) {
                 this.name = "operationMode";
             }
             return t.prototype.createTarget = function () {
+                var ctrlKey = /Mac/i.test(navigator.userAgent) ? "⌘" : "Ctrl";
                 return this.target = $(`<div class="hiprint-option-item">
-                        <div class="hiprint-option-item-label" title="按住Ctrl键不放切换至捕获">²操作模式</div>
+                        <div class="hiprint-option-item-label" title="按住${ctrlKey}键不放切换至捕获">²操作模式</div>
                     <div class="hiprint-option-item-field">
                         <label><input type="radio" name="option" value="true" class="auto-submit" style="width:16px;height:16px;vertical-align: text-top">捕获</label>
                         <label><input type="radio" name="option" value="false" class="auto-submit" style="width:16px;height:16px;vertical-align: text-top; margin-left:10px;">拖拽</label>
@@ -3583,8 +3596,8 @@ var hiprint = function (t) {
                 var opt = {
                     oLeft: parseInt(this.oLeft.find('input').val() || 0),
                     oTop: parseInt(this.oTop.find('input').val() || 0),
-                    oWidth: parseInt(this.oWidth.find('input').val() || 1920),
-                    oHeight: parseInt(this.oHeight.find('input').val() || 1080)
+                    oWidth: parseInt(this.oWidth.find('input').val() || 1366),
+                    oHeight: parseInt(this.oHeight.find('input').val() || 1920)
                 }
                 var options = Object.assign({}, this.options, opt);
                 return _objToString(options);
@@ -3592,8 +3605,8 @@ var hiprint = function (t) {
                 var t = typeof t === "string" ? eval(`(${t})`) : t || {};
                 this.oLeft.find("input").val(t.oLeft || 0);
                 this.oTop.find("input").val(t.oTop || 0);
-                this.oWidth.find("input").val(t.oWidth || 1920);
-                this.oHeight.find("input").val(t.oHeight || 1080);
+                this.oWidth.find("input").val(t.oWidth || 1366);
+                this.oHeight.find("input").val(t.oHeight || 1920);
             }, t.prototype.destroy = function () {
                 this.target.remove();
             }, t;
@@ -7491,50 +7504,63 @@ var hiprint = function (t) {
                     var t = this.getData();
                     this.css(this.designTarget, t), this.updateTargetHtml();
                 }
-            }, e.prototype.updateTargetHtml = function () {
-                var t = this.getFormatter();
-                var data = this.getData();
+            }, e.prototype.updateTargetHtml = async function () {
                 var option = this.getOption()
-                var e = t ? t(data, option, this._currenttemplateData) : data;
-                var iframe = this.designTarget.find(".hiprint-printElement-link-content .iframe");
-                this.setIframe();
-                iframe.css({left:-option.oLeft, top:-option.oTop, width:option.oWidth, height:option.oHeight}); 
+                this.setIframeUrl();
+                await this.updateIframePos(option);
+
+            }, e.prototype.updateIframePos = function (option, n) {
+                return new Promise((resolve) => {
+                    n = n || this.designTarget;
+                    var left = option.oLeft;
+                    var top = option.oTop;
+                    var width = option.oWidth;
+                    var height = option.oHeight;
+                    var iframe = n.find(".hiprint-printElement-link-content .iframe");
+                    iframe.css({left, top, width, height});
+                    iframe.on("load",resolve).on("error", resolve)
+                })
+
             }, e.prototype.getOption = function (t) {
                 var config = this.options.elementSizePosition;
                 var operationMode = this.options.operationMode;
                 var options = typeof config == "string" ? eval(`(${config})`) : config;
                return {operationMode, ...options};
+
             }, e.prototype.getData = function (t) {
                 var i = this.getFormatter();
                 var data = t ? t[this.getField()] || "" : this.options.testData || this.options.title || this.printElementType.getData() || "";
-               return i ? i(data, this.getOption(), this._currenttemplateData) || data : data
+               return i ? i(data, this.getOption(), this._currenttemplateData) || data : data;
+
             }, e.prototype.getConfigOptions = function () {
                 return p.a.instance.link;
-            }, e.prototype.createTarget = function (t, e) {
+            }, e.prototype.createTarget = function (t, e, isPrint) {
                  var n = $(`<div class="hiprint-printElement hiprint-printElement-link" style="position: absolute;">
                         <div class="hiprint-printElement-link-content" style="height:100%;width:100%;overflow: hidden;box-shadow:0 0 1px 1px #ddd;">
-                            <div class="iframe" style="position:relative;width:1920px;height:1080px;">
+                            <div class="iframe" style="position:relative;width:1366px;height:1920px;">
                                 <iframe width="100%" height="100%" style="border:none;pointer-events:none;" border="0"></iframe>
                             </div>
                         </div>
                     </div>`);
-                this.setIframe(n);
-                this.initDragScroll(n.find(".iframe"));
+                this.setIframeUrl(n);
+                this.bindDragEvent(n.find(".iframe"));
                 return n;
-            }, e.prototype.setIframe = function (n) {
+            }, e.prototype.setIframeUrl = async function (n) {
                 var n = n || this.designTarget;
                 var i = this.getFormatter(),
                     data = this.getData(),
+                    option = this.getOption(),
                     iframe = n.find(".hiprint-printElement-link-content iframe");
                 if(data == iframe.attr("src")) return;
-                iframe.attr("src", i ? i(data, this.getOption(), this._currenttemplateData) : data);
-            }, e.prototype.initDragScroll = function (iframe) {
+                iframe.attr("src", i ? i(data, option, this._currenttemplateData) : data);
+                await this.updateIframePos(option, n);
+            }, e.prototype.bindDragEvent = function (iframe) {
                 var self = this, isDragging = false, oIframe = iframe[0];
                 var startX, startY, moveLeft, moveTop;
                 
                 function onDown(ev) {
                     var option = self.getOption();
-                    if ((ev.ctrlKey || option.operationMode)) {
+                    if ((ev.ctrlKey || ev.metaKey | option.operationMode)) {
                         ev.preventDefault();
                         ev.stopPropagation();
                         isDragging = true;
@@ -7547,7 +7573,7 @@ var hiprint = function (t) {
                     } 
                     function onMove(ev) {
                         if (!isDragging) return;
-                        if (!(ev.ctrlKey || self.getOption().operationMode)) return;
+                        if (!(ev.ctrlKey || ev.metaKey || self.getOption().operationMode)) return;
                         ev.preventDefault();
                         ev.stopPropagation();
                         var dx = ev.clientX - startX + moveLeft;

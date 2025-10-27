@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-18 18:17:30
  * @LastEditors: Hailen
- * @LastEditTime: 2025-10-25 09:26:33
+ * @LastEditTime: 2025-10-27 12:09:35
  * @Description: 拖拽元素配置
  */
 
@@ -244,7 +244,7 @@ var customElementTypeProvider = (function () {
               operationMode: false,
               canvasOption: $tool.objToString({
                 eraseWidth: 10,
-                lineWidth: 3,
+                lineWidth: 1,
                 lineStyle: "rgba(0, 0, 0)",
                 fillStyle: "rgba(255, 255, 255, 0)",
               }),
