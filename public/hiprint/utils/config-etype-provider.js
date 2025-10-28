@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-18 18:17:30
  * @LastEditors: Hailen
- * @LastEditTime: 2025-10-27 12:09:35
+ * @LastEditTime: 2025-10-28 10:38:17
  * @Description: 拖拽元素配置
  */
 
@@ -258,10 +258,10 @@ var customElementTypeProvider = (function () {
             options: {
               width: 300,
               height: 300,
-              positionOffset: {},
+              elementSizePosition: { oLeft: 0, oTop: 0 },
             },
             formatter: function (data, options) {
-              return `https://www.hao123.com/`;
+              return `/hiprint/print.html`;
             },
           },
         ]),

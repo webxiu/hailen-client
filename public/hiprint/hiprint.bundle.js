@@ -3575,7 +3575,7 @@ var hiprint = function (t) {
                                 </div>`);
                 this.oTop = $(`<div class="hiprint-option-item-field" style="display: flex;">
                                     <div class="hiprint-option-item-label" style="text-align: right;">垂直偏移</div>
-                                    <input style="flex: 1" type="range" step="1" min="-2000" max="2000" class="auto-submit" />
+                                    <input style="flex: 1" type="range" step="1" min="-4000" max="4000" class="auto-submit" />
                                 </div>`);
                 this.oWidth = $(`<div class="hiprint-option-item-field" style="display: flex;">
                                     <div class="hiprint-option-item-label" style="text-align: right;">网页宽度</div>
@@ -3596,7 +3596,7 @@ var hiprint = function (t) {
                 var opt = {
                     oLeft: parseInt(this.oLeft.find('input').val() || 0),
                     oTop: parseInt(this.oTop.find('input').val() || 0),
-                    oWidth: parseInt(this.oWidth.find('input').val() || 1366),
+                    oWidth: parseInt(this.oWidth.find('input').val() || 1080),
                     oHeight: parseInt(this.oHeight.find('input').val() || 1920)
                 }
                 var options = Object.assign({}, this.options, opt);
@@ -3605,7 +3605,7 @@ var hiprint = function (t) {
                 var t = typeof t === "string" ? eval(`(${t})`) : t || {};
                 this.oLeft.find("input").val(t.oLeft || 0);
                 this.oTop.find("input").val(t.oTop || 0);
-                this.oWidth.find("input").val(t.oWidth || 1366);
+                this.oWidth.find("input").val(t.oWidth || 1080);
                 this.oHeight.find("input").val(t.oHeight || 1920);
             }, t.prototype.destroy = function () {
                 this.target.remove();
@@ -7505,7 +7505,7 @@ var hiprint = function (t) {
                     this.css(this.designTarget, t), this.updateTargetHtml();
                 }
             }, e.prototype.updateTargetHtml = async function () {
-                var option = this.getOption()
+                var option = this.getOption();
                 this.setIframeUrl();
                 await this.updateIframePos(option);
 
@@ -7520,31 +7520,31 @@ var hiprint = function (t) {
                     iframe.css({left, top, width, height});
                     iframe.on("load",resolve).on("error", resolve)
                 })
-
+                
             }, e.prototype.getOption = function (t) {
                 var config = this.options.elementSizePosition;
                 var operationMode = this.options.operationMode;
                 var options = typeof config == "string" ? eval(`(${config})`) : config;
-               return {operationMode, ...options};
-
+                return {operationMode, ...options};
+                
             }, e.prototype.getData = function (t) {
                 var i = this.getFormatter();
                 var data = t ? t[this.getField()] || "" : this.options.testData || this.options.title || this.printElementType.getData() || "";
-               return i ? i(data, this.getOption(), this._currenttemplateData) || data : data;
-
+                return i ? i(data, this.getOption(), this._currenttemplateData) || data : data;
+                
             }, e.prototype.getConfigOptions = function () {
                 return p.a.instance.link;
             }, e.prototype.createTarget = function (t, e, isPrint) {
-                 var n = $(`<div class="hiprint-printElement hiprint-printElement-link" style="position: absolute;">
-                        <div class="hiprint-printElement-link-content" style="height:100%;width:100%;overflow: hidden;box-shadow:0 0 1px 1px #ddd;">
-                            <div class="iframe" style="position:relative;width:1366px;height:1920px;">
+                var n = $(`<div class="hiprint-printElement hiprint-printElement-link" style="position: absolute;">
+                        <div class="hiprint-printElement-link-content" style="position: relative;height:300pt;width:300pt;overflow: hidden;box-shadow:0 0 1px 1px #ddd;">
+                            <div class="iframe" style="position:absolute;width:600%;height:1000%;top:0px;left:0px">
                                 <iframe width="100%" height="100%" style="border:none;pointer-events:none;" border="0"></iframe>
                             </div>
                         </div>
-                    </div>`);
-                this.setIframeUrl(n);
-                this.bindDragEvent(n.find(".iframe"));
-                return n;
+                        </div>`);
+                        this.setIframeUrl(n);
+                        this.bindDragEvent(n.find(".iframe"));
+                        return n;
             }, e.prototype.setIframeUrl = async function (n) {
                 var n = n || this.designTarget;
                 var i = this.getFormatter(),
@@ -7554,6 +7554,10 @@ var hiprint = function (t) {
                 if(data == iframe.attr("src")) return;
                 iframe.attr("src", i ? i(data, option, this._currenttemplateData) : data);
                 await this.updateIframePos(option, n);
+            }, e.prototype.onUpdateSize = function(t, h, w) {
+                var n = h ? this.designTarget : t;
+                var oContent = n.find(".hiprint-printElement-link-content");
+                oContent.css({ width: n.width(), height: n.height() });
             }, e.prototype.bindDragEvent = function (iframe) {
                 var self = this, isDragging = false, oIframe = iframe[0];
                 var startX, startY, moveLeft, moveTop;
@@ -7578,6 +7582,7 @@ var hiprint = function (t) {
                         ev.stopPropagation();
                         var dx = ev.clientX - startX + moveLeft;
                         var dy = ev.clientY - startY + moveTop;
+                        self.options.elementSizePosition = {oLeft: dx, oTop: dy};
                         iframe.css({ left: dx, top: dy, cursor: "grabbing" });
                     }
                     function onUp(ev) {
