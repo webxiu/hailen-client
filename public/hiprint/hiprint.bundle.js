@@ -3909,13 +3909,20 @@ var hiprint = function (t) {
                 this.name = "formatter";
             }
             return t.prototype.createTarget = function (t, e, n) {
-                var imgBtnHtml = '' // 如果是图片才显示按钮
-                if(n.type == 'image') imgBtnHtml = '<button class="hiprint-option-item-settingBtn" style="margin-left:0px;">选择图片转Base64</button>'
+                var self = this;
+                // 根据类型显示按钮
+                var buttonList = [
+                    {type: "image", name: "选择图片转Base64", show: n.type === "image", clickFn: onBase64 },
+                    {type: "shtml", name: "富文本编辑", show: n.type === "shtml", clickFn: onRichText },
+                ]
+                const buttonHtml = buttonList.filter(item => item.show)
+                        .map(item => `<button class="hiprint-option-item-settingBtn ${item.type}" style="margin-left:0px;">${item.name}</button>`).join('')
+
                 var t = `<div class="hiprint-option-item hiprint-option-item-row vert" >
                     <div class="hiprint-option-item-label" title="formatter">格式化函数</div>
                     <div class="hiprint-option-item-field">
                         <textarea style="height:80px;resize:vertical" placeholder="function (title, value, options, templateData, target) {\n  return value;\n}" class="auto-submit"></textarea>
-                        <div style="align-self: center;flex-wrap: wrap;">${imgBtnHtml}</div>
+                        <div class="format-btn" style="align-self: center;flex-wrap: wrap;">${buttonHtml}</div>
                     </div>
                 </div>`;
                 this.target = $(t);
@@ -3926,7 +3933,33 @@ var hiprint = function (t) {
                 fileInput.accept = 'image/*';
                 fileInput.style.display = 'none';
                 document.body.appendChild(fileInput);
-                this.target.find('button').on('click', function () { fileInput.click(); });
+
+                // 选择图片转Base64
+                function onBase64() {
+                    fileInput.click()
+                }
+                // 富文本编辑
+                function onRichText() {
+                    var o = self.getValue();
+                    let value ="";
+                    try { 
+                        var fn = eval(`(${o})`);
+                        if(typeof fn === 'function') value = fn();
+                    } catch (error) { 
+
+                    }
+
+                    $tool.openRichText(value, (option)=>{
+                        const result = `()=>{\n  return \`${option.content}\`;\n}`;
+                        self.setValue(result);
+                        self.target.find('textarea').trigger('input').trigger('change').trigger('blur');
+                    })
+                }
+
+                this.target.find('.format-btn').on('click','.image,.shtml', function (e) { 
+                    const clickItem = buttonList.find(item => e.target.classList.contains(item.type));
+                    if(clickItem) clickItem.clickFn()
+                });
                 fileInput.onchange = function (event) {
                     const file = event.target.files[0];
                     if (!file) return

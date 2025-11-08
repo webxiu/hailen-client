@@ -9,6 +9,9 @@ const active = ref(null);
 const scaleValue = ref(1);
 const templateName = ref("");
 const printVisible = ref(false);
+const editVisible = ref(false);
+const tempCallback = ref();
+const editor = ref(null);
 const designData = reactive({ gridLine: false, landscape: false, livePreview: false });
 const formData = reactive({ heightInput: "", widthInput: "", scale: "100%" });
 
@@ -175,6 +178,32 @@ window.onload = () => {
         onInitHiPrint(row.content);
       }
 
+      function onCreateEditor(wEditor) {
+        editor.value = wEditor;
+        window.wEditor = wEditor;
+      }
+
+      /** 打开富文本 */
+      function openRichText(value, callback) {
+        editVisible.value = true;
+        if (value) {
+          requestAnimationFrame(() => {
+            editor.value.setHtml(value);
+          });
+        }
+        tempCallback.value = callback;
+      }
+
+      /** 获取富文本 */
+      function onConfirm(callback) {
+        const content = editor.value.getHtml();
+        if (tempCallback.value) {
+          tempCallback.value({ editor: editor.value, content });
+        }
+        editVisible.value = false;
+      }
+      window.$tool.openRichText = openRichText;
+
       return {
         tableRef,
         designData,
@@ -182,7 +211,10 @@ window.onload = () => {
         elements,
         papers,
         toolButtons,
+        editVisible,
         printVisible,
+        onCreateEditor,
+        onConfirm,
         onInitHiPrint,
         onResetDesign,
         onUpdateDesign,

@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-10-17 16:51:57
+ * @LastEditTime: 2025-11-08 15:19:05
  * @Description: 布局组件模块
  */
 
@@ -384,8 +384,49 @@ const MyTool = {
     };
   },
 };
+const WangEditor = {
+  name: "WangEditor",
+  emits: ["create"],
+  template: `
+    <div id="editor—wrapper">
+      <div id="toolbar-container"><!-- 工具栏 --></div>
+      <div id="editor-container"><!-- 编辑器 --></div>
+    </div>
+  `,
+  setup(props, { emit }) {
+    const editor = ref();
+    const editVisible = ref(false);
+    const { createEditor, createToolbar } = window.wangEditor;
 
-const components = [MyHeader, MyTool];
+    onMounted(() => onCreateEditor());
+
+    function onCreateEditor() {
+      const toolbarConfig = {};
+      const editorConfig = {
+        placeholder: "请输入内容...",
+        onChange(editor) {},
+      };
+
+      editor.value = createEditor({
+        selector: "#editor-container",
+        html: "<p><br></p>",
+        config: editorConfig,
+        mode: "default", // or 'simple'
+      });
+
+      const toolbar = createToolbar({
+        editor: editor.value,
+        selector: "#toolbar-container",
+        config: toolbarConfig,
+        mode: "default", // or 'simple'
+      });
+      
+      emit("create", editor.value);
+    }
+  },
+};
+
+const components = [MyHeader, MyTool, WangEditor];
 function registerComponents(app) {
   components.forEach((c) => app.component(c.name, c));
 }

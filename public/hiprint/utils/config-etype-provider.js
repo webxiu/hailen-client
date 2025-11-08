@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-18 18:17:30
  * @LastEditors: Hailen
- * @LastEditTime: 2025-10-28 10:38:17
+ * @LastEditTime: 2025-11-08 15:14:36
  * @Description: 拖拽元素配置
  */
 
@@ -177,7 +177,7 @@ var customElementTypeProvider = (function () {
             text: "增强SHTML",
             title: "增强SHTML",
             formatter: function (data, options) {
-              return `<div style="font-size:16px; color:blue">增强型SHTML, 内容超出自动分页</div>`;
+              return `<p><span style="color: rgb(54, 88, 226);">增强型SHTML, 内容超出自动分页</span></p><p><br></p>`;
             },
           },
           {

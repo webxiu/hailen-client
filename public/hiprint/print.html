@@ -6,10 +6,12 @@
     <link rel="shortcut icon" href="./assets/image/favicon.png" />
     <link rel="stylesheet" href="./assets/fonts/bootstrap-icons.css" />
     <link rel="stylesheet" href="./lib/element-plus.css" />
+    <link rel="stylesheet" href="./lib/wangEdit/wangeditor@5.1.23.css" />
     <link rel="stylesheet" href="./assets/css/hiprint.css" />
     <link rel="stylesheet" href="./assets/css/print-lock.css" />
     <link rel="stylesheet" href="./assets/css/design.css" />
     <script src="./lib/vue3.prod.js"></script>
+    <script src="./lib/wangEdit/wangeditor@5.1.23.js"></script>
     <script src="./lib/element-plus.js"></script>
     <script src="./lib/echarts.min.js"></script>
 
@@ -94,6 +96,16 @@
             <span> HiPrint Designer V2.5.4</span>
           </div>
         </el-footer>
+
+        <el-dialog v-model="editVisible" title="富文本编辑" draggable width="98%" top="4vh">
+          <WangEditor @create="onCreateEditor" />
+          <template #footer>
+            <div class="dialog-footer">
+              <el-button @click="editVisible = false">取消</el-button>
+              <el-button type="primary" @click="onConfirm">确定</el-button>
+            </div>
+          </template>
+        </el-dialog>
       </el-container>
     </script>
     <script type="text/html" id="headerTemplate">
