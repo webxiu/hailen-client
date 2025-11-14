@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-10-17 18:41:39
+ * @LastEditTime: 2025-11-14 15:56:19
  * @Description: 初始化模板
  */
 
@@ -10,7 +10,7 @@
 var watermarkOptions = {
   content: "内部文件 请勿外传",
   rotate: 25,
-  show: true,
+  show: false,
   timestamp: true,
   format: "YYYY-MM-DD HH:mm",
 };
@@ -19,7 +19,7 @@ var defaultConfig = {
   title: "默认",
   printCount: 1,
   showLandscape: false,
-  showGridLine: true,
+  showGridLine: false,
   history: true,
   dataMode: true,
   // fontList: [{ title: "苹果黑体", value: "STHeitiSC-Light" }],
@@ -36,6 +36,7 @@ var defaultConfig = {
         paperFooter: 800,
         paperNumberDisabled: true,
         printElements: [],
+        hostDomain: "http://localhost:17521",
         watermarkOptions: watermarkOptions,
       },
     ],

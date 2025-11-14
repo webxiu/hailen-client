@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-10-25 09:22:51
+ * @LastEditTime: 2025-11-14 11:26:25
  * @Description: 设计JS主文件
  */
 
@@ -41,9 +41,10 @@ var toolButtons = [
   { name: "网格", action: "onGridLine" },
   { name: "清空", action: "onClear", type: "danger" },
   { name: "重置", action: "onReset", type: "danger" },
-  { name: "PDF", action: "onExportPdf", type: "primary" }, // echarts绘制svg图表复杂, 导出PDF功能会报错, 其他组件不受影响, 可使用打印另存为PDF
   { name: "打印", action: "onPrint", type: "primary" },
-  { name: "预览", action: "onPreview", type: "warning" },
+  { name: "预览", action: "onPreview", type: "primary" },
+  { name: "快速打印", action: "onPrint2", type: "success" },
+  { name: "PDF", action: "onExportPdf", type: "info" },
   { name: "模板", action: "onTemplate", type: "info" },
   { name: "实时预览", action: "onLivePreview" },
   // { name: "获取元素", action: "getPanels" },
@@ -303,7 +304,7 @@ function removeEmpty(data, excludeKeys = []) {
     onPreview: function () {
       printVisible.value = true;
       requestAnimationFrame(() => {
-        $("#printView").html(hiprintTemplate.getHtml(printConfig.testData)); // printData;
+        $("#printView").html(hiprintTemplate.getHtml(printConfig.testData));
       });
     },
     // 实时预览
@@ -312,12 +313,16 @@ function removeEmpty(data, excludeKeys = []) {
     },
     // 打印
     onPrint: function () {
-      hiprintTemplate.print(printConfig.testData, { isDownload: true, type: "blob" }); // printData
+      hiprintTemplate.print(printConfig.testData, { isDownload: true, type: "blob" });
+    },
+    // 打印
+    onPrint2: function () {
+      hiprintTemplate.print2(printConfig.testData, { isDownload: true, type: "blob" });
     },
     // 导出PDF
     onExportPdf: function () {
       const panel = hiprintTemplate.getPanel();
-      hiprintTemplate.toPdf(printConfig.testData, printConfig.title); // printData
+      hiprintTemplate.toPdf(printConfig.testData, printConfig.title);
     },
     // 获取json
     getJson: function () {

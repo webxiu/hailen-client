@@ -2718,6 +2718,34 @@ var hiprint = function (t) {
                 this.target.remove();
             }, t;
         }(),
+        HostDomain = function () {
+            function t() {
+                this.name = "hostDomain";
+            }
+            return t.prototype.createTarget = function (t, e, n) {
+                var self = this;
+                this.target = $(`<div class="hiprint-option-item hiprint-option-item-row">
+                        <div class="hiprint-option-item-label">主机地址</div>
+                        <div class="hiprint-option-item-field"><input type="text" placeholder="${hiwebSocket.host}" class="auto-submit"></div>
+                        <button class="hiprint-option-item-settingBtn" style="padding: 0 10px; margin: 0 0 0 5px; white-space: nowrap">连接</button>
+                    </div>`);
+                this.target.find("button").on("click", function (val) {
+                    var t = self.getValue();
+                    if(!t) return ElMessage.warning("请输入客户端主机地址");
+                    hiwebSocket.stop();
+                    hiwebSocket.host = t
+                    hiwebSocket.start();
+                }); 
+                return this.target;
+            }, t.prototype.getValue = function () {
+                var t = this.target.find("input").val();
+                if (t) return t;
+            }, t.prototype.setValue = function (t) {
+                this.target.find("input").val(t);
+            }, t.prototype.destroy = function () {
+                this.target.remove();
+            }, t;
+        }(),
         watermarkOptions = function () {
             function t() {
                 this.name = "watermarkOptions";
@@ -4191,7 +4219,7 @@ var hiprint = function (t) {
             t.init(), t.printElementOptionItems[e.name] = e;
         }, t.getItem = function (e) {
             return t.init(), t.printElementOptionItems[e];
-        }, t._printElementOptionItems = [new o(), new r(), new a(), new p(), new i(), new s(), new l(), new pt(), new u(), new d(), new c(), new h(), new f(), new g(), new m(), new v(), new y(), new b(), new E(), new qrCodeLevel(), new T(), new P(), new _(), new w(), new x(), new C(), new imageFit(), new borderRadius(), new O(), new watermarkOptions(), new H(), new D(), new I(), new R(), new M(), new S(), new B(), new F(), new L(), new A(), new z(), new k(), new st(), new N(), new V(), new W(), new j(), new U(), new K(), new G(), new q(), new X(), new Y(), new Q(), new J(), new Z(), new tt(), new et(), new lockWidthHeight(), new DraggableElement(), new ZIndex(), new EchartsOption(), new EchartsTool(), new CanvasOption(), new OperationMode(), new ElementSizePosition(), new nt(), new it(), new ot(), new at(), new lt(), new ut(), new dt(), new ct(), new ht(), new ft(), new gt(), new mt(), new rowcolumns(), new vt(), new yt(), new bt(), new Tt(), new Et(), new Pt(), new _t(), new wt(), new xt()], t;
+        }, t._printElementOptionItems = [new o(), new r(), new a(), new p(), new i(), new s(), new l(), new pt(), new u(), new d(), new c(), new h(), new f(), new g(), new m(), new v(), new y(), new b(), new E(), new qrCodeLevel(), new T(), new P(), new _(), new w(), new x(), new C(), new imageFit(), new borderRadius(), new O(), new HostDomain(), new watermarkOptions(), new H(), new D(), new I(), new R(), new M(), new S(), new B(), new F(), new L(), new A(), new z(), new k(), new st(), new N(), new V(), new W(), new j(), new U(), new K(), new G(), new q(), new X(), new Y(), new Q(), new J(), new Z(), new tt(), new et(), new lockWidthHeight(), new DraggableElement(), new ZIndex(), new EchartsOption(), new EchartsTool(), new CanvasOption(), new OperationMode(), new ElementSizePosition(), new nt(), new it(), new ot(), new at(), new lt(), new ut(), new dt(), new ct(), new ht(), new ft(), new gt(), new mt(), new rowcolumns(), new vt(), new yt(), new bt(), new Tt(), new Et(), new Pt(), new _t(), new wt(), new xt()], t;
     }();
 }, function (t, e, n) {
     "use strict";
@@ -6067,6 +6095,7 @@ var hiprint = function (t) {
         reconnectTimeout: 6e4,
         reconnectWindowSetTimeout: null,
         reconnectDelay: 2e3,
+        host: "http://localhost:17521",
         supportsKeepAlive: function supportsKeepAlive() {
             return !0;
         },
@@ -6085,10 +6114,11 @@ var hiprint = function (t) {
         },
         start: function start() {
             var _this = this;
-
             var t = this;
-            window.WebSocket ? this.socket || (this.socket = io("http://localhost:17521", {
-                reconnectionAttempts: 5
+            window.WebSocket ? this.socket || (this.socket = io(this.host, {
+                transports: ["websocket"],
+                reconnectionAttempts: 5,
+                withCredentials: !0
             }), this.socket.on("connect", function (e) {
                 t.opened = !0, console.log("Websocket opened."), _this.socket.on("successs", function (t) {
                     hinnn.event.trigger("printSuccess_" + t.templateId, t);
@@ -7403,7 +7433,7 @@ var hiprint = function (t) {
                 return p.a.instance.echarts;
             }, e.prototype.createTarget = function (t, e, isPrint) { 
                 var n = $(`<div  class="hiprint-printElement hiprint-printElement-echarts" style="position: absolute;">
-                        <div class="hiprint-printElement-echarts-content" style="width:100%; height:100%;overflow: hidden;box-shadow:0 0 1px 1px #ddd;">
+                        <div class="hiprint-printElement-echarts-content" style="width:100%; height:100%;overflow: hidden;">
                             <div class="hailen-canvas"></div>
                             <img class="hailen-img" style="width:100%;height:100%" />
                         </div>
@@ -7488,7 +7518,7 @@ var hiprint = function (t) {
                 return p.a.instance.canvas;
             }, e.prototype.createTarget = function (t, e, isPrint) {
                 var n = $(`<div class="hiprint-printElement hiprint-printElement-canvas" style="position: absolute;">
-                        <div class="hiprint-printElement-canvas-content" style="height:100%;width:100%;overflow: hidden;box-shadow:0 0 1px 1px #ddd;">
+                        <div class="hiprint-printElement-canvas-content" style="height:100%;width:100%;overflow: hidden;">
                             <canvas class="hailen-canvas" style="width:100%;height:100%"></canvas>
                             <img class="hailen-img" style="width:100%;height:100%" />
                         </div>
@@ -8226,7 +8256,7 @@ var hiprint = function (t) {
                     var e = s.a.instance[this.paperType];
                     t.height ? (this.height = t.height, this.width = t.width) : (this.height = e.height, this.width = e.width);
                 } else this.height = t.height, this.width = t.width;
-                this.paperHeader = t.paperHeader || 0, this.paperFooter = t.paperFooter || o.a.mm.toPt(this.height), this.printElements = t.printElements || [], this.paperNumberLeft = t.paperNumberLeft, this.paperNumberTop = t.paperNumberTop, this.paperNumberDisabled = t.paperNumberDisabled, this.paperNumberFormat = t.paperNumberFormat, this.panelPaperRule = t.panelPaperRule, this.rotate = t.rotate || void 0, this.firstPaperFooter = t.firstPaperFooter, this.evenPaperFooter = t.evenPaperFooter, this.oddPaperFooter = t.oddPaperFooter, this.lastPaperFooter = t.lastPaperFooter, this.topOffset = t.topOffset, this.fontFamily = t.fontFamily, this.leftOffset = t.leftOffset, this.orient = t.orient, this.watermarkOptions= t.watermarkOptions;
+                this.paperHeader = t.paperHeader || 0, this.paperFooter = t.paperFooter || o.a.mm.toPt(this.height), this.printElements = t.printElements || [], this.paperNumberLeft = t.paperNumberLeft, this.paperNumberTop = t.paperNumberTop, this.paperNumberDisabled = t.paperNumberDisabled, this.paperNumberFormat = t.paperNumberFormat, this.panelPaperRule = t.panelPaperRule, this.rotate = t.rotate || void 0, this.firstPaperFooter = t.firstPaperFooter, this.evenPaperFooter = t.evenPaperFooter, this.oddPaperFooter = t.oddPaperFooter, this.lastPaperFooter = t.lastPaperFooter, this.topOffset = t.topOffset, this.fontFamily = t.fontFamily, this.leftOffset = t.leftOffset, this.orient = t.orient, this.hostDomain = t.hostDomain, this.watermarkOptions= t.watermarkOptions;
             };
         }(),
         at = function () {
@@ -8252,7 +8282,7 @@ var hiprint = function (t) {
         pt = function () {
             function t(t, e) {
                 this.gridLine = e.gridLine;
-                this.templateId = e.id, this.index = t.index, this.width = t.width, this.height = t.height, this.paperType = t.paperType, this.paperHeader = t.paperHeader, this.paperFooter = t.paperFooter, this.initPrintElements(t.printElements), this.paperNumberLeft = t.paperNumberLeft, this.paperNumberTop = t.paperNumberTop, this.paperNumberDisabled = t.paperNumberDisabled, this.paperNumberFormat = t.paperNumberFormat, this.panelPaperRule = t.panelPaperRule, this.firstPaperFooter = t.firstPaperFooter, this.evenPaperFooter = t.evenPaperFooter, this.oddPaperFooter = t.oddPaperFooter, this.lastPaperFooter = t.lastPaperFooter, this.topOffset = t.topOffset, this.leftOffset = t.leftOffset, this.fontFamily = t.fontFamily, this.orient = t.orient, this.target = this.createTarget(), this.rotate = t.rotate, this.watermarkOptions = t.watermarkOptions || {};
+                this.templateId = e.id, this.index = t.index, this.width = t.width, this.height = t.height, this.paperType = t.paperType, this.paperHeader = t.paperHeader, this.paperFooter = t.paperFooter, this.initPrintElements(t.printElements), this.paperNumberLeft = t.paperNumberLeft, this.paperNumberTop = t.paperNumberTop, this.paperNumberDisabled = t.paperNumberDisabled, this.paperNumberFormat = t.paperNumberFormat, this.panelPaperRule = t.panelPaperRule, this.firstPaperFooter = t.firstPaperFooter, this.evenPaperFooter = t.evenPaperFooter, this.oddPaperFooter = t.oddPaperFooter, this.lastPaperFooter = t.lastPaperFooter, this.topOffset = t.topOffset, this.leftOffset = t.leftOffset, this.fontFamily = t.fontFamily, this.orient = t.orient, this.target = this.createTarget(), this.rotate = t.rotate,  this.hostDomain = t.hostDomain, this.watermarkOptions = t.watermarkOptions || {};
             }
 
             return t.prototype.design = function (t) {
@@ -8277,6 +8307,7 @@ var hiprint = function (t) {
                         paperNumberDisabled: e.paperNumberDisabled,
                         paperNumberContinue: e.paperNumberContinue,
                         paperNumberFormat: e.paperNumberFormat,
+                        hostDomain: e.hostDomain,
                         watermarkOptions: e.watermarkOptions || {}
                     };
                     if (!p.a.instance.paperNumberContinue) {
@@ -8286,7 +8317,7 @@ var hiprint = function (t) {
                         options: panelOptions,
                         callback: function callback(t) {
                             e.watermarkOptions = t.watermarkOptions || void 0, (t.watermarkOptions && e.designPaper.createWaterMark(true, 1, t.watermarkOptions))
-                            e.panelLayoutOptions = t.panelLayoutOptions || {},
+                            e.panelLayoutOptions = t.panelLayoutOptions || {}, e.hostDomain = t.hostDomain,
                                 e.panelPaperRule = t.panelPaperRule, e.panelPageRule = t.panelPageRule, e.firstPaperFooter = t.firstPaperFooter, e.evenPaperFooter = t.evenPaperFooter, e.oddPaperFooter = t.oddPaperFooter, e.lastPaperFooter = t.lastPaperFooter, e.leftOffset = t.leftOffset, e.topOffset = t.topOffset, e.fontFamily = t.fontFamily, e.orient = t.orient, e.paperNumberDisabled = e.designPaper.paperNumberDisabled = !!t.paperNumberDisabled || void 0, e.paperNumberContinue = e.designPaper.paperNumberContinue = t.paperNumberContinue, e.paperNumberFormat = t.paperNumberFormat, e.designPaper.paperNumberFormat = t.paperNumberFormat, (t.paperNumberFormat && (e.designPaper.paperNumberTarget = e.designPaper.createPaperNumber(e.designPaper.formatPaperNumber(1, 1), true))), e.designPaper.setOffset(e.leftOffset, e.topOffset), e.css(e.target), e.designPaper.resetPaperNumber(e.designPaper.paperNumberTarget), e.designPaper.triggerOnPaperBaseInfoChanged();
                         }
                     });
@@ -8474,6 +8505,7 @@ var hiprint = function (t) {
                     // 水印参数
                     this.watermarkOptions = t.watermarkOptions || {};
                     this.designPaper.createWaterMark(true, this.index, this.watermarkOptions);
+                    this.hostDomain = t.hostDomain;
                     // 页码
                     this.paperNumberLeft = t.paperNumberLeft, this.paperNumberTop = t.paperNumberTop, this.paperNumberDisabled = t.paperNumberDisabled, this.paperNumberContinue = t.paperNumberContinue, this.paperNumberFormat = t.paperNumberFormat;
                     this.designPaper.paperNumberLeft = this.paperNumberLeft, this.designPaper.paperNumberTop = this.paperNumberTop, this.designPaper.paperNumberDisabled = this.paperNumberDisabled, this.designPaper.paperNumberContinue = this.paperNumberContinue, this.designPaper.paperNumberFormat = this.paperNumberFormat;
@@ -8676,6 +8708,7 @@ var hiprint = function (t) {
                     fontFamily: this.fontFamily,
                     orient: this.orient,
                     scale: this.scale,
+                    hostDomain: this.hostDomain,
                     watermarkOptions: this.watermarkOptions ? this.watermarkOptions : void 0,
                     leftOffset: this.leftOffset
                 });
@@ -9239,12 +9272,12 @@ var hiprint = function (t) {
                                     for (var p = "", l = 0; l < r.length; l++) {
                                         p += o[l + ""];
                                     }
-    
+                                    ElMessage.success("已发送至打印机");
                                     n.sentToClient(p, t, e);
                                 }
                             }, s.send();
                         });
-                    } else alert("连接客户端失败");
+                    } else ElMessage.error("客户端连接失败");
                 });
             }, t.prototype.imageToBase64 = function (t) {
                 var e = $(t).attr("src");

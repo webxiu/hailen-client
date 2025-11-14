@@ -1010,6 +1010,11 @@ font-weight: normal;*/
   visibility: visible;
 }
 
+.hailen-img,
+.hailen-canvas {
+  box-shadow: 0 0 1px 1px #ddd inset;
+}
+
 .resize-panel .size-box .hide {
   display: none;
 }
