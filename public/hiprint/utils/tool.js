@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-10-13 14:20:08
  * @LastEditors: Hailen
- * @LastEditTime: 2025-10-27 12:09:13
+ * @LastEditTime: 2025-11-15 18:00:09
  * @Description: 全局方法
  */
 
@@ -249,6 +249,8 @@
         return this.onClear();
       } else if (type === "erase") {
         return this.onEraser();
+      } else if (type === "download") {
+        return this.onDownload();
       }
 
       // 重绘画布
@@ -307,7 +309,7 @@
       const { imgData, mime } = this.onExport();
       const a = document.createElement("a");
       a.href = imgData;
-      a.download = "image.png";
+      a.download = "画图.png";
       a.click();
     };
 

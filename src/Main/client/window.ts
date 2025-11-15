@@ -104,8 +104,10 @@ function createWindow(param: WindowProp) {
   $$.clog("主进程__dirname:", __dirname);
 
   if (process.env.NODE_ENV === "development") {
-    mainWindow.loadURL(sysConfig[mode]).then(() => mainWindow.show());
-    mainWindow.webContents.openDevTools();
+    mainWindow.loadURL(sysConfig[mode]).then(() => {
+      mainWindow.show()
+      mainWindow.webContents.openDevTools();
+    });
   } else {
     mainWindow.loadFile(sysConfig[mode]);
   }
