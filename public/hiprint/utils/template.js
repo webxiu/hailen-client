@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-11-14 15:56:19
+ * @LastEditTime: 2025-11-25 16:59:35
  * @Description: 初始化模板
  */
 
@@ -71,18 +71,19 @@ var testTemplate = [
           .fill(0)
           .map((_, i) => `<div>我是增强型HTML, 可限定宽度, 高度根据内容适应, 自动分页 - ${i}</div>`)
           .join("")}</div>`,
-        table: new Array(3).fill(1).map((_, i) => {
+        table: new Array(30).fill(1).map((_, i) => {
           const id = i + 1;
+          const odd = i % 2 === 0;
           return {
             name: "张三" + id,
             age: 18 + id,
             email: "123@qq.com",
             address: "广东省深圳市",
             phone: "123456789" + id,
-            sex: "<div style='color:red'>男</div>",
-            hobbies: "篮球",
-            type: "学生",
-            status: "在职",
+            sex: `<div style='color:red'>${odd ? "女" : "男"}</div>`,
+            hobbies: odd ? "足球" : "篮球",
+            type: odd ? "老师" : "学生",
+            status: odd ? "离职" : "在职",
           };
         }),
       },
@@ -422,12 +423,12 @@ var testTemplate = [
                 options: { top: 784, left: 525, width: 63, height: 13, title: "页尾线", textAlign: "center", textType: "text", hideTitle: false },
                 printElementType: { title: "自定义文本", type: "text" },
               },
+              // {
+              //   options: { top: 680, left: 50, width: 310, height: 50, field: "html" },
+              //   printElementType: { title: "HTML", type: "html" },
+              // },
               {
-                options: { top: 680, left: 50, width: 310, height: 50, field: "html" },
-                printElementType: { title: "HTML", type: "html" },
-              },
-              {
-                options: { top: 740, left: 50, width: 500, height: 30, field: "shtml" },
+                options: { top: 700, left: 50, width: 500, height: 30, field: "shtml" },
                 printElementType: { title: "SHTML", type: "shtml" },
               },
               {

@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-11-08 15:19:05
+ * @LastEditTime: 2025-11-27 10:38:15
  * @Description: 布局组件模块
  */
 
@@ -63,29 +63,32 @@ const MyHeader = {
     const tableData = ref(templateArr.value);
 
     var docText = `    1️⃣.使用说明:
-          1. 数据打印需设置[字段名], 未设置则使用标题作为值
-          2. 设置字段名, 修改数据预览和打印均无效, 删除字段即可
-          3. 导出PDF需使用base64图片,或 选择图片转base64上传
+          1. 加载数据打印需设置[字段名], 未设置则使用标题作为值
+          2. 设置了字段名, 修改数据预览和打印均无效, 删除字段即可
+          3. 导出PDF需使用base64图片 或 选择图片转base64上传
           4. 禁止元素拖动: 在options中配置draggable为false
-          5. 快捷键: 
-              ① 按 Space + 鼠标拖拽\t拖拽画布
-              ② 按 Alt + 鼠标滚轮\t\t缩放画布
-              ③ 按 Shift + 鼠标滚轮\t横向滚动
-              ④ 按 ctrl + z\t\t\t\t撤销画布
-              ⑤ 按 ctrl + shift + z\t\t恢复画布
+          
+    2️⃣.快捷键:
+          ① 按 Space + 鼠标拖拽     \t\t拖拽画布
+          ② 按 Alt   + 鼠标滚轮     \t\t缩放画布
+          ③ 按 Shift + 鼠标滚轮   \t\t横向滚动
+          ④ 按 ctrl  + z          \t\t\t\t撤销画布
+          ⑤ 按 ctrl  + shift + z   \t\t\t恢复画布
+          ⑥ 按 ctrl  + 鼠标左键     \t\t画布组件 画图
+          ⑦ 按 ctrl  + 鼠标左键     \t\t链接组件 网页拖拽
 
-    2️⃣.创建打印窗口:
+    3️⃣.创建打印窗口:
           var postMsg = {
               // 基础配置
-              title: "文件标题",\t\t// 导出PDF标题
-              printCount: 1,\t\t\t// 打印份数(默认1), 若testData为数组, 按testData的长度打印份数
-              showGridLine: true,\t\t// 是否显示网格
-              showLandscape: false,\t// 是否横向打印(默认false)
-              testData: testData,\t\t// 打印数据 (默认数据对象, 打印多份传入数组)
-              template: template,\t\t// 打印模板 查看3️⃣ 或 文档地址: http://hiprint.io/demo
+              title: "文件标题",     \t\t\t// 导出PDF标题
+              printCount: 1,        \t\t\t// 打印份数(默认1), 若testData为数组, 按testData的长度打印份数
+              showGridLine: true,   \t\t// 是否显示网格
+              showLandscape: false, \t\t// 是否横向打印(默认false)
+              testData: testData,   \t\t\t// 打印数据 (默认数据对象, 打印多份传入数组)
+              template: template,   \t\t// 打印模板 查看4️⃣ 或 文档地址: http://hiprint.io/demo
               // 其他可选配置
-              history: true,\t\t\t\t\t\t\t// 是否记录历史, 默认true
-              dataMode: true,\t\t\t\t\t\t\t// 变化回调获取方式: true(getJson)|false(getJsonTid)
+              history: true,        \t\t\t\t\t\t// 是否记录历史, 默认true
+              dataMode: true,       \t\t\t\t\t\t// 变化回调获取方式: true(getJson)|false(getJsonTid)
               onDataChange: (type, json) => {}\t\t// 数据变化回调
               fontList: [{ title: "楷体", value: "KaiTi" }]  // 配置字体,合并到内部配置
           };
@@ -94,10 +97,10 @@ const MyHeader = {
               title: "打印窗口标题", 
               width: "96%", 
               postMsg: postMsg, 
-              showPrint: false,\t\t// 是否直接打印, 不会显示设计窗口
+              showPrint: false,   \t\t\t// 是否直接打印, 不会显示设计窗口
           }); 
 
-    3️⃣.模板配置: 
+    4️⃣.模板配置: 
           1. 配置多页: panels数组项中的每项都是一个分页, 表格和长文本超出页码自动新增分页
           2. 打印多份: 所有分页打印数据集中配置在testData对象中, 每页字段名不能重复
                       testData为对象时, 按printCount设置的值打印份数
@@ -106,41 +109,42 @@ const MyHeader = {
               template: {
                 panels: [
                   {
-                    index: 0, \t\t\t\t\t\t// 分页索引, 多页累加
-                    width: 210, \t\t\t\t\t// 宽度
-                    height: 297, \t\t\t\t\t// 高度
-                    paperType: "A4", \t\t\t// 尺寸
-                    paperHeader: 49.5,\t\t\t// 页眉高度
-                    paperFooter: 800, \t\t\t// 页脚高度
+                    index: 0,           \t\t\t\t// 分页索引, 多页累加
+                    width: 210,         \t\t\t\t// 宽度
+                    height: 297,        \t\t\t\t// 高度
+                    paperType: "A4",      \t\t\t// 尺寸
+                    paperHeader: 49.5,     \t\t// 页眉高度
+                    paperFooter: 800,      \t\t\t// 页脚高度
                     paperNumberDisabled: true, // 禁用页码
-                    watermarkOptions: { \t\t// 配置水印
+                    watermarkOptions: {     \t\t// 配置水印
                         content: "内部文件 请勿外传",
                         rotate: 25,
+                        show: false,
                         timestamp: true,
                         format: "YYYY-MM-DD HH:mm"
                     },
-                    printElements: [ ... ]\t\t\t// 表格函数配置, 查看4️⃣
+                    printElements: [ ... ]    \t\t// 表格函数配置, 查看5️⃣
                   },
                   // 继续配置其他分页
                   { ... }
                 ]
               }
 
-    4️⃣.表格函数配置: 配置在options中(注意options中的函数为字符串函数):
+    5️⃣.表格函数配置: 配置在options中(注意options中的函数为字符串函数):
         printElements: [
          {
             options: { 
               ...省略其他配置
-              title: "",\t\t\t\t\t\t\t\t\t// 标题默认显示冒号(：), 设置title为""则不显示冒号
-              styler: \`()=>{}\`,\t\t\t\t\t\t\t// 样式函数
-              rowStyler: \`()=>{}\`,\t\t\t\t\t\t// 行样式函数
-              formatter: \`()=>{}\`,\t\t\t\t\t\t// 格式化函数
-              rowsColumnsMerge: \`()=>{}\`,\t\t\t// 行/列合并函数
-              footerFormatter: \`()=>{}\`,\t\t\t\t// 表格脚函数 (方式1, 优先级高)
+              title: "",                      \t\t\t\t\t\t// 标题默认显示冒号(：), 设置title为""则不显示冒号
+              styler: \`()=>{}\`,             \t\t\t\t\t// 样式函数
+              rowStyler: \`()=>{}\`,          \t\t\t\t// 行样式函数
+              formatter: \`()=>{}\`,          \t\t\t\t// 格式化函数
+              rowsColumnsMerge: \`()=>{}\`,         \t\t// 行/列合并函数
+              footerFormatter: \`()=>{}\`,            \t\t\t// 表格脚函数 (方式1, 优先级高)
               gridColumnsFooterFormatter: \`()=>{}\`,\t// 多组表格脚函数 (方式1, 优先级高)
             },
             printElementType: {  
-              footerFormatter: ()=>{},\t\t\t\t\t// 表格脚函数 (方式2)
+              footerFormatter: ()=>{},        \t\t\t\t// 表格脚函数 (方式2)
               gridColumnsFooterFormatter: ()=>{},\t// 多组表格脚函数 (方式2)
             }
           }

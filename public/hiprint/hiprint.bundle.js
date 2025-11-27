@@ -2725,16 +2725,16 @@ var hiprint = function (t) {
             return t.prototype.createTarget = function (t, e, n) {
                 var self = this;
                 this.target = $(`<div class="hiprint-option-item hiprint-option-item-row">
-                        <div class="hiprint-option-item-label">主机地址</div>
+                        <div class="hiprint-option-item-label">客户端地址</div>
                         <div class="hiprint-option-item-field"><input type="text" placeholder="${hiwebSocket.host}" class="auto-submit"></div>
                         <button class="hiprint-option-item-settingBtn" style="padding: 0 10px; margin: 0 0 0 5px; white-space: nowrap">连接</button>
                     </div>`);
                 this.target.find("button").on("click", function (val) {
                     var t = self.getValue();
-                    if(!t) return ElMessage.warning("请输入客户端主机地址");
+                    if(!t) return ElMessage.error("请输入客户端地址");
                     hiwebSocket.stop();
                     hiwebSocket.host = t
-                    hiwebSocket.start();
+                    hiwebSocket.start(true);
                 }); 
                 return this.target;
             }, t.prototype.getValue = function () {
@@ -2880,15 +2880,14 @@ var hiprint = function (t) {
             return t.prototype.css = function (t, e) {
                 return null;
             }, t.prototype.createTarget = function () {
-                return this.target = $(' <div class="hiprint-option-item">\n        <div class="hiprint-option-item-label">\n        每行缩进\n        </div>\n        <div class="hiprint-option-item-field">\n        <select class="auto-submit">\n        <option value="" >默认</option>\n        <option value="6" >6pt</option>\n        <option value="6.75" >6.75pt</option>\n        <option value="7.5" >7.5pt</option>\n        <option value="8.25" >8.25pt</option>\n        <option value="9" >9pt</option>\n        <option value="9.75" >9.75pt</option>\n        <option value="10.5" >10.5pt</option>\n        <option value="11.25" >11.25pt</option>\n        <option value="12" >12pt</option>\n        <option value="12.75" >12.75pt</option>\n        <option value="13.5" >13pt</option>\n        <option value="14.25" >14.25pt</option>\n        <option value="15" >15pt</option>\n        <option value="15.75" >15.75pt</option>\n        <option value="16.5" >16.5pt</option>\n        <option value="17.25" >17.25pt</option>\n        <option value="18" >18pt</option>\n        <option value="18.75" >18.75pt</option>\n        <option value="19.5" >19.5pt</option>\n        <option value="20.25" >20.25pt</option>\n        <option value="21" >21pt</option>\n        <option value="21.75" >21.75pt</option>\n        <option value="22.5" >22.5pt</option>\n        <option value="23.25" >23.25pt</option>\n        <option value="24" >24pt</option>\n        <option value="24.75" >24.75pt</option>\n        <option value="25.5" >25.5pt</option>\n        <option value="26.25" >26.25pt</option>\n        <option value="27" >27pt</option>\n        <option value="27.75" >27.75pt</option>\n        <option value="28.5" >28.5pt</option>\n        <option value="29.25" >29.25pt</option>\n        <option value="30" >30pt</option>\n        <option value="30.75" >30.75pt</option>\n        <option value="31.5" >31.5pt</option>\n        <option value="32.25" >32.25pt</option>\n        <option value="33" >33pt</option>\n        <option value="33.75" >33.75pt</option>\n        <option value="34.5" >34.5pt</option>\n        <option value="35.25" >35.25pt</option>\n        <option value="36" >36pt</option>\n        </select>\n        </div>\n    </div>'), this.target;
+                return this.target = $(`<div class="hiprint-option-item"><div class="hiprint-option-item-label">每行缩进</div>  <div class="hiprint-option-item-field"><input type="number" min="0" step="0.5" class="auto-submit" /></div></div>`), this.target;
             }, t.prototype.getValue = function () {
-                var t = this.target.find("select").val();
-                if (t) return parseFloat(t.toString());
-            }, t.prototype.setValue = function (t) {
-                t && (this.target.find('option[value="' + t + '"]').length || this.target.find("select").prepend('<option value="' + t + '" >' + t + "</option>"));
-                this.target.find("select").val(t);
-            }, t.prototype.destroy = function () {
-                this.target.remove();
+                    var t = this.target.find("input").val();
+                    if (t) return parseFloat(t.toString());
+                }, t.prototype.setValue = function (t) {
+                    this.target.find("input").val(t);
+                }, t.prototype.destroy = function () {
+                    this.target.remove();
             }, t;
         }(),
         R = function () {
@@ -6112,7 +6111,7 @@ var hiprint = function (t) {
         getPrinterList: function getPrinterList() {
             return this.printerList;
         },
-        start: function start() {
+        start: function start(isManual) {
             var _this = this;
             var t = this;
             window.WebSocket ? this.socket || (this.socket = io(this.host, {
@@ -6120,6 +6119,7 @@ var hiprint = function (t) {
                 reconnectionAttempts: 5,
                 withCredentials: !0
             }), this.socket.on("connect", function (e) {
+                if(isManual) ElMessage.success("连接成功");
                 t.opened = !0, console.log("Websocket opened."), _this.socket.on("successs", function (t) {
                     hinnn.event.trigger("printSuccess_" + t.templateId, t);
                 }), _this.socket.on("error", function (t) {
@@ -6127,6 +6127,8 @@ var hiprint = function (t) {
                 }), _this.socket.on("printerList", function (e) {
                     t.printerList = e;
                 }), t.state = n;
+            }), this.socket.on("connect_error", function () {
+                if(isManual) ElMessage.error("连接失败");
             }), this.socket.on("disconnect", function () {
                 t.opened = !1;
             })) : console.log("WebSocket start fail");
