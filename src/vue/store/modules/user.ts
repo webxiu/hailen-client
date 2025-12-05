@@ -2,7 +2,7 @@ import { LoginInfoType, UserInfoType, login } from "@/vue/api/user";
 import { getUserInfo, removeCookie, removeUserInfo, setUserInfo } from "@/vue/utils/storage";
 
 import { defineStore } from "pinia";
-import router from "@/vue/router";
+import router, { resetRouter } from "@/vue/router";
 import { store } from "@/vue/store";
 import { userType } from "./types";
 import { initRouter } from "@/vue/router/utils";
@@ -21,10 +21,11 @@ export const useUserStore = defineStore({
     async userLogin(data: any) {
       return new Promise<LoginInfoType>((resolve, reject) => {
         login(data)
-          .then(({ data }) => {
+          .then(async ({ data }) => {
             setUserInfo(data);
             this.updateUserInfo(data.user);
-            initRouter();
+            // 等待路由初始化完成后再跳转
+            await initRouter();
             router.push({ path: "/" });
             resolve(data);
           })
@@ -36,6 +37,7 @@ export const useUserStore = defineStore({
       router.push("/login?redirect=" + location.href.split("#")[1]);
       removeCookie();
       removeUserInfo();
+      resetRouter(); // 重置路由
     }
   }
 });
