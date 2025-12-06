@@ -10,12 +10,8 @@ const tags = new Array(1).fill(0).map((item, index) => {
   index++;
   return {
     name: `Home${index}`,
-    path: `/workbench/home${index}`,
-    meta: {
-      title: "标题很累空间四六级".slice(0, randomIndex) + index,
-      icon: "icon-gongzuotai",
-      keepAlive: true
-    },
+    path: `/home/command/mac/index`,
+    meta: { title: "主页", icon: "icon-gongzuotai", keepAlive: true },
     id: index,
     query: {
       menuCode: "16",

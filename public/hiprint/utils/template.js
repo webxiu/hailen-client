@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-11-25 16:59:35
+ * @LastEditTime: 2025-12-05 18:23:34
  * @Description: 初始化模板
  */
 
@@ -113,13 +113,16 @@ var testTemplate = [
                   textType: "text",
                   hideTitle: false,
                 },
-                printElementType: { title: "自定义文本", type: "text" },
+                printElementType: { title: "文本", type: "text" },
               },
               {
                 options: { left: 60, top: 27, height: 13, width: 52, title: "页眉线", textAlign: "center", textType: "text", hideTitle: false },
-                printElementType: { title: "自定义文本", type: "text" },
+                printElementType: { title: "文本", type: "text" },
               },
-              { options: { left: 25.5, top: 57, height: 705, width: 9, fixed: true, borderStyle: "dotted" }, printElementType: { type: "vline" } },
+              {
+                options: { left: 25.5, top: 57, height: 705, width: 9, fixed: true, borderStyle: "dotted" },
+                printElementType: { title: "竖线", type: "vline" },
+              },
               {
                 options: { left: 60, top: 61.5, height: 48, width: 87, src: "./assets/image/hi.png", fit: "contain" },
                 printElementType: { title: "图片", type: "image" },
@@ -158,7 +161,7 @@ var testTemplate = [
               },
               {
                 options: { left: 499.5, top: 120, height: 43, width: 51, title: "123456789", textType: "qrcode", hideTitle: false },
-                printElementType: { title: "自定义文本", type: "text" },
+                printElementType: { title: "123546789", type: "text" },
               },
               {
                 options: {
@@ -174,7 +177,7 @@ var testTemplate = [
                   textType: "barcode",
                   hideTitle: false,
                 },
-                printElementType: { title: "自定义文本", type: "text" },
+                printElementType: { title: "条形码", type: "text" },
               },
               {
                 options: {
@@ -189,7 +192,7 @@ var testTemplate = [
                   textType: "text",
                   hideTitle: false,
                 },
-                printElementType: { title: "自定义文本", type: "text" },
+                printElementType: { title: "文本", type: "text" },
               },
               {
                 options: {
@@ -203,11 +206,11 @@ var testTemplate = [
                   textType: "text",
                   hideTitle: false,
                 },
-                printElementType: { title: "自定义文本", type: "text" },
+                printElementType: { title: "文本", type: "text" },
               },
               {
                 options: { left: 60, top: 190.5, height: 13, width: 51, title: "横线", textAlign: "center", textType: "text", hideTitle: false },
-                printElementType: { title: "自定义文本", type: "text" },
+                printElementType: { title: "横线", type: "text" },
               },
               {
                 options: {
@@ -221,7 +224,7 @@ var testTemplate = [
                   textType: "text",
                   hideTitle: false,
                 },
-                printElementType: { title: "自定义文本", type: "text" },
+                printElementType: { title: "文本", type: "text" },
               },
               { options: { left: 60, top: 214.5, height: 10, width: 475.5, borderWidth: 0.75 }, printElementType: { title: "横线", type: "hline" } },
               {
@@ -237,7 +240,7 @@ var testTemplate = [
                   textType: "text",
                   hideTitle: false,
                 },
-                printElementType: { title: "自定义文本", type: "text" },
+                printElementType: { title: "文本", type: "text" },
               },
               {
                 options: {
@@ -251,7 +254,7 @@ var testTemplate = [
                   textType: "text",
                   hideTitle: false,
                 },
-                printElementType: { title: "自定义文本", type: "text" },
+                printElementType: { title: "文本", type: "text" },
               },
               {
                 options: {
@@ -265,7 +268,7 @@ var testTemplate = [
                   textType: "text",
                   hideTitle: false,
                 },
-                printElementType: { title: "自定义文本", type: "text" },
+                printElementType: { title: "文本", type: "text" },
               },
               {
                 options: {
@@ -279,7 +282,7 @@ var testTemplate = [
                   textType: "text",
                   hideTitle: false,
                 },
-                printElementType: { title: "自定义文本", type: "text" },
+                printElementType: { title: "文本", type: "text" },
               },
               {
                 options: {
@@ -351,7 +354,7 @@ var testTemplate = [
                   textType: "text",
                   hideTitle: false,
                 },
-                printElementType: { type: "text" },
+                printElementType: { title: "文本", type: "text" },
               },
               {
                 options: {
@@ -364,11 +367,11 @@ var testTemplate = [
                   textType: "text",
                   hideTitle: false,
                 },
-                printElementType: { title: "自定义文本", type: "text" },
+                printElementType: { title: "文本", type: "text" },
               },
               {
                 options: { left: 60, top: 370.5, height: 18, width: 79, title: "配置项表格", textAlign: "center", textType: "text", hideTitle: false },
-                printElementType: { title: "自定义文本", type: "text" },
+                printElementType: { title: "文本", type: "text" },
               },
               {
                 options: {
@@ -384,7 +387,7 @@ var testTemplate = [
                   textType: "text",
                   hideTitle: false,
                 },
-                printElementType: { title: "自定义文本", type: "text" },
+                printElementType: { title: "文本", type: "text" },
               },
               {
                 options: {
@@ -398,7 +401,7 @@ var testTemplate = [
                   textType: "text",
                   hideTitle: false,
                 },
-                printElementType: { title: "自定义文本", type: "text" },
+                printElementType: { title: "文本", type: "text" },
               },
               {
                 options: { top: 507, left: 60, width: 510, height: 40, field: "longText", hideTitle: false },
@@ -407,21 +410,21 @@ var testTemplate = [
               { options: { top: 565, left: 475, width: 100 }, height: 100, printElementType: { title: "矩形", type: "rect" } },
               {
                 options: { top: 568, left: 174, width: 90, height: 13, title: "竖线", textAlign: "center", textType: "text", hideTitle: false },
-                printElementType: { title: "自定义文本", type: "text" },
+                printElementType: { title: "竖线", type: "text" },
               },
               { options: { top: 574, left: 60, width: 10 }, height: 100, printElementType: { title: "竖线", type: "vline" } },
               {
                 options: { top: 604, left: 210, width: 120, height: 13, title: "横线", textAlign: "center", textType: "text", hideTitle: false },
-                printElementType: { title: "自定义文本", type: "text" },
+                printElementType: { title: "横线", type: "text" },
               },
               { options: { top: 625, left: 130, width: 277, height: 10, borderWidth: 0.75 }, printElementType: { title: "横线", type: "hline" } },
               {
                 options: { top: 649, left: 364, width: 101, height: 13, title: "矩形", textAlign: "center", textType: "text", hideTitle: false },
-                printElementType: { title: "自定义文本", type: "text" },
+                printElementType: { title: "矩形", type: "text" },
               },
               {
                 options: { top: 784, left: 525, width: 63, height: 13, title: "页尾线", textAlign: "center", textType: "text", hideTitle: false },
-                printElementType: { title: "自定义文本", type: "text" },
+                printElementType: { title: "文本", type: "text" },
               },
               // {
               //   options: { top: 680, left: 50, width: 310, height: 50, field: "html" },
@@ -442,7 +445,7 @@ var testTemplate = [
                   textType: "text",
                   hideTitle: false,
                 },
-                printElementType: { title: "自定义文本", type: "text" },
+                printElementType: { title: "文本", type: "text" },
               },
               {
                 options: {
@@ -455,7 +458,7 @@ var testTemplate = [
                   textType: "text",
                   hideTitle: false,
                 },
-                printElementType: { title: "自定义文本", type: "text" },
+                printElementType: { title: "文本", type: "text" },
               },
             ],
           },
@@ -485,8 +488,8 @@ var testTemplate = [
                 },
                 printElementType: { title: "文本", type: "text" },
               },
-              { options: { left: 66, top: 64, height: 90, width: 90 }, printElementType: { type: "rect" } },
-              { options: { left: 237, top: 58, height: 90, width: 90 }, printElementType: { type: "oval" } },
+              { options: { left: 66, top: 64, height: 90, width: 90 }, printElementType: { title: "矩形", type: "rect" } },
+              { options: { left: 237, top: 58, height: 90, width: 90 }, printElementType: { title: "椭圆", type: "oval" } },
               {
                 options: {
                   left: 365,
@@ -495,7 +498,7 @@ var testTemplate = [
                   width: 200,
                   content: "<div style='width: 100%;height: 100%;text-align: center;line-height: 50px;color: #00f;'>这是一个HTML元素</div>",
                 },
-                printElementType: { title: "html", type: "html" },
+                printElementType: { title: "HTML", type: "html" },
               },
               {
                 options: {

@@ -8446,8 +8446,9 @@ var hiprint = function (t) {
                         // [方法]
                         var Method = {
                             clear: function ( ) { 
-                                elements.forEach((el) => _e.deletePrintElement(el)) 
+                                _e.clear();
                                 ElMessage.success("清空成功");
+                                hinnn.event.trigger("hiprintTemplateDataChanged_" + _e.templateId, "清空");
                                 onClose();
                             },
                             paste: function () {
@@ -8474,6 +8475,7 @@ var hiprint = function (t) {
                                 reset: ()=>({ top: originPos[index].top, left: originPos[index].left }),
                                 delete: function () {
                                     _e.deletePrintElement(el);
+                                    hinnn.event.trigger("hiprintTemplateDataChanged_" + el.templateId, "删除");
                                     return onClose();
                                 },
                                 copy: function (isLast) {
@@ -9558,10 +9560,13 @@ var hiprint = function (t) {
                         var isDraggable = el.options.draggable == false
                         var draggable = isDraggable ? "disabled glyphicon-minus-sign" : "glyphicon-ok-sign";
                         var field = el.options.field || "";
-                        var _title = el.printElementType.title || "";
+                        var _title = el.printElementType.title || ""; // 组件名称
                         var type = el.options.textType || el.printElementType.type || "";
-                        var title = el.options.title || _title || "";
-                        var icon = t.layerOption.icons.find((item) => item.tid.split(".")[1] === type).icon || "";
+                        var title = el.options.title || el.printElementType.title || "";
+                        var icon = t.layerOption.icons.find((item) => {
+                            const titleType = el.printElementType.title; // 自定义文本特殊处理
+                            return titleType ==="自定义文本" ? titleType === item.title : item.tid.split(".")[1] === type
+                        }).icon || "";
                         var content = ['html', 'echarts', 'shtml'].includes(type) ? '' : title + (testData && typeof testData === "string" ? `: ${testData}` : "");
                         var itemDom = $(`<div class="layer-item" data-seq="${idx}">
                                             <span class="icon glyphicon ${icon}"></span>
@@ -9622,6 +9627,7 @@ var hiprint = function (t) {
 
                         if ($target.is(".delete")) {
                             e.stopPropagation(), t.deletePrintElement(el), $item.remove();// 删除
+                            hinnn.event.trigger("hiprintTemplateDataChanged_" + el.templateId, "删除");
                             return;
                         }
                         // 显示配置代码
@@ -9641,7 +9647,8 @@ var hiprint = function (t) {
                         if(!$item?.length || !elItemObj.el) return;
                         $item.addClass("active");
                         var {right, top} = $item[0].getBoundingClientRect();
-                        var optionCode = JSON.stringify(elItemObj.el.options || {}, null, 2);
+                        var { options, printElementType } = elItemObj.el;
+                        var optionCode = JSON.stringify({options, printElementType}, null, 2);
                         elOption.css({ left: right + 5, top, display:  elItemObj.showOption ? "block" : "none" });
                         if(!elItemObj.showOption) return;
 

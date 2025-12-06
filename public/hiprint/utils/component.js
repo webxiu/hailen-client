@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-11-27 10:38:15
+ * @LastEditTime: 2025-12-04 09:42:41
  * @Description: 布局组件模块
  */
 
@@ -81,10 +81,10 @@ const MyHeader = {
           var postMsg = {
               // 基础配置
               title: "文件标题",     \t\t\t// 导出PDF标题
-              printCount: 1,        \t\t\t// 打印份数(默认1), 若testData为数组, 按testData的长度打印份数
               showGridLine: true,   \t\t// 是否显示网格
               showLandscape: false, \t\t// 是否横向打印(默认false)
-              testData: testData,   \t\t\t// 打印数据 (默认数据对象, 打印多份传入数组)
+              printCount: 1,        \t\t\t// 打印份数 (仅testData为对象有效)
+              testData: testData,   \t\t\t// 打印数据 (可以是对象或数组)
               template: template,   \t\t// 打印模板 查看4️⃣ 或 文档地址: http://hiprint.io/demo
               // 其他可选配置
               history: true,        \t\t\t\t\t\t// 是否记录历史, 默认true
@@ -102,10 +102,10 @@ const MyHeader = {
 
     4️⃣.模板配置: 
           1. 配置多页: panels数组项中的每项都是一个分页, 表格和长文本超出页码自动新增分页
-          2. 打印多份: 所有分页打印数据集中配置在testData对象中, 每页字段名不能重复
-                      testData为对象时, 按printCount设置的值打印份数
-                      testData为数组时, 按testData数组的长度打印份数
-          3. 模板配置: 
+          2. 打印多份: 所有分页打印数据集中配置在testData对象中, 存在多页时, 每页字段名不能重复
+                \t\t  testData为对象时, 按printCount设置的值打印份数
+                \t\t  testData为数组时, 按testData数组的长度打印份数, 忽略printCount配置
+          3. 配置格式: 
               template: {
                 panels: [
                   {
@@ -130,18 +130,18 @@ const MyHeader = {
                 ]
               }
 
-    5️⃣.表格函数配置: 配置在options中(注意options中的函数为字符串函数):
+    5️⃣.printElements中的表格函数说明 (注意options中的函数为字符串函数):
         printElements: [
          {
             options: { 
               ...省略其他配置
-              title: "",                      \t\t\t\t\t\t// 标题默认显示冒号(：), 设置title为""则不显示冒号
+              title: "",                      \t\t\t\t\t\t// 标题默认显示冒号(：), 为空则不显示
               styler: \`()=>{}\`,             \t\t\t\t\t// 样式函数
               rowStyler: \`()=>{}\`,          \t\t\t\t// 行样式函数
               formatter: \`()=>{}\`,          \t\t\t\t// 格式化函数
               rowsColumnsMerge: \`()=>{}\`,         \t\t// 行/列合并函数
-              footerFormatter: \`()=>{}\`,            \t\t\t// 表格脚函数 (方式1, 优先级高)
-              gridColumnsFooterFormatter: \`()=>{}\`,\t// 多组表格脚函数 (方式1, 优先级高)
+              footerFormatter: \`()=>{}\`,            \t\t\t// 表格脚函数 (方式1, 比 printElementType 中的优先级高)
+              gridColumnsFooterFormatter: \`()=>{}\`,\t// 多组表格脚函数 (方式1,  比 printElementType 中的优先级高)
             },
             printElementType: {  
               footerFormatter: ()=>{},        \t\t\t\t// 表格脚函数 (方式2)
