@@ -62,60 +62,10 @@ router.beforeEach(async (to, from, next) => {
 
   if (loginInfo.token) {
     if (to.path === "/login") {
-      // 登录后跳转到首页，等待路由初始化完成
-      await initRouter();
       next({ path: "/" });
       NProgress.done();
     } else {
-      // 初始化动态路由（只会在首次调用时执行）
-      await initRouter();
-
-      // 等待一个tick，确保路由完全注册
-      await nextTick();
-
-      // 额外等待一小段时间，确保路由完全注册到 Vue Router 内部
-      await new Promise((resolve) => setTimeout(resolve, 100));
-
-      // 检查是否是动态路由路径（排除根路径和登录页）
-      const isDynamicRoutePath = (to.path.startsWith("/home/") || to.path.startsWith("/system/")) && to.path !== "/" && to.path !== "/login";
-
-      if (isDynamicRoutePath) {
-        // 使用 router.resolve 来检查路由是否存在
-        // 这是最可靠的方式，因为 Vue Router 会自动处理嵌套路由
-        try {
-          const resolved = router.resolve(to.path);
-
-          // 打印调试信息
-          console.log("路由解析结果:", {
-            path: to.path,
-            resolvedName: resolved.name,
-            resolvedPath: resolved.path,
-            resolvedMatched: resolved.matched?.map((r) => ({ name: r.name, path: r.path }))
-          });
-
-          // 如果解析到的路由是404，说明路由不存在
-          if (resolved.name === "Error404") {
-            console.warn("动态路由不存在，重定向到首页:", to.path);
-            // 打印所有已注册的路由，用于调试
-            const allRoutes = router.getRoutes();
-            console.log(
-              "当前所有路由:",
-              allRoutes.map((r) => ({
-                name: r.name,
-                path: r.path,
-                children: r.children?.map((c: any) => ({ name: c.name, path: c.path, children: c.children?.map((cc: any) => ({ name: cc.name, path: cc.path })) }))
-              }))
-            );
-            next({ path: "/", replace: true });
-            return;
-          }
-        } catch (error) {
-          // 解析出错，重定向到首页
-          console.warn("路由解析出错，重定向到首页:", to.path, error);
-          next({ path: "/", replace: true });
-          return;
-        }
-      }
+      await initRouter(); 
 
       // 正常情况，继续导航
       addTagPath(to);

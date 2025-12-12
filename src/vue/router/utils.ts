@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-29 09:04:51
  * @LastEditors: Hailen
- * @LastEditTime: 2025-12-05 11:15:58
+ * @LastEditTime: 2025-12-12 08:43:41
  * @Description:
  */
 
@@ -110,65 +110,21 @@ const getAsyncRoutes = () => {
 
 /** 处理动态路由（后端返回的路由） */
 function handleAsyncRoutes(routeList: RouteRecordRaw[]) {
-  if (routeList.length === 0) {
-    console.warn("没有动态路由需要添加");
-    return;
-  }
-
-  // 查找 home.ts 定义的 Layout 路由（path 为 "/" 或 name 为 "Layout"）
-  const layoutRoute = router.getRoutes().find((route) => (route.path === "/" && route.name === "Layout") || route.name === "Layout");
+  if (routeList.length === 0) return console.warn("没有动态路由需要添加");
+  const layoutRoute = router.getRoutes().find((route) => route.path === "/");
 
   if (layoutRoute && layoutRoute.name) {
-    // 如果 Layout 路由存在，将所有动态路由添加到它的 children 中
     routeList.forEach((v: RouteRecordRaw) => {
       if (v?.name && !router.hasRoute(v.name)) {
-        // 将动态路由添加到 Layout 路由的 children 中
         router.addRoute(layoutRoute.name!, v);
-        console.log(
-          "添加子路由到 Layout:",
-          v.name,
-          v.path,
-          "children:",
-          v.children?.map((c: any) => c.path)
-        );
       }
     });
 
-    // 更新 Layout 路由的 redirect 为第一个 menu 路由
     const firstMenuPath = findFirstMenuRoute(routeList as any[]);
+    // 更新 Layout 路由的 redirect
     if (firstMenuPath) {
-      // 更新 Layout 路由的 redirect
-      const updatedLayoutRoute = router.getRoutes().find((route) => route.name === "Layout");
-      if (updatedLayoutRoute) {
-        updatedLayoutRoute.redirect = firstMenuPath;
-        console.log("更新 Layout 路由的 redirect 为:", firstMenuPath);
-      }
-    }
-  } else {
-    // 如果 Layout 路由不存在，尝试从 home.ts 配置创建
-    if (homeRouteConfig) {
-      // 查找第一个 menu 路由作为默认 redirect
-      const firstMenuPath = findFirstMenuRoute(routeList as any[]);
-
-      // 将动态路由添加到 homeRouteConfig 的 children 中
-      const layoutRouteWithChildren: RouteRecordRaw = {
-        ...homeRouteConfig,
-        name: homeRouteConfig.name || "Layout",
-        redirect: firstMenuPath || homeRouteConfig.redirect || "/home/dashboard/index",
-        children: [...(homeRouteConfig.children || []), ...routeList]
-      };
-
-      router.addRoute(layoutRouteWithChildren);
-      console.log("创建 Layout 路由并添加子路由:", routeList.length, "个", "默认redirect:", layoutRouteWithChildren.redirect);
-    } else {
-      // 如果 home.ts 配置也不存在，作为顶级路由添加（不推荐）
-      console.warn("未找到 Layout 路由配置，将动态路由作为顶级路由添加");
-      routeList.forEach((v: RouteRecordRaw) => {
-        if (v?.name && !router.hasRoute(v.name)) {
-          router.addRoute(v);
-          console.log("添加路由（顶级）:", v.name, v.path);
-        }
-      });
+      const updatedLayoutRoute = router.getRoutes().find((route) => route.path === "/");
+      if (updatedLayoutRoute) updatedLayoutRoute.redirect = firstMenuPath;
     }
   }
 }
@@ -203,4 +159,10 @@ function resetRouterInit() {
   initRouterPromise = null;
 }
 
-export { initRouter, resetRouterInit };
+/** 获取所有菜单中的第一个菜单（顶级菜单）*/
+function getTopMenu(tag = false) {
+  console.log("homeRouteConfig :>> ", homeRouteConfig.children[0]);
+  return homeRouteConfig.children[0];
+}
+
+export { initRouter, resetRouterInit, getTopMenu };

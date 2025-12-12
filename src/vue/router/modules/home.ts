@@ -2,14 +2,14 @@
  * @Author: Hailen
  * @Date: 2025-09-25 09:53:24
  * @LastEditors: Hailen
- * @LastEditTime: 2025-12-04 18:31:23
- * @Description: 
+ * @LastEditTime: 2025-12-12 08:52:11
+ * @Description:
  */
 import Layout from "@/vue/layout/index.vue";
 
 export default {
   path: "/",
-  name: "Layout",
+  name: "WorkBench",
   component: Layout,
   redirect: "/home/dashboard/index",
   meta: { title: "首页", icon: "Monitor", order: 1 },
