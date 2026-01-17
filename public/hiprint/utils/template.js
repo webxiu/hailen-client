@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-12-05 18:23:34
+ * @LastEditTime: 2026-01-17 15:09:52
  * @Description: 初始化模板
  */
 
@@ -24,7 +24,37 @@ var defaultConfig = {
   dataMode: true,
   // fontList: [{ title: "苹果黑体", value: "STHeitiSC-Light" }],
   // onDataChange: (type, json) => {console.log(type, json); },
-  testData: {},
+  testData: {
+    barcode: "123456789",
+    name: "古力娜扎",
+    logo: "https://dlpctest.deogra.com/static/png/logo-0c9a0132.1751693932184.png",
+    logoName: "https://dlpctest.deogra.com/static/png/titleLogo-d6d96c8f.1751693932184.png",
+    longText:
+      "浙江在线3月29日讯最近，\n一篇小学五年级学生写的作文引起了钱报记者的关注这篇作文的题目叫做《脏话风波》，讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文《脏话风波》浙江在线3月29日讯最近，一篇小学五年级学生写的作文引起了钱报记者的关注。这篇作文的题目叫做《脏话风波》，讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文《脏话风波》浙江在线3月29日讯最近，一篇小学五年级学生写的作文引起了钱报记者的关注。这篇作文的题目叫做《脏话风波》，讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文《脏话风波》浙江在线3月29日讯最近，一篇小学五年级学生写的作文引起了钱报记者的关注。这篇作文的题目叫做《脏话风波》，讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文《脏话风波》浙江在线3月29日讯最近，一篇小学五年级学生写的作文引起了钱报记者的关注。这篇作文的题目叫做《脏话风波》，讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文",
+    html: `<div class="html">${new Array(10)
+      .fill(0)
+      .map((_, i) => `<div>我是通用型HTML, 通过调整宽高限定范围, 不可分页 - ${i}</div>`)
+      .join("")}</div>`,
+    shtml: `<div class="shtml">${new Array(50)
+      .fill(0)
+      .map((_, i) => `<div>我是增强型HTML, 可限定宽度, 高度根据内容适应, 自动分页 - ${i}</div>`)
+      .join("")}</div>`,
+    table: new Array(30).fill(1).map((_, i) => {
+      const id = i + 1;
+      const odd = i % 2 === 0;
+      return {
+        name: "张三" + id,
+        age: 18 + id,
+        email: "123@qq.com",
+        address: "广东省深圳市",
+        phone: "123456789" + id,
+        sex: `<div style='color:red'>${odd ? "女" : "男"}</div>`,
+        hobbies: odd ? "足球" : "篮球",
+        type: odd ? "老师" : "学生",
+        status: odd ? "离职" : "在职",
+      };
+    }),
+  },
   template: {
     panels: [
       {
@@ -33,268 +63,224 @@ var defaultConfig = {
         height: 297,
         width: 210,
         paperHeader: 49.5,
-        paperFooter: 800,
+        paperFooter: 780,
         paperNumberDisabled: true,
-        printElements: [],
-        hostDomain: "http://localhost:17521",
         watermarkOptions: watermarkOptions,
-      },
-    ],
-  },
-};
-
-var testTemplate = [
-  {
-    name: "默认",
-    createDate: new Date().toLocaleString(),
-    content: Object.assign({}, defaultConfig),
-  },
-  {
-    name: "内置模板",
-    createDate: new Date().toLocaleString(),
-    content: {
-      title: "内置模板",
-      showGridLine: true,
-      showLandscape: false,
-      testData: {
-        barcode: "123456789",
-        name: "古力娜扎",
-        logo: "https://dlpctest.deogra.com/static/png/logo-0c9a0132.1751693932184.png",
-        logoName: "https://dlpctest.deogra.com/static/png/titleLogo-d6d96c8f.1751693932184.png",
-        longText:
-          "浙江在线3月29日讯最近，\n一篇小学五年级学生写的作文引起了钱报记者的关注这篇作文的题目叫做《脏话风波》，讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文《脏话风波》浙江在线3月29日讯最近，一篇小学五年级学生写的作文引起了钱报记者的关注。这篇作文的题目叫做《脏话风波》，讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文《脏话风波》浙江在线3月29日讯最近，一篇小学五年级学生写的作文引起了钱报记者的关注。这篇作文的题目叫做《脏话风波》，讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文《脏话风波》浙江在线3月29日讯最近，一篇小学五年级学生写的作文引起了钱报记者的关注。这篇作文的题目叫做《脏话风波》，讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文《脏话风波》浙江在线3月29日讯最近，一篇小学五年级学生写的作文引起了钱报记者的关注。这篇作文的题目叫做《脏话风波》，讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文讲述的是小作者班级里发生的一种不文明现象——讲脏话的同学越来越多，有的人说话甚至句句“带把儿”。班主任为了遏制这种现象，煞费苦心想了很多办法，跟学生斗智斗勇……看到这篇作文，记者突然想到，自己读六年级的儿子有天突然冒出一句脏话。此前，他是从不说脏话的。问他怎么学会的，他也说不出个所以然来。于是，记者做了这个小学生脏话现象调查。经过了解才发现，小学生爱说脏话竟然较为普遍，一般三年级会冒出苗头。无论是学习成绩好的，还是平时不太起眼的，都会说脏话。而且，说脏话会“传染”，一旦冒头不制止，到了五六年级甚至可能在班里大爆发。以下为作文",
-        html: `<div class="html">${new Array(10)
-          .fill(0)
-          .map((_, i) => `<div>我是通用型HTML, 通过调整宽高限定范围, 不可分页 - ${i}</div>`)
-          .join("")}</div>`,
-        shtml: `<div class="shtml">${new Array(50)
-          .fill(0)
-          .map((_, i) => `<div>我是增强型HTML, 可限定宽度, 高度根据内容适应, 自动分页 - ${i}</div>`)
-          .join("")}</div>`,
-        table: new Array(30).fill(1).map((_, i) => {
-          const id = i + 1;
-          const odd = i % 2 === 0;
-          return {
-            name: "张三" + id,
-            age: 18 + id,
-            email: "123@qq.com",
-            address: "广东省深圳市",
-            phone: "123456789" + id,
-            sex: `<div style='color:red'>${odd ? "女" : "男"}</div>`,
-            hobbies: odd ? "足球" : "篮球",
-            type: odd ? "老师" : "学生",
-            status: odd ? "离职" : "在职",
-          };
-        }),
-      },
-      template: {
-        panels: [
+        printElements: [
           {
-            index: 0,
-            paperType: "A4",
-            height: 297,
-            width: 210,
-            paperHeader: 49.5,
-            paperFooter: 780,
-            paperNumberDisabled: true,
-            watermarkOptions: watermarkOptions,
-            printElements: [
-              {
-                options: {
-                  left: 175.5,
-                  top: 10.5,
-                  height: 27,
-                  width: 259,
-                  title: "HiPrint自定义模块打印插件",
-                  fontSize: 19,
-                  fontWeight: "600",
-                  textAlign: "center",
-                  lineHeight: 26,
-                  textType: "text",
-                  hideTitle: false,
-                },
-                printElementType: { title: "文本", type: "text" },
-              },
-              {
-                options: { left: 60, top: 27, height: 13, width: 52, title: "页眉线", textAlign: "center", textType: "text", hideTitle: false },
-                printElementType: { title: "文本", type: "text" },
-              },
-              {
-                options: { left: 25.5, top: 57, height: 705, width: 9, fixed: true, borderStyle: "dotted" },
-                printElementType: { title: "竖线", type: "vline" },
-              },
-              {
-                options: { left: 60, top: 61.5, height: 48, width: 87, src: "./assets/image/hi.png", fit: "contain" },
-                printElementType: { title: "图片", type: "image" },
-              },
-              {
-                options: {
-                  left: 153,
-                  top: 64.5,
-                  height: 39,
-                  width: 276,
-                  title: "二维码以及条形码均采用svg格式打印。不同打印机打印不会造成失真。图片打印：不同DPI打印可能会导致失真，",
-                  fontFamily: "微软雅黑",
-                  textAlign: "center",
-                  lineHeight: 18,
-                  textType: "text",
-                  hideTitle: false,
-                },
-                printElementType: { title: "自定义文本", type: "text" },
-              },
-              {
-                options: {
-                  left: 457.5,
-                  top: 79.5,
-                  height: 13,
-                  width: 120,
-                  title: "姓名",
-                  field: "name",
-                  testData: "古力娜扎",
-                  color: "#f00808",
-                  textDecoration: "underline",
-                  textAlign: "center",
-                  textType: "text",
-                  hideTitle: false,
-                },
-                printElementType: { title: "文本", type: "text" },
-              },
-              {
-                options: { left: 499.5, top: 120, height: 43, width: 51, title: "123456789", textType: "qrcode", hideTitle: false },
-                printElementType: { title: "123546789", type: "text" },
-              },
-              {
-                options: {
-                  left: 285,
-                  top: 130.5,
-                  height: 34,
-                  width: 175,
-                  testData: "123456789",
-                  field: "barcode",
-                  title: "123456789",
-                  fontFamily: "微软雅黑",
-                  textAlign: "center",
-                  textType: "barcode",
-                  hideTitle: false,
-                },
-                printElementType: { title: "条形码", type: "text" },
-              },
-              {
-                options: {
-                  left: 60,
-                  top: 132,
-                  height: 19,
-                  width: 213,
-                  title: "所有打印元素都可已拖拽的方式来改变元素大小",
-                  fontFamily: "微软雅黑",
-                  textAlign: "center",
-                  lineHeight: 18,
-                  textType: "text",
-                  hideTitle: false,
-                },
-                printElementType: { title: "文本", type: "text" },
-              },
-              {
-                options: {
-                  left: 153,
-                  top: 189,
-                  height: 13,
-                  width: 238,
-                  title: "单击元素，右侧可自定义元素属性",
-                  textAlign: "center",
-                  fontFamily: "微软雅黑",
-                  textType: "text",
-                  hideTitle: false,
-                },
-                printElementType: { title: "文本", type: "text" },
-              },
-              {
-                options: { left: 60, top: 190.5, height: 13, width: 51, title: "横线", textAlign: "center", textType: "text", hideTitle: false },
-                printElementType: { title: "横线", type: "text" },
-              },
-              {
-                options: {
-                  left: 415.5,
-                  top: 190.5,
-                  height: 13,
-                  width: 164,
-                  title: "可以配置各属性的默认值",
-                  textAlign: "center",
-                  fontFamily: "微软雅黑",
-                  textType: "text",
-                  hideTitle: false,
-                },
-                printElementType: { title: "文本", type: "text" },
-              },
-              { options: { left: 60, top: 214.5, height: 10, width: 475.5, borderWidth: 0.75 }, printElementType: { title: "横线", type: "hline" } },
-              {
-                options: {
-                  left: 235.5,
-                  top: 220.5,
-                  height: 32,
-                  width: 342,
-                  title: "自定义表格：用户可左键选中表头，右键查看可操作项，操作类似Excel，双击表头单元格可进行编辑。内容：title#field",
-                  fontFamily: "微软雅黑",
-                  textAlign: "center",
-                  lineHeight: 15,
-                  textType: "text",
-                  hideTitle: false,
-                },
-                printElementType: { title: "文本", type: "text" },
-              },
-              {
-                options: {
-                  left: 156,
-                  top: 265.5,
-                  height: 13,
-                  width: 94,
-                  title: "表头列大小可拖动",
-                  fontFamily: "微软雅黑",
-                  textAlign: "center",
-                  textType: "text",
-                  hideTitle: false,
-                },
-                printElementType: { title: "文本", type: "text" },
-              },
-              {
-                options: {
-                  left: 300,
-                  top: 265.5,
-                  height: 13,
-                  width: 120,
-                  title: "行列合并及背景颜色配置",
-                  fontFamily: "微软雅黑",
-                  textAlign: "center",
-                  textType: "text",
-                  hideTitle: false,
-                },
-                printElementType: { title: "文本", type: "text" },
-              },
-              {
-                options: {
-                  left: 60,
-                  top: 265.5,
-                  height: 13,
-                  width: 90,
-                  title: "红色区域可拖动",
-                  fontFamily: "微软雅黑",
-                  textAlign: "center",
-                  textType: "text",
-                  hideTitle: false,
-                },
-                printElementType: { title: "文本", type: "text" },
-              },
-              {
-                options: {
-                  left: 60,
-                  top: 285,
-                  height: 50,
-                  width: 511.5,
-                  field: "table",
-                  rowsColumnsMerge: `function(row,colum,rowIndex,colIndex,tableData) {
+            options: {
+              left: 160,
+              top: 10.5,
+              height: 27,
+              width: 280,
+              title: "HiPrint自定义模块打印插件",
+              fontSize: 19,
+              fontWeight: "600",
+              textAlign: "center",
+              lineHeight: 26,
+              textType: "text",
+              hideTitle: false,
+            },
+            printElementType: { title: "文本", type: "text" },
+          },
+          {
+            options: { left: 60, top: 27, height: 13, width: 52, title: "页眉线", textAlign: "center", textType: "text", hideTitle: false },
+            printElementType: { title: "文本", type: "text" },
+          },
+          {
+            options: { left: 25.5, top: 57, height: 705, width: 9, fixed: true, borderStyle: "dotted" },
+            printElementType: { title: "竖线", type: "vline" },
+          },
+          {
+            options: { left: 60, top: 61.5, height: 48, width: 87, src: "./assets/image/hi.png", fit: "contain" },
+            printElementType: { title: "图片", type: "image" },
+          },
+          {
+            options: {
+              left: 153,
+              top: 64.5,
+              height: 39,
+              width: 276,
+              title: "二维码以及条形码均采用svg格式打印。不同打印机打印不会造成失真。图片打印：不同DPI打印可能会导致失真，",
+              fontFamily: "微软雅黑",
+              textAlign: "center",
+              lineHeight: 18,
+              textType: "text",
+              hideTitle: false,
+            },
+            printElementType: { title: "自定义文本", type: "text" },
+          },
+          {
+            options: {
+              left: 457.5,
+              top: 79.5,
+              height: 13,
+              width: 120,
+              title: "姓名",
+              field: "name",
+              testData: "古力娜扎",
+              color: "#f00808",
+              textDecoration: "underline",
+              textAlign: "center",
+              textType: "text",
+              hideTitle: false,
+            },
+            printElementType: { title: "文本", type: "text" },
+          },
+          {
+            options: { left: 499.5, top: 120, height: 43, width: 51, title: "123456789", textType: "qrcode", hideTitle: false },
+            printElementType: { title: "123546789", type: "text" },
+          },
+          {
+            options: {
+              left: 285,
+              top: 130.5,
+              height: 34,
+              width: 175,
+              testData: "123456789",
+              field: "barcode",
+              title: "123456789",
+              fontFamily: "微软雅黑",
+              textAlign: "center",
+              textType: "barcode",
+              hideTitle: false,
+            },
+            printElementType: { title: "条形码", type: "text" },
+          },
+          {
+            options: {
+              left: 60,
+              top: 132,
+              height: 19,
+              width: 213,
+              title: "所有打印元素都可已拖拽的方式来改变元素大小",
+              fontFamily: "微软雅黑",
+              textAlign: "center",
+              lineHeight: 18,
+              textType: "text",
+              hideTitle: false,
+            },
+            printElementType: { title: "文本", type: "text" },
+          },
+          {
+            options: {
+              left: 153,
+              top: 189,
+              height: 13,
+              width: 238,
+              title: "单击元素，右侧可自定义元素属性",
+              textAlign: "center",
+              fontFamily: "微软雅黑",
+              textType: "text",
+              hideTitle: false,
+            },
+            printElementType: { title: "文本", type: "text" },
+          },
+          {
+            options: { left: 60, top: 190.5, height: 13, width: 51, title: "横线", textAlign: "center", textType: "text", hideTitle: false },
+            printElementType: { title: "横线", type: "text" },
+          },
+          {
+            options: {
+              left: 415.5,
+              top: 190.5,
+              height: 13,
+              width: 164,
+              title: "可以配置各属性的默认值",
+              textAlign: "center",
+              fontFamily: "微软雅黑",
+              textType: "text",
+              hideTitle: false,
+            },
+            printElementType: { title: "文本", type: "text" },
+          },
+          { options: { left: 60, top: 214.5, height: 10, width: 475.5, borderWidth: 0.75 }, printElementType: { title: "横线", type: "hline" } },
+          {
+            options: {
+              left: 235.5,
+              top: 220.5,
+              height: 32,
+              width: 342,
+              title: "自定义表格：用户可左键选中表头，右键查看可操作项，操作类似Excel，双击表头单元格可进行编辑。内容：title#field",
+              fontFamily: "微软雅黑",
+              textAlign: "center",
+              lineHeight: 15,
+              textType: "text",
+              hideTitle: false,
+            },
+            printElementType: { title: "文本", type: "text" },
+          },
+          {
+            options: {
+              left: 156,
+              top: 265.5,
+              height: 13,
+              width: 94,
+              title: "表头列大小可拖动",
+              fontFamily: "微软雅黑",
+              textAlign: "center",
+              textType: "text",
+              hideTitle: false,
+            },
+            printElementType: { title: "文本", type: "text" },
+          },
+          {
+            options: {
+              left: 300,
+              top: 265.5,
+              height: 13,
+              width: 120,
+              title: "行列合并及背景颜色配置",
+              fontFamily: "微软雅黑",
+              textAlign: "center",
+              textType: "text",
+              hideTitle: false,
+            },
+            printElementType: { title: "文本", type: "text" },
+          },
+          {
+            options: {
+              left: 60,
+              top: 265.5,
+              height: 13,
+              width: 90,
+              title: "红色区域可拖动",
+              fontFamily: "微软雅黑",
+              textAlign: "center",
+              textType: "text",
+              hideTitle: false,
+            },
+            printElementType: { title: "文本", type: "text" },
+          },
+          {
+            options: {
+              left: 60,
+              top: 285,
+              height: 49,
+              width: 511.5,
+              field: "table",
+              columns: [
+                [
+                  { title: "基本信息", width: 100, align: "center", colspan: 2, rowspan: 1, checked: true },
+                  { title: "性别", field: "sex", width: 54, align: "center", colspan: 1, rowspan: 2, checked: true, columnId: "sex" },
+                  { title: "检查信息", width: 84, align: "center", colspan: 3, rowspan: 1, checked: true },
+                  { title: "状态", field: "status", width: 65, align: "center", colspan: 1, rowspan: 2, checked: true, columnId: "status" },
+                  { title: "其他信息", width: 100, align: "center", colspan: 2, rowspan: 1, checked: true },
+                ],
+                [
+                  { title: "姓名", field: "name", width: 50, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "name" },
+                  { title: "年龄", field: "age", width: 50, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "age" },
+                  { title: "电话", field: "phone", width: 50, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "phone" },
+                  { title: "邮箱", field: "email", width: 54, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "email" },
+                  { title: "地址", field: "address", width: 84, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "address" },
+                  { title: "类型", field: "type", width: 50, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "type" },
+                  { title: "爱好", field: "hobbies", width: 50, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "hobbies" },
+                ],
+              ],
+              rowsColumnsMerge: `function(row,colum,rowIndex,colIndex,tableData) {
                     if (rowIndex === 0) {
                       return {
-                        trStyle: { 'background-color': 'skyblue' },
+                        trStyle: { 'background': 'skyblue' },
                         trClass: 'xxx',
                       };
                     }
@@ -302,9 +288,9 @@ var testTemplate = [
                       return {
                         rowspan: 2,
                         colspan: 1,
-                        tdStyle: { 'background-color': '#31f5a4' },
-                        trStyle: { 'background-color': '#cfc3c3' },
-                        trClass: 'xxx',
+                        tdStyle: { 'background': '#31f5a4' },
+                        trStyle: { 'background': '#cfc3c3' },
+                        trClass: 'yyy',
                         tdClass: 'sss',
                       };
                     }
@@ -312,211 +298,284 @@ var testTemplate = [
                       return {
                         rowspan: 1,
                         colspan: 2,
-                        tdStyle: { 'background-color': '#cb90ff' },
-                        trStyle: { 'background-color': '#c9bd51' },
+                        tdStyle: { 'background': '#cb90ff' },
+                        trStyle: { 'background': '#c9bd51' },
                         trClass: 'ddd',
                         tdClass: 'eee',
                       };
                     }
-                  }`,
-                  columns: [
-                    [
-                      { title: "基本信息", width: 100, align: "center", colspan: 2, rowspan: 1, checked: true },
-                      { title: "性别", field: "sex", width: 54, align: "center", colspan: 1, rowspan: 2, checked: true, columnId: "sex" },
-                      { title: "检查信息", width: 84, align: "center", colspan: 3, rowspan: 1, checked: true },
-                      { title: "状态", field: "status", width: 65, align: "center", colspan: 1, rowspan: 2, checked: true, columnId: "status" },
-                      { title: "其他信息", width: 100, align: "center", colspan: 2, rowspan: 1, checked: true },
-                    ],
-                    [
-                      { title: "姓名", field: "name", width: 50, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "name" },
-                      { title: "年龄", field: "age", width: 50, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "age" },
-                      { title: "电话", field: "phone", width: 50, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "phone" },
-                      { title: "邮箱", field: "email", width: 54, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "email" },
-                      { title: "地址", field: "address", width: 84, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "address" },
-                      { title: "类型", field: "type", width: 50, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "type" },
-                      { title: "爱好", field: "hobbies", width: 50, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "hobbies" },
-                    ],
-                  ],
-                },
-                printElementType: { title: "表格", type: "tableCustom" },
-              },
-              {
-                options: {
-                  left: 21,
-                  top: 346.5,
-                  height: 61.5,
-                  width: 15,
-                  title: "装订线",
-                  lineHeight: 18,
-                  fixed: true,
-                  contentPaddingTop: 3.75,
-                  backgroundColor: "#ffffff",
-                  textType: "text",
-                  hideTitle: false,
-                },
-                printElementType: { title: "文本", type: "text" },
-              },
-              {
-                options: {
-                  left: 225,
-                  top: 349.5,
-                  height: 13,
-                  width: 346.5,
-                  title: "自定义模块：主要为开发人员设计，能够快速，简单，实现自己功能",
-                  textAlign: "center",
-                  textType: "text",
-                  hideTitle: false,
-                },
-                printElementType: { title: "文本", type: "text" },
-              },
-              {
-                options: { left: 60, top: 370.5, height: 18, width: 79, title: "配置项表格", textAlign: "center", textType: "text", hideTitle: false },
-                printElementType: { title: "文本", type: "text" },
-              },
-              {
-                options: {
-                  left: 225,
-                  top: 385.5,
-                  height: 38,
-                  width: 346.5,
-                  title: "配置模块：主要为客户使用，开发人员可以配置属性，字段，标题等，客户直接使用，配置模块请参考实例2",
-                  fontFamily: "微软雅黑",
-                  lineHeight: 15,
-                  textAlign: "center",
-                  color: "#d93838",
-                  textType: "text",
-                  hideTitle: false,
-                },
-                printElementType: { title: "文本", type: "text" },
-              },
-              {
-                options: {
-                  left: 60,
-                  top: 488,
-                  height: 13,
-                  width: 123,
-                  field: "",
-                  title: "长文本会自动分页",
-                  textAlign: "center",
-                  textType: "text",
-                  hideTitle: false,
-                },
-                printElementType: { title: "文本", type: "text" },
-              },
-              {
-                options: { top: 507, left: 60, width: 510, height: 40, field: "longText", hideTitle: false },
-                printElementType: { title: "长文本", type: "longText" },
-              },
-              { options: { top: 565, left: 475, width: 100 }, height: 100, printElementType: { title: "矩形", type: "rect" } },
-              {
-                options: { top: 568, left: 174, width: 90, height: 13, title: "竖线", textAlign: "center", textType: "text", hideTitle: false },
-                printElementType: { title: "竖线", type: "text" },
-              },
-              { options: { top: 574, left: 60, width: 10 }, height: 100, printElementType: { title: "竖线", type: "vline" } },
-              {
-                options: { top: 604, left: 210, width: 120, height: 13, title: "横线", textAlign: "center", textType: "text", hideTitle: false },
-                printElementType: { title: "横线", type: "text" },
-              },
-              { options: { top: 625, left: 130, width: 277, height: 10, borderWidth: 0.75 }, printElementType: { title: "横线", type: "hline" } },
-              {
-                options: { top: 649, left: 364, width: 101, height: 13, title: "矩形", textAlign: "center", textType: "text", hideTitle: false },
-                printElementType: { title: "矩形", type: "text" },
-              },
-              {
-                options: { top: 784, left: 525, width: 63, height: 13, title: "页尾线", textAlign: "center", textType: "text", hideTitle: false },
-                printElementType: { title: "文本", type: "text" },
-              },
-              // {
-              //   options: { top: 680, left: 50, width: 310, height: 50, field: "html" },
-              //   printElementType: { title: "HTML", type: "html" },
-              // },
-              {
-                options: { top: 700, left: 50, width: 500, height: 30, field: "shtml" },
-                printElementType: { title: "SHTML", type: "shtml" },
-              },
-              {
-                options: {
-                  left: 75,
-                  top: 790.5,
-                  height: 13,
-                  width: 137,
-                  title: "红色原型是自动定义的Html",
-                  textAlign: "center",
-                  textType: "text",
-                  hideTitle: false,
-                },
-                printElementType: { title: "文本", type: "text" },
-              },
-              {
-                options: {
-                  left: 334.5,
-                  top: 810,
-                  height: 13,
-                  width: 205,
-                  title: "页眉线已上。页尾下以下每页都会重复打印",
-                  textAlign: "center",
-                  textType: "text",
-                  hideTitle: false,
-                },
-                printElementType: { title: "文本", type: "text" },
-              },
-            ],
+                }`,
+              footerFormatter: `function (options, rows, testData, gridRowsData) {
+                  // console.log('options', options);
+                  return \`<tr>
+                    <td colspan="3" align="right">每页页脚小计:</td>
+                    <td colspan="6" align="center">200.00元</td>
+                  </tr>\`;
+                }`,
+              gridColumnsFooterFormatter: `function (options, rows, testData, gridRowsData) {
+                  return \`<div style="padding-top: 5px;color: blue">
+                    <span>每页页脚小计(表格外):</span>
+                    <span>200.00元</span>
+                  </div>\`;
+                }`,
+            },
+            printElementType: { title: "表格", type: "table" },
           },
           {
-            index: 1,
-            paperType: "A4",
-            height: 297,
-            width: 210,
-            paperHeader: 53,
-            paperFooter: 811,
-            paperNumberDisabled: true,
-            watermarkOptions: watermarkOptions,
-            printElements: [
-              {
-                options: {
-                  left: 108,
-                  top: 13,
-                  height: 27,
-                  width: 366,
-                  title: "第二页 内容重新开始分页",
-                  fontSize: 12,
-                  fontWeight: "600",
-                  textAlign: "center",
-                  lineHeight: 26,
-                  textType: "text",
-                  hideTitle: false,
-                },
-                printElementType: { title: "文本", type: "text" },
-              },
-              { options: { left: 66, top: 64, height: 90, width: 90 }, printElementType: { title: "矩形", type: "rect" } },
-              { options: { left: 237, top: 58, height: 90, width: 90 }, printElementType: { title: "椭圆", type: "oval" } },
-              {
-                options: {
-                  left: 365,
-                  top: 79,
-                  height: 50,
-                  width: 200,
-                  content: "<div style='width: 100%;height: 100%;text-align: center;line-height: 50px;color: #00f;'>这是一个HTML元素</div>",
-                },
-                printElementType: { title: "HTML", type: "html" },
-              },
-              {
-                options: {
-                  left: 14,
-                  top: 188,
-                  height: 219,
-                  width: 567,
-                  echartsTool: true,
-                  echartsOption: $tool.objToString(getEchartsOption()),
-                },
-                printElementType: { title: "Echarts图表", type: "echarts" },
-              },
-            ],
-            paperNumberFormat: "paperNo/paperCount",
+            options: {
+              left: 60,
+              top: 425,
+              height: 32.5,
+              width: 511.5,
+              tableCustomRender: `(options) => {
+                    // console.log('options', options);
+                    return  \`<table>
+                        <thead>
+                            <!-- <tr><td> 可以省略表头 </td></tr> -->
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td align="center">序号 (我是自定义表格)</td>
+                            <td>姓名</td>
+                            <td>邮箱</td>
+                            <td>电话</td>
+                            <td>备注</td>
+                          </tr>
+                          <tr>
+                            <td align="center">10010</td>
+                            <td>张三</td>
+                            <td>123@qq.com</td>
+                            <td>123456789</td>
+                            <td>备注信息</td>
+                          </tr>
+                          <tr>
+                            <td align="center">1234</td>
+                            <td colspan="4" align="center" style="background: #d6bbff">合并行</td>
+                          </tr>
+                          <tr>
+                            <td rowspan="2" align="center" style="background: #f1ca98">合并列</td>
+                            <td colspan="2">张三</td>
+                            <td rowspan="2" colspan="2" align="center" style="background: #00ff8c">合并行 / 列</td>
+                          </tr>
+                          <tr>
+                            <td colspan="2">张三</td>
+                          </tr>
+                          ${new Array(3)
+                            .fill(1)
+                            .map((_, i) => {
+                              return `<tr>
+                                <td align="center">我是自定义表格${i + 1}</td>
+                                <td>张三</td>
+                                <td>123@qq.com</td>
+                                <td>123456789</td>
+                                <td>备注</td>
+                              </tr>`;
+                            })
+                            .join("")}
+                        </tbody>
+                      </table>\`
+                    }`,
+            },
+            printElementType: { title: "自定义表格", type: "tableCustom" },
+          },
+          {
+            options: {
+              left: 21,
+              top: 346.5,
+              height: 61.5,
+              width: 15,
+              title: "装订线",
+              lineHeight: 18,
+              fixed: true,
+              contentPaddingTop: 3.75,
+              backgroundColor: "#ffffff",
+              textType: "text",
+              hideTitle: false,
+            },
+            printElementType: { title: "文本", type: "text" },
+          },
+          {
+            options: {
+              left: 225,
+              top: 349.5,
+              height: 13,
+              width: 346.5,
+              title: "自定义模块：主要为开发人员设计，能够快速，简单，实现自己功能",
+              textAlign: "center",
+              textType: "text",
+              hideTitle: false,
+            },
+            printElementType: { title: "文本", type: "text" },
+          },
+          {
+            options: { left: 60, top: 370.5, height: 18, width: 79, title: "配置项表格", textAlign: "center", textType: "text", hideTitle: false },
+            printElementType: { title: "文本", type: "text" },
+          },
+          {
+            options: {
+              left: 225,
+              top: 385.5,
+              height: 38,
+              width: 346.5,
+              title: "配置模块：主要为客户使用，开发人员可以配置属性，字段，标题等，客户直接使用，配置模块请参考实例2",
+              fontFamily: "微软雅黑",
+              lineHeight: 15,
+              textAlign: "center",
+              color: "#d93838",
+              textType: "text",
+              hideTitle: false,
+            },
+            printElementType: { title: "文本", type: "text" },
+          },
+          {
+            options: {
+              left: 60,
+              top: 488,
+              height: 13,
+              width: 123,
+              field: "",
+              title: "长文本会自动分页",
+              textAlign: "center",
+              textType: "text",
+              hideTitle: false,
+            },
+            printElementType: { title: "文本", type: "text" },
+          },
+          {
+            options: { top: 507, left: 60, width: 510, height: 40, field: "longText", hideTitle: false },
+            printElementType: { title: "长文本", type: "longText" },
+          },
+          { options: { top: 565, left: 475, width: 100 }, height: 100, printElementType: { title: "矩形", type: "rect" } },
+          {
+            options: { top: 568, left: 174, width: 90, height: 13, title: "竖线", textAlign: "center", textType: "text", hideTitle: false },
+            printElementType: { title: "竖线", type: "text" },
+          },
+          { options: { top: 574, left: 60, width: 10 }, height: 100, printElementType: { title: "竖线", type: "vline" } },
+          {
+            options: { top: 604, left: 210, width: 120, height: 13, title: "横线", textAlign: "center", textType: "text", hideTitle: false },
+            printElementType: { title: "横线", type: "text" },
+          },
+          { options: { top: 625, left: 130, width: 277, height: 10, borderWidth: 0.75 }, printElementType: { title: "横线", type: "hline" } },
+          {
+            options: { top: 649, left: 364, width: 101, height: 13, title: "矩形", textAlign: "center", textType: "text", hideTitle: false },
+            printElementType: { title: "矩形", type: "text" },
+          },
+          {
+            options: { top: 784, left: 525, width: 63, height: 13, title: "页尾线", textAlign: "center", textType: "text", hideTitle: false },
+            printElementType: { title: "文本", type: "text" },
+          },
+          // {
+          //   options: { top: 680, left: 50, width: 310, height: 50, field: "html" },
+          //   printElementType: { title: "HTML", type: "html" },
+          // },
+          {
+            options: { top: 700, left: 50, width: 500, height: 30, field: "shtml" },
+            printElementType: { title: "SHTML", type: "shtml" },
+          },
+          {
+            options: {
+              left: 75,
+              top: 790.5,
+              height: 13,
+              width: 137,
+              title: "红色原型是自动定义的Html",
+              textAlign: "center",
+              textType: "text",
+              hideTitle: false,
+            },
+            printElementType: { title: "文本", type: "text" },
+          },
+          {
+            options: {
+              left: 334.5,
+              top: 810,
+              height: 13,
+              width: 205,
+              title: "页眉线已上。页尾下以下每页都会重复打印",
+              textAlign: "center",
+              textType: "text",
+              hideTitle: false,
+            },
+            printElementType: { title: "文本", type: "text" },
           },
         ],
       },
-    },
+      {
+        index: 1,
+        paperType: "A4",
+        height: 297,
+        width: 210,
+        paperHeader: 53,
+        paperFooter: 811,
+        paperNumberDisabled: true,
+        watermarkOptions: watermarkOptions,
+        printElements: [
+          {
+            options: {
+              left: 108,
+              top: 13,
+              height: 27,
+              width: 366,
+              title: "第二页 内容重新开始分页",
+              fontSize: 12,
+              fontWeight: "600",
+              textAlign: "center",
+              lineHeight: 26,
+              textType: "text",
+              hideTitle: false,
+            },
+            printElementType: { title: "文本", type: "text" },
+          },
+          { options: { left: 66, top: 64, height: 90, width: 90 }, printElementType: { title: "矩形", type: "rect" } },
+          { options: { left: 237, top: 58, height: 90, width: 90 }, printElementType: { title: "椭圆", type: "oval" } },
+          {
+            options: {
+              left: 365,
+              top: 79,
+              height: 50,
+              width: 200,
+              content: "<div style='width: 100%;height: 100%;text-align: center;line-height: 50px;color: #00f;'>这是一个HTML元素</div>",
+            },
+            printElementType: { title: "HTML", type: "html" },
+          },
+          {
+            options: {
+              left: 14,
+              top: 188,
+              height: 219,
+              width: 567,
+              echartsTool: true,
+              echartsOption: $tool.objToString(getEchartsOption()),
+            },
+            printElementType: { title: "Echarts图表", type: "echarts" },
+          },
+          {
+            options: {
+              left: 113,
+              top: 479,
+              height: 150,
+              width: 300,
+              echartsTool: true,
+              echartsOption:
+                '{\n  title: {\n    text: "柱状图",\n    textStyle: {\n      fontSize: 16\n    }\n  },\n  grid: {\n    left: "3%",\n    right: "4%",\n    bottom: "3%",\n    containLabel: true\n  },\n  xAxis: {\n    type: "category",\n    data: [\n      "一月",\n      "二月",\n      "三月",\n      "四月"\n    ]\n  },\n  yAxis: {\n    type: "value",\n    axisLine: {\n      show: true\n    }\n  },\n  legend: [\n    {\n      top: "8%"\n    }\n  ],\n  tooltip: {\n    trigger: "item",\n    backgroundColor: "rgba(0,0,0,0.6)",\n    borderColor: "transparent",\n    textStyle: {\n      color: "#fff"\n    }\n  },\n  toolbox: {\n    show: true,\n    feature: {\n      magicType: {\n        type: [\n          "line",\n          "bar"\n        ],\n        title: {\n          bar: "切换柱状图",\n          line: "切换折线图"\n        }\n      },\n      dataView: {\n        show: true,\n        title: "数据视图",\n        lang: [\n          "数据视图",\n          "关闭",\n          "刷新"\n        ]\n      },\n      saveAsImage: {\n        title: "下载",\n        show: true,\n        type: "png",\n        pixelRatio: 2\n      }\n    }\n  },\n  series: [\n    {\n      type: "bar",\n      name: "服装",\n      label: {\n        show: true,\n        position: "top"\n      },\n      data: [\n        {\n          name: "衬衫",\n          value: 150\n        },\n        {\n          name: "羊毛衫",\n          value: 320\n        },\n        {\n          name: "雪纺衫",\n          value: 224\n        },\n        {\n          name: "裤子",\n          value: 410\n        }\n      ]\n    },\n    {\n      type: "line",\n      name: "水果",\n      smooth: true,\n      label: {\n        show: true,\n        position: "top"\n      },\n      data: [\n        {\n          name: "苹果",\n          value: 40\n        },\n        {\n          name: "菠萝",\n          value: 180\n        },\n        {\n          name: "香蕉",\n          value: 460\n        },\n        {\n          name: "橘子",\n          value: 126\n        }\n      ]\n    }\n  ]\n}',
+            },
+            printElementType: {
+              title: "Echarts图表",
+              type: "echarts",
+            },
+          },
+        ],
+        paperNumberFormat: "paperNo/paperCount",
+      },
+    ],
+  },
+};
+
+var testTemplate = [
+  {
+    name: "内置模板",
+    createDate: new Date().toLocaleString(),
+    content: Object.assign({}, defaultConfig),
   },
   {
     name: "发票模板",

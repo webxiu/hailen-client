@@ -55,7 +55,7 @@ window.onload = () => {
 
       /** 创建模板 */
       function onInitHiPrint(data = {}) {
-        const options = Object.assign({}, defaultConfig, data);
+        const options = Object.assign({ testData: {}, template: { panels: [] } }, data);
         const { title, printCount, printType, showLandscape, showGridLine, template, testData } = options;
         templateName.value = title;
         printConfig = options;
@@ -90,13 +90,13 @@ window.onload = () => {
           .then(() => {
             const printHander = { fixed };
             printHander[printType]?.();
-            const { showPrint, preview } = getQuery(location.href);
+            const { showPrint, showPreview } = getQuery(location.href);
             const { paperType } = options.template.panels[0] || {};
             if (paperType) Design.setPaperSize(paperType);
             if (showGridLine) (designData.gridLine = true), Design.onGridLine(true);
             if (showLandscape) (designData.landscape = true), Design.onRotate();
-            if (preview === "true") Design.onPreview();
             if (showPrint === "true") Design.onPrint();
+            if (showPreview === "true") Design.onPreview();
           })
           .catch((err) => console.error("模板初始化失败", err));
       }

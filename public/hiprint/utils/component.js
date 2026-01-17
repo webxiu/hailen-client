@@ -2,12 +2,11 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-12-04 09:42:41
+ * @LastEditTime: 2026-01-17 15:46:50
  * @Description: 布局组件模块
  */
 
 const _Templates = "_templates"; // 模板记录
-const _Preview = "_preview"; // 模板预览
 
 function setTemplate(data) {
   localStorage.setItem(_Templates, JSON.stringify(data));
@@ -97,7 +96,8 @@ const MyHeader = {
               title: "打印窗口标题", 
               width: "96%", 
               postMsg: postMsg, 
-              showPrint: false,   \t\t\t// 是否直接打印, 不会显示设计窗口
+              showPrint: false,   \t\t\t// 是否直接打印(默认false: 不显示设计弹窗)
+              showPreview: false,   \t\t// 是否进入设计弹窗直接预览, showPrint为false时有效
           }); 
 
     4️⃣.模板配置: 
@@ -115,8 +115,22 @@ const MyHeader = {
                     paperType: "A4",      \t\t\t// 尺寸
                     paperHeader: 49.5,     \t\t// 页眉高度
                     paperFooter: 800,      \t\t\t// 页脚高度
-                    paperNumberDisabled: true, // 禁用页码
-                    watermarkOptions: {     \t\t// 配置水印
+                    paperNumberDisabled: true, // 是否禁用页码
+                    paperNumberFormat: "paperNo/paperCount", // 页码格式
+                    paperNumberTop: 60.5, \t    // 分页页码距离顶部位置
+                    paperNumberLeft: 50,  \t    // 分页页码距离左侧位置
+                    panelPaperRule: '',  \t\t   // 奇偶分页规则
+                    rotate: '',       \t\t\t\t  // 是否横向打印
+                    firstPaperFooter: '', \t\t  // 首页页尾
+                    evenPaperFooter: '',  \t    // 偶数页页尾
+                    oddPaperFooter: '',   \t\t  // 奇数页页尾
+                    lastPaperFooter: '',  \t\t  // 最后一页页脚
+                    topOffset: '',      \t\t\t  // 顶部偏移
+                    fontFamily: '',     \t\t\t  // 字体
+                    leftOffset: '',     \t\t\t  // 左侧偏移
+                    orient: '',         \t\t\t  // 纸张方向(仅自定义纸张有效)
+                    hostDomain: '',   \t\t\t    // 客户端地址(静默打印)
+                    watermarkOptions: {   \t    // 配置水印
                         content: "内部文件 请勿外传",
                         rotate: 25,
                         show: false,
@@ -140,8 +154,20 @@ const MyHeader = {
               rowStyler: \`()=>{}\`,          \t\t\t\t// 行样式函数
               formatter: \`()=>{}\`,          \t\t\t\t// 格式化函数
               rowsColumnsMerge: \`()=>{}\`,         \t\t// 行/列合并函数
+              tableCustomRender: \`()=>{}\`,         \t\t// 表格自定义渲染函数 (函数体返回表格字符串)
               footerFormatter: \`()=>{}\`,            \t\t\t// 表格脚函数 (方式1, 比 printElementType 中的优先级高)
               gridColumnsFooterFormatter: \`()=>{}\`,\t// 多组表格脚函数 (方式1,  比 printElementType 中的优先级高)
+              columns: [                      \t\t\t\t\t// 表格单元格格式化函数(formatter2) 和 样式函数(styler2)
+                  [
+                      { title: "姓名", field: "name", columnId: "name", 其他... },
+                      { title: "金额", field: "money", columnId: "money", align: "center", 其他... , 
+                          styler2: \`(value, row, index,options)=> ({ color: 'blue' })\`,
+                          formatter2: \`(value, row, index,options)=> {
+                              return value ? '<div style="text-align:right">'+ value.toFixed(2) +'元</div>' : value;
+                          }\`
+                      },
+                  ]                    
+              ]
             },
             printElementType: {  
               footerFormatter: ()=>{},        \t\t\t\t// 表格脚函数 (方式2)
@@ -167,7 +193,8 @@ const MyHeader = {
     }
 
     function onOpenNew() {
-      window.open(location.href, "_blank");
+      const host = location.origin + location.pathname;
+      window.open(host + "?showPrint=false&showPreview=true", "_blank");
     }
 
     function onInfo() {
@@ -251,7 +278,7 @@ const MyTool = {
     function onTemplate() {
       dialogVisible.value = true;
       const jsonData = Design.getJson();
-      const template = removeEmpty(jsonData, ["paperNumberLeft", "paperNumberTop"]);
+      const template = removeEmpty(jsonData);
       const json = $tool.objToString(template);
       const pressJson = $tool.objToString(template, false);
 
@@ -424,7 +451,7 @@ const WangEditor = {
         config: toolbarConfig,
         mode: "default", // or 'simple'
       });
-      
+
       emit("create", editor.value);
     }
   },
