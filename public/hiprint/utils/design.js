@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2025-11-14 11:26:25
+ * @LastEditTime: 2026-01-23 16:10:59
  * @Description: 设计JS主文件
  */
 
@@ -41,11 +41,11 @@ var toolButtons = [
   { name: "网格", action: "onGridLine" },
   { name: "清空", action: "onClear", type: "danger" },
   { name: "重置", action: "onReset", type: "danger" },
-  { name: "打印", action: "onPrint", type: "primary" },
-  { name: "预览", action: "onPreview", type: "primary" },
-  { name: "快速打印", action: "onPrint2", type: "success" },
   { name: "PDF", action: "onExportPdf", type: "info" },
   { name: "模板", action: "onTemplate", type: "info" },
+  { name: "预览", action: "onPreview", type: "primary" },
+  { name: "打印", action: "onPrint", type: "primary" },
+  { name: "快速打印", action: "onPrint2", type: "success" },
   { name: "实时预览", action: "onLivePreview" },
   // { name: "获取元素", action: "getPanels" },
 ];

@@ -2726,7 +2726,7 @@ var hiprint = function (t) {
                 var self = this;
                 this.target = $(`<div class="hiprint-option-item hiprint-option-item-row">
                         <div class="hiprint-option-item-label">客户端地址</div>
-                        <div class="hiprint-option-item-field"><input type="text" placeholder="${hiwebSocket.host}" class="auto-submit"></div>
+                        <div class="hiprint-option-item-field"><input type="text" placeholder="${hiwebSocket.host || 'http://localhost:17521'}" class="auto-submit"></div>
                         <button class="hiprint-option-item-settingBtn" style="padding: 0 10px; margin: 0 0 0 5px; white-space: nowrap">连接</button>
                     </div>`);
                 this.target.find("button").on("click", function (val) {
@@ -3604,7 +3604,7 @@ var hiprint = function (t) {
             return t.prototype.createTarget = function () {
                 var ctrlKey = /Mac/i.test(navigator.userAgent) ? "⌘" : "Ctrl";
                 return this.target = $(`<div class="hiprint-option-item">
-                        <div class="hiprint-option-item-label" title="按住${ctrlKey}键不放切换至捕获">²操作模式</div>
+                        <div class="hiprint-option-item-label" title="按住${ctrlKey}键不放切换至捕获">操作模式</div>
                     <div class="hiprint-option-item-field">
                         <label><input type="radio" name="option" value="true" class="auto-submit" style="width:16px;height:16px;vertical-align: text-top">捕获</label>
                         <label><input type="radio" name="option" value="false" class="auto-submit" style="width:16px;height:16px;vertical-align: text-top; margin-left:10px;">拖拽</label>
@@ -6124,7 +6124,7 @@ var hiprint = function (t) {
         reconnectTimeout: 6e4,
         reconnectWindowSetTimeout: null,
         reconnectDelay: 2e3,
-        host: "http://localhost:17521",
+        host: "", // http://localhost:17521
         supportsKeepAlive: function supportsKeepAlive() {
             return !0;
         },
@@ -6144,6 +6144,7 @@ var hiprint = function (t) {
         start: function start(isManual) {
             var _this = this;
             var t = this;
+            if (!this.host) return;
             window.WebSocket ? this.socket || (this.socket = io(this.host, {
                 transports: ["websocket"],
                 reconnectionAttempts: 5,
@@ -7655,7 +7656,7 @@ var hiprint = function (t) {
                 
                 function onDown(ev) {
                     var option = self.getOption();
-                    if ((ev.ctrlKey || ev.metaKey | option.operationMode)) {
+                    if ((ev.ctrlKey || ev.metaKey || option.operationMode)) {
                         ev.preventDefault();
                         ev.stopPropagation();
                         isDragging = true;

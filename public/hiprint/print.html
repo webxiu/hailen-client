@@ -22,7 +22,7 @@
     <script src="./plugins/qrcode.js"></script>
     <script src="./utils/tool.js"></script>
     <script src="./utils/watermark.js"></script>
-    <!-- <script src="./plugins/socket.io.js"></script> -->
+    <script src="./plugins/socket.io.js"></script>
     <script src="./hiprint.config.js"></script>
     <script src="./hiprint.bundle.js"></script>
     <script src="./utils/config-etype-provider.js"></script>
@@ -46,7 +46,7 @@
           <MyHeader ref="tableRef" @updateTemplate="onUpdateTemplate" />
         </el-header>
         <el-container class="h-100 ui-ov-h border" style="margin: 0 10px">
-          <el-aside width="200px" class="ui-ovy-a p-10">
+          <el-aside width="180px" class="ui-ovy-a p-10">
             <div class="rect-printElement-types hiprintEpContainer">
               <!-- 拖拽列表 -->
               <ul class="hiprint-printElement-type no-select">
@@ -77,7 +77,7 @@
               <div id="ElementLayer"></div>
             </div>
           </el-main>
-          <el-aside width="15%" class="border-right" style="min-width: 260px; overflow-y: auto">
+          <el-aside width="15%" class="border-right" style="min-width: 300px; overflow-y: auto">
             <!-- 属性配置 -->
             <div id="PrintOptionSetting">
               <div class="no-wrap ui-ta-c color-ccc" style="margin-top: 143px;">属性配置区域</div>
