@@ -11,7 +11,7 @@
     // paperNumberContinue: true, //连续打印页码
 
     providers: [],
-    movingDistance: 1, // 鼠标拖动一次移动的距离,默认1.5pt
+    movingDistance: 0.5, // 鼠标拖动一次移动的距离,默认1.5pt
     paperHeightTrim: 1, // 纸张html 的高度等于真实高度1
 
     fontList: [

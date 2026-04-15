@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2026-04-15 11:57:40
+ * @LastEditTime: 2026-04-15 15:36:01
  * @Description: 布局组件模块
  */
 
@@ -50,7 +50,7 @@ const MyHeader = {
     const iconList = reactive([
       { title: "保存模板", icon: "⚛️", click: onSubmit, hide: !Design.isIframe() },
       { title: "新窗口预览", icon: "❇️", click: onOpenNew },
-      { title: "打印配置", icon: "🔔", click: onInfo }
+      { title: "打印配置", icon: "🔔", click: onInfo },
     ]);
     const templateArr = computed(() => {
       const data = getTemplate();
@@ -210,7 +210,7 @@ const MyHeader = {
 
     expose({ updateTableData });
     return { docVisible, docText, tableData, iconList, onCurrentChange, onDelete };
-  }
+  },
 };
 
 const MyTool = {
@@ -221,12 +221,12 @@ const MyTool = {
     let mncEditor = null;
     const isMore = ref(null);
     const dialogVisible = ref(false);
-    const tplForm = reactive({ compress: false, disabled: false, newLine: false, content: "" });
+    const tplForm = reactive({ compress: false, disabled: false, autoLine: false, content: "" });
 
     function createEditor(template) {
       if (mncEditor) return setCode(template);
       require.config({
-        paths: { vs: "./lib/vs" }
+        paths: { vs: "./lib/vs" },
       });
       require(["vs/editor/editor.main"], function () {
         mncEditor = monaco.editor.create(document.getElementById("container"), {
@@ -236,7 +236,7 @@ const MyTool = {
           readOnly: false, // 确保非只读
           wordWrap: "off", // 禁用自动换行
           automaticLayout: true, // 自动布局
-          smoothScrolling: true // 平滑滚动
+          smoothScrolling: true, // 平滑滚动
         });
         setCode(template);
       });
@@ -335,8 +335,8 @@ const MyTool = {
       const itemSet = {
         compress: () => onFold(flag),
         disabled: () => onDisabled(flag),
-        newLine: () => onNewline(flag),
-        theme: () => onTheme(flag)
+        autoLine: () => onAutoline(flag),
+        theme: () => onTheme(flag),
       };
       itemSet[type]();
     }
@@ -349,12 +349,12 @@ const MyTool = {
       }
     }
     // 切换主题
-    function onTheme(flag) { 
+    function onTheme(flag) {
       const newTheme = flag ? "vs-dark" : "vs-light";
       mncEditor.updateOptions({ theme: newTheme });
     }
     // 自动换行
-    function onNewline() {
+    function onAutoline() {
       const currentWrap = mncEditor.getOption(monaco.editor.EditorOption.wordWrap);
       const wordWrap = currentWrap === "on" ? "off" : "on";
       mncEditor.updateOptions({ wordWrap });
@@ -367,6 +367,7 @@ const MyTool = {
           el.options.draggable = disabled ? false : true;
         });
       });
+      tplForm.compress = false;
       setCode(template);
     }
 
@@ -378,7 +379,7 @@ const MyTool = {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         inputPattern: /\S/,
-        inputErrorMessage: "模板名称不能为空"
+        inputErrorMessage: "模板名称不能为空",
       }).then(({ value }) => {
         value = value.trim();
         const template = getCode();
@@ -387,9 +388,9 @@ const MyTool = {
           content: {
             title: value,
             template: template,
-            testData: printConfig.testData
+            testData: printConfig.testData,
           },
-          createDate: new Date().toLocaleString()
+          createDate: new Date().toLocaleString(),
         };
         templateName.value = value;
         const localData = getTemplate();
@@ -447,9 +448,9 @@ const MyTool = {
       onChangeCode,
       onSave,
       onRewirite,
-      onCopy
+      onCopy,
     };
-  }
+  },
 };
 const WangEditor = {
   name: "WangEditor",
@@ -471,26 +472,26 @@ const WangEditor = {
       const toolbarConfig = {};
       const editorConfig = {
         placeholder: "请输入内容...",
-        onChange(editor) {}
+        onChange(editor) {},
       };
 
       editor.value = createEditor({
         selector: "#editor-container",
         html: "<p><br></p>",
         config: editorConfig,
-        mode: "default" // or 'simple'
+        mode: "default", // or 'simple'
       });
 
       const toolbar = createToolbar({
         editor: editor.value,
         selector: "#toolbar-container",
         config: toolbarConfig,
-        mode: "default" // or 'simple'
+        mode: "default", // or 'simple'
       });
 
       emit("create", editor.value);
     }
-  }
+  },
 };
 
 const components = [MyHeader, MyTool, WangEditor];

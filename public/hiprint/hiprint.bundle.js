@@ -8086,7 +8086,6 @@ var hiprint = function (t) {
                             } 
                         }
                     }
-                    console.log('lastPage :>> ', lastPage);
                     // 删除当前页被合并的单元格
                     Object.keys(lastPage).forEach(key => {
                         for (let i = 0; i < trLen; i++) {
@@ -8119,9 +8118,12 @@ var hiprint = function (t) {
                         h = this.getRowsInSpecificHeight(u > 0 ? u : 0 == s ? d - p : t.getContentHeight(s), r, o, s, c, e);
                     l = h.isEnd;
                     var f = void 0;
-                    const trs = h.target.find("tbody tr:not(.thead)");
-                    updateCell(trs);
-                    lastPage = lastPageMerge(trs);
+                    const isPageMerge = h.target.find("table.page-merge");
+                    if(isPageMerge.length){
+                        const trs = h.target.find("tbody tr:not(.thead)");
+                        updateCell(trs);
+                        lastPage = lastPageMerge(trs);
+                    }
                     
                     h.target && (h.target.css("left", this.options.displayLeft()), h.target[0].height = ""), 0 == s || u > 0 ? (h.target && (a = p, h.target.css("top", p + "pt")), f = l && null != this.options.lHeight ? p + (h.height > this.options.lHeight ? h.height : this.options.lHeight) : p + h.height) : (h.target && (a = t.paperHeader, h.target.css("top", t.paperHeader + "pt")), f = t.paperHeader + h.height), n.push(new P.a({
                         target: h.target,
