@@ -77,19 +77,6 @@ declare global {
     }
   }
 
-  /* 天地图T类型 */
-  namespace T {
-    class Map {
-      constructor(containerId: string);
-      centerAndZoom(lngLat: LngLat, zoom: number): void;
-      addEventListener(event: string, callback: Function): void;
-    }
-
-    class LngLat {
-      constructor(lng: number, lat: number);
-    }
-  }
-
   type ValueOf<T> = T[keyof T];
 
   /** 只读属性转可读写 */
@@ -353,7 +340,7 @@ declare global {
     records: T[];
     total: number;
     size: number;
-    page: number; 
+    page: number;
     pages: number;
   }
 

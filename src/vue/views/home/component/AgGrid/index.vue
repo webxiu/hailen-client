@@ -3,6 +3,8 @@ import { ref, defineComponent, withModifiers, reactive } from "vue";
 import type { ColDef } from "ag-grid-community";
 import { PAGE_CONFIG } from "@/vue/config/constant";
 
+defineOptions({ name: "HomeComponentAgGridIndex", title: "AgGrid" });
+
 interface DataItemType {
   id: string;
   factory: string;

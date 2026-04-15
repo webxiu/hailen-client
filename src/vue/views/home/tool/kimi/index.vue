@@ -39,6 +39,8 @@ import { ref, reactive, computed, onMounted } from "vue";
 import { ChatItemType, setChatMsg, getChattMsg } from "./utils";
 import { useUserStore, useUserStoreHook } from "@/vue/store/modules/user";
 
+defineOptions({ name: "HomeToolKimiIndex", title: "KimiChat" });
+
 interface Props {
   isFullScreen?: boolean;
 }

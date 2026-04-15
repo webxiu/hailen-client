@@ -32,6 +32,7 @@ const route = useRoute();
 
 // 从 store 获取动态路由（菜单数据）
 const navMenuList = computed(() => useAppStoreHook().getAsyncRoutes);
+console.log('navMenuList.value', navMenuList.value)
 
 // 当前激活的菜单项
 const activeMenu = computed(() => route.path);

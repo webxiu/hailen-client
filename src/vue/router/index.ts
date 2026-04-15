@@ -1,10 +1,10 @@
 import { RouteRecordRaw, createRouter, createWebHashHistory, createWebHistory } from "vue-router";
 import { getUserInfo, removeUserInfo } from "@/vue/utils/storage";
-import { nextTick } from "vue";
+import { initRouter, resetRouterInit } from "@/vue/router/utils";
 
 import NProgress from "@/vue/utils/progress";
+import { nextTick } from "vue";
 import { useTagStoreHook } from "@/vue/store/modules/tag";
-import { initRouter, resetRouterInit } from "@/vue/router/utils";
 
 /** 路由白名单 */
 export const whiteList = ["/login", "/404"];
@@ -65,9 +65,8 @@ router.beforeEach(async (to, from, next) => {
       next({ path: "/" });
       NProgress.done();
     } else {
-      await initRouter(); 
-
-      // 正常情况，继续导航
+      await initRouter();
+      // 重新进入当前路由，触发新加的动态路由匹配，避免 404 残留
       addTagPath(to);
       next();
     }

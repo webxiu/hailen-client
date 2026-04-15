@@ -7,6 +7,9 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive, computed } from "vue";
 import KeyBit from "./KeyBit.vue";
+
+defineOptions({ name: "HomeToolTransformIndex", title: "转换器" });
+
 const audioData = [261.63, 293.66, 329.63, 349.23, 392.0, 440.0, 493.88];
 // ["c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", "b"],
 // const audio_type_list = ["sine", "square", "sawtooth", "triangle"];

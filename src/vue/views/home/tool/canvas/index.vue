@@ -45,6 +45,8 @@ import ControlPanel, { ControlType } from "./ControlPanel.vue";
 import { v4 as uuidv4 } from "uuid";
 import { onDownload, base64ToBlob } from "@/vue/utils/common";
 
+defineOptions({ name: "HomeToolCanvasIndex", title: "画板" });
+
 const signInstance = ref<DrawBoard>();
 const signRef = ref<HTMLElement>();
 const imgList = ref<any[]>([]);

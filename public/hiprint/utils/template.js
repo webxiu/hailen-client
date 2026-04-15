@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2026-01-17 15:09:52
+ * @LastEditTime: 2026-02-05 15:17:28
  * @Description: 初始化模板
  */
 
@@ -324,22 +324,28 @@ var defaultConfig = {
           {
             options: {
               left: 60,
-              top: 425,
+              top: 440,
               height: 32.5,
               width: 511.5,
               tableCustomRender: `(options) => {
                     // console.log('options', options);
-                    return  \`<table>
+                    return  \`
+                      <style>
+                        /* 添加style标签, 可自定义样式 */
+                        .hiprint-printElement-table .thead {background: #fbe9b4}
+                      </style>
+
+                    <table class="hiprint-printElement-tableTarget">
                         <thead>
                             <!-- <tr><td> 可以省略表头 </td></tr> -->
                         </thead>
                         <tbody>
-                          <tr>
-                            <td align="center">序号 (我是自定义表格)</td>
-                            <td>姓名</td>
-                            <td>邮箱</td>
-                            <td>电话</td>
-                            <td>备注</td>
+                          <tr class="thead">
+                            <td align="center">序号 (我是自定义表格, 只有一个表头, 分页无表头)</td>
+                            <td align="center">姓名</td>
+                            <td align="center">邮箱</td>
+                            <td align="center">电话</td>
+                            <td align="center">备注</td>
                           </tr>
                           <tr>
                             <td align="center">10010</td>
@@ -360,7 +366,8 @@ var defaultConfig = {
                           <tr>
                             <td colspan="2">张三</td>
                           </tr>
-                          ${new Array(3)
+                          <!-- 渲染数据行 (提示用, 使用时删除此行) -->
+                          ${new Array(30)
                             .fill(1)
                             .map((_, i) => {
                               return `<tr>
@@ -373,6 +380,12 @@ var defaultConfig = {
                             })
                             .join("")}
                         </tbody>
+                        <tfoot>
+                          <tr>
+                            <td colspan="2" align="right">页尾说明: </td>
+                            <td colspan="3" align="center">表格页尾(每页重复显)</td>
+                          </tr>
+                        </tfoot>
                       </table>\`
                     }`,
             },

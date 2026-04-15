@@ -9,6 +9,8 @@
 import { ref, onMounted } from "vue";
 import { userList, UserItemType } from "@/vue/api/user";
 
+defineOptions({ name: "HomeSystemUserIndex", title: "用户" });
+
 const columns = ref<TableColumnList[]>([
   { label: "用户名", prop: "username" },
   { label: "邮箱", prop: "email" },

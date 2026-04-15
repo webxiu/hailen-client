@@ -163,9 +163,18 @@ hiprint-printPanel {
   line-height: 9.75pt;
 }
 
-.hiprint-printElement-table thead {
+.hiprint-printElement-table thead,
+.hiprint-printElement-table .thead {
   background: #e8e8e8;
   font-weight: 700;
+}
+
+.hiprint-printElement-table .thead td {
+  font-weight: 700;
+}
+
+.hiprint-printElement-tableTarget {
+  width: 100%;
 }
 
 .hiprint-printElement-tableTarget,

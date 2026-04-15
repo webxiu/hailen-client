@@ -1,3 +1,10 @@
+/*
+ * @Author: Hailen
+ * @Date: 2025-09-05 14:02:55
+ * @LastEditors: Hailen
+ * @LastEditTime: 2025-12-16 11:59:05
+ * @Description:
+ */
 import { PropType, defineComponent } from "vue";
 import { useRouter } from "vue-router";
 import HxIcon from "@/vue/components/HxIcon";
@@ -14,7 +21,7 @@ const MenuItemComponent = defineComponent({
   emits: ["submit", "reset", "change"],
   setup(props, { emit, expose, attrs, slots }) {
     const { index, item } = props;
-    console.log('item', item)
+    console.log("item",   item.meta?.icon);
     const router = useRouter();
 
     function onToPath(item) {
@@ -39,7 +46,7 @@ const MenuItemComponent = defineComponent({
       ) : (
         <el-menu-item index={index}>
           <HxIcon icon={item.meta?.icon} />
-          <span onClick={() => onToPath(item)}>{item.meta?.title  || item.name}</span>
+          <span onClick={() => onToPath(item)}>{item.meta?.title || item.name}</span>
         </el-menu-item>
       );
     };

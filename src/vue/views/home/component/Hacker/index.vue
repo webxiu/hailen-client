@@ -10,6 +10,8 @@ import { onMounted, ref } from "vue";
 import { canvasResize } from "./hook";
 import { reactive } from "vue";
 
+defineOptions({ name: "HomeComponentHackerIndex", title: "Hacker" });
+
 let timer;
 const dpr = window.devicePixelRatio;
 const cvsRef = ref<HTMLCanvasElement>();

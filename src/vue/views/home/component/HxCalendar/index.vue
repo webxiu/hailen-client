@@ -46,6 +46,8 @@ import utils, { LunarType } from "./utils";
 import { onMounted, reactive, ref, watch, h } from "vue";
 import { ArrowLeft, ArrowRight, DArrowLeft, DArrowRight } from "@element-plus/icons-vue";
 
+defineOptions({ name: "HxCalendar", title: "日历" });
+
 /**
  * 日期说明:
  *  1. 周数: 0-6 => 周日-周六

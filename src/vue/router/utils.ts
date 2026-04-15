@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-29 09:04:51
  * @LastEditors: Hailen
- * @LastEditTime: 2025-12-12 08:43:41
+ * @LastEditTime: 2025-12-16 11:59:54
  * @Description:
  */
 
@@ -86,8 +86,8 @@ const getAsyncRoutes = () => {
             item.component = getRouteComponent(item.path);
           }
           // dirctory 类型不设置 component
-          const { title, icon, createDate, ...rest } = item;
-          const meta = { title, icon, keepAlive: true };
+          const { title, icon  , createDate, ...rest } = item;
+          const meta = { title, icon: icon || "SetUp", keepAlive: true };
           return { ...rest, meta, redirect: "" };
         });
 

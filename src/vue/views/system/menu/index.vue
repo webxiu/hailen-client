@@ -4,6 +4,8 @@ import { menuList, updateMenu, MenuItemType } from "@/vue/api/system";
 import { arrayToTree } from "@/vue/utils/common";
 import { QueryParamsType, SearchOptionType } from "@/vue/components/BlendedSearch/index.vue";
 
+defineOptions({ name: "SystemMenuIndex", title: "菜单管理" });
+
 const formData = reactive({
   page: 1,
   pageSize: 30,
@@ -45,7 +47,7 @@ const columns = ref<TableColumnType[]>([
   { label: "名称", prop: "name" },
   { label: "路径", prop: "path" },
   { label: "图标", prop: "icon" },
-  { label: "类型", prop: "type" }, 
+  { label: "类型", prop: "type" },
   { label: "创建时间", prop: "createDate" },
   {
     label: "操作",
