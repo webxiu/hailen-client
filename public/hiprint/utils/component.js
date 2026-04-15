@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2026-01-17 15:46:50
+ * @LastEditTime: 2026-04-15 11:57:40
  * @Description: 布局组件模块
  */
 
@@ -50,14 +50,14 @@ const MyHeader = {
     const iconList = reactive([
       { title: "保存模板", icon: "⚛️", click: onSubmit, hide: !Design.isIframe() },
       { title: "新窗口预览", icon: "❇️", click: onOpenNew },
-      { title: "打印配置", icon: "🔔", click: onInfo },
+      { title: "打印配置", icon: "🔔", click: onInfo }
     ]);
     const templateArr = computed(() => {
       const data = getTemplate();
       const _newData = testTemplate.filter((f) => !data.some((s) => f.name === s.name));
       const _data = data.map((m) => ({ ...m, ...(testTemplate.find((f) => m.name === f.name) || {}) }));
       _data.unshift(..._newData);
-      return setTemplate(_data), _data;
+      return (setTemplate(_data), _data);
     });
     const tableData = ref(templateArr.value);
 
@@ -144,7 +144,7 @@ const MyHeader = {
                 ]
               }
 
-    5️⃣.printElements中的表格函数说明 (注意options中的函数为字符串函数):
+    5️⃣.在options中的函数为字符串函数(查看template.js 或 点击“模板”按钮预览):
         printElements: [
          {
             options: { 
@@ -210,7 +210,7 @@ const MyHeader = {
 
     expose({ updateTableData });
     return { docVisible, docText, tableData, iconList, onCurrentChange, onDelete };
-  },
+  }
 };
 
 const MyTool = {
@@ -218,9 +218,42 @@ const MyTool = {
   emits: ["resetDesign", "updateDesign", "updateLivePreview"],
   template: genTemplate("toolTemplate"),
   setup(props, { emit }) {
+    let mncEditor = null;
     const isMore = ref(null);
     const dialogVisible = ref(false);
-    const tplForm = reactive({ compress: false, disabled: false, content: "" });
+    const tplForm = reactive({ compress: false, disabled: false, newLine: false, content: "" });
+
+    function createEditor(template) {
+      if (mncEditor) return setCode(template);
+      require.config({
+        paths: { vs: "./lib/vs" }
+      });
+      require(["vs/editor/editor.main"], function () {
+        mncEditor = monaco.editor.create(document.getElementById("container"), {
+          value: tplForm.content,
+          language: "javascript",
+          theme: "vs-light",
+          readOnly: false, // 确保非只读
+          wordWrap: "off", // 禁用自动换行
+          automaticLayout: true, // 自动布局
+          smoothScrolling: true // 平滑滚动
+        });
+        setCode(template);
+      });
+    }
+    // 设置代码
+    function setCode(template) {
+      if (!mncEditor) return;
+      tplForm.content = $tool.objToString(template);
+      mncEditor.setValue(tplForm.content);
+    }
+    // 获取代码
+    function getCode() {
+      if (!mncEditor) return;
+      const newValue = mncEditor.getValue();
+      const template = eval(`(${newValue})`);
+      return template;
+    }
 
     function getType(item) {
       const { action, type } = item;
@@ -230,6 +263,7 @@ const MyTool = {
       return active.value === action || (isMore.value && action === "more") ? "success" : type;
     }
 
+    // 按钮操作
     function onOperate(item, moreFlag = false) {
       const { action } = item;
       isMore.value = moreFlag;
@@ -267,7 +301,7 @@ const MyTool = {
       // 按钮点击时间
       if (Design[action]) Design[action]();
     }
-    // 重置
+    // 重置模板
     function onReset() {
       Design.onResetScale();
       Design.onClear();
@@ -279,11 +313,6 @@ const MyTool = {
       dialogVisible.value = true;
       const jsonData = Design.getJson();
       const template = removeEmpty(jsonData);
-      const json = $tool.objToString(template);
-      const pressJson = $tool.objToString(template, false);
-
-      // 1.更新压缩状态
-      tplForm.content = tplForm.compress ? pressJson : json;
       // 2.更新禁用状态
       updateCheck(getDragStatus());
 
@@ -298,40 +327,47 @@ const MyTool = {
           tplForm.disabled = false;
         }
       }
-    }
-
-    // 设置到输入框
-    function onPressCode(press, template) {
-      if (!template) template = eval(`(${tplForm.content})`);
-      if (press) {
-        tplForm.content = $tool.objToString(template, false);
-      } else {
-        tplForm.content = $tool.objToString(template);
-      }
+      createEditor(template);
     }
 
     // 勾选拖拽及压缩
-    function onTplChange(field, value) {
-      if (field === "compress") {
-        isPress = value;
-        onPressCode(value);
-      }
-      if (field === "disabled") onDisabled(value);
+    function onChangeCode(type, flag) {
+      const itemSet = {
+        compress: () => onFold(flag),
+        disabled: () => onDisabled(flag),
+        newLine: () => onNewline(flag),
+        theme: () => onTheme(flag)
+      };
+      itemSet[type]();
     }
-
-    // 设置禁用
+    // 折叠代码切换
+    function onFold(flag) {
+      if (flag) {
+        mncEditor.trigger("button", "editor.foldAll", null);
+      } else {
+        mncEditor.trigger("button", "editor.unfoldAll", null);
+      }
+    }
+    // 切换主题
+    function onTheme(flag) { 
+      const newTheme = flag ? "vs-dark" : "vs-light";
+      mncEditor.updateOptions({ theme: newTheme });
+    }
+    // 自动换行
+    function onNewline() {
+      const currentWrap = mncEditor.getOption(monaco.editor.EditorOption.wordWrap);
+      const wordWrap = currentWrap === "on" ? "off" : "on";
+      mncEditor.updateOptions({ wordWrap });
+    }
+    // 禁用拖拽切换
     function onDisabled(disabled) {
-      const template = eval(`(${tplForm.content})`);
+      const template = getCode();
       template.panels.forEach((f) => {
         f.printElements.forEach((el) => {
-          if (disabled) {
-            el.options.draggable = false;
-          } else {
-            el.options.draggable = true;
-          }
+          el.options.draggable = disabled ? false : true;
         });
       });
-      onPressCode(isPress, template);
+      setCode(template);
     }
 
     // 保存
@@ -342,17 +378,18 @@ const MyTool = {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         inputPattern: /\S/,
-        inputErrorMessage: "模板名称不能为空",
+        inputErrorMessage: "模板名称不能为空"
       }).then(({ value }) => {
         value = value.trim();
+        const template = getCode();
         const item = {
           name: value,
           content: {
             title: value,
-            testData: printConfig.testData,
-            template: eval(`(${tplForm.content})`),
+            template: template,
+            testData: printConfig.testData
           },
-          createDate: new Date().toLocaleString(),
+          createDate: new Date().toLocaleString()
         };
         templateName.value = value;
         const localData = getTemplate();
@@ -370,12 +407,11 @@ const MyTool = {
     // 修改
     function onRewirite() {
       try {
-        const template = eval(`(${tplForm.content})`);
+        const template = getCode();
         emit("updateDesign", { template });
         ElMessage.success("修改成功");
         dialogVisible.value = false;
       } catch (error) {
-        console.log("error", error);
         ElMessage.warning("数据格式错误");
       }
     }
@@ -408,12 +444,12 @@ const MyTool = {
       getType,
       setScale,
       onOperate,
-      onTplChange,
+      onChangeCode,
       onSave,
       onRewirite,
-      onCopy,
+      onCopy
     };
-  },
+  }
 };
 const WangEditor = {
   name: "WangEditor",
@@ -435,26 +471,26 @@ const WangEditor = {
       const toolbarConfig = {};
       const editorConfig = {
         placeholder: "请输入内容...",
-        onChange(editor) {},
+        onChange(editor) {}
       };
 
       editor.value = createEditor({
         selector: "#editor-container",
         html: "<p><br></p>",
         config: editorConfig,
-        mode: "default", // or 'simple'
+        mode: "default" // or 'simple'
       });
 
       const toolbar = createToolbar({
         editor: editor.value,
         selector: "#toolbar-container",
         config: toolbarConfig,
-        mode: "default", // or 'simple'
+        mode: "default" // or 'simple'
       });
 
       emit("create", editor.value);
     }
-  },
+  }
 };
 
 const components = [MyHeader, MyTool, WangEditor];

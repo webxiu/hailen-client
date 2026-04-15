@@ -8001,7 +8001,7 @@ var hiprint = function (t) {
                 var n = $('<table class="hiprint-printElement-tableTarget" style="border-collapse: collapse;width:100%;"></table>');
                 // 表格由外部配置
                 if (this.options?.tableCustomRender) {
-                    var tableHtml = eval(this.options.tableCustomRender)(this.options);
+                    var tableHtml = eval(this.options.tableCustomRender)(this.options, e);
                     var $table = $(tableHtml);
                     $table.addClass("hiprint-printElement-tableTarget");
                     var currentStyle = $table.attr('style') || '';
@@ -8019,6 +8019,94 @@ var hiprint = function (t) {
                     o = this.getTableHtml(i, e),
                     r = this.createTarget(this.printElementType.title, [], e);
                 e ? this.updateTargetWidth(r) : this.updateTargetSize(r), this.css(r, i), this.css(o, i), this.getTempContainer().html(""), this.getTempContainer().append(r);
+                
+                let lastPage = {} 
+                
+                // 当前页:获取合并字段及标记列信息
+                function lastPageMerge(trs) {
+                    let colMap = {};
+                    const rowLen = trs.length;
+                    // 1.获取当前最后跨页的合并信息
+                    for (let i = 0; i < rowLen; i++) {
+                        let cells = trs[i].cells;
+                        for (let j = 0; j < cells.length; j++) {
+                            let cell = cells[j];
+                            let rowspan = cell.rowSpan;
+                            let field = cell.getAttribute("field");
+                            if (rowspan > 1) {
+                                colMap[`${field}_${j}`] = {
+                                    field: field,
+                                    startRow: i,
+                                    endRow: rowLen - 1,
+                                    startCol: j,
+                                    rowspan: rowspan,
+                                    colspan: cell.colSpan,
+                                    nextRowspan: rowLen - rowspan- i,
+                                }; 
+                            }
+                        }
+                    }
+                    // 2.删除本页被合并的所有行单元格
+                    Object.keys(colMap).forEach((key) => {
+                        for (let i = 0; i < rowLen; i++) {
+                            const cells = trs[i].cells;
+                            for (let j = 0; j < cells.length; j++) {
+                                const field = cells[j].getAttribute("field");
+                                const {field:prop, startRow, endRow, rowspan, nextRowspan} = colMap[key] || {} ;
+                                if(field === prop && i > startRow && i <= endRow && nextRowspan < 0){
+                                    $(cells[j]).remove();
+                                } 
+                                if(field === prop && i > startRow && i < startRow +rowspan && nextRowspan>=0){
+                                    $(cells[j]).remove();
+                                }
+                            }
+                        }
+                    })
+                    return colMap;
+                }
+
+                function updateCell(trs) {
+                    const isFirshPage = Array.from(trs).some(tr => {
+                        return Array.from(tr.cells).some(td => td.rowSpan > 1)
+                    }); 
+                    if(isFirshPage) return;
+                    const trLen = trs.length;
+                    // 给当前页添加合并属性
+                    for (let i = 0; i < trLen; i++) {
+                        let cells = trs[i].cells;
+                        for (let j = 0; j < cells.length; j++) {
+                            let cell = cells[j];
+                            let field = cell.getAttribute("field");
+                            const cellVal = lastPage[`${field}_${j}`]
+                            const mergeNum =  cellVal?.nextRowspan;
+                            if(cellVal && mergeNum < 0){
+                                if (i===0 && !isFirshPage) {
+                                    cell.rowSpan = mergeNum >= 0 ? 1 : Math.abs(mergeNum);
+                                }
+                            } 
+                        }
+                    }
+                    console.log('lastPage :>> ', lastPage);
+                    // 删除当前页被合并的单元格
+                    Object.keys(lastPage).forEach(key => {
+                        for (let i = 0; i < trLen; i++) {
+                            const cells = trs[i]?.cells;
+                            for (let j = 0; j < cells.length; j++) {
+                                const field = cells[j].getAttribute("field");
+                                const {field:prop, nextRowspan} = lastPage[key] || {} ;
+                                const rowspan = Math.abs(nextRowspan);
+                                if(field === prop && nextRowspan < 0){
+                                    if(i === 0 && nextRowspan === -1) $(cells[j]).empty();
+                                    if(i > 0 && i < rowspan) $(cells[j]).remove();
+                                }
+                            }
+    
+                        } 
+                        
+                    })
+
+
+                }
 
                 for (var a, p = this.getBeginPrintTopInPaperByReferenceElement(t), s = 0, l = !1; !l;) {
                     var u = 0,
@@ -8031,6 +8119,10 @@ var hiprint = function (t) {
                         h = this.getRowsInSpecificHeight(u > 0 ? u : 0 == s ? d - p : t.getContentHeight(s), r, o, s, c, e);
                     l = h.isEnd;
                     var f = void 0;
+                    const trs = h.target.find("tbody tr:not(.thead)");
+                    updateCell(trs);
+                    lastPage = lastPageMerge(trs);
+                    
                     h.target && (h.target.css("left", this.options.displayLeft()), h.target[0].height = ""), 0 == s || u > 0 ? (h.target && (a = p, h.target.css("top", p + "pt")), f = l && null != this.options.lHeight ? p + (h.height > this.options.lHeight ? h.height : this.options.lHeight) : p + h.height) : (h.target && (a = t.paperHeader, h.target.css("top", t.paperHeader + "pt")), f = t.paperHeader + h.height), n.push(new P.a({
                         target: h.target,
                         printLine: f,

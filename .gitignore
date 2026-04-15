@@ -15,6 +15,7 @@ dist
 output
 dist-ssr
 *.local
+.db
 
 # Editor directories and files
 .vscode/*

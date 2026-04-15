@@ -93,8 +93,8 @@ window.onload = () => {
             const { showPrint, showPreview } = getQuery(location.href);
             const { paperType } = options.template.panels[0] || {};
             if (paperType) Design.setPaperSize(paperType);
-            if (showGridLine) (designData.gridLine = true), Design.onGridLine(true);
-            if (showLandscape) (designData.landscape = true), Design.onRotate();
+            if (showGridLine) ((designData.gridLine = true), Design.onGridLine(true));
+            if (showLandscape) ((designData.landscape = true), Design.onRotate());
             if (showPrint === "true") Design.onPrint();
             if (showPreview === "true") Design.onPreview();
           })

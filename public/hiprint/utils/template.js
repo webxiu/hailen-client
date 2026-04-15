@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-19 11:41:58
  * @LastEditors: Hailen
- * @LastEditTime: 2026-02-05 15:17:28
+ * @LastEditTime: 2026-04-15 12:00:43
  * @Description: 初始化模板
  */
 
@@ -12,11 +12,11 @@ var watermarkOptions = {
   rotate: 25,
   show: false,
   timestamp: true,
-  format: "YYYY-MM-DD HH:mm",
+  format: "YYYY-MM-DD HH:mm"
 };
 
 var defaultConfig = {
-  title: "默认",
+  title: "示例模板",
   printCount: 1,
   showLandscape: false,
   showGridLine: false,
@@ -51,9 +51,9 @@ var defaultConfig = {
         sex: `<div style='color:red'>${odd ? "女" : "男"}</div>`,
         hobbies: odd ? "足球" : "篮球",
         type: odd ? "老师" : "学生",
-        status: odd ? "离职" : "在职",
+        status: odd ? "离职" : "在职"
       };
-    }),
+    })
   },
   template: {
     panels: [
@@ -79,21 +79,21 @@ var defaultConfig = {
               textAlign: "center",
               lineHeight: 26,
               textType: "text",
-              hideTitle: false,
+              hideTitle: false
             },
-            printElementType: { title: "文本", type: "text" },
+            printElementType: { title: "文本", type: "text" }
           },
           {
             options: { left: 60, top: 27, height: 13, width: 52, title: "页眉线", textAlign: "center", textType: "text", hideTitle: false },
-            printElementType: { title: "文本", type: "text" },
+            printElementType: { title: "文本", type: "text" }
           },
           {
             options: { left: 25.5, top: 57, height: 705, width: 9, fixed: true, borderStyle: "dotted" },
-            printElementType: { title: "竖线", type: "vline" },
+            printElementType: { title: "竖线", type: "vline" }
           },
           {
             options: { left: 60, top: 61.5, height: 48, width: 87, src: "./assets/image/hi.png", fit: "contain" },
-            printElementType: { title: "图片", type: "image" },
+            printElementType: { title: "图片", type: "image" }
           },
           {
             options: {
@@ -106,9 +106,9 @@ var defaultConfig = {
               textAlign: "center",
               lineHeight: 18,
               textType: "text",
-              hideTitle: false,
+              hideTitle: false
             },
-            printElementType: { title: "自定义文本", type: "text" },
+            printElementType: { title: "自定义文本", type: "text" }
           },
           {
             options: {
@@ -123,13 +123,13 @@ var defaultConfig = {
               textDecoration: "underline",
               textAlign: "center",
               textType: "text",
-              hideTitle: false,
+              hideTitle: false
             },
-            printElementType: { title: "文本", type: "text" },
+            printElementType: { title: "文本", type: "text" }
           },
           {
             options: { left: 499.5, top: 120, height: 43, width: 51, title: "123456789", textType: "qrcode", hideTitle: false },
-            printElementType: { title: "123546789", type: "text" },
+            printElementType: { title: "123546789", type: "text" }
           },
           {
             options: {
@@ -143,9 +143,9 @@ var defaultConfig = {
               fontFamily: "微软雅黑",
               textAlign: "center",
               textType: "barcode",
-              hideTitle: false,
+              hideTitle: false
             },
-            printElementType: { title: "条形码", type: "text" },
+            printElementType: { title: "条形码", type: "text" }
           },
           {
             options: {
@@ -158,9 +158,9 @@ var defaultConfig = {
               textAlign: "center",
               lineHeight: 18,
               textType: "text",
-              hideTitle: false,
+              hideTitle: false
             },
-            printElementType: { title: "文本", type: "text" },
+            printElementType: { title: "文本", type: "text" }
           },
           {
             options: {
@@ -172,13 +172,13 @@ var defaultConfig = {
               textAlign: "center",
               fontFamily: "微软雅黑",
               textType: "text",
-              hideTitle: false,
+              hideTitle: false
             },
-            printElementType: { title: "文本", type: "text" },
+            printElementType: { title: "文本", type: "text" }
           },
           {
             options: { left: 60, top: 190.5, height: 13, width: 51, title: "横线", textAlign: "center", textType: "text", hideTitle: false },
-            printElementType: { title: "横线", type: "text" },
+            printElementType: { title: "横线", type: "text" }
           },
           {
             options: {
@@ -190,9 +190,9 @@ var defaultConfig = {
               textAlign: "center",
               fontFamily: "微软雅黑",
               textType: "text",
-              hideTitle: false,
+              hideTitle: false
             },
-            printElementType: { title: "文本", type: "text" },
+            printElementType: { title: "文本", type: "text" }
           },
           { options: { left: 60, top: 214.5, height: 10, width: 475.5, borderWidth: 0.75 }, printElementType: { title: "横线", type: "hline" } },
           {
@@ -206,9 +206,9 @@ var defaultConfig = {
               textAlign: "center",
               lineHeight: 15,
               textType: "text",
-              hideTitle: false,
+              hideTitle: false
             },
-            printElementType: { title: "文本", type: "text" },
+            printElementType: { title: "文本", type: "text" }
           },
           {
             options: {
@@ -220,9 +220,9 @@ var defaultConfig = {
               fontFamily: "微软雅黑",
               textAlign: "center",
               textType: "text",
-              hideTitle: false,
+              hideTitle: false
             },
-            printElementType: { title: "文本", type: "text" },
+            printElementType: { title: "文本", type: "text" }
           },
           {
             options: {
@@ -234,9 +234,9 @@ var defaultConfig = {
               fontFamily: "微软雅黑",
               textAlign: "center",
               textType: "text",
-              hideTitle: false,
+              hideTitle: false
             },
-            printElementType: { title: "文本", type: "text" },
+            printElementType: { title: "文本", type: "text" }
           },
           {
             options: {
@@ -248,9 +248,9 @@ var defaultConfig = {
               fontFamily: "微软雅黑",
               textAlign: "center",
               textType: "text",
-              hideTitle: false,
+              hideTitle: false
             },
-            printElementType: { title: "文本", type: "text" },
+            printElementType: { title: "文本", type: "text" }
           },
           {
             options: {
@@ -265,7 +265,7 @@ var defaultConfig = {
                   { title: "性别", field: "sex", width: 54, align: "center", colspan: 1, rowspan: 2, checked: true, columnId: "sex" },
                   { title: "检查信息", width: 84, align: "center", colspan: 3, rowspan: 1, checked: true },
                   { title: "状态", field: "status", width: 65, align: "center", colspan: 1, rowspan: 2, checked: true, columnId: "status" },
-                  { title: "其他信息", width: 100, align: "center", colspan: 2, rowspan: 1, checked: true },
+                  { title: "其他信息", width: 100, align: "center", colspan: 2, rowspan: 1, checked: true }
                 ],
                 [
                   { title: "姓名", field: "name", width: 50, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "name" },
@@ -274,35 +274,49 @@ var defaultConfig = {
                   { title: "邮箱", field: "email", width: 54, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "email" },
                   { title: "地址", field: "address", width: 84, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "address" },
                   { title: "类型", field: "type", width: 50, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "type" },
-                  { title: "爱好", field: "hobbies", width: 50, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "hobbies" },
-                ],
+                  { title: "爱好", field: "hobbies", width: 50, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "hobbies" }
+                ]
               ],
               rowsColumnsMerge: `function(row,colum,rowIndex,colIndex,tableData) {
+                    // 行的合并(和样式设置)
                     if (rowIndex === 0) {
                       return {
-                        trStyle: { 'background': 'skyblue' },
-                        trClass: 'xxx',
+                        trStyle: { 'background': '#87ceeb' },
+                        trClass: 'aaa',
                       };
                     }
+                    // 指定某单元格合并
                     if (rowIndex === 1 && colIndex === 1) {
                       return {
                         rowspan: 2,
                         colspan: 1,
                         tdStyle: { 'background': '#31f5a4' },
                         trStyle: { 'background': '#cfc3c3' },
-                        trClass: 'yyy',
-                        tdClass: 'sss',
+                        trClass: 'bbb',
+                        tdClass: 'ccc',
                       };
                     }
-                    if (rowIndex === 2 && colIndex === 3) {
-                      return {
-                        rowspan: 1,
-                        colspan: 2,
-                        tdStyle: { 'background': '#cb90ff' },
-                        trStyle: { 'background': '#c9bd51' },
-                        trClass: 'ddd',
-                        tdClass: 'eee',
-                      };
+                    // 指定某行多个单元格合并
+                    if (rowIndex === 4) {
+                      if(colIndex === 3){
+                        return {
+                          rowspan: 1,
+                          colspan: 2,
+                          tdStyle: { 'background': '#9ab4ff' },
+                          trStyle: { 'background': '#fff495' },
+                          trClass: 'ddd',
+                          tdClass: 'eee',
+                        };
+                      }
+                      if(colIndex === 6){
+                        return {
+                          rowspan: 1,
+                          colspan: 2,
+                          tdStyle: { 'background': '#16db00' },
+                          trClass: 'fff',
+                          tdClass: 'ggg',
+                        };
+                      }
                     }
                 }`,
               footerFormatter: `function (options, rows, testData, gridRowsData) {
@@ -317,9 +331,9 @@ var defaultConfig = {
                     <span>每页页脚小计(表格外):</span>
                     <span>200.00元</span>
                   </div>\`;
-                }`,
+                }`
             },
-            printElementType: { title: "表格", type: "table" },
+            printElementType: { title: "表格", type: "table" }
           },
           {
             options: {
@@ -327,55 +341,56 @@ var defaultConfig = {
               top: 440,
               height: 32.5,
               width: 511.5,
-              tableCustomRender: `(options) => {
+              field: "table",
+              // 注释不显示head表头
+              columns: [
+                // [
+                //   { title: "序号", field: "index", width: 65, align: "center", columnId: "index" },
+                //   { title: "姓名", field: "name", width: null, align: "center", columnId: "name" },
+                //   { title: "邮箱", field: "email", width: null, align: "center", columnId: "email" },
+                //   { title: "电话", field: "phone", width: null, align: "center", columnId: "phone" },
+                //   { title: "备注", field: "remark", width: 65, align: "center", columnId: "remark" },
+                // ],
+              ],
+              tableCustomRender: `(options, testData) => {
                     // console.log('options', options);
                     return  \`
                       <style>
                         /* 添加style标签, 可自定义样式 */
-                        .hiprint-printElement-table .thead {background: #fbe9b4}
+                        .hiprint-printElement-table .thead {background: #e8e8e7}
                       </style>
 
-                    <table class="hiprint-printElement-tableTarget">
+                    <table class="hiprint-printElement-tableTarget" style="border-collapse: collapse;">
                         <thead>
-                            <!-- <tr><td> 可以省略表头 </td></tr> -->
+                            <!-- <tr><td> 可以省略表头(配置columns自动显示标题) </td></tr> -->
+                            \${options.columns.map(row => \`<tr>\${row.columns.map(col => \`<td align="\${col.align || 'left'}" style="width:\${col.width+'px'||'auto'}">\${col.title}</td>\`).join('')}</tr>\`).join('')}
                         </thead>
                         <tbody>
                           <tr class="thead">
-                            <td align="center">序号 (我是自定义表格, 只有一个表头, 分页无表头)</td>
-                            <td align="center">姓名</td>
-                            <td align="center">邮箱</td>
-                            <td align="center">电话</td>
-                            <td align="center">备注</td>
+                            <td field="index" align="center" style="width:55px">序号</td>
+                            <td field="name" align="center">姓名(模拟表头)</td>
+                            <td field="email" align="center" style="width: 160px">邮箱</td>
+                            <td field="phone" align="center">电话</td>
+                            <td field="remark" align="center">备注</td>
                           </tr>
+                     
                           <tr>
-                            <td align="center">10010</td>
-                            <td>张三</td>
-                            <td>123@qq.com</td>
-                            <td>123456789</td>
-                            <td>备注信息</td>
+                            <td field="index" align="center" style="width:55px">10010</td>
+                            <td field="name" align="center"  style="width: 170px">说明:自定义表格 分页无表头</td>
+                            <td field="email" align="center">456@qq.com</td>
+                            <td field="phone" align="center">123456789</td>
+                            <td field="remark" align="center">备注</td>
                           </tr>
-                          <tr>
-                            <td align="center">1234</td>
-                            <td colspan="4" align="center" style="background: #d6bbff">合并行</td>
-                          </tr>
-                          <tr>
-                            <td rowspan="2" align="center" style="background: #f1ca98">合并列</td>
-                            <td colspan="2">张三</td>
-                            <td rowspan="2" colspan="2" align="center" style="background: #00ff8c">合并行 / 列</td>
-                          </tr>
-                          <tr>
-                            <td colspan="2">张三</td>
-                          </tr>
-                          <!-- 渲染数据行 (提示用, 使用时删除此行) -->
+                          <!-- 模拟数据渲染 (使用时删除) -->
                           ${new Array(30)
                             .fill(1)
                             .map((_, i) => {
                               return `<tr>
-                                <td align="center">我是自定义表格${i + 1}</td>
-                                <td>张三</td>
-                                <td>123@qq.com</td>
-                                <td>123456789</td>
-                                <td>备注</td>
+                                <td field="index" align="center" rowspan="${i == 14 ? 5 : 1}" style="width:55px">序号${i}</td>
+                                <td field="name" align="center" rowspan="${i == 15 ? 5 : 1}" style="width: 170px">张三${i}</td>
+                                <td field="email" align="center" rowspan="${i == 13 ? 2 : 1}">123@qq.com</td>
+                                <td field="phone" align="center">123456789</td>
+                                <td field="remark" align="center">备注</td>
                               </tr>`;
                             })
                             .join("")}
@@ -383,13 +398,13 @@ var defaultConfig = {
                         <tfoot>
                           <tr>
                             <td colspan="2" align="right">页尾说明: </td>
-                            <td colspan="3" align="center">表格页尾(每页重复显)</td>
+                            <td colspan="3" align="center">表格页尾(每页重复显示)</td>
                           </tr>
                         </tfoot>
                       </table>\`
-                    }`,
+                    }`
             },
-            printElementType: { title: "自定义表格", type: "tableCustom" },
+            printElementType: { title: "自定义表格", type: "tableCustom" }
           },
           {
             options: {
@@ -403,9 +418,9 @@ var defaultConfig = {
               contentPaddingTop: 3.75,
               backgroundColor: "#ffffff",
               textType: "text",
-              hideTitle: false,
+              hideTitle: false
             },
-            printElementType: { title: "文本", type: "text" },
+            printElementType: { title: "文本", type: "text" }
           },
           {
             options: {
@@ -416,13 +431,13 @@ var defaultConfig = {
               title: "自定义模块：主要为开发人员设计，能够快速，简单，实现自己功能",
               textAlign: "center",
               textType: "text",
-              hideTitle: false,
+              hideTitle: false
             },
-            printElementType: { title: "文本", type: "text" },
+            printElementType: { title: "文本", type: "text" }
           },
           {
             options: { left: 60, top: 370.5, height: 18, width: 79, title: "配置项表格", textAlign: "center", textType: "text", hideTitle: false },
-            printElementType: { title: "文本", type: "text" },
+            printElementType: { title: "文本", type: "text" }
           },
           {
             options: {
@@ -436,9 +451,9 @@ var defaultConfig = {
               textAlign: "center",
               color: "#d93838",
               textType: "text",
-              hideTitle: false,
+              hideTitle: false
             },
-            printElementType: { title: "文本", type: "text" },
+            printElementType: { title: "文本", type: "text" }
           },
           {
             options: {
@@ -450,32 +465,32 @@ var defaultConfig = {
               title: "长文本会自动分页",
               textAlign: "center",
               textType: "text",
-              hideTitle: false,
+              hideTitle: false
             },
-            printElementType: { title: "文本", type: "text" },
+            printElementType: { title: "文本", type: "text" }
           },
           {
             options: { top: 507, left: 60, width: 510, height: 40, field: "longText", hideTitle: false },
-            printElementType: { title: "长文本", type: "longText" },
+            printElementType: { title: "长文本", type: "longText" }
           },
           { options: { top: 565, left: 475, width: 100 }, height: 100, printElementType: { title: "矩形", type: "rect" } },
           {
             options: { top: 568, left: 174, width: 90, height: 13, title: "竖线", textAlign: "center", textType: "text", hideTitle: false },
-            printElementType: { title: "竖线", type: "text" },
+            printElementType: { title: "竖线", type: "text" }
           },
           { options: { top: 574, left: 60, width: 10 }, height: 100, printElementType: { title: "竖线", type: "vline" } },
           {
             options: { top: 604, left: 210, width: 120, height: 13, title: "横线", textAlign: "center", textType: "text", hideTitle: false },
-            printElementType: { title: "横线", type: "text" },
+            printElementType: { title: "横线", type: "text" }
           },
           { options: { top: 625, left: 130, width: 277, height: 10, borderWidth: 0.75 }, printElementType: { title: "横线", type: "hline" } },
           {
             options: { top: 649, left: 364, width: 101, height: 13, title: "矩形", textAlign: "center", textType: "text", hideTitle: false },
-            printElementType: { title: "矩形", type: "text" },
+            printElementType: { title: "矩形", type: "text" }
           },
           {
             options: { top: 784, left: 525, width: 63, height: 13, title: "页尾线", textAlign: "center", textType: "text", hideTitle: false },
-            printElementType: { title: "文本", type: "text" },
+            printElementType: { title: "文本", type: "text" }
           },
           // {
           //   options: { top: 680, left: 50, width: 310, height: 50, field: "html" },
@@ -483,7 +498,7 @@ var defaultConfig = {
           // },
           {
             options: { top: 700, left: 50, width: 500, height: 30, field: "shtml" },
-            printElementType: { title: "SHTML", type: "shtml" },
+            printElementType: { title: "SHTML", type: "shtml" }
           },
           {
             options: {
@@ -494,9 +509,9 @@ var defaultConfig = {
               title: "红色原型是自动定义的Html",
               textAlign: "center",
               textType: "text",
-              hideTitle: false,
+              hideTitle: false
             },
-            printElementType: { title: "文本", type: "text" },
+            printElementType: { title: "文本", type: "text" }
           },
           {
             options: {
@@ -507,11 +522,11 @@ var defaultConfig = {
               title: "页眉线已上。页尾下以下每页都会重复打印",
               textAlign: "center",
               textType: "text",
-              hideTitle: false,
+              hideTitle: false
             },
-            printElementType: { title: "文本", type: "text" },
-          },
-        ],
+            printElementType: { title: "文本", type: "text" }
+          }
+        ]
       },
       {
         index: 1,
@@ -535,9 +550,9 @@ var defaultConfig = {
               textAlign: "center",
               lineHeight: 26,
               textType: "text",
-              hideTitle: false,
+              hideTitle: false
             },
-            printElementType: { title: "文本", type: "text" },
+            printElementType: { title: "文本", type: "text" }
           },
           { options: { left: 66, top: 64, height: 90, width: 90 }, printElementType: { title: "矩形", type: "rect" } },
           { options: { left: 237, top: 58, height: 90, width: 90 }, printElementType: { title: "椭圆", type: "oval" } },
@@ -547,9 +562,9 @@ var defaultConfig = {
               top: 79,
               height: 50,
               width: 200,
-              content: "<div style='width: 100%;height: 100%;text-align: center;line-height: 50px;color: #00f;'>这是一个HTML元素</div>",
+              content: "<div style='width: 100%;height: 100%;text-align: center;line-height: 50px;color: #00f;'>这是一个HTML元素</div>"
             },
-            printElementType: { title: "HTML", type: "html" },
+            printElementType: { title: "HTML", type: "html" }
           },
           {
             options: {
@@ -558,9 +573,9 @@ var defaultConfig = {
               height: 219,
               width: 567,
               echartsTool: true,
-              echartsOption: $tool.objToString(getEchartsOption()),
+              echartsOption: $tool.objToString(getEchartsOption())
             },
-            printElementType: { title: "Echarts图表", type: "echarts" },
+            printElementType: { title: "Echarts图表", type: "echarts" }
           },
           {
             options: {
@@ -570,25 +585,22 @@ var defaultConfig = {
               width: 300,
               echartsTool: true,
               echartsOption:
-                '{\n  title: {\n    text: "柱状图",\n    textStyle: {\n      fontSize: 16\n    }\n  },\n  grid: {\n    left: "3%",\n    right: "4%",\n    bottom: "3%",\n    containLabel: true\n  },\n  xAxis: {\n    type: "category",\n    data: [\n      "一月",\n      "二月",\n      "三月",\n      "四月"\n    ]\n  },\n  yAxis: {\n    type: "value",\n    axisLine: {\n      show: true\n    }\n  },\n  legend: [\n    {\n      top: "8%"\n    }\n  ],\n  tooltip: {\n    trigger: "item",\n    backgroundColor: "rgba(0,0,0,0.6)",\n    borderColor: "transparent",\n    textStyle: {\n      color: "#fff"\n    }\n  },\n  toolbox: {\n    show: true,\n    feature: {\n      magicType: {\n        type: [\n          "line",\n          "bar"\n        ],\n        title: {\n          bar: "切换柱状图",\n          line: "切换折线图"\n        }\n      },\n      dataView: {\n        show: true,\n        title: "数据视图",\n        lang: [\n          "数据视图",\n          "关闭",\n          "刷新"\n        ]\n      },\n      saveAsImage: {\n        title: "下载",\n        show: true,\n        type: "png",\n        pixelRatio: 2\n      }\n    }\n  },\n  series: [\n    {\n      type: "bar",\n      name: "服装",\n      label: {\n        show: true,\n        position: "top"\n      },\n      data: [\n        {\n          name: "衬衫",\n          value: 150\n        },\n        {\n          name: "羊毛衫",\n          value: 320\n        },\n        {\n          name: "雪纺衫",\n          value: 224\n        },\n        {\n          name: "裤子",\n          value: 410\n        }\n      ]\n    },\n    {\n      type: "line",\n      name: "水果",\n      smooth: true,\n      label: {\n        show: true,\n        position: "top"\n      },\n      data: [\n        {\n          name: "苹果",\n          value: 40\n        },\n        {\n          name: "菠萝",\n          value: 180\n        },\n        {\n          name: "香蕉",\n          value: 460\n        },\n        {\n          name: "橘子",\n          value: 126\n        }\n      ]\n    }\n  ]\n}',
+                '{\n  title: {\n    text: "柱状图",\n    textStyle: {\n      fontSize: 16\n    }\n  },\n  grid: {\n    left: "3%",\n    right: "4%",\n    bottom: "3%",\n    containLabel: true\n  },\n  xAxis: {\n    type: "category",\n    data: [\n      "一月",\n      "二月",\n      "三月",\n      "四月"\n    ]\n  },\n  yAxis: {\n    type: "value",\n    axisLine: {\n      show: true\n    }\n  },\n  legend: [\n    {\n      top: "8%"\n    }\n  ],\n  tooltip: {\n    trigger: "item",\n    backgroundColor: "rgba(0,0,0,0.6)",\n    borderColor: "transparent",\n    textStyle: {\n      color: "#fff"\n    }\n  },\n  toolbox: {\n    show: true,\n    feature: {\n      magicType: {\n        type: [\n          "line",\n          "bar"\n        ],\n        title: {\n          bar: "切换柱状图",\n          line: "切换折线图"\n        }\n      },\n      dataView: {\n        show: true,\n        title: "数据视图",\n        lang: [\n          "数据视图",\n          "关闭",\n          "刷新"\n        ]\n      },\n      saveAsImage: {\n        title: "下载",\n        show: true,\n        type: "png",\n        pixelRatio: 2\n      }\n    }\n  },\n  series: [\n    {\n      type: "bar",\n      name: "服装",\n      label: {\n        show: true,\n        position: "top"\n      },\n      data: [\n        {\n          name: "衬衫",\n          value: 150\n        },\n        {\n          name: "羊毛衫",\n          value: 320\n        },\n        {\n          name: "雪纺衫",\n          value: 224\n        },\n        {\n          name: "裤子",\n          value: 410\n        }\n      ]\n    },\n    {\n      type: "line",\n      name: "水果",\n      smooth: true,\n      label: {\n        show: true,\n        position: "top"\n      },\n      data: [\n        {\n          name: "苹果",\n          value: 40\n        },\n        {\n          name: "菠萝",\n          value: 180\n        },\n        {\n          name: "香蕉",\n          value: 460\n        },\n        {\n          name: "橘子",\n          value: 126\n        }\n      ]\n    }\n  ]\n}'
             },
-            printElementType: {
-              title: "Echarts图表",
-              type: "echarts",
-            },
-          },
+            printElementType: { title: "Echarts图表", type: "echarts" }
+          }
         ],
-        paperNumberFormat: "paperNo/paperCount",
-      },
-    ],
-  },
+        paperNumberFormat: "paperNo/paperCount"
+      }
+    ]
+  }
 };
 
 var testTemplate = [
   {
-    name: "内置模板",
+    name: defaultConfig.title || "示例模板",
     createDate: new Date().toLocaleString(),
-    content: Object.assign({}, defaultConfig),
+    content: Object.assign({}, defaultConfig)
   },
   {
     name: "发票模板",
@@ -611,7 +623,7 @@ var testTemplate = [
         rmbSmall: "￥120.00",
         checker: "张三",
         invoice: "李四",
-        payee: "王二",
+        payee: "王二"
       },
       template: {
         panels: [
@@ -641,9 +653,9 @@ var testTemplate = [
                   textAlign: "center",
                   lineHeight: 16,
                   textType: "text",
-                  hideTitle: false,
+                  hideTitle: false
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: {
@@ -657,9 +669,9 @@ var testTemplate = [
                   textAlign: "center",
                   lineHeight: 15,
                   textType: "text",
-                  hideTitle: false,
+                  hideTitle: false
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: {
@@ -675,13 +687,13 @@ var testTemplate = [
                   textAlign: "center",
                   lineHeight: 18,
                   textType: "text",
-                  hideTitle: false,
+                  hideTitle: false
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: { left: 244.5, top: 19.5, height: 51, width: 112, borderColor: "#eb1111", borderWidth: "2" },
-                printElementType: { title: "椭圆", type: "oval" },
+                printElementType: { title: "椭圆", type: "oval" }
               },
               {
                 options: {
@@ -698,9 +710,9 @@ var testTemplate = [
                   textAlign: "center",
                   lineHeight: 18,
                   textType: "text",
-                  hideTitle: false,
+                  hideTitle: false
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: {
@@ -713,18 +725,18 @@ var testTemplate = [
                   textType: "qrcode",
                   fontSize: 9,
                   hideTitle: false,
-                  lineHeight: 9.75,
+                  lineHeight: 9.75
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               { options: { left: 248.5, top: 24, height: 42, width: 104, borderColor: "#f00505" }, printElementType: { title: "椭圆", type: "oval" } },
               {
                 options: { left: 190.5, top: 45, height: 10, width: 228, borderColor: "#b5a8a8", borderWidth: 0.75 },
-                printElementType: { title: "横线", type: "hline" },
+                printElementType: { title: "横线", type: "hline" }
               },
               {
                 options: { left: 190.5, top: 49.5, height: 10, width: 228, borderColor: "#baafaf", borderWidth: 0.75 },
-                printElementType: { title: "横线", type: "hline" },
+                printElementType: { title: "横线", type: "hline" }
               },
               {
                 options: {
@@ -740,9 +752,9 @@ var testTemplate = [
                   textAlign: "center",
                   lineHeight: 18,
                   textType: "text",
-                  hideTitle: false,
+                  hideTitle: false
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: {
@@ -757,9 +769,9 @@ var testTemplate = [
                   fontSize: 9,
                   textType: "text",
                   hideTitle: false,
-                  lineHeight: 9.75,
+                  lineHeight: 9.75
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: {
@@ -772,9 +784,9 @@ var testTemplate = [
                   lineHeight: 13,
                   fontSize: 9,
                   textType: "text",
-                  hideTitle: false,
+                  hideTitle: false
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: {
@@ -790,9 +802,9 @@ var testTemplate = [
                   lineHeight: 13,
                   fontSize: 9,
                   textType: "text",
-                  hideTitle: false,
+                  hideTitle: false
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               { options: { left: 400, top: 90, height: 60, width: 10, borderColor: "#cc5a5a" }, printElementType: { title: "竖线", type: "vline" } },
               { options: { left: 35, top: 90, height: 60, width: 10, borderColor: "#cc5a5a" }, printElementType: { title: "竖线", type: "vline" } },
@@ -809,9 +821,9 @@ var testTemplate = [
                   color: "#cc5a5a",
                   lineHeight: 18,
                   textType: "text",
-                  hideTitle: false,
+                  hideTitle: false
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: {
@@ -826,9 +838,9 @@ var testTemplate = [
                   fontSize: 9,
                   textType: "text",
                   hideTitle: false,
-                  lineHeight: 9.75,
+                  lineHeight: 9.75
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: {
@@ -843,9 +855,9 @@ var testTemplate = [
                   fontSize: 9,
                   textType: "text",
                   hideTitle: false,
-                  lineHeight: 9.75,
+                  lineHeight: 9.75
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: {
@@ -860,9 +872,9 @@ var testTemplate = [
                   fontSize: 9,
                   textType: "text",
                   hideTitle: false,
-                  lineHeight: 9.75,
+                  lineHeight: 9.75
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: {
@@ -875,9 +887,9 @@ var testTemplate = [
                   color: "#cc5a5a",
                   lineHeight: 18,
                   textType: "text",
-                  hideTitle: false,
+                  hideTitle: false
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: {
@@ -890,9 +902,9 @@ var testTemplate = [
                   fontSize: 9,
                   textType: "text",
                   hideTitle: false,
-                  lineHeight: 9.75,
+                  lineHeight: 9.75
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               { options: { left: 345, top: 150, height: 190, width: 10, borderColor: "#cc5a5a" }, printElementType: { title: "竖线", type: "vline" } },
               { options: { left: 409.5, top: 150, height: 190, width: 10, borderColor: "#cc5a5a" }, printElementType: { title: "竖线", type: "vline" } },
@@ -902,7 +914,7 @@ var testTemplate = [
               { options: { left: 520.5, top: 150, height: 190, width: 10, borderColor: "#cc5a5a" }, printElementType: { title: "竖线", type: "vline" } },
               {
                 options: { left: 11, top: 150, height: 10, width: 571.5, borderColor: "#cc5a5a", borderWidth: 0.75 },
-                printElementType: { title: "横线", type: "hline" },
+                printElementType: { title: "横线", type: "hline" }
               },
               {
                 options: {
@@ -916,9 +928,9 @@ var testTemplate = [
                   textAlign: "center",
                   textType: "text",
                   hideTitle: false,
-                  lineHeight: 9.75,
+                  lineHeight: 9.75
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: {
@@ -932,9 +944,9 @@ var testTemplate = [
                   textAlign: "center",
                   textType: "text",
                   hideTitle: false,
-                  lineHeight: 9.75,
+                  lineHeight: 9.75
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: {
@@ -948,9 +960,9 @@ var testTemplate = [
                   textAlign: "center",
                   textType: "text",
                   hideTitle: false,
-                  lineHeight: 9.75,
+                  lineHeight: 9.75
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: {
@@ -964,9 +976,9 @@ var testTemplate = [
                   textAlign: "center",
                   textType: "text",
                   hideTitle: false,
-                  lineHeight: 9.75,
+                  lineHeight: 9.75
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: {
@@ -980,9 +992,9 @@ var testTemplate = [
                   textAlign: "center",
                   textType: "text",
                   hideTitle: false,
-                  lineHeight: 9.75,
+                  lineHeight: 9.75
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: {
@@ -996,9 +1008,9 @@ var testTemplate = [
                   textAlign: "center",
                   textType: "text",
                   hideTitle: false,
-                  lineHeight: 9.75,
+                  lineHeight: 9.75
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: {
@@ -1012,9 +1024,9 @@ var testTemplate = [
                   textAlign: "center",
                   textType: "text",
                   hideTitle: false,
-                  lineHeight: 9.75,
+                  lineHeight: 9.75
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: {
@@ -1028,13 +1040,13 @@ var testTemplate = [
                   fontSize: 9,
                   textType: "text",
                   hideTitle: false,
-                  lineHeight: 9.75,
+                  lineHeight: 9.75
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: { left: 10.5, top: 339.5, height: 10, width: 571.5, borderColor: "#cc5a5a", borderWidth: 0.75 },
-                printElementType: { title: "横线", type: "hline" },
+                printElementType: { title: "横线", type: "hline" }
               },
               {
                 options: {
@@ -1049,9 +1061,9 @@ var testTemplate = [
                   fontSize: 9,
                   textType: "text",
                   hideTitle: false,
-                  lineHeight: 9.75,
+                  lineHeight: 9.75
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: {
@@ -1064,9 +1076,9 @@ var testTemplate = [
                   color: "#cc5a5a",
                   textType: "text",
                   hideTitle: false,
-                  lineHeight: 9.75,
+                  lineHeight: 9.75
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: {
@@ -1081,9 +1093,9 @@ var testTemplate = [
                   fontSize: 9,
                   textType: "text",
                   hideTitle: false,
-                  lineHeight: 9.75,
+                  lineHeight: 9.75
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: {
@@ -1097,9 +1109,9 @@ var testTemplate = [
                   textAlign: "center",
                   textType: "text",
                   hideTitle: false,
-                  lineHeight: 9.75,
+                  lineHeight: 9.75
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: {
@@ -1112,9 +1124,9 @@ var testTemplate = [
                   fontSize: 9,
                   textType: "text",
                   hideTitle: false,
-                  lineHeight: 9.75,
+                  lineHeight: 9.75
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: {
@@ -1129,9 +1141,9 @@ var testTemplate = [
                   fontSize: 9,
                   textType: "text",
                   hideTitle: false,
-                  lineHeight: 9.75,
+                  lineHeight: 9.75
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: {
@@ -1144,9 +1156,9 @@ var testTemplate = [
                   fontSize: 9,
                   textType: "text",
                   hideTitle: false,
-                  lineHeight: 9.75,
+                  lineHeight: 9.75
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: {
@@ -1161,9 +1173,9 @@ var testTemplate = [
                   fontSize: 9,
                   textType: "text",
                   hideTitle: false,
-                  lineHeight: 9.75,
+                  lineHeight: 9.75
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: {
@@ -1176,9 +1188,9 @@ var testTemplate = [
                   fontSize: 9,
                   textType: "text",
                   hideTitle: false,
-                  lineHeight: 9.75,
+                  lineHeight: 9.75
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
               {
                 options: {
@@ -1193,9 +1205,9 @@ var testTemplate = [
                   fontSize: 9,
                   textType: "text",
                   hideTitle: false,
-                  lineHeight: 9.75,
+                  lineHeight: 9.75
                 },
-                printElementType: { title: "文本", type: "text" },
+                printElementType: { title: "文本", type: "text" }
               },
 
               {
@@ -1209,16 +1221,16 @@ var testTemplate = [
                   fontSize: 9,
                   textType: "text",
                   hideTitle: false,
-                  lineHeight: 9.75,
+                  lineHeight: 9.75
                 },
-                printElementType: { title: "文本", type: "text" },
-              },
-            ],
-          },
-        ],
-      },
-    },
-  },
+                printElementType: { title: "文本", type: "text" }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
 ];
 
 function getEchartsOption() {
@@ -1317,18 +1329,18 @@ function getEchartsOption() {
         "2013/6/5",
         "2013/6/6",
         "2013/6/7",
-        "2013/6/13",
+        "2013/6/13"
       ],
       boundaryGap: false,
       axisLine: { onZero: false },
       splitLine: { show: false },
       min: "dataMin",
-      max: "dataMax",
+      max: "dataMax"
     },
     yAxis: { scale: true, splitArea: { show: true } },
     dataZoom: [
       { type: "inside", start: 50, end: 100 },
-      { show: true, type: "slider", top: "90%", start: 50, end: 100 },
+      { show: true, type: "slider", top: "90%", start: 50, end: 100 }
     ],
     series: [
       {
@@ -1422,7 +1434,7 @@ function getEchartsOption() {
           [2270.71, 2270.93, 2260.87, 2276.86],
           [2264.43, 2242.11, 2240.07, 2266.69],
           [2242.26, 2210.9, 2205.07, 2250.63],
-          [2190.1, 2148.35, 2126.22, 2190.1],
+          [2190.1, 2148.35, 2126.22, 2190.1]
         ],
         itemStyle: { color: "#ec0000", color0: "#00da3c", borderColor: "#8A0000", borderColor0: "#008F28" },
         markPoint: {
@@ -1431,9 +1443,9 @@ function getEchartsOption() {
             { name: "Mark", coord: ["2013/5/31", 2300], value: 2300, itemStyle: { color: "rgb(41,60,85)" } },
             { name: "highest value", type: "max", valueDim: "highest" },
             { name: "lowest value", type: "min", valueDim: "lowest" },
-            { name: "average value on close", type: "average", valueDim: "close" },
+            { name: "average value on close", type: "average", valueDim: "close" }
           ],
-          tooltip: {},
+          tooltip: {}
         },
         markLine: {
           symbol: ["none", "none"],
@@ -1446,7 +1458,7 @@ function getEchartsOption() {
                 symbol: "circle",
                 symbolSize: 10,
                 label: { show: false },
-                emphasis: { label: { show: false } },
+                emphasis: { label: { show: false } }
               },
               {
                 type: "max",
@@ -1454,13 +1466,13 @@ function getEchartsOption() {
                 symbol: "circle",
                 symbolSize: 10,
                 label: { show: false },
-                emphasis: { label: { show: false } },
-              },
+                emphasis: { label: { show: false } }
+              }
             ],
             { name: "min line on close", type: "min", valueDim: "close" },
-            { name: "max line on close", type: "max", valueDim: "close" },
-          ],
-        },
+            { name: "max line on close", type: "max", valueDim: "close" }
+          ]
+        }
       },
       {
         name: "MA5",
@@ -1553,10 +1565,10 @@ function getEchartsOption() {
           2292.188,
           2277.06,
           2259.1220000000003,
-          2228.942,
+          2228.942
         ],
         smooth: true,
-        lineStyle: { opacity: 0.5 },
+        lineStyle: { opacity: 0.5 }
       },
       {
         name: "MA10",
@@ -1649,10 +1661,10 @@ function getEchartsOption() {
           2296.3559999999998,
           2293,
           2285.237,
-          2270.764,
+          2270.764
         ],
         smooth: true,
-        lineStyle: { opacity: 0.5 },
+        lineStyle: { opacity: 0.5 }
       },
       {
         name: "MA20",
@@ -1745,10 +1757,10 @@ function getEchartsOption() {
           2278.4635000000003,
           2278.9205,
           2277.1240000000003,
-          2272.4455000000003,
+          2272.4455000000003
         ],
         smooth: true,
-        lineStyle: { opacity: 0.5 },
+        lineStyle: { opacity: 0.5 }
       },
       {
         name: "MA30",
@@ -1841,11 +1853,11 @@ function getEchartsOption() {
           2256.1393333333335,
           2256.1373333333336,
           2257.0160000000005,
-          2254.683666666667,
+          2254.683666666667
         ],
         smooth: true,
-        lineStyle: { opacity: 0.5 },
-      },
-    ],
+        lineStyle: { opacity: 0.5 }
+      }
+    ]
   };
 }

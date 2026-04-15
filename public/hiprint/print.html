@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <meta charset="utf-8" />
@@ -32,6 +32,7 @@
     <script src="./plugins/jspdf/html2canvas.min.js"></script>
     <script src="./plugins/jspdf/jspdf.min.js"></script>
 
+    <script src="./lib/vs/loader.js"></script>
     <script src="./utils/design.js"></script>
     <script src="./utils/template.js"></script>
     <script src="./utils/component.js" defer></script>
@@ -236,24 +237,23 @@
       </el-dialog>
 
       <!-- 配置弹窗 -->
-      <el-dialog v-model="dialogVisible" title="模板配置" draggable width="40%" top="4vh">
+      <el-dialog v-model="dialogVisible" title="模板配置" draggable width="60%" top="4vh">
         <el-form :model="tplForm" label-width="0px" inline>
-          <el-form-item style="margin-bottom: 0px">
-            <el-checkbox v-model="tplForm.compress" @change="(v)=>onTplChange('compress', v)">压缩配置</el-checkbox>
+          <el-form-item style="margin: 0 0 0 15px">
+            <el-checkbox v-model="tplForm.compress" @change="(v)=>onChangeCode('compress', v)">折叠配置</el-checkbox>
           </el-form-item>
-          <el-form-item style="margin-bottom: 0px">
-            <el-checkbox v-model="tplForm.disabled" @change="(v)=>onTplChange('disabled', v)">禁用拖拽</el-checkbox>
+          <el-form-item style="margin: 0 0 0 15px">
+            <el-checkbox v-model="tplForm.disabled" @change="(v)=>onChangeCode('disabled', v)">禁用拖拽</el-checkbox>
+          </el-form-item>
+          <el-form-item style="margin: 0 0 0 15px">
+            <el-checkbox v-model="tplForm.newLine" @change="(v)=>onChangeCode('newLine', v)">自动换行</el-checkbox>
+          </el-form-item>
+          <el-form-item style="margin: 0 0 0 15px">
+            <el-checkbox v-model="tplForm.theme" @change="(v)=>onChangeCode('theme', v)">切换主题</el-checkbox>
           </el-form-item>
           <div>
             <el-form-item style="width: 100%">
-              <el-input
-                v-model="tplForm.content"
-                type="textarea"
-                style="width: 100%"
-                input-style="height: calc(100vh - 266px)"
-                resize="none"
-                placeholder="暂无数据"
-              />
+              <div id="container" style="width: 100%;height: calc(-266px + 100vh);border: 1px solid #c1c1c1;border-radius: 4px;overflow: hidden;"></div>
             </el-form-item>
           </div>
         </el-form>
