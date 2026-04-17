@@ -2,6 +2,7 @@
 import { Transition, computed, reactive, ref } from "vue";
 import NavMenu from "./component/NavMenu.vue";
 import HxIcon from "@/vue/components/HxIcon";
+import { useRoute } from "vue-router";
 // import { routes } from "@/router";
 // import BackButton from "@/vue/components/BackButton/index.vue";
 import Star from "@/vue/components/Star.vue";
@@ -10,6 +11,7 @@ import Tag from "./component/Tag/index.vue";
 
 defineOptions({ name: "Layout" });
 
+const route = useRoute();
 const useStore = useUserStore();
 const names = ref<string[]>([]);
 const theme = ref("light");
@@ -21,11 +23,12 @@ const themeConfig = reactive([
 /**
  * 在vscode中打开
  */
-const openInVScode = (path = "/system/menuManage/index") => {
+const openInVScode = () => {
+  const path = route.path;
   const codePath = "vscode://file/";
   const urlPath = !path.includes("index") ? `${path}/index` : path;
   const openURL = codePath + $$.appInfo.rootPath + `/src/vue/views${urlPath}.vue`;
-  const newWindow = window.open(openURL, "在vscode中打开", "width=480,height=200,resizable=yes");
+  const newWindow = window.open(openURL, "在vscode中打开", "width=480,height=200,menubar=no,toolbar=no,location=no,status=no");
   const timer = setTimeout(() => {
     newWindow.close();
     clearTimeout(timer);
@@ -68,13 +71,13 @@ function logout() {
 <template>
   <Star />
   <div class="layout">
-    <div class="flex-col p-4">
+    <div class="flex-col ui-vh-100 p-4">
       <div>logo <HxIcon icon="Setting" /></div>
-      <div>
+      <div class="flex-1 ui-ovy-a">
         <NavMenu />
       </div>
     </div>
-    <div class="flex-col flex-1 ui-h-100 ui-ov-h">
+    <div class="flex-col flex-1 ui-vh-100 ui-ov-h">
       <div class="main-header">
         <div class="head-view">
           <div class="left">

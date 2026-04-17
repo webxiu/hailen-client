@@ -2,7 +2,7 @@
  * @Author: Hailen
  * @Date: 2025-08-29 09:04:51
  * @LastEditors: Hailen
- * @LastEditTime: 2025-12-16 11:59:54
+ * @LastEditTime: 2026-04-16 11:38:53
  * @Description:
  */
 
@@ -28,9 +28,14 @@ let initRouterPromise: Promise<{ router: Router; routes: RouteRecordRaw[] }> | n
 
 // 根据菜单地址获取路由组件(.vue文件)
 function getRouteComponent(path: string) {
-  const modulesRoutesKeys = Object.keys(modulesRoutes);
-  const index = modulesRoutesKeys.findIndex((ev) => ev.includes(path));
-  return modulesRoutes[modulesRoutesKeys[index]];
+  // const modulesRoutesKeys = Object.keys(modulesRoutes);
+  // const index = modulesRoutesKeys.findIndex((ev) => ev.includes(path));
+  // return modulesRoutes[modulesRoutesKeys[index]];
+    const matchKey = Object.keys(modulesRoutes).find(key =>
+    key.endsWith(`${path}.vue`) || key.endsWith(`${path}/index.vue`)
+  );
+
+  return matchKey ? modulesRoutes[matchKey] : null;
 }
 
 /**

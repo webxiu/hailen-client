@@ -71,7 +71,7 @@ const handleClose = (key: string, keyPath: string[]) => {
 }
 
 .slide-menu:not(.el-menu--collapse) {
-  width: 200px;
+  width: 220px;
   min-height: 400px;
   border-right: none;
 }

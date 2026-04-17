@@ -60,15 +60,25 @@ router.beforeEach(async (to, from, next) => {
   const title = to.meta?.title as string;
   if (title) document.title = title;
 
+  function toCorrectRoute() {
+    whiteList.includes(to.path) ? next(from.fullPath) : next();
+  }
   if (loginInfo.token) {
     if (to.path === "/login") {
       next({ path: "/" });
       NProgress.done();
+    } else if (from.name) {
+      toCorrectRoute();
     } else {
-      await initRouter();
-      // 重新进入当前路由，触发新加的动态路由匹配，避免 404 残留
-      addTagPath(to);
-      next();
+      await initRouter()
+      console.log('location', location)
+      console.log('to', to)
+      console.log('from', from)
+      if ( from.path !== '/' && location.hash.includes(to.path)) {
+        next(from.fullPath)
+      } else {
+        next();
+      }
     }
   } else {
     if (whiteList.indexOf(to.path) !== -1) {
