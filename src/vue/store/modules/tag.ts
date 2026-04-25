@@ -25,7 +25,7 @@ const tags = new Array(1).fill(0).map((item, index) => {
 export const useTagStore = defineStore({
   id: "hx-tag",
   state: (): TagType => ({
-    tagList: tags
+    tagList: []
   }),
   getters: {
     getTagList(state) {

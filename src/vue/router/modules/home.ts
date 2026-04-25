@@ -15,5 +15,11 @@ export default {
   meta: { title: "首页", icon: "Monitor", order: 1 },
   children: [
     // 动态路由会通过 initRouter 添加到这里的 children 中
+    // {
+    //   path: "/home/dashboard/index",
+    //   name: "HomeDashboardIndex",
+    //   meta: { title: "首页", icon: "Monitor", keepAlive: true },
+    //   component: () => import("@/vue/views/home/dashboard/index.vue")
+    // }
   ]
 } as RouteRecordRawType;

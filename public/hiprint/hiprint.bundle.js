@@ -8020,92 +8020,101 @@ var hiprint = function (t) {
                     r = this.createTarget(this.printElementType.title, [], e);
                 e ? this.updateTargetWidth(r) : this.updateTargetSize(r), this.css(r, i), this.css(o, i), this.getTempContainer().html(""), this.getTempContainer().append(r);
                 
-                let lastPage = {} 
+                let lastRowPage = {} 
                 
-                // 当前页:获取合并字段及标记列信息
                 function lastPageMerge(trs) {
-                    let colMap = {};
                     const rowLen = trs.length;
-                    // 1.获取当前最后跨页的合并信息
+                    // 1.先检查上一页是否有跨页的合并信息
+                    Object.keys(lastRowPage).forEach((key) => {
+                        for (let i = 0; i < rowLen; i++) {
+                            const cells = trs[i].cells;
+                            for (let j = 0; j < cells.length; j++) {
+                                let cell = cells[j];
+                                const field = cell.getAttribute("field");
+                                const {field:prop, nextRowspan, content} = lastRowPage[key];
+                                if(field === prop && i===0 && nextRowspan < 0) {
+                                    cell.rowSpan = Math.abs(nextRowspan);
+                                    cell.innerText = content;// 将上一页的合并内容填充
+                                }
+                            }
+                        }
+                    })
+
+                    // 2.获取当前页和下一页的合并信息
+                    let curColMerge = {};
+                    let curRowMerge = {};
+                    let nextRowMerge = {}
                     for (let i = 0; i < rowLen; i++) {
                         let cells = trs[i].cells;
                         for (let j = 0; j < cells.length; j++) {
                             let cell = cells[j];
                             let rowspan = cell.rowSpan;
+                            let colspan = cell.colSpan;
                             let field = cell.getAttribute("field");
+                            let content = cell.innerText;
+                            
+                            // 记录合并列
+                            if (colspan > 1) { 
+                                curColMerge[`${field}_${i}_${j}`] = {
+                                    field: field,
+                                    colspan: colspan,
+                                    startRow: i,
+                                    startCol: j
+                                }
+                                
+                            }
+
+                            // 记录合并行
                             if (rowspan > 1) {
-                                colMap[`${field}_${j}`] = {
+                                curRowMerge[`${field}_${i}_${j}`] = {
                                     field: field,
                                     startRow: i,
                                     endRow: rowLen - 1,
-                                    startCol: j,
                                     rowspan: rowspan,
-                                    colspan: cell.colSpan,
                                     nextRowspan: rowLen - rowspan- i,
-                                }; 
+                                };
+                                // 下一页合并
+                                nextRowMerge[`${field}_${j}`] = {
+                                    field: field,
+                                    merged: (rowspan > rowLen ? rowLen : rowspan) - i,
+                                    nextRowspan: rowLen - rowspan- i,
+                                    content: content // 当前合并文本
+                                }
                             }
                         }
                     }
-                    // 2.删除本页被合并的所有行单元格
-                    Object.keys(colMap).forEach((key) => {
+                    // 3.删除本页被合并的所有列单元格(先删除合并列)
+                    const sortedMerges = Object.values(curColMerge).sort((a, b) => b.startCol - a.startCol);
+                    sortedMerges.forEach(mergeInfo => {
+                        const { startRow, startCol, colspan } = mergeInfo;
+                        const $tr = $(trs[startRow]);  
+                        for (let col = startCol + 1; col < startCol + colspan; col++) {
+                            if ($tr.children().eq(col).length) {
+                                $tr.children().eq(col).remove();  
+                            }
+                        }
+                    });
+
+                    // 4.删除本页被合并的所有行单元格(再删除合并行)
+                    Object.keys(curRowMerge).forEach((key) => {
+                        const {field: rowField, startRow, endRow, rowspan, nextRowspan} = curRowMerge[key] || {};
                         for (let i = 0; i < rowLen; i++) {
                             const cells = trs[i].cells;
                             for (let j = 0; j < cells.length; j++) {
-                                const field = cells[j].getAttribute("field");
-                                const {field:prop, startRow, endRow, rowspan, nextRowspan} = colMap[key] || {} ;
-                                if(field === prop && i > startRow && i <= endRow && nextRowspan < 0){
-                                    $(cells[j]).remove();
-                                } 
-                                if(field === prop && i > startRow && i < startRow +rowspan && nextRowspan>=0){
-                                    $(cells[j]).remove();
+                                const cell = cells[j];
+                                const field = cell.getAttribute("field");
+                               
+                                if(field === rowField && i > startRow && i < startRow + rowspan && nextRowspan >= 0){
+                                    $(cell).remove();// 当前页
+                                }
+                                if(field === rowField && i > startRow && i <= endRow && nextRowspan < 0){
+                                    $(cell).remove();// 有跨页
                                 }
                             }
                         }
                     })
-                    return colMap;
-                }
-
-                function updateCell(trs) {
-                    const isFirshPage = Array.from(trs).some(tr => {
-                        return Array.from(tr.cells).some(td => td.rowSpan > 1)
-                    }); 
-                    if(isFirshPage) return;
-                    const trLen = trs.length;
-                    // 给当前页添加合并属性
-                    for (let i = 0; i < trLen; i++) {
-                        let cells = trs[i].cells;
-                        for (let j = 0; j < cells.length; j++) {
-                            let cell = cells[j];
-                            let field = cell.getAttribute("field");
-                            const cellVal = lastPage[`${field}_${j}`]
-                            const mergeNum =  cellVal?.nextRowspan;
-                            if(cellVal && mergeNum < 0){
-                                if (i===0 && !isFirshPage) {
-                                    cell.rowSpan = mergeNum >= 0 ? 1 : Math.abs(mergeNum);
-                                }
-                            } 
-                        }
-                    }
-                    // 删除当前页被合并的单元格
-                    Object.keys(lastPage).forEach(key => {
-                        for (let i = 0; i < trLen; i++) {
-                            const cells = trs[i]?.cells;
-                            for (let j = 0; j < cells.length; j++) {
-                                const field = cells[j].getAttribute("field");
-                                const {field:prop, nextRowspan} = lastPage[key] || {} ;
-                                const rowspan = Math.abs(nextRowspan);
-                                if(field === prop && nextRowspan < 0){
-                                    if(i === 0 && nextRowspan === -1) $(cells[j]).empty();
-                                    if(i > 0 && i < rowspan) $(cells[j]).remove();
-                                }
-                            }
-    
-                        } 
-                        
-                    })
-
-
-                }
+                    return nextRowMerge;
+                }               
 
                 for (var a, p = this.getBeginPrintTopInPaperByReferenceElement(t), s = 0, l = !1; !l;) {
                     var u = 0,
@@ -8121,8 +8130,7 @@ var hiprint = function (t) {
                     const isPageMerge = h.target.find("table.page-merge");
                     if(isPageMerge.length){
                         const trs = h.target.find("tbody tr:not(.thead)");
-                        updateCell(trs);
-                        lastPage = lastPageMerge(trs);
+                        lastRowPage = lastPageMerge(trs);
                     }
                     
                     h.target && (h.target.css("left", this.options.displayLeft()), h.target[0].height = ""), 0 == s || u > 0 ? (h.target && (a = p, h.target.css("top", p + "pt")), f = l && null != this.options.lHeight ? p + (h.height > this.options.lHeight ? h.height : this.options.lHeight) : p + h.height) : (h.target && (a = t.paperHeader, h.target.css("top", t.paperHeader + "pt")), f = t.paperHeader + h.height), n.push(new P.a({

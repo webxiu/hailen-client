@@ -365,41 +365,74 @@ var defaultConfig = {
                             \${options.columns.map(row => \`<tr>\${row.columns.map(col => \`<td align="\${col.align || 'left'}" style="width:\${col.width+'px'||'auto'}">\${col.title}</td>\`).join('')}</tr>\`).join('')}
                         </thead>
                         <tbody>
-                          <tr class="thead">
-                            <td field="index" align="center" style="width:55px">序号</td>
-                            <td field="name" align="center">姓名(模拟表头)</td>
-                            <td field="email" align="center" style="width: 160px">邮箱</td>
-                            <td field="phone" align="center">电话</td>
-                            <td field="remark" align="center">备注</td>
-                          </tr>
-                     
                           <tr>
-                            <td field="index" align="center" style="width:55px">10010</td>
-                            <td field="name" align="center"  style="width: 170px">说明:自定义表格 分页无表头</td>
-                            <td field="email" align="center">456@qq.com</td>
-                            <td field="phone" align="center">123456789</td>
-                            <td field="remark" align="center">备注</td>
+                            <td field="index" align="center" rowspan="50" style="width:55px">序号</td>
+                            <td field="name" align="center" colspan="2" style="width: 170px">张三</td>
+                            <td field="email" align="center">9999@qq.com</td>
+                            <td field="phone" align="center" colspan="2" >123456799</td>
+                            <td field="remark" align="center">备备注注</td>
                           </tr>
-                          <!-- 模拟数据渲染 (使用时删除) -->
-                          ${new Array(30)
+                          <!-- 模拟数据渲染 (使用时删除) --> 
+                          ${new Array(10)
                             .fill(1)
                             .map((_, i) => {
+                              const idx = i + 1;
+                              const rowspan = i == 0 ? 10 : 1;
+                              const colspan = i == 7 ? 2 : 1;
                               return `<tr>
-                                <td field="index" align="center" rowspan="${i == 14 ? 5 : 1}" style="width:55px">序号${i}</td>
-                                <td field="name" align="center" rowspan="${i == 15 ? 5 : 1}" style="width: 170px">张三${i}</td>
-                                <td field="email" align="center" rowspan="${i == 13 ? 2 : 1}">123@qq.com</td>
-                                <td field="phone" align="center">123456789</td>
+                                <td field="index" align="center" style="width:55px">序号  - ${idx}</td>
+                                <td field="name" align="center" rowspan="${rowspan}" style="width: 170px">张三 - ${idx}</td>
+                                <td field="email" align="center">123@qq.com - ${idx}</td>
+                                <td field="phone" align="center"  colspan="${colspan}">123456789</td>
                                 <td field="remark" align="center">备注</td>
                               </tr>`;
                             })
                             .join("")}
+                          ${new Array(12)
+                            .fill(1)
+                            .map((_, i) => {
+                              const idx = i + 1;
+                              const rowspan = i == 0 ? 12 : 1;
+                              return `<tr>
+                                <td field="index" align="center" style="width:55px">序号</td>
+                                <td field="name" align="center" rowspan="${rowspan}" style="width: 170px">李四 - ${idx}</td>
+                                <td field="email" align="center">123@qq.com - ${idx}</td>
+                                <td field="phone" align="center">123456789</td>
+                                <td field="remark" align="center">备注</td>
+                              </tr>`;
+                            })
+                            .join("")}  
+                          ${new Array(7)
+                            .fill(1)
+                            .map((_, i) => {
+                              const idx = i + 1;
+                              const rowspan = i == 0 ? 7 : 1;
+                              return `<tr>
+                                <td field="index" align="center" style="width:55px">序号</td>
+                                <td field="name" align="center" rowspan="${rowspan}" style="width: 170px">王五 - ${idx}</td>
+                                <td field="email" align="center">123@qq.com - ${idx}</td>
+                                <td field="phone" align="center">123456789</td>
+                                <td field="remark" align="center">备注</td>
+                              </tr>`;
+                            })
+                            .join("")}  
+                          ${new Array(20)
+                            .fill(1)
+                            .map((_, i) => {
+                              const idx = i + 1;
+                              const rowspan = i == 0 ? 20 : 1;
+                              return `<tr>
+                                <td field="index" align="center" style="width:55px">序号</td>
+                                <td field="name" align="center" rowspan="${rowspan}" style="width: 170px">赵六 - ${idx}</td>
+                                <td field="email" align="center">123@qq.com - ${idx}</td>
+                                <td field="phone" align="center">123456789</td>
+                                <td field="remark" align="center">备注</td>
+                              </tr>`;
+                            })
+                            .join("")}  
+                          
+                         
                         </tbody>
-                        <tfoot>
-                          <tr>
-                            <td colspan="2" align="right">页尾说明: </td>
-                            <td colspan="3" align="center">表格页尾(每页重复显示)</td>
-                          </tr>
-                        </tfoot>
                       </table>\`
                     }`,
             },

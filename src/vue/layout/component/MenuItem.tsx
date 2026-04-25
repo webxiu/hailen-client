@@ -21,7 +21,6 @@ const MenuItemComponent = defineComponent({
   emits: ["submit", "reset", "change"],
   setup(props, { emit, expose, attrs, slots }) {
     const { index, item } = props;
-    console.log("item",   item.meta?.icon);
     const router = useRouter();
 
     function onToPath(item) {
