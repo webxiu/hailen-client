@@ -2,14 +2,11 @@
 
 /* 定义全局遍历变量 */
 
-// 间距与字体
-$spaces: 4, 6, 8, 10, 12, 14, 15, 16, 18, 20, 22, 24, 28, 30, 32, 34, 36, 40, 46, 50, 60, 80, 100, 120, 130, 140, 160, 180, 200, 220, 240, 260, 280, 300;
-
 // 字体从粗细
 $weights: 100, 200, 300, 400, 500, 600, 700;
 
 // 颜色
-$colors: 111, 222, 333, 555, 666, 777, 888, 999, aaa, bbb, ccc, ddd, eee, fff, f00, '0f0', '00f', f0f, c12f38;
+$colors: 111, 222, 333, 555, 666, 777, 888, 999, aaa, bbb, ccc, ddd, eee, fff, f00, "0f0", "00f", f0f, c12f38;
 
 // 边框颜色
 $borderColor: var(--el-input-border-color, var(--el-border-color));
@@ -17,7 +14,7 @@ $borderColor: var(--el-input-border-color, var(--el-border-color));
 // flex
 $flexs: 1, 2, 3, 4, 5, 6, 7, 8, 9;
 
-@each $i in $spaces {
+@for $i from 0 through 300 {
   /* **************************** 宽高 *****************************/
 
   .w-#{$i} {
@@ -26,15 +23,44 @@ $flexs: 1, 2, 3, 4, 5, 6, 7, 8, 9;
   .h-#{$i} {
     height: #{$i}px;
   }
+  .lh-#{$i} {
+    line-height: #{$i}px;
+  }
 
+  /* **************************** 宽高(权重) *****************************/
   .wi-#{$i} {
     width: #{$i}px !important;
   }
   .hi-#{$i} {
     height: #{$i}px !important;
   }
-  .lh-#{$i} {
-    line-height: #{$i}px;
+
+  /* **************************** 宽高(最大小) *****************************/
+  .maxw-#{$i} {
+    max-width: #{$i}px;
+  }
+  .maxh-#{$i} {
+    max-height: #{$i}px;
+  }
+  .minw-#{$i} {
+    min-width: #{$i}px;
+  }
+  .minh-#{$i} {
+    min-height: #{$i}px;
+  }
+
+  /* **************************** 百分比 *****************************/
+  .ui-w-#{$i} {
+    width: $i * 1%;
+  }
+  .ui-h-#{$i} {
+    height: $i * 1%;
+  }
+  .ui-vw-#{$i} {
+    width: $i * 1vw;
+  }
+  .ui-vh-#{$i} {
+    height: $i * 1vh;
   }
 
   /* **************************** 字体 *****************************/
@@ -218,22 +244,6 @@ $flexs: 1, 2, 3, 4, 5, 6, 7, 8, 9;
 
 .ui-ov-h {
   overflow: hidden;
-}
-
-.ui-w-100 {
-  width: 100%;
-}
-
-.ui-h-100 {
-  height: 100%;
-}
-
-.ui-vw-100 {
-  width: 100vw;
-}
-
-.ui-vh-100 {
-  height: 100vh;
 }
 
 .ui-va-m {

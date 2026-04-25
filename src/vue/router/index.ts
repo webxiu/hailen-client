@@ -54,14 +54,18 @@ const router = createRouter({
 });
 
 // 路由拦截
-router.beforeEach(async (to, from, next) => {
+router.beforeEach((to, from, next) => {
   NProgress.start();
   const loginInfo = getUserInfo();
   const title = to.meta?.title as string;
   if (title) document.title = title;
 
   function toCorrectRoute() {
-    whiteList.includes(to.path) ? next(from.fullPath) : next();
+    if (whiteList.includes(to.path)) {
+      next(to.path);
+    } else {
+      next();
+    }
   }
   if (loginInfo.token) {
     if (to.path === "/login") {
@@ -70,12 +74,11 @@ router.beforeEach(async (to, from, next) => {
     } else if (from.name) {
       toCorrectRoute();
     } else {
-      await initRouter()
-      console.log('location', location)
-      console.log('to', to)
-      console.log('from', from)
-      if ( from.path !== '/' && location.hash.includes(to.path)) {
-        next(from.fullPath)
+      if (useTagStoreHook().tagList.length === 0 && to.path !== "/login") {
+        initRouter().then(() => {
+          next(to.path)
+          addTagPath(to);
+        })
       } else {
         next();
       }
