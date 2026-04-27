@@ -82,6 +82,101 @@ function loadedAllImage(container, callback = () => {}) {
     return Promise.all(promises).then(() => callback());
 }
 
+/** 表格合并处理 */
+function lastPageMerge(trs, lastRowPage) {
+    const rowLen = trs.length;
+    // 1.先检查上一页是否有跨页的合并信息
+    Object.keys(lastRowPage).forEach((key) => {
+        for (let i = 0; i < rowLen; i++) {
+            const cells = trs[i].cells;
+            for (let j = 0; j < cells.length; j++) {
+                let cell = cells[j];
+                const field = cell.getAttribute("field");
+                const {field:prop, nextRowspan, content} = lastRowPage[key];
+                if(field === prop && i===0 && nextRowspan < 0) {
+                    cell.rowSpan = Math.abs(nextRowspan);
+                    cell.innerText = content;// 将上一页的合并内容填充
+                }
+            }
+        }
+    })
+
+    // 2.获取当前页和下一页的合并信息
+    let curColMerge = {};
+    let curRowMerge = {};
+    let nextRowMerge = {}
+    for (let i = 0; i < rowLen; i++) {
+        let cells = trs[i].cells;
+        for (let j = 0; j < cells.length; j++) {
+            let cell = cells[j];
+            let rowspan = cell.rowSpan;
+            let colspan = cell.colSpan;
+            let field = cell.getAttribute("field");
+            let content = cell.innerText;
+            
+            // 记录合并列
+            if (colspan > 1) { 
+                curColMerge[`${field}_${i}_${j}`] = {
+                    field: field,
+                    colspan: colspan,
+                    startRow: i,
+                    startCol: j
+                }
+                
+            }
+
+            // 记录合并行
+            if (rowspan > 1) {
+                curRowMerge[`${field}_${i}_${j}`] = {
+                    field: field,
+                    startRow: i,
+                    endRow: rowLen - 1,
+                    rowspan: rowspan,
+                    nextRowspan: rowLen - rowspan- i,
+                };
+                // 下一页合并
+                nextRowMerge[`${field}_${j}`] = {
+                    field: field,
+                    merged: (rowspan > rowLen ? rowLen : rowspan) - i,
+                    nextRowspan: rowLen - rowspan- i,
+                    content: content // 当前合并文本
+                }
+            }
+        }
+    }
+    // 3.删除本页被合并的所有列单元格(先删除合并列)
+    const sortedMerges = Object.values(curColMerge).sort((a, b) => b.startCol - a.startCol);
+    sortedMerges.forEach(mergeInfo => {
+        const { startRow, startCol, colspan } = mergeInfo;
+        const $tr = $(trs[startRow]);  
+        for (let col = startCol + 1; col < startCol + colspan; col++) {
+            if ($tr.children().eq(col).length) {
+                $tr.children().eq(col).remove();  
+            }
+        }
+    });
+
+    // 4.删除本页被合并的所有行单元格(再删除合并行)
+    Object.keys(curRowMerge).forEach((key) => {
+        const {field: rowField, startRow, endRow, rowspan, nextRowspan} = curRowMerge[key] || {};
+        for (let i = 0; i < rowLen; i++) {
+            const cells = trs[i].cells;
+            for (let j = 0; j < cells.length; j++) {
+                const cell = cells[j];
+                const field = cell.getAttribute("field");
+                
+                if(field === rowField && i > startRow && i < startRow + rowspan && nextRowspan >= 0){
+                    $(cell).remove();// 当前页
+                }
+                if(field === rowField && i > startRow && i <= endRow && nextRowspan < 0){
+                    $(cell).remove();// 有跨页
+                }
+            }
+        }
+    })
+    return nextRowMerge;
+}
+
 var hiprint = function (t) {
     var e = {};
 
@@ -1807,9 +1902,9 @@ var hiprint = function (t) {
                     }
                 });
                 t.rowColumns.forEach(function (t, colIndex) {
-                    if (window._mergeSkipMap && window._mergeSkipMap[rowIndex + "-" + colIndex]) {
-                        return; // 直接跳过，不渲染
-                    }
+                    // if (window._mergeSkipMap && window._mergeSkipMap[rowIndex + "-" + colIndex]) {
+                    //     return; // 直接跳过，不渲染(已通过属性配置实现)
+                    // }
                     var r = $("<td></td>");
                     var mergeRes = mergeMap[colIndex] || defMerge;
                     if (mergeRes.rowspan > 1 || mergeRes.colspan > 1) {
@@ -1865,7 +1960,7 @@ var hiprint = function (t) {
                 var n = {},
                     i = TableExcelHelper.allAutoWidth(t),
                     o = TableExcelHelper.allFixedWidth(t);
-                return t.rowColumns.forEach(function (t) {
+                return t.rowColumns?.forEach(function (t) {
                     if (t.fixed) n[t.id] = t.width; else {
                         var r = e - o,
                             a = t.width / i * (r > 0 ? r : 0);
@@ -1882,12 +1977,12 @@ var hiprint = function (t) {
                 });
             }, TableExcelHelper.allAutoWidth = function (t) {
                 var e = 0;
-                return t.rowColumns.forEach(function (t) {
+                return t.rowColumns?.forEach(function (t) {
                     e += t.fixed ? 0 : t.width;
                 }), e;
             }, TableExcelHelper.allFixedWidth = function (t) {
                 var e = 0;
-                return t.rowColumns.forEach(function (t) {
+                return t.rowColumns?.forEach(function (t) {
                     e += t.fixed ? t.width : 0;
                 }), e;
             }, TableExcelHelper.reconsitutionTableColumnTree = function (t, e, n) {
@@ -3668,6 +3763,33 @@ var hiprint = function (t) {
                 this.target.remove();
             }, t;
         }(),
+        TableMerge = function () {
+            function t() {
+                this.name = "tableMerge";
+            }
+
+            return t.prototype.createTarget = function () {
+                const mergeOptions = [
+                    { value: "", text: "默认" },    
+                    { value: "true", text: "合并" },
+                    { value: "false", text: "不合并" }
+                ] 
+                return this.target = $(`<div class="hiprint-option-item">
+                    <div class="hiprint-option-item-label">表格合并</div>
+                    <div class="hiprint-option-item-field">
+                        <select class="auto-submit">
+                            ${mergeOptions.map(m => `<option value="${m.value}">${m.text}</option>`).join('')}
+                        </select>
+                    </div></div>
+                `), this.target;
+            }, t.prototype.getValue = function () {
+                if ("true" == this.target.find("select").val()) return !0;
+            }, t.prototype.setValue = function (t) {
+                this.target.find("select").val((null == t ? "" : t).toString());
+            }, t.prototype.destroy = function () {
+                this.target.remove();
+            }, t;
+        }(),
         nt = function () {
             function t() {
                 this.name = "backgroundColor";
@@ -4248,7 +4370,7 @@ var hiprint = function (t) {
             t.init(), t.printElementOptionItems[e.name] = e;
         }, t.getItem = function (e) {
             return t.init(), t.printElementOptionItems[e];
-        }, t._printElementOptionItems = [new o(), new r(), new a(), new p(), new i(), new s(), new l(), new pt(), new u(), new d(), new c(), new h(), new f(), new g(), new m(), new v(), new y(), new b(), new E(), new qrCodeLevel(), new T(), new P(), new _(), new w(), new x(), new C(), new imageFit(), new borderRadius(), new O(), new HostDomain(), new watermarkOptions(), new H(), new D(), new PaperNumberTop(), new PaperNumberLeft(), new I(), new R(), new M(), new S(), new B(), new F(), new L(), new A(), new z(), new k(), new st(), new N(), new V(), new W(), new j(), new U(), new K(), new G(), new q(), new X(), new Y(), new Q(), new J(), new Z(), new tt(), new et(), new lockWidthHeight(), new DraggableElement(), new ZIndex(), new EchartsOption(), new EchartsTool(), new CanvasOption(), new OperationMode(), new ElementSizePosition(), new nt(), new it(), new ot(), new at(), new lt(), new ut(), new dt(), new ct(), new ht(), new ft(), new gt(), new mt(), new rowcolumns(), new vt(), new yt(), new bt(), new Tt(), new Et(), new Pt(), new _t(), new wt(), new xt()], t;
+        }, t._printElementOptionItems = [new o(), new r(), new a(), new p(), new i(), new s(), new l(), new pt(), new u(), new d(), new c(), new h(), new f(), new g(), new m(), new v(), new y(), new b(), new E(), new qrCodeLevel(), new T(), new P(), new _(), new w(), new x(), new C(), new imageFit(), new borderRadius(), new O(), new HostDomain(), new watermarkOptions(), new H(), new D(), new PaperNumberTop(), new PaperNumberLeft(), new I(), new R(), new M(), new S(), new B(), new F(), new L(), new A(), new z(), new k(), new st(), new N(), new V(), new W(), new j(), new U(), new K(), new G(), new q(), new X(), new Y(), new Q(), new J(), new Z(), new tt(), new et(), new lockWidthHeight(), new DraggableElement(), new ZIndex(), new EchartsOption(), new EchartsTool(), new CanvasOption(), new OperationMode(), new ElementSizePosition(), new TableMerge(), new nt(), new it(), new ot(), new at(), new lt(), new ut(), new dt(), new ct(), new ht(), new ft(), new gt(), new mt(), new rowcolumns(), new vt(), new yt(), new bt(), new Tt(), new Et(), new Pt(), new _t(), new wt(), new xt()], t;
     }();
 }, function (t, e, n) {
     "use strict";
@@ -4557,9 +4679,10 @@ var hiprint = function (t) {
                 return e.find(".hiprint-printElement-tableTarget tbody tr").remove(), e;
             }, TablePrintElement.prototype.getTableHtml = function (t, e) {
                 var n, i;
-                if (!this.getField() && this.options.content) return (n = $("<div></div>")).append(this.options.content), (i = n.find("table")).addClass("hiprint-printElement-tableTarget"), i;
-                if (this.printElementType.formatter) return (n = $("<div></div>")).append(this.printElementType.formatter(t)), (i = n.find("table")).addClass("hiprint-printElement-tableTarget"), i;
-                var o = $('<table class="hiprint-printElement-tableTarget" style="border-collapse: collapse;"></table>');
+                const pageMerge = this.options.tableMerge ? ` page-merge` : '';
+                if (!this.getField() && this.options.content) return (n = $("<div></div>")).append(this.options.content), (i = n.find("table")).addClass(`hiprint-printElement-tableTarget${pageMerge}`), i;
+                if (this.printElementType.formatter) return (n = $("<div></div>")).append(this.printElementType.formatter(t)), (i = n.find("table")).addClass(`hiprint-printElement-tableTarget${pageMerge}`), i;
+                var o = $(`<table class="hiprint-printElement-tableTarget${pageMerge}" style="border-collapse: collapse;"></table>`);
                 return o.append(_table_TableExcelHelper__WEBPACK_IMPORTED_MODULE_6__.a.createTableHead(this.getColumns(), this.options.getWidth() / this.options.getGridColumns())), o.append(_table_TableExcelHelper__WEBPACK_IMPORTED_MODULE_6__.a.createTableRow(this.getColumns(), t, this.options, this.printElementType)), this.getFooterFormatter() && ("no" == this.options.tableFooterRepeat || ("last" == this.options.tableFooterRepeat ? o.find("tbody").append(_table_TableExcelHelper__WEBPACK_IMPORTED_MODULE_6__.a.createTableFooter(this.printElementType.columns, t, this.options, this.printElementType, e, t).html()) : o.append(_table_TableExcelHelper__WEBPACK_IMPORTED_MODULE_6__.a.createTableFooter(this.printElementType.columns, t, this.options, this.printElementType, e, [])))), o;
             }, TablePrintElement.prototype.getEmptyRowTarget = function () {
                 return _table_TableExcelHelper__WEBPACK_IMPORTED_MODULE_6__.a.createEmptyRowTarget(this.getColumns());
@@ -4574,6 +4697,7 @@ var hiprint = function (t) {
                     r = this.createtempEmptyRowsTargetStructure(e);
                 e ? this.updateTargetWidth(r) : this.updateTargetSize(r), this.css(r, i), this.css(o, i), this.getTempContainer().html(""), this.getTempContainer().append(r);
 
+                let lastRowPage = {} 
                 for (var a, p = this.getBeginPrintTopInPaperByReferenceElement(t), s = 0, l = !1; !l;) {
                     var u = 0,
                         d = t.getPaperFooter(s);
@@ -4585,6 +4709,14 @@ var hiprint = function (t) {
                         h = this.getRowsInSpecificHeight(e, u > 0 ? u : 0 == s ? d - p : t.getContentHeight(s), r, o, s, c);
                     l = h.isEnd;
                     var f = void 0;
+
+                    const pageMerge = this.options.tableMerge ? `page-merge` : 'no-merge';
+                    const isPageMerge = h.target.find(`table.${pageMerge}`);
+                    if(isPageMerge.length){
+                        const trs = h.target.find("tbody tr:not(.thead)");
+                        lastRowPage = lastPageMerge(trs, lastRowPage);
+                    }
+
                     h.target && (h.target.css("left", this.options.displayLeft()), h.target[0].height = ""), 0 == s || u > 0 ? (h.target && (a = p, h.target.css("top", p + "pt")), f = l && null != this.options.lHeight ? p + (h.height > this.options.lHeight ? h.height : this.options.lHeight) : p + h.height) : (h.target && (a = t.paperHeader, h.target.css("top", t.paperHeader + "pt")), f = t.paperHeader + h.height), n.push(new _dto_PaperHtmlResult__WEBPACK_IMPORTED_MODULE_2__.a({
                         target: h.target,
                         printLine: f,
@@ -7998,12 +8130,13 @@ var hiprint = function (t) {
                 var i = $('<div class="hiprint-printElement hiprint-printElement-table" style="position: absolute;"><div class="hiprint-printElement-table-handle"></div><div class="hiprint-printElement-table-content" style="height:100%;width:100%"></span></div>');
                 return i.find(".hiprint-printElement-table-content").append(this.getTableHtml(e, n)), i;
             }, e.prototype.getTableHtml = function (t, e) {
-                var n = $('<table class="hiprint-printElement-tableTarget" style="border-collapse: collapse;width:100%;"></table>');
+                const pageMerge = this.options.tableMerge ? ` page-merge` : '';
+                var n = $(`<table class="hiprint-printElement-tableTarget${pageMerge}" style="border-collapse: collapse;width:100%;"></table>`);
                 // 表格由外部配置
                 if (this.options?.tableCustomRender) {
                     var tableHtml = eval(this.options.tableCustomRender)(this.options, e);
                     var $table = $(tableHtml);
-                    $table.addClass("hiprint-printElement-tableTarget");
+                    $table.addClass(`hiprint-printElement-tableTarget${pageMerge}`);
                     var currentStyle = $table.attr('style') || '';
                     $table.attr('style', currentStyle + ';border-collapse: collapse;width:100%;');
                     return $table;
@@ -8020,102 +8153,7 @@ var hiprint = function (t) {
                     r = this.createTarget(this.printElementType.title, [], e);
                 e ? this.updateTargetWidth(r) : this.updateTargetSize(r), this.css(r, i), this.css(o, i), this.getTempContainer().html(""), this.getTempContainer().append(r);
                 
-                let lastRowPage = {} 
-                
-                function lastPageMerge(trs) {
-                    const rowLen = trs.length;
-                    // 1.先检查上一页是否有跨页的合并信息
-                    Object.keys(lastRowPage).forEach((key) => {
-                        for (let i = 0; i < rowLen; i++) {
-                            const cells = trs[i].cells;
-                            for (let j = 0; j < cells.length; j++) {
-                                let cell = cells[j];
-                                const field = cell.getAttribute("field");
-                                const {field:prop, nextRowspan, content} = lastRowPage[key];
-                                if(field === prop && i===0 && nextRowspan < 0) {
-                                    cell.rowSpan = Math.abs(nextRowspan);
-                                    cell.innerText = content;// 将上一页的合并内容填充
-                                }
-                            }
-                        }
-                    })
-
-                    // 2.获取当前页和下一页的合并信息
-                    let curColMerge = {};
-                    let curRowMerge = {};
-                    let nextRowMerge = {}
-                    for (let i = 0; i < rowLen; i++) {
-                        let cells = trs[i].cells;
-                        for (let j = 0; j < cells.length; j++) {
-                            let cell = cells[j];
-                            let rowspan = cell.rowSpan;
-                            let colspan = cell.colSpan;
-                            let field = cell.getAttribute("field");
-                            let content = cell.innerText;
-                            
-                            // 记录合并列
-                            if (colspan > 1) { 
-                                curColMerge[`${field}_${i}_${j}`] = {
-                                    field: field,
-                                    colspan: colspan,
-                                    startRow: i,
-                                    startCol: j
-                                }
-                                
-                            }
-
-                            // 记录合并行
-                            if (rowspan > 1) {
-                                curRowMerge[`${field}_${i}_${j}`] = {
-                                    field: field,
-                                    startRow: i,
-                                    endRow: rowLen - 1,
-                                    rowspan: rowspan,
-                                    nextRowspan: rowLen - rowspan- i,
-                                };
-                                // 下一页合并
-                                nextRowMerge[`${field}_${j}`] = {
-                                    field: field,
-                                    merged: (rowspan > rowLen ? rowLen : rowspan) - i,
-                                    nextRowspan: rowLen - rowspan- i,
-                                    content: content // 当前合并文本
-                                }
-                            }
-                        }
-                    }
-                    // 3.删除本页被合并的所有列单元格(先删除合并列)
-                    const sortedMerges = Object.values(curColMerge).sort((a, b) => b.startCol - a.startCol);
-                    sortedMerges.forEach(mergeInfo => {
-                        const { startRow, startCol, colspan } = mergeInfo;
-                        const $tr = $(trs[startRow]);  
-                        for (let col = startCol + 1; col < startCol + colspan; col++) {
-                            if ($tr.children().eq(col).length) {
-                                $tr.children().eq(col).remove();  
-                            }
-                        }
-                    });
-
-                    // 4.删除本页被合并的所有行单元格(再删除合并行)
-                    Object.keys(curRowMerge).forEach((key) => {
-                        const {field: rowField, startRow, endRow, rowspan, nextRowspan} = curRowMerge[key] || {};
-                        for (let i = 0; i < rowLen; i++) {
-                            const cells = trs[i].cells;
-                            for (let j = 0; j < cells.length; j++) {
-                                const cell = cells[j];
-                                const field = cell.getAttribute("field");
-                               
-                                if(field === rowField && i > startRow && i < startRow + rowspan && nextRowspan >= 0){
-                                    $(cell).remove();// 当前页
-                                }
-                                if(field === rowField && i > startRow && i <= endRow && nextRowspan < 0){
-                                    $(cell).remove();// 有跨页
-                                }
-                            }
-                        }
-                    })
-                    return nextRowMerge;
-                }               
-
+                let lastRowPage = {};
                 for (var a, p = this.getBeginPrintTopInPaperByReferenceElement(t), s = 0, l = !1; !l;) {
                     var u = 0,
                         d = t.getPaperFooter(s);
@@ -8127,10 +8165,11 @@ var hiprint = function (t) {
                         h = this.getRowsInSpecificHeight(u > 0 ? u : 0 == s ? d - p : t.getContentHeight(s), r, o, s, c, e);
                     l = h.isEnd;
                     var f = void 0;
-                    const isPageMerge = h.target.find("table.page-merge");
+                    const pageMerge = this.options.tableMerge ? `page-merge` : 'no-merge';
+                    const isPageMerge = h.target.find(`table.${pageMerge}`);
                     if(isPageMerge.length){
                         const trs = h.target.find("tbody tr:not(.thead)");
-                        lastRowPage = lastPageMerge(trs);
+                        lastRowPage = lastPageMerge(trs, lastRowPage);
                     }
                     
                     h.target && (h.target.css("left", this.options.displayLeft()), h.target[0].height = ""), 0 == s || u > 0 ? (h.target && (a = p, h.target.css("top", p + "pt")), f = l && null != this.options.lHeight ? p + (h.height > this.options.lHeight ? h.height : this.options.lHeight) : p + h.height) : (h.target && (a = t.paperHeader, h.target.css("top", t.paperHeader + "pt")), f = t.paperHeader + h.height), n.push(new P.a({

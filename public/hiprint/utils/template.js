@@ -259,6 +259,7 @@ var defaultConfig = {
               height: 49,
               width: 511.5,
               field: "table",
+              tableMerge: true,
               columns: [
                 [
                   { title: "基本信息", width: 100, align: "center", colspan: 2, rowspan: 1, checked: true },
@@ -288,7 +289,7 @@ var defaultConfig = {
                     // 指定某单元格合并
                     if (rowIndex === 1 && colIndex === 1) {
                       return {
-                        rowspan: 2,
+                        rowspan: 25,
                         colspan: 1,
                         tdStyle: { 'background': '#31f5a4' },
                         trStyle: { 'background': '#cfc3c3' },
@@ -342,6 +343,7 @@ var defaultConfig = {
               height: 32.5,
               width: 511.5,
               field: "table",
+              tableMerge: true,
               // 注释不显示head表头
               columns: [
                 // [
@@ -353,88 +355,98 @@ var defaultConfig = {
                 // ],
               ],
               tableCustomRender: `(options, testData) => {
-                    // console.log('options', options);
-                    return  \`
-                      <style>
-                        /* 添加style标签, 可自定义样式 */
-                        .hiprint-printElement-table .thead {background: #e8e8e7}
-                      </style>
-                    <table class="hiprint-printElement-tableTarget page-merge" style="border-collapse: collapse;">
-                        <thead>
-                            <!-- <tr><td> 可以省略表头(配置columns自动显示标题) </td></tr> -->
-                            \${options.columns.map(row => \`<tr>\${row.columns.map(col => \`<td align="\${col.align || 'left'}" style="width:\${col.width+'px'||'auto'}">\${col.title}</td>\`).join('')}</tr>\`).join('')}
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td field="index" align="center" rowspan="50" style="width:55px">序号</td>
-                            <td field="name" align="center" colspan="2" style="width: 170px">张三</td>
-                            <td field="email" align="center">9999@qq.com</td>
-                            <td field="phone" align="center" colspan="2" >123456799</td>
-                            <td field="remark" align="center">备备注注</td>
-                          </tr>
-                          <!-- 模拟数据渲染 (使用时删除) --> 
-                          ${new Array(10)
-                            .fill(1)
-                            .map((_, i) => {
-                              const idx = i + 1;
-                              const rowspan = i == 0 ? 10 : 1;
-                              const colspan = i == 7 ? 2 : 1;
-                              return `<tr>
-                                <td field="index" align="center" style="width:55px">序号  - ${idx}</td>
-                                <td field="name" align="center" rowspan="${rowspan}" style="width: 170px">张三 - ${idx}</td>
-                                <td field="email" align="center">123@qq.com - ${idx}</td>
-                                <td field="phone" align="center"  colspan="${colspan}">123456789</td>
-                                <td field="remark" align="center">备注</td>
-                              </tr>`;
-                            })
-                            .join("")}
-                          ${new Array(12)
-                            .fill(1)
-                            .map((_, i) => {
-                              const idx = i + 1;
-                              const rowspan = i == 0 ? 12 : 1;
-                              return `<tr>
-                                <td field="index" align="center" style="width:55px">序号</td>
-                                <td field="name" align="center" rowspan="${rowspan}" style="width: 170px">李四 - ${idx}</td>
-                                <td field="email" align="center">123@qq.com - ${idx}</td>
-                                <td field="phone" align="center">123456789</td>
-                                <td field="remark" align="center">备注</td>
-                              </tr>`;
-                            })
-                            .join("")}  
-                          ${new Array(7)
-                            .fill(1)
-                            .map((_, i) => {
-                              const idx = i + 1;
-                              const rowspan = i == 0 ? 7 : 1;
-                              return `<tr>
-                                <td field="index" align="center" style="width:55px">序号</td>
-                                <td field="name" align="center" rowspan="${rowspan}" style="width: 170px">王五 - ${idx}</td>
-                                <td field="email" align="center">123@qq.com - ${idx}</td>
-                                <td field="phone" align="center">123456789</td>
-                                <td field="remark" align="center">备注</td>
-                              </tr>`;
-                            })
-                            .join("")}  
-                          ${new Array(20)
-                            .fill(1)
-                            .map((_, i) => {
-                              const idx = i + 1;
-                              const rowspan = i == 0 ? 20 : 1;
-                              return `<tr>
-                                <td field="index" align="center" style="width:55px">序号</td>
-                                <td field="name" align="center" rowspan="${rowspan}" style="width: 170px">赵六 - ${idx}</td>
-                                <td field="email" align="center">123@qq.com - ${idx}</td>
-                                <td field="phone" align="center">123456789</td>
-                                <td field="remark" align="center">备注</td>
-                              </tr>`;
-                            })
-                            .join("")}  
-                          
-                         
-                        </tbody>
-                      </table>\`
-                    }`,
+                // console.log('options', options);
+                // 1.自定义配置表头(适用场景: 表头仅在首页显示,后续页不显示)
+                const columns = [
+                  { title: "序号", field: "index", width: 65, align: "center", columnId: "index" },
+                  { title: "姓名(模拟表头)", field: "name", width: 170, align: "center", columnId: "name" },
+                  { title: "邮箱", field: "email", width: 60, align: "center", columnId: "email" },
+                  { title: "电话", field: "phone", width: 60, align: "center", columnId: "phone" },
+                  { title: "备注", field: "remark", width: 60, align: "center", columnId: "remark" },
+                ];
+                return \`
+                  <style>
+                    /* 2.添加style标签, 可自定义样式 */
+                    .hiprint-printElement-table .thead {background: #e8e8e7}
+                  </style>
+                  <table class="hiprint-printElement-tableTarget" style="border-collapse: collapse;">
+                    <thead>
+                        <!-- 3.options配置columns将会显示分页表头 -->
+                        \${options.columns.map(row => \`<tr>\${row.columns.map(col => \`<td align="\${col.align || 'left'}" style="width:\${col.width+'px'||'auto'}">\${col.title}</td>\`).join('')}</tr>\`).join('')}
+                    </thead>
+                    <tbody>
+                      <!-- 4.在首行tr中添加thead类名模拟表头,背景自动高亮(表头仅在首页显示,后续页不显示) -->
+                      <tr class="thead">
+                        \${columns.map((col) => \`<td field="\${col.field}" width="\${col.width}" align="\${col.align || 'center'}">\${col.title}</td>\`).join('\\n')}
+                      </tr>
+                      <tr>
+                        <td field="index" width="55" align="center" rowspan="50">序号</td>
+                        <td field="name" width="170 align="center" colspan="2">张三</td>
+                        <td field="email" width="60" align="center">9999@qq.com</td>
+                        <td field="phone" width="60" align="center" colspan="2">123456799</td>
+                        <td field="remark" width="60" align="center">备备注注</td>
+                      </tr>
+                      <!-- 模拟数据(跨页渲染) --> 
+                      ${new Array(10)
+                        .fill(1)
+                        .map((_, i) => {
+                          const idx = i + 1;
+                          const rowspan = i == 0 ? 10 : 1;
+                          const colspan = i == 7 ? 2 : 1;
+                          return `<tr>
+                            <td field="index" width="55" align="center">序号  - ${idx}</td>
+                            <td field="name" width="170 align="center" rowspan="${rowspan}">张三 - ${idx}</td>
+                            <td field="email" width="60" align="center">123@qq.com - ${idx}</td>
+                            <td field="phone" width="60" align="center"  colspan="${colspan}">123456789</td>
+                            <td field="remark" width="60" align="center">备注</td>
+                          </tr>`;
+                        })
+                        .join("")}
+                      ${new Array(12)
+                        .fill(1)
+                        .map((_, i) => {
+                          const idx = i + 1;
+                          const rowspan = i == 0 ? 12 : 1;
+                          return `<tr>
+                            <td field="index" width="55" align="center">序号</td>
+                            <td field="name" width="170 align="center" rowspan="${rowspan}">李四 - ${idx}</td>
+                            <td field="email" width="60" align="center">123@qq.com - ${idx}</td>
+                            <td field="phone" width="60" align="center">123456789</td>
+                            <td field="remark" width="60" align="center">备注</td>
+                          </tr>`;
+                        })
+                        .join("")}  
+                      ${new Array(7)
+                        .fill(1)
+                        .map((_, i) => {
+                          const idx = i + 1;
+                          const rowspan = i == 0 ? 7 : 1;
+                          return `<tr>
+                            <td field="index" width="55" align="center">序号</td>
+                            <td field="name" width="170 align="center" rowspan="${rowspan}">王五 - ${idx}</td>
+                            <td field="email" width="60" align="center">123@qq.com - ${idx}</td>
+                            <td field="phone" width="60" align="center">123456789</td>
+                            <td field="remark" width="60" align="center">备注</td>
+                          </tr>`;
+                        })
+                        .join("")}  
+                      ${new Array(20)
+                        .fill(1)
+                        .map((_, i) => {
+                          const idx = i + 1;
+                          const rowspan = i == 0 ? 20 : 1;
+                          return `<tr>
+                            <td field="index" width="55" align="center">序号</td>
+                            <td field="name" width="170 align="center" rowspan="${rowspan}">赵六 - ${idx}</td>
+                            <td field="email" width="60" align="center">123@qq.com - ${idx}</td>
+                            <td field="phone" width="60" align="center">123456789</td>
+                            <td field="remark" width="60" align="center">备注</td>
+                          </tr>`;
+                        })
+                        .join("")}  
+                    </tbody>
+                  </table>\`
+                }`,
             },
             printElementType: { title: "自定义表格", type: "tableCustom" },
           },
