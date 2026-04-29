@@ -33,7 +33,7 @@ app.whenReady().then(() => {
 
   createServer(config).then(() => {
     if (process.env.NODE_ENV === "development") {
-      const excludes = ["notFound", "component", "components", "utils"]; // 排除目录
+      const excludes = ["login", "notFound", "component", "components", "utils"]; // 排除目录
       const result = getRoutePaths(pagePath, excludes, (item) => item.endsWith("index.vue"));
       post({ menus: result }, config.host); 
     }

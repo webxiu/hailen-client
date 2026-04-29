@@ -1,17 +1,10 @@
 <template>
-  <div class="nav-menu-container">
+  <div class="flex-co">
     <el-button @click="isCollapse = !isCollapse" class="collapse-btn">
       {{ isCollapse ? "展开" : "收起" }}
     </el-button>
     <div v-if="navMenuList.length" class="menu-wrapper">
-      <el-menu
-        :default-active="activeMenu"
-        class="slide-menu"
-        :collapse="isCollapse"
-        :router="true"
-        @open="handleOpen"
-        @close="handleClose"
-      >
+      <el-menu :default-active="activeMenu" class="slide-menu" :collapse="isCollapse" :router="true" @open="handleOpen" @close="handleClose">
         <MenuItem v-for="item in navMenuList" :item="item" :index="item.path" :key="item.path" />
       </el-menu>
     </div>
@@ -30,14 +23,10 @@ import { useAppStoreHook } from "@/vue/store/modules/app";
 const isCollapse = ref(false);
 const route = useRoute();
 
-// 从 store 获取动态路由（菜单数据）
 const navMenuList = computed(() => useAppStoreHook().getAsyncRoutes);
-console.log('navMenuList.value', navMenuList.value)
 
-// 当前激活的菜单项
 const activeMenu = computed(() => route.path);
 
-// 监听路由变化，确保菜单高亮正确
 watch(
   () => route.path,
   (newPath) => {
@@ -46,20 +35,16 @@ watch(
 );
 
 const handleOpen = (key: string, keyPath: string[]) => {
-  console.log("菜单展开:", key, keyPath);
+  // console.log("菜单展开:", key, keyPath);
 };
 
 const handleClose = (key: string, keyPath: string[]) => {
-  console.log("菜单收起:", key, keyPath);
+  // console.log("菜单收起:", key, keyPath);
 };
 </script>
 
-<style scoped>
-.nav-menu-container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
+<style lang="scss" scoped>
+ 
 
 .collapse-btn {
   margin-bottom: 10px;
@@ -68,6 +53,9 @@ const handleClose = (key: string, keyPath: string[]) => {
 .menu-wrapper {
   flex: 1;
   overflow-y: auto;
+  :deep(.el-menu) {
+    background: transparent;
+  }
 }
 
 .slide-menu:not(.el-menu--collapse) {

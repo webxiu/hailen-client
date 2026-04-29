@@ -24,7 +24,6 @@ const tagsViews = reactive<Array<any>>([
   { icon: "FullScreen", text: "内容全屏", divided: false, disabled: false, show: true }
 ]);
 const tags = computed(() => useTagStore().getTagList);
-// console.log("useTagStore", useTagStore().getTagList);
 const linkIsActive = computed(() => {
   return (item, previous, next) => {
     // 判断路由及参数来激活当前Tag标签
@@ -34,29 +33,6 @@ const linkIsActive = computed(() => {
       return route.path + routeQuery === item.path + itemQuery ? previous : next;
     }
     return route.path === item.path ? previous : next;
-  };
-});
-
-// 5-10随即索引
-
-const tags2 = new Array(30).fill(0).map((item, index) => {
-  const randomIndex = Math.floor(Math.random() * 5 + 5);
-  index++;
-  return {
-    name: `Home${index}`,
-    path: `/workbench/home${index}`,
-    meta: {
-      title: "标题很累空间四六级".slice(0, randomIndex) + index,
-      icon: "icon-gongzuotai",
-      keepAlive: true
-    },
-    id: index,
-    query: {
-      menuCode: "16",
-      from: "/productMkCenter",
-      menuId: "146",
-      menuName: "李会计"
-    }
   };
 });
 
@@ -72,7 +48,6 @@ function getScrollTagPosition() {
   // 找到当前高亮的路由
   const index = tags.value.findIndex((item) => linkIsActive.value(item, true, false));
   const activeRef = instance.refs["dynamic" + index];
-  // console.log("============route", activeRef, route);
   if (!activeRef) return;
   const activeTabEl = activeRef[0];
   const tabItemElOffsetLeft = (activeTabEl as HTMLElement)?.offsetLeft;
@@ -164,8 +139,8 @@ function handleAliveRoute(route, type) {}
 function transformI18n(item) {}
 
 function onRouteClick(item) {
-  console.log("跳转", item); 
-  router.push({ path:item.path, query: item.query });
+  console.log("跳转", item);
+  router.push({ path: item.path, query: item.query });
 }
 </script>
 
@@ -263,13 +238,15 @@ function onRouteClick(item) {
       color: var(--el-color-primary);
       cursor: pointer;
       transform-origin: center center;
-      transition: font-size 0.2s, transform 0.3s;
+      transition:
+        font-size 0.2s,
+        transform 0.3s;
       transform: translate(3px, -50%) scale(0);
       line-height: 7px;
       text-align: center;
 
       &:hover {
-        font-size: 13px; 
+        font-size: 13px;
         border-radius: 50%;
         transform: translate(3px, -50%) scale(0);
       }

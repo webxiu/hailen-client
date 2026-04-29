@@ -4,13 +4,15 @@
 $themeConfig: (
   light: (
     color: #111,
-    head: #fff3b37a,
+    head: #adafff7a,
+    side: #fff6b37a,
     content: #ffffff8c,
-    background: rgba(136, 158, 197, 0.473)
+    background: #889ec579
   ),
   dark: (
     color: #ffffff,
-    head: #6d6d6d44,
+    head: #54d72c44,
+    side: #3584ff45,
     content: #2236464b,
     background: #1b1b1b44
   )
@@ -53,6 +55,10 @@ body {
 }
 .main-header {
   background: var(--theme-head);
+  @include delayTime;
+}
+.main-side {
+  background: var(--theme-side);
   @include delayTime;
 }
 

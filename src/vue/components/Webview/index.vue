@@ -11,7 +11,7 @@
       disablewebsecurity
       nodeintegrationinsubframes
       partition="partition"
-      :style="{ width: ' 100%', height: '600px' }"
+      :style="{ width: ' 100%', height: '460px' }"
     ></webview>
   </div>
 </template>

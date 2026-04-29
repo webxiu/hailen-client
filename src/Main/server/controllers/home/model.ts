@@ -19,7 +19,7 @@ export default class DbModel {
         queryParams.push(params[key]);
       }
     }
-    sql += " ORDER BY create_date DESC";
+    sql += " ORDER BY createDate DESC";
     return this.db.all<User>(sql, queryParams);
   }
 }

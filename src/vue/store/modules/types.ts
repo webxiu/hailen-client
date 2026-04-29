@@ -13,18 +13,7 @@ export type positionType = {
 };
 
 export type appType = {
-  sidebar: {
-    opened: boolean;
-    withoutAnimation: boolean;
-    // 判断是否手动点击Collapse
-    isClickCollapse: boolean;
-  };
-  layout: LayoutStyle;
-  appConfig: StorageConfigs;
-  device: string;
   asyncRoutes: RouteConfigsTable[];
-  routeLoading: boolean;
-  currentLoadings: string[];
 };
 
 export type multiType = {

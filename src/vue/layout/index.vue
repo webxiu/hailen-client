@@ -32,7 +32,7 @@ const openInVScode = () => {
   const timer = setTimeout(() => {
     newWindow.close();
     clearTimeout(timer);
-  }, 3000);
+  }, 1500);
 };
 
 // 设置主题
@@ -71,7 +71,7 @@ function logout() {
 <template>
   <Star />
   <div class="layout">
-    <div class="flex-col ui-vh-100 p-4">
+    <div class="main-side flex-col ui-vh-100 p-4">
       <div>logo <HxIcon icon="Setting" /></div>
       <div class="flex-1 ui-ovy-a">
         <NavMenu />

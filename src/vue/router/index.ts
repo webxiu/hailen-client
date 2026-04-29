@@ -1,9 +1,8 @@
 import { RouteRecordRaw, createRouter, createWebHashHistory, createWebHistory } from "vue-router";
 import { getUserInfo, removeUserInfo } from "@/vue/utils/storage";
-import { initRouter, resetRouterInit } from "@/vue/router/utils";
+import { initRouter } from "@/vue/router/utils";
 
 import NProgress from "@/vue/utils/progress";
-import { nextTick } from "vue";
 import { useTagStoreHook } from "@/vue/store/modules/tag";
 
 /** 路由白名单 */
@@ -30,10 +29,8 @@ const commonRoute: RouteRecordRawType[] = [
     meta: { title: "页面找不到", icon: "Grape", order: 0 }
   }
 ];
-// 动态加载，只加载 home.ts 作为 Layout 路由配置
 const modules: Record<string, any> = import.meta.glob(["./modules/home.ts"], { eager: true });
 
-// 路由模块列表
 const routeList: Required<RouteRecordRawType>[] = [];
 Object.keys(modules).forEach((key) => {
   const mod = modules[key].default || {};
@@ -41,9 +38,7 @@ Object.keys(modules).forEach((key) => {
   routeList.push(...modList);
 });
 
-// 合并路由
 export const asyncRoutes = []; // 动态路由
-// 只加载 home.ts 作为基础 Layout 路由，动态路由会通过 initRouter 添加到它的 children 中
 export const routeCateList = routeList.sort((a, b) => (a.meta?.order || 0) - (b.meta?.order || 0));
 export const routes = [...commonRoute, ...routeCateList, ...asyncRoutes] as RouteRecordRaw[];
 
@@ -57,9 +52,6 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   NProgress.start();
   const loginInfo = getUserInfo();
-  const title = to.meta?.title as string;
-  if (title) document.title = title;
-
   function toCorrectRoute() {
     if (whiteList.includes(to.path)) {
       next(to.path);
@@ -67,20 +59,25 @@ router.beforeEach((to, from, next) => {
       next();
     }
   }
+  function addTagPath(to) {
+    if (to.meta.type !== "menu") return;
+    useTagStoreHook().addTag(to);
+  }
+
   if (loginInfo.token) {
     if (to.path === "/login") {
       next({ path: "/" });
       NProgress.done();
-    } else if (from.name) {
-      toCorrectRoute();
     } else {
+      // 刷新
       if (useTagStoreHook().tagList.length === 0 && to.path !== "/login") {
         initRouter().then(() => {
-          next(to.path)
+          next(to.path);
           addTagPath(to);
-        })
+        });
       } else {
-        next();
+        addTagPath(to);
+        toCorrectRoute();
       }
     }
   } else {
@@ -88,7 +85,6 @@ router.beforeEach((to, from, next) => {
       next();
     } else {
       removeUserInfo();
-      resetRouterInit(); // 重置路由初始化状态
       next("/login");
     }
   }
@@ -97,10 +93,6 @@ router.beforeEach((to, from, next) => {
 router.afterEach(() => {
   NProgress.done();
 });
-
-function addTagPath(to) {
-  useTagStoreHook().addTag(to);
-}
 
 // 重置路由
 export function resetRouter() {

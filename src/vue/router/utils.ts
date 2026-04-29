@@ -10,8 +10,8 @@ import { RouteComponent, RouteRecordRaw, Router, RouterHistory, createWebHashHis
 import { arrayToTree, toCamelCase } from "@/vue/utils/common";
 import { isProxy, toRaw } from "vue";
 
-import { menuList } from "@/vue/api/system";
 import router from "./index";
+import { menuList } from "@/vue/api/system";
 import { useAppStoreHook } from "@/vue/store/modules/app";
 
 // 动态路由
@@ -28,13 +28,7 @@ let initRouterPromise: Promise<{ router: Router; routes: RouteRecordRaw[] }> | n
 
 // 根据菜单地址获取路由组件(.vue文件)
 function getRouteComponent(path: string) {
-  // const modulesRoutesKeys = Object.keys(modulesRoutes);
-  // const index = modulesRoutesKeys.findIndex((ev) => ev.includes(path));
-  // return modulesRoutes[modulesRoutesKeys[index]];
-    const matchKey = Object.keys(modulesRoutes).find(key =>
-    key.endsWith(`${path}.vue`) || key.endsWith(`${path}/index.vue`)
-  );
-
+  const matchKey = Object.keys(modulesRoutes).find((key) => key.endsWith(`${path}.vue`) || key.endsWith(`${path}/index.vue`));
   return matchKey ? modulesRoutes[matchKey] : null;
 }
 
@@ -47,16 +41,12 @@ function cleanRouteComponent(route: any): any {
 
   const cleanedRoute = { ...route };
 
-  // 如果是 dirctory 类型，移除 component
   if (cleanedRoute.type === "dirctory" && cleanedRoute.component) {
     delete cleanedRoute.component;
   }
-
-  // 递归处理 children
   if (cleanedRoute.children && Array.isArray(cleanedRoute.children)) {
     cleanedRoute.children = cleanedRoute.children.map((child: any) => cleanRouteComponent(child));
   }
-
   return cleanedRoute;
 }
 
@@ -83,27 +73,17 @@ const getAsyncRoutes = () => {
   return new Promise<RouteRecordRaw[]>((resolve) => {
     menuList({})
       .then(({ data }) => {
-        console.log("接口返回的菜单数据:", data);
         const routeList = data.map((item) => {
-          // 只给 menu 类型的路由添加组件
-          // dirctory 类型不添加 component，避免页面递归嵌套
           if (item.type === "menu") {
             item.component = getRouteComponent(item.path);
           }
-          // dirctory 类型不设置 component
-          const { title, icon  , createDate, ...rest } = item;
-          const meta = { title, icon: icon || "SetUp", keepAlive: true };
+          const { title, icon, createDate, type, ...rest } = item;
+          const meta = { title, type, icon: icon || "SetUp", keepAlive: true };
           return { ...rest, meta, redirect: "" };
         });
-
         const treeList = arrayToTree(routeList);
-
-        // 清理所有 dirctory 类型的 component
         const cleanedTreeList = treeList.map((route: any) => cleanRouteComponent(route));
-
-        // 设置动态路由到 store，供菜单组件使用
         useAppStoreHook().setAsyncRoutes(cleanedTreeList);
-        console.log("处理后的路由树:", cleanedTreeList);
         resolve(cleanedTreeList);
       })
       .catch((error) => {
@@ -134,14 +114,12 @@ function handleAsyncRoutes(routeList: RouteRecordRaw[]) {
   }
 }
 
-/** 初始化路由（`new Promise` 写法防止在异步请求中造成无限循环）*/
+/** 获取菜单生产路由 */
 function initRouter() {
-  // 如果正在初始化，返回同一个 Promise
   if (initRouterPromise) {
     return initRouterPromise;
   }
 
-  // 如果已经初始化过，直接返回
   if (isRouterInitialized) {
     return Promise.resolve({ router, routes: useAppStoreHook().getAsyncRoutes });
   }
@@ -154,7 +132,6 @@ function initRouter() {
       resolve({ router, routes: data });
     });
   });
-
   return initRouterPromise;
 }
 
@@ -164,10 +141,4 @@ function resetRouterInit() {
   initRouterPromise = null;
 }
 
-/** 获取所有菜单中的第一个菜单（顶级菜单）*/
-function getTopMenu(tag = false) {
-  console.log("homeRouteConfig :>> ", homeRouteConfig.children[0]);
-  return homeRouteConfig.children[0];
-}
-
-export { initRouter, resetRouterInit, getTopMenu };
+export { initRouter, resetRouterInit };

@@ -23,7 +23,6 @@ export const useAppStore = defineStore({
   },
   actions: {
     setAsyncRoutes(asyncRoutes) {
-      console.log("asyncRoutes", asyncRoutes);
       this.asyncRoutes = asyncRoutes;
     }
   }

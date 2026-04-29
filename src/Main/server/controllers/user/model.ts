@@ -31,7 +31,7 @@ export default class DbModel {
 
   // 获取所有用户
   async findAll(params: Record<string, any>): Promise<User[]> {
-    // const sql = "SELECT * FROM users WHERE ORDER BY create_date DESC";
+    // const sql = "SELECT * FROM users WHERE ORDER BY createDate DESC";
     let sql = "SELECT * FROM users WHERE 1=1";
     const queryParams: any[] = [];
     for (const key in params) {
@@ -40,7 +40,7 @@ export default class DbModel {
         queryParams.push(params[key]);
       }
     }
-    sql += " ORDER BY create_date DESC";
+    sql += " ORDER BY createDate DESC";
     return this.db.all<User>(sql, queryParams);
   }
 }
