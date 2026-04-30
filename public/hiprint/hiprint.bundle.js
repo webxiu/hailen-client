@@ -426,7 +426,7 @@ var hiprint = function (t) {
     var i = n(9),
         o = function () {
             function t() {
-                this.providers = [], this.movingDistance = 1.5, this.paperHeightTrim = 1;
+                this.providers = [], this.movingDistance = 0.5, this.paperHeightTrim = 1;
                 this.text = {
                     supportOptions: [
                         { name: "title", hidden: !1, title: "" },
@@ -5860,7 +5860,7 @@ var hiprint = function (t) {
             disabled: !1,
             edge: 0,
             axis: null,
-						getScale: function getScale(t) {},
+            getScale: function getScale(t) {},
             onBeforeDrag: function onBeforeDrag(t) { },
             onStartDrag: function onStartDrag(t) { },
             onDrag: function onDrag(t) { },

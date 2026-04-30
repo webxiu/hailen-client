@@ -16,7 +16,11 @@
 }
 
 .hiprint-printPaper *:focus {
-  outline: -webkit-focus-ring-color auto 0px;
+  outline: none;
+}
+
+.hiprint-printPaper .hiprint-printElement-table:focus {
+  outline: 1px dashed #000;
 }
 
 .hiprint-page-break-avoid {
@@ -72,6 +76,10 @@ hiprint-printPanel {
 .design .hiprint-printElement-longText-content {
   overflow: hidden;
   box-sizing: border-box;
+}
+
+.design .hiprint-printElement-table {
+  box-shadow: 0 0 1px 1px #000 inset;
 }
 
 .design .resize-panel {

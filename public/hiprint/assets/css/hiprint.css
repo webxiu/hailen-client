@@ -15,7 +15,7 @@
   --elementListColor: #3d3d3d;
   /* rightMenu */
   --borderColor: #bdc3c7;
-  --rightMenuBg: #ebebeb;
+  --rightMenuBg: #bcdcff;
 }
 
 ul,
@@ -333,7 +333,15 @@ font-weight: normal;*/
   cursor: pointer;
   border-radius: 3px;
   border: 1px solid transparent;
-  font-family: PingFangSC, helvetica neue, hiragino sans gb, arial, microsoft yahei ui, microsoft yahei, simsun, "sans-serif";
+  font-family:
+    PingFangSC,
+    helvetica neue,
+    hiragino sans gb,
+    arial,
+    microsoft yahei ui,
+    microsoft yahei,
+    simsun,
+    "sans-serif";
   vertical-align: middle;
 }
 .hiprint-option-item-settingBtn:active {
@@ -884,7 +892,8 @@ font-weight: normal;*/
 }
 
 .hiprint-printPaper.design.grid {
-  background-image: linear-gradient(90deg, var(--gridLine) 3%, transparent 0), linear-gradient(1turn, var(--gridLine) 3%, transparent 0),
+  background-image:
+    linear-gradient(90deg, var(--gridLine) 3%, transparent 0), linear-gradient(1turn, var(--gridLine) 3%, transparent 0),
     linear-gradient(
       90deg,
       transparent calc(50% - var(--midWidth)),
@@ -900,7 +909,11 @@ font-weight: normal;*/
       transparent calc(50% + var(--midWidth))
     );
 
-  background-size: var(--size) var(--size), var(--size) var(--size), 100% 100%, 100% 100%;
+  background-size:
+    var(--size) var(--size),
+    var(--size) var(--size),
+    100% 100%,
+    100% 100%;
   background-position: 0 0;
   background-repeat: repeat;
 }
@@ -1029,11 +1042,13 @@ font-weight: normal;*/
   display: flex;
   flex-direction: column;
   border-radius: 0px;
-  z-index: 100;
+  z-index: 1999;
   border: none;
   overflow: hidden;
   background: transparent;
-  transition: width 0.3s, max-height 0.3s;
+  transition:
+    width 0.3s,
+    max-height 0.3s;
 }
 #ElementLayer.no-transition {
   transition: none;
@@ -1227,7 +1242,7 @@ font-weight: normal;*/
 /** ============================= 选区右键菜单 ============================= */
 .right-menu {
   position: absolute;
-  z-index: 100;
+  z-index: 999;
   background: var(--bgColor);
   border-radius: 5px;
   border: 1px solid var(--borderColor);
