@@ -5628,15 +5628,105 @@ var hiprint = function (t) {
 							e.data.parent != document.body && (a += t(e.data.parent).scrollLeft(), p += t(e.data.parent).scrollTop()),
 								"h" == i.axis ? r.left = a : "v" == i.axis ? r.top = p : (e.shiftKey && e.altKey ? r.top = p : e.shiftKey ? r.left = a : (r.left = a, r.top = p));
         }
+        function cssPosValue(e, n, i) {
+            if ("pt" == n.moveUnit) {
+                if (i) return t.fn.dragLengthC(e, n);
+                return .75 * e + "pt";
+            }
+            if (i) return t.fn.dragLengthCNum(e, n);
+            return e;
+        }
 
-        function n(e) {
+        function paintDragCss(e) {
             var n = t.data(e.data.target, "hidraggable"),
                 i = n.options,
                 o = n.proxy;
             o || (o = t(e.data.target)), o.css({
-                left: t.fn.dragLengthC(e.data.left, i),
-                top: t.fn.dragLengthC(e.data.top, i)
+                left: cssPosValue(e.data.left, i, !1),
+                top: cssPosValue(e.data.top, i, !1)
             }), t("body").css("cursor", i.cursor);
+        }
+
+        function snapDragData(e) {
+            var dg = t.data(e.data.target, "hidraggable"),
+                i = dg.options,
+                A = null,
+                B = null;
+            if (!(i && i.snap !== !1)) return;
+            var z = dg.options.getScale() || 1,
+                J = null != e.pageX && null != e.data.startX && (Math.abs(e.pageX - e.data.startX) / z >= 1 || Math.abs(e.pageY - e.data.startY) / z >= 1);
+            if (!J) return;
+            var PT = .75,
+                selfTarget = e.data.target,
+                designEl = i.designTarget,
+                L = e.data.left,
+                O = e.data.top,
+                el = t(selfTarget),
+                h = [],
+                f = [],
+                W,
+                H,
+                N = "pt" == i.moveUnit ? ((i.minMove || 3) / .75) : 3,
+                D = Math.max(4, N * 1.5),
+                DX = Math.max(8, N * 2);
+            if ("pt" == i.moveUnit && designEl && designEl.options && designEl.options.getWidth && designEl.panel && designEl.panel.printElements) {
+                W = designEl.options.getWidth() / PT;
+                H = designEl.options.getHeight() / PT;
+                designEl.panel.printElements.forEach(function (pe) {
+                    if (!pe.designTarget || !pe.designTarget.length || pe.designTarget[0] === selfTarget) return;
+                    if (pe.printElementType && pe.printElementType.type && pe.printElementType.type.indexOf("table") >= 0) return;
+                    var pl = pe.options.getLeft(),
+                        pt = pe.options.getTop(),
+                        pw = pe.options.getWidth(),
+                        ph = pe.options.getHeight(),
+                        lx = pl / PT,
+                        ly = pt / PT,
+                        rw = pw / PT,
+                        rh = ph / PT;
+                    h.push(lx, lx + rw / 2, lx + rw);
+                    f.push(ly, ly + rh / 2, ly + rh);
+                });
+            } else {
+                W = el.outerWidth();
+                H = el.outerHeight();
+                var a = el.parent();
+                a && a.length && a.children(".hiprint-printElement").each(function () {
+                    if (this !== selfTarget) {
+                        var n = t(this),
+                            pos = n.position(),
+                            ow = n.outerWidth(),
+                            oh = n.outerHeight();
+                        pos && (h.push(pos.left), h.push(pos.left + ow / 2), h.push(pos.left + ow), f.push(pos.top), f.push(pos.top + oh / 2), f.push(pos.top + oh));
+                    }
+                });
+            }
+            for (var p = L, s = O, g = [L, L + W / 2, L + W], v = 0; v < g.length; v++) {
+                for (var m = null, y = DX, P = 0; P < h.length; P++) {
+                    var b = Math.abs(h[P] - g[v]);
+                    b <= y && (y = b, m = h[P]);
+                }
+                if (null != m) {
+                    p = m - (0 === v ? 0 : 1 === v ? W / 2 : W), A = m;
+                    break;
+                }
+            }
+            for (var S = [O, O + H / 2, O + H], w = 0; w < S.length; w++) {
+                for (var x = null, C = D, T = 0; T < f.length; T++) {
+                    var k = Math.abs(f[T] - S[w]);
+                    k <= C && (C = k, x = f[T]);
+                }
+                if (null != x) {
+                    s = x - (0 === w ? 0 : 1 === w ? H / 2 : H), B = x;
+                    break;
+                }
+            }
+            null == A && (p = L), null == B && (s = O);
+            e.data.left = p, e.data.top = s;
+        }
+
+        function n(e) {
+            snapDragData(e);
+            paintDragCss(e);
         }
 
         function i(i) {
@@ -5657,15 +5747,23 @@ var hiprint = function (t) {
         }
 
         function o(i) {
-            var o = t.data(i.data.target, "hidraggable");
-            e(i), 0 != o.options.onDrag.call(i.data.target, i, t.fn.dragLengthCNum(i.data.left, o.options), t.fn.dragLengthCNum(i.data.top, o.options)) && n(i);
-            var r = i.data.target;
-            return o.hidroppables.each(function () {
+            var hid = t.data(i.data.target, "hidraggable");
+            e(i);
+            var preL = i.data.left,
+                preT = i.data.top;
+            snapDragData(i);
+            var r = "pt" == hid.options.moveUnit ? .75 * i.data.left : i.data.left,
+                a = "pt" == hid.options.moveUnit ? .75 * i.data.top : i.data.top;
+            if (0 == hid.options.onDrag.call(i.data.target, i, r, a)) i.data.left = preL, i.data.top = preT;
+            else t("body").css("cursor", hid.options.cursor);
+            paintDragCss(i);
+            var p = i.data.target;
+            return hid.hidroppables.each(function () {
                 var e = t(this);
 
                 if (!e.hidroppable("options").disabled) {
                     var n = e.offset();
-                    i.pageX > n.left && i.pageX < n.left + e.outerWidth() && i.pageY > n.top && i.pageY < n.top + e.outerHeight() ? (this.entered || (t(this).trigger("_dragenter", [r]), this.entered = !0), t(this).trigger("_dragover", [r])) : this.entered && (t(this).trigger("_dragleave", [r]), this.entered = !1);
+                    i.pageX > n.left && i.pageX < n.left + e.outerWidth() && i.pageY > n.top && i.pageY < n.top + e.outerHeight() ? (this.entered || (t(this).trigger("_dragenter", [p]), this.entered = !0), t(this).trigger("_dragover", [p])) : this.entered && (t(this).trigger("_dragleave", [p]), this.entered = !1);
                 }
             }), !1;
         }
@@ -5694,8 +5792,8 @@ var hiprint = function (t) {
                 t(e.data.target).css("position", e.data.startPosition);
             }) : (t(e.data.target).css({
                 position: "absolute",
-                left: t.fn.dragLengthC(e.data.left, p),
-                top: t.fn.dragLengthC(e.data.top, p)
+                left: cssPosValue(e.data.left, p, !1),
+                top: cssPosValue(e.data.top, p, !1)
             }), l());
 
             function s() {
