@@ -12,15 +12,15 @@ var paperSizes = [
   { name: "A2", action: "A2", title: "420 x 594" },
   { name: "A3", action: "A3", title: "297 x 420", isOpen: true },
   { name: "A4", action: "A4", title: "210 x 297", isOpen: true },
-  { name: "A5", action: "A5", title: "148 x 210", isOpen: true },
+  { name: "A5", action: "A5", title: "148 x 210" },
   { name: "A6", action: "A6", title: "105 x 148", isOpen: true },
   { name: "A7", action: "A7", title: "74 x 105" },
   { name: "A8", action: "A8", title: "52 x 74" },
   { name: "B1", action: "B1", title: "707 x 1000", divided: true },
   { name: "B2", action: "B2", title: "500 x 707" },
-  { name: "B3", action: "B3", title: "353 x 500", isOpen: true },
-  { name: "B4", action: "B4", title: "250 x 353", isOpen: true },
-  { name: "B5", action: "B5", title: "176 x 250", isOpen: true },
+  { name: "B3", action: "B3", title: "353 x 500" },
+  { name: "B4", action: "B4", title: "250 x 353" },
+  { name: "B5", action: "B5", title: "176 x 250" },
   { name: "B6", action: "B6", title: "125 x 176" },
   { name: "B7", action: "B7", title: "88 x 125" },
   { name: "B8", action: "B8", title: "62 x 88" },
@@ -119,7 +119,7 @@ window.addEventListener(
     if (ev.deltaY < 0) drawDef.scale += step;
     setScale(drawDef.scale);
   },
-  { passive: false, capture: true }
+  { passive: false, capture: true },
 );
 
 function setScale(step) {

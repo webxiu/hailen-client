@@ -65,6 +65,7 @@ var defaultConfig = {
         paperHeader: 49.5,
         paperFooter: 780,
         paperNumberDisabled: true,
+        paperNumberContinue: true,
         watermarkOptions: watermarkOptions,
         printElements: [
           {
@@ -278,7 +279,14 @@ var defaultConfig = {
                   { title: "爱好", field: "hobbies", width: 50, align: "center", colspan: 1, rowspan: 1, checked: true, columnId: "hobbies" },
                 ],
               ],
-              rowsColumnsMerge: `function(row,colum,rowIndex,colIndex,tableData) {
+              cellFormatter: `function (options) {
+                if(options.column.field === "status"){
+                  // console.log('ptions', options);// 格式化状态列
+                  return \`<div style="color: blue;">\${options.value}</div>\`;
+                }
+                return options.value;
+              }`,
+              rowsColumnsMerge: `function (row,colum,rowIndex,colIndex,tableData) {
                     // 行的合并(和样式设置)
                     if (rowIndex === 0) {
                       return {
@@ -319,20 +327,20 @@ var defaultConfig = {
                         };
                       }
                     }
-                }`,
+              }`,
               footerFormatter: `function (options, rows, testData, gridRowsData) {
-                  // console.log('options', options);
-                  return \`<tr>
-                    <td colspan="3" align="right">每页页脚小计:</td>
-                    <td colspan="6" align="center">200.00元</td>
-                  </tr>\`;
-                }`,
+                // console.log('options', options);
+                return \`<tr>
+                  <td colspan="3" align="right">每页页脚小计:</td>
+                  <td colspan="6" align="center">200.00元</td>
+                </tr>\`;
+              }`,
               gridColumnsFooterFormatter: `function (options, rows, testData, gridRowsData) {
-                  return \`<div style="padding-top: 5px;color: blue">
-                    <span>每页页脚小计(表格外):</span>
-                    <span>200.00元</span>
-                  </div>\`;
-                }`,
+                return \`<div style="padding-top: 5px;color: blue">
+                  <span>每页页脚小计(表格外):</span>
+                  <span>200.00元</span>
+                </div>\`;
+              }`,
             },
             printElementType: { title: "表格", type: "table" },
           },
@@ -580,6 +588,7 @@ var defaultConfig = {
         paperHeader: 53,
         paperFooter: 811,
         paperNumberDisabled: true,
+        paperNumberContinue: true,
         watermarkOptions: watermarkOptions,
         printElements: [
           {

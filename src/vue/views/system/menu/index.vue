@@ -1,3 +1,24 @@
+<template>
+  <div>
+    用户
+    <HxTable
+      :dataList="dataList"
+      v-model:page="formData.page"
+      v-model:pageSize="formData.pageSize"
+      row-key="id"
+      :columns="columns"
+      :pagination="pagination"
+      @paginationChange="onPaginationChange"
+      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+    >
+      <template #query>
+        <BlendedSearch @tagSearch="onTagSearch" :queryParams="queryParams" :searchOptions="searchOptions" placeholder="请选择" searchField="title" :immediate="true" />
+      </template>
+      <template #operation> 666 </template>
+      <template #footer></template>
+    </HxTable>
+  </div>
+</template>
 <script setup lang="tsx">
 import { ref, reactive, onMounted, watch } from "vue";
 import { menuList, updateMenu, MenuItemType } from "@/vue/api/system";
@@ -109,27 +130,5 @@ function onPaginationChange({ page, pageSize }) {
   getTableList();
 }
 </script>
-
-<template>
-  <div>
-    用户
-    <HxTable
-      :dataList="dataList"
-      v-model:page="formData.page"
-      v-model:pageSize="formData.pageSize"
-      row-key="id"
-      :columns="columns"
-      :pagination="pagination"
-      @paginationChange="onPaginationChange"
-      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-    >
-      <template #query>
-        <BlendedSearch @tagSearch="onTagSearch" :queryParams="queryParams" :searchOptions="searchOptions" placeholder="请选择" searchField="title" :immediate="true" />
-      </template>
-      <template #operation> 666 </template>
-      <template #footer></template>
-    </HxTable>
-  </div>
-</template>
 
 <style scoped></style>

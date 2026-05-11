@@ -1914,13 +1914,16 @@ var hiprint = function (t) {
                     if (mergeRes.tdClass)  r.addClass(mergeRes.tdClass); 
                     if(!t.field && t.columnId) t.field = t.columnId; // 表格列未配置field，使用columnId
                     t.field && r.attr("field", t.field), t.align && r.css("text-align", t.align), t.vAlign && r.css("vertical-align", t.vAlign);
+                    var val = e[t.field]; // 单元格数据
                     var a = TableExcelHelper.getColumnFormatter(t),
-                        p = a ? a(e[t.field], e, colIndex, n) : e[t.field];
+                        p = a ? a(val, e, colIndex, n) : val;
+                    var result = TableExcelHelper.cellFormatter(val, e, t, rowIndex, colIndex, n);
+                    if(val && result) p = result;
                     r.html(p);
                     var s = TableExcelHelper.getColumnStyler(t);
 
                     if (s) {
-                        var l = s(e[t.field], e, colIndex, n);
+                        var l = s(val, e, colIndex, n);
                         if (l) Object.keys(l).forEach(function (t) {
                             r.css(t, l[t]);
                         });
@@ -2079,6 +2082,15 @@ var hiprint = function (t) {
 				}
 				this.rowColumns = newColumns[t.totalLayer - 1];
 				return newColumns[t.totalLayer - 1];
+            }, TableExcelHelper.cellFormatter = function (value, row, column, rowIndex, colIndex, n) {
+				var cellFormatter = void 0;
+                if (n.cellFormatter) try {
+                    var s = "cellFormatter=" + n.cellFormatter;
+                    eval(s);
+                } catch (t) {
+                    console.log(t);
+                }
+                return cellFormatter ? cellFormatter({value, row, column, rowIndex, colIndex, testData:n.testData}) : value;
             }, TableExcelHelper;
         }();
 }, function (t, e, n) {
@@ -2967,6 +2979,20 @@ var hiprint = function (t) {
                 this.target.remove();
             }, t;
         }(),
+        PaperNumberContinue = function () {
+            function t() {
+                this.name = "paperNumberContinue";
+            }
+            return t.prototype.createTarget = function () {
+                return this.target = $(' <div class="hiprint-option-item">\n        <div class="hiprint-option-item-label">\n        页码连续\n        </div>\n        <div class="hiprint-option-item-field">\n        <select class="auto-submit">\n        <option value="" >默认</option>\n        <option value="true" >连续</option>\n        <option value="false" >不连续</option>\n        </select>\n        </div>\n    </div>'), this.target;
+            }, t.prototype.getValue = function () {
+                if ("false" == this.target.find("select").val()) return !1;
+            }, t.prototype.setValue = function (t) {
+                this.target.find("select").val(t?.toString());
+            }, t.prototype.destroy = function () {
+                this.target.remove();
+            }, t;
+        }(),
         PaperNumberTop = function () {
             function t() {
                 this.name = "paperNumberTop";
@@ -3775,7 +3801,7 @@ var hiprint = function (t) {
                     { value: "false", text: "不合并" }
                 ] 
                 return this.target = $(`<div class="hiprint-option-item">
-                    <div class="hiprint-option-item-label">表格合并</div>
+                    <div class="hiprint-option-item-label">跨页合并</div>
                     <div class="hiprint-option-item-field">
                         <select class="auto-submit">
                             ${mergeOptions.map(m => `<option value="${m.value}">${m.text}</option>`).join('')}
@@ -4194,6 +4220,22 @@ var hiprint = function (t) {
                 this.target.remove();
             }, t;
         }(),
+        cellFormatter = function () {
+            function t() {
+                this.name = "cellFormatter";
+            }
+
+            return t.prototype.createTarget = function () {
+                return this.target = $(` <div class="hiprint-option-item hiprint-option-item-row vert">\n        <div class="hiprint-option-item-label" title="cellFormatter">\n        格式化函数\n        </div>\n        <div class="hiprint-option-item-field">\n        <textarea style="height:80px;resize:vertical" placeholder="function(options){\n  return options.value;\n}" class="auto-submit"></textarea>\n        </div>\n    </div>`), this.target;
+            }, t.prototype.getValue = function () {
+                var t = this.target.find("textarea").val();
+                if (t) return t;
+            }, t.prototype.setValue = function (t) {
+                this.target.find("textarea").val(t);
+            }, t.prototype.destroy = function () {
+                this.target.remove();
+            }, t;
+        }(),
         mt = function () {
             function t() {
                 this.name = "footerFormatter";
@@ -4370,7 +4412,7 @@ var hiprint = function (t) {
             t.init(), t.printElementOptionItems[e.name] = e;
         }, t.getItem = function (e) {
             return t.init(), t.printElementOptionItems[e];
-        }, t._printElementOptionItems = [new o(), new r(), new a(), new p(), new i(), new s(), new l(), new pt(), new u(), new d(), new c(), new h(), new f(), new g(), new m(), new v(), new y(), new b(), new E(), new qrCodeLevel(), new T(), new P(), new _(), new w(), new x(), new C(), new imageFit(), new borderRadius(), new O(), new HostDomain(), new watermarkOptions(), new H(), new D(), new PaperNumberTop(), new PaperNumberLeft(), new I(), new R(), new M(), new S(), new B(), new F(), new L(), new A(), new z(), new k(), new st(), new N(), new V(), new W(), new j(), new U(), new K(), new G(), new q(), new X(), new Y(), new Q(), new J(), new Z(), new tt(), new et(), new lockWidthHeight(), new DraggableElement(), new ZIndex(), new EchartsOption(), new EchartsTool(), new CanvasOption(), new OperationMode(), new ElementSizePosition(), new TableMerge(), new nt(), new it(), new ot(), new at(), new lt(), new ut(), new dt(), new ct(), new ht(), new ft(), new gt(), new mt(), new rowcolumns(), new vt(), new yt(), new bt(), new Tt(), new Et(), new Pt(), new _t(), new wt(), new xt()], t;
+        }, t._printElementOptionItems = [new o(), new r(), new a(), new p(), new i(), new s(), new l(), new pt(), new u(), new d(), new c(), new h(), new f(), new g(), new m(), new v(), new y(), new b(), new E(), new qrCodeLevel(), new T(), new P(), new _(), new w(), new x(), new C(), new imageFit(), new borderRadius(), new O(), new HostDomain(), new watermarkOptions(), new H(), new D(), new PaperNumberTop(), new PaperNumberLeft(), new PaperNumberContinue(), new I(), new R(), new M(), new S(), new B(), new F(), new L(), new A(), new z(), new k(), new st(), new N(), new V(), new W(), new j(), new U(), new K(), new G(), new q(), new X(), new Y(), new Q(), new J(), new Z(), new tt(), new et(), new lockWidthHeight(), new DraggableElement(), new ZIndex(), new EchartsOption(), new EchartsTool(), new CanvasOption(), new OperationMode(), new ElementSizePosition(), new TableMerge(), new nt(), new it(), new ot(), new at(), new lt(), new ut(), new dt(), new ct(), new ht(), new ft(), new gt(), new mt(), new rowcolumns(), new cellFormatter(), new vt(), new yt(), new bt(), new Tt(), new Et(), new Pt(), new _t(), new wt(), new xt()], t;
     }();
 }, function (t, e, n) {
     "use strict";
@@ -6818,7 +6860,7 @@ var hiprint = function (t) {
                 var e = this;
                 this.text = t.text, this.field = t.field, this.fields = t.fields, this.title = t.title, this.tid = t.tid, this.data = t.data, this.styler = t.styler, this.formatter = t.formatter, this.type = t.type, this.options = t.options, this.editable = t.editable, this.columnDisplayEditable = t.columnDisplayEditable, this.columnDisplayIndexEditable = t.columnDisplayIndexEditable, this.columnTitleEditable = t.columnTitleEditable, this.columnResizable = t.columnResizable, this.columnAlignEditable = t.columnAlignEditable, this.columns = [], (t.columns || []).forEach(function (t, n) {
                     e.columns.push(e.createTableColumnArray(t));
-                }), this.rowStyler = t.rowStyler, this.striped = t.striped, this.groupFields = t.groupFields || [], this.groupFormatter = t.groupFormatter, this.groupFooterFormatter = t.groupFooterFormatter, this.footerFormatter = t.footerFormatter, this.rowsColumnsMerge = t.rowsColumnsMerge, this.gridColumnsFooterFormatter = t.gridColumnsFooterFormatter, this.columnObj = this.makeColumnObj();
+                }), this.rowStyler = t.rowStyler, this.striped = t.striped, this.groupFields = t.groupFields || [], this.groupFormatter = t.groupFormatter, this.groupFooterFormatter = t.groupFooterFormatter, this.footerFormatter = t.footerFormatter, this.rowsColumnsMerge = t.rowsColumnsMerge, this.cellFormatter = t.cellFormatter, this.gridColumnsFooterFormatter = t.gridColumnsFooterFormatter, this.columnObj = this.makeColumnObj();
             }
 
             return t.prototype.getText = function () {
@@ -8533,7 +8575,7 @@ var hiprint = function (t) {
                     var e = s.a.instance[this.paperType];
                     t.height ? (this.height = t.height, this.width = t.width) : (this.height = e.height, this.width = e.width);
                 } else this.height = t.height, this.width = t.width;
-                this.paperHeader = t.paperHeader || 0, this.paperFooter = t.paperFooter || o.a.mm.toPt(this.height), this.printElements = t.printElements || [], this.paperNumberLeft = t.paperNumberLeft, this.paperNumberTop = t.paperNumberTop, this.paperNumberDisabled = t.paperNumberDisabled, this.paperNumberFormat = t.paperNumberFormat, this.panelPaperRule = t.panelPaperRule, this.rotate = t.rotate || void 0, this.firstPaperFooter = t.firstPaperFooter, this.evenPaperFooter = t.evenPaperFooter, this.oddPaperFooter = t.oddPaperFooter, this.lastPaperFooter = t.lastPaperFooter, this.topOffset = t.topOffset, this.fontFamily = t.fontFamily, this.leftOffset = t.leftOffset, this.orient = t.orient, this.paperNumberTop = t.paperNumberTop, this.paperNumberLeft = t.paperNumberLeft, this.hostDomain = t.hostDomain, this.watermarkOptions= t.watermarkOptions;
+                this.paperHeader = t.paperHeader || 0, this.paperFooter = t.paperFooter || o.a.mm.toPt(this.height), this.printElements = t.printElements || [], this.paperNumberLeft = t.paperNumberLeft, this.paperNumberTop = t.paperNumberTop, this.paperNumberDisabled = t.paperNumberDisabled, this.paperNumberFormat = t.paperNumberFormat, this.panelPaperRule = t.panelPaperRule, this.rotate = t.rotate || void 0, this.firstPaperFooter = t.firstPaperFooter, this.evenPaperFooter = t.evenPaperFooter, this.oddPaperFooter = t.oddPaperFooter, this.lastPaperFooter = t.lastPaperFooter, this.topOffset = t.topOffset, this.fontFamily = t.fontFamily, this.leftOffset = t.leftOffset, this.orient = t.orient, this.paperNumberTop = t.paperNumberTop, this.paperNumberLeft = t.paperNumberLeft, this.paperNumberContinue = t.paperNumberContinue, this.hostDomain = t.hostDomain, this.watermarkOptions= t.watermarkOptions;
             };
         }(),
         at = function () {
@@ -8559,7 +8601,7 @@ var hiprint = function (t) {
         pt = function () {
             function t(t, e) {
                 this.gridLine = e.gridLine;
-                this.templateId = e.id, this.index = t.index, this.width = t.width, this.height = t.height, this.paperType = t.paperType, this.paperHeader = t.paperHeader, this.paperFooter = t.paperFooter, this.initPrintElements(t.printElements), this.paperNumberLeft = t.paperNumberLeft, this.paperNumberTop = t.paperNumberTop, this.paperNumberDisabled = t.paperNumberDisabled, this.paperNumberFormat = t.paperNumberFormat, this.panelPaperRule = t.panelPaperRule, this.firstPaperFooter = t.firstPaperFooter, this.evenPaperFooter = t.evenPaperFooter, this.oddPaperFooter = t.oddPaperFooter, this.lastPaperFooter = t.lastPaperFooter, this.topOffset = t.topOffset, this.leftOffset = t.leftOffset, this.fontFamily = t.fontFamily, this.orient = t.orient, this.target = this.createTarget(), this.rotate = t.rotate, this.paperNumberTop = t.paperNumberTop, this.paperNumberLeft = t.paperNumberLeft, this.hostDomain = t.hostDomain, this.watermarkOptions = t.watermarkOptions || {};
+                this.templateId = e.id, this.index = t.index, this.width = t.width, this.height = t.height, this.paperType = t.paperType, this.paperHeader = t.paperHeader, this.paperFooter = t.paperFooter, this.initPrintElements(t.printElements), this.paperNumberLeft = t.paperNumberLeft, this.paperNumberTop = t.paperNumberTop, this.paperNumberDisabled = t.paperNumberDisabled, this.paperNumberFormat = t.paperNumberFormat, this.panelPaperRule = t.panelPaperRule, this.firstPaperFooter = t.firstPaperFooter, this.evenPaperFooter = t.evenPaperFooter, this.oddPaperFooter = t.oddPaperFooter, this.lastPaperFooter = t.lastPaperFooter, this.topOffset = t.topOffset, this.leftOffset = t.leftOffset, this.fontFamily = t.fontFamily, this.orient = t.orient, this.target = this.createTarget(), this.rotate = t.rotate, this.paperNumberTop = t.paperNumberTop, this.paperNumberLeft = t.paperNumberLeft, this.paperNumberContinue = t.paperNumberContinue, this.hostDomain = t.hostDomain, this.watermarkOptions = t.watermarkOptions || {};
             }
 
             return t.prototype.design = function (t) {
@@ -8589,9 +8631,6 @@ var hiprint = function (t) {
                         hostDomain: e.hostDomain,
                         watermarkOptions: e.watermarkOptions || {}
                     };
-                    if (!p.a.instance.paperNumberContinue) {
-                        delete panelOptions['paperNumberContinue'];
-                    }
                     o.a.event.trigger("BuildCustomOptionSettingEventKey_" + e.templateId, {
                         options: panelOptions,
                         callback: function callback(t) {
@@ -8600,8 +8639,8 @@ var hiprint = function (t) {
                                 e.designPaper.resetPaperNumber(e.designPaper.paperNumberTarget);
                             };
                             e.watermarkOptions = t.watermarkOptions || void 0, (t.watermarkOptions && e.designPaper.createWaterMark(true, 1, t.watermarkOptions))
-                            e.panelLayoutOptions = t.panelLayoutOptions || {}, e.paperNumberTop = t.paperNumberTop, e.paperNumberLeft = t.paperNumberLeft, e.designPaper.paperNumberTop = t.paperNumberTop, e.designPaper.paperNumberLeft = t.paperNumberLeft, e.hostDomain = t.hostDomain,
-                                e.panelPaperRule = t.panelPaperRule, e.panelPageRule = t.panelPageRule, e.firstPaperFooter = t.firstPaperFooter, e.evenPaperFooter = t.evenPaperFooter, e.oddPaperFooter = t.oddPaperFooter, e.lastPaperFooter = t.lastPaperFooter, e.leftOffset = t.leftOffset, e.topOffset = t.topOffset, e.fontFamily = t.fontFamily, e.orient = t.orient, e.paperNumberDisabled = e.designPaper.paperNumberDisabled = !!t.paperNumberDisabled || void 0, e.paperNumberContinue = e.designPaper.paperNumberContinue = t.paperNumberContinue, e.paperNumberFormat = t.paperNumberFormat, e.designPaper.paperNumberFormat = t.paperNumberFormat, (t.paperNumberFormat && (e.designPaper.paperNumberTarget = e.designPaper.createPaperNumber(e.designPaper.formatPaperNumber(1, 1), true))), e.designPaper.setOffset(e.leftOffset, e.topOffset), e.css(e.target), e.designPaper.resetPaperNumber(e.designPaper.paperNumberTarget), e.designPaper.triggerOnPaperBaseInfoChanged();
+                            e.panelLayoutOptions = t.panelLayoutOptions || {}, e.paperNumberTop = t.paperNumberTop, e.paperNumberLeft = t.paperNumberLeft, e.designPaper.paperNumberTop = t.paperNumberTop, e.designPaper.paperNumberLeft = t.paperNumberLeft, e.paperNumberContinue = t.paperNumberContinue, e.hostDomain = t.hostDomain,
+                                e.panelPaperRule = t.panelPaperRule, e.panelPageRule = t.panelPageRule, e.firstPaperFooter = t.firstPaperFooter, e.evenPaperFooter = t.evenPaperFooter, e.oddPaperFooter = t.oddPaperFooter, e.lastPaperFooter = t.lastPaperFooter, e.leftOffset = t.leftOffset, e.topOffset = t.topOffset, e.fontFamily = t.fontFamily, e.orient = t.orient, e.paperNumberDisabled = e.designPaper.paperNumberDisabled = !!t.paperNumberDisabled || void 0, e.paperNumberFormat = t.paperNumberFormat, e.designPaper.paperNumberFormat = t.paperNumberFormat, (t.paperNumberFormat && (e.designPaper.paperNumberTarget = e.designPaper.createPaperNumber(e.designPaper.formatPaperNumber(1, 1), true))), e.designPaper.setOffset(e.leftOffset, e.topOffset), e.css(e.target), e.designPaper.resetPaperNumber(e.designPaper.paperNumberTarget), e.designPaper.triggerOnPaperBaseInfoChanged();
                         }
                     });
                 }), this.bindShortcutKeyEvent();
@@ -8795,7 +8834,7 @@ var hiprint = function (t) {
                     this.hostDomain = t.hostDomain;
                     // 页码
                     this.paperNumberLeft = t.paperNumberLeft, this.paperNumberTop = t.paperNumberTop, this.paperNumberDisabled = t.paperNumberDisabled, this.paperNumberContinue = t.paperNumberContinue, this.paperNumberFormat = t.paperNumberFormat;
-                    this.designPaper.paperNumberLeft = this.paperNumberLeft, this.designPaper.paperNumberTop = this.paperNumberTop, this.designPaper.paperNumberDisabled = this.paperNumberDisabled, this.designPaper.paperNumberContinue = this.paperNumberContinue, this.designPaper.paperNumberFormat = this.paperNumberFormat;
+                    this.designPaper.paperNumberLeft = this.paperNumberLeft, this.designPaper.paperNumberTop = this.paperNumberTop, this.designPaper.paperNumberDisabled = this.paperNumberDisabled, this.designPaper.paperNumberFormat = this.paperNumberFormat;
                     this.designPaper.paperNumberTarget.css("top", this.paperNumberTop + "pt").css("left", this.paperNumberLeft + "pt"), this.designPaper.resetPaperNumber(this.designPaper.paperNumberTarget);
                     // 字体方向
                     this.fontFamily = t.fontFamily, this.orient = t.orient, this.rotate = t.rotate, this.scale = t.scale;
@@ -8981,6 +9020,7 @@ var hiprint = function (t) {
                     paperHeader: this.paperHeader,
                     paperFooter: this.paperFooter,
                     paperNumberDisabled: !!this.paperNumberDisabled || void 0,
+                    paperNumberContinue: this.paperNumberContinue,
                     paperNumberFormat: this.paperNumberFormat ? this.paperNumberFormat : void 0,
                     panelPaperRule: this.panelPaperRule ? this.panelPaperRule : void 0,
                     paperNumberLeft: this.paperNumberLeft,
@@ -9455,6 +9495,24 @@ var hiprint = function (t) {
                 this.createContainer(t), this.printPanels.forEach(function (t, i) {
                     n.container.append(t.getTarget()), i > 0 && t.disable(), t.design(e);
                 }), this.selectPanel(0);
+            }, t.prototype.applyContinuousPaperNumbersDom = function (t) {
+                if (!t || !t.length || !this.printPanels.every(function (t) {
+                    return t.paperNumberContinue !== false;
+                })) return;
+                var e = this,
+                    n = t.length && t.first().hasClass("hiprint-printPaper") ? t : t.find(".hiprint-printPaper"),
+                    i = n.length;
+                if (i < 1) return;
+                n.each(function (t, n) {
+                    var o = $(n).closest(".hiprint-printPanel"),
+                        r = (o.attr("class") || "").match(/panel-index-(\d+)/),
+                        a = r ? parseInt(r[1], 10) : 0,
+                        p = e.printPanels[a] || e.printPanels[0],
+                        s = p && p.paperNumberFormat ? p.paperNumberFormat : "paperNo-paperCount";
+                    if (p && p.paperNumberDisabled) return;
+                    var l = $(n).find(".hiprint-paperNumber");
+                    l.length && l.html(s.replace("paperNo", (t + 1).toString()).replace("paperCount", i.toString()));
+                });
             }, t.prototype.getSimpleHtml = function (t, e) {
                 var n = this;
                 e || (e = {});
@@ -9466,7 +9524,7 @@ var hiprint = function (t) {
                 }) : this.printPanels.forEach(function (n, o) {
                     i.append(n.getHtml(t, e));
                 });
-                return e && e.imgToBase64 && this.transformImg(i.find("img")), i;
+                return n.applyContinuousPaperNumbersDom(i), e && e.imgToBase64 && this.transformImg(i.find("img")), i;
             }, t.prototype.getHtml = function (t, e) {
                 return t || (t = {}), this.getSimpleHtml(t, e);
             }, t.prototype.getJointHtml = function (t, e, n) {
@@ -9474,7 +9532,7 @@ var hiprint = function (t) {
                     o = [];
                 return this.printPanels.forEach(function (r, a) {
                     i.append(r.getHtml(t, e, o, void 0, n));
-                }), i;
+                }), this.applyContinuousPaperNumbersDom(i), i;
             }, t.prototype.setPaper = function (t, e) {
                 if (/^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/.test(t)) this.editingPanel.resize(void 0, parseFloat(t), parseFloat(e), !1); else {
                     var n = s.a.instance[t];
