@@ -1879,6 +1879,10 @@ var hiprint = function (t) {
                 o.data("rowData", e);
                 var mergeMap = {};
                 var defMerge = { rowspan: 1, colspan: 1 };
+                if(!t.rowColumns) {
+                    t.rowColumns = [];
+                    console.warn("table columns is empty");
+                }
                 t.rowColumns.forEach(function (t, colIndex) {
                     var rowsColumnsMerge = null;
                     if (n.rowsColumnsMerge) {
@@ -2857,93 +2861,100 @@ var hiprint = function (t) {
             function t() {
                 this.name = "watermarkOptions";
             }
+            const defaults = {
+                content: "",
+                fillStyle: "rgba(110, 110, 110, 0.35)",
+                fontSize: "14",
+                rotate: 20,
+                width: 200,
+                height: 200,
+                show: false,
+                dateTime: false,
+                format: "YYYY-MM-DD HH:mm:ss"
+            };
             return t.prototype.createTarget = function () {
-                this.target = $(`<div class="hiprint-option-item hiprint-option-item-row vert"><div class="hiprint-option-item-label">水印功能:</div></div>`);
-                this.waterContent = $(`<div></div>`);
-                this.content = $(`<div class="hiprint-option-item-field" style="display: flex;">
-                                    <div class="hiprint-option-item-label" style="text-align: right;">水印内容</div>
-                                    <input style="flex: 1" type="text" placeholder="水印内容" class="auto-submit" />
-                                </div>`);
-                this.fillStyle = $(`<div class="hiprint-option-item-field" style="display: flex;">
-                                    <div class="hiprint-option-item-label" style="text-align: right;">字体颜色</div>
-                                    <input style="flex: 1" data-format="rgb" data-opacity="0.3" type="text" class="auto-submit" />
-                                </div>`);
-                this.fontSize = $(`<div class="hiprint-option-item-field" style="display: flex;">
-                                    <div class="hiprint-option-item-label" style="text-align: right;">字体大小</div>
-                                    <input style="flex: 1" type="range" min="10" max="80" class="auto-submit" />
-                                </div>`);
-                this.rotate = $(`<div class="hiprint-option-item-field" style="display: flex;">
-                                    <div class="hiprint-option-item-label" style="text-align: right;">旋转角度</div>
-                                    <input style="flex: 1" type="range" min="0" max="180" class="auto-submit" />
-                                </div>`);
-                this.width = $(`<div class="hiprint-option-item-field" style="display: flex;">
-                                    <div class="hiprint-option-item-label" style="text-align: right;">水平间距</div>
-                                    <input style="flex: 1" type="range" min="100" max="800" class="auto-submit" />
-                                </div>`);
-                this.height = $(`<div class="hiprint-option-item-field" style="display: flex;">
-                                    <div class="hiprint-option-item-label" style="text-align: right;">垂直间距</div>
-                                    <input style="flex: 1" type="range" min="100" max="800" class="auto-submit" />
-                                </div>`);
-                this.timestamp = $(`<div class="hiprint-option-item-field" style="display: flex;">
-                                    <div class="hiprint-option-item-label" style="text-align: right;">显示时间</div><input style="width:18px;height:18px;" type="checkbox" class="auto-submit"></div>`);
-                this.show = $(`<div class="hiprint-option-item-field" style="display: flex;">
-                                    <div class="hiprint-option-item-label" style="text-align: right;">显示水印</div><input style="width:18px;height:18px;" type="checkbox" class="auto-submit"></div>`);
-                let formatlist = [
+                const formatList = [
+                    "默认(YYYY-MM-DD HH:mm:ss)",
                     "YYYY-MM-DD HH:mm:ss",
                     "YYYY-MM-DD HH:mm",
                     "YYYY-MM-DD HH",
                     "YYYY-MM-DD",
                     "YYYY-MM",
-                    "YYYY",
+                    "YYYY"
                 ];
- 
-                const timeFormatList = formatlist.map(function (e) { return `<option value="${e}">${e}</option>`; })
-                this.format = $(`<div class="hiprint-option-item-field" style="display: flex;align-items: baseline;">
-                            <div class="hiprint-option-item-label" style="text-align: right;">时间格式:</div>
-                            <select style="flex: 1" class="auto-submit">
-                                <option value="" >默认(YYYY-MM-DD HH:mm)</option>
-                                ${timeFormatList.join("")}
-                            </select>
-                        </div>`);
-                this.waterContent.append(this.content);
-                this.waterContent.append(this.fillStyle);
-                this.waterContent.append(this.fontSize);
-                this.waterContent.append(this.rotate);
-                this.waterContent.append(this.width);
-                this.waterContent.append(this.height);
-                this.waterContent.append(this.timestamp);
-                this.waterContent.append(this.show);
-                this.waterContent.append(this.format);
+                const timeOptions = formatList.map((f,i) => `<option value="${i==0 ? "" : f}">${f}</option>`).join("");
+                const elements = [
+                    { key: 'show',     label: '显示水印', type: 'checkbox', default: defaults.show                                   },
+                    { key: 'dateTime', label: '显示时间', type: 'checkbox', default: defaults.dateTime                               },
+                    { key: 'content',  label: '水印内容', type: 'text',     default: '',                 placeholder: '水印内容'      },
+                    { key: 'format',   label: '时间格式', type: 'select',   default: defaults.format,    options: timeOptions        },
+                    { key: 'fillStyle',label: '水印颜色', type: 'color',    default: defaults.fillStyle, format: 'rgb', opacity: 0.3 },
+                    { key: 'fontSize', label: '水印大小', type: 'range',    default: defaults.fontSize,  min: 5, max: 60             },
+                    { key: 'rotate',   label: '旋转角度', type: 'range',    default: defaults.rotate,    min: 0,  max: 180           },
+                    { key: 'width',    label: '水平间距', type: 'range',    default: defaults.width,     min: 1, max: 520            },
+                    { key: 'height',   label: '垂直间距', type: 'range',    default: defaults.height,    min: 1, max: 520            },
+                ];
+                this.target = $(`<div class="hiprint-option-item hiprint-option-item-row vert">
+                                <div class="hiprint-option-item-label">水印选项</div></div>`);
+                this.waterContent = $('<div></div>');
+                this.inputs = {};
 
+                elements.forEach(field => {
+                    function getWrapper(type="input", options) {
+                        const inputEl = {
+                            input: `<input style="flex: 1" class="auto-submit" />`,
+                            select: `<select style="flex: 1" class="auto-submit">${options}</select>`
+                        }[type];
+                        return $(`<div class="hiprint-option-item-field" style="display: flex;">
+                                    <div class="hiprint-option-item-label" style="text-align: right;">${field.label}</div>
+                                    ${inputEl}
+                                </div>`);
+                    }
+                    let wrapper = getWrapper();
+                    let $input = wrapper.find('input');
+                    const attrsObj = {
+                        text: ()=> $input.attr({ type: 'text', placeholder: field.placeholder }),
+                        range: ()=> $input.attr({ type: 'range', min: field.min, max: field.max }),
+                        checkbox: ()=> $input.attr({ type: 'checkbox', style: 'width:18px; height:18px;' }),
+                        color: ()=> {
+                            $input.attr({ type: 'text', 'data-format': 'rgb', 'data-opacity': '0.35' }),
+                            $input.minicolors({ format: "rgb", opacity: true, theme: "bootstrap" });
+                        },
+                        select: ()=> {
+                            wrapper = getWrapper('select', field.options);
+                            $input = wrapper.find('select');
+                        },
+                    }
+                    attrsObj[field.type]();
+                    this.waterContent.append(wrapper);
+                    this.inputs[field.key] = $input;
+                });
                 this.target.append(this.waterContent);
                 return this.target;
             }, t.prototype.getValue = function () {
-                var opt = {
-                    content: this.content.find('input').val(),
-                    fillStyle: this.fillStyle.find('input').val() || "rgba(184, 184, 184, 0.3)",
-                    fontSize: parseInt(this.fontSize.find('input').val() || "14") + "px",
-                    rotate: parseInt(this.rotate.find('input').val() || "25"),
-                    width: parseInt(this.width.find('input').val() || "200"),
-                    height: parseInt(this.height.find('input').val() || "200"),
-                    show: this.show.find('input').is(':checked'),
-                    timestamp: this.timestamp.find('input').is(':checked'),
-                    format: this.format.find('select').val() == "" ? "YYYY-MM-DD HH:mm" : this.format.find('select').val()
-                }
-                var options = Object.assign({}, this.options, opt);
-                return options;
+                const _options = {
+                    content: this.inputs.content.val(),
+                    fillStyle: this.inputs.fillStyle.val() || defaults.fillStyle,
+                    fontSize: parseInt(this.inputs.fontSize.val() || defaults.fontSize) + "px",
+                    rotate: parseInt(this.inputs.rotate.val() || defaults.rotate),
+                    width: parseInt(this.inputs.width.val() || defaults.width),
+                    height: parseInt(this.inputs.height.val() || defaults.height),
+                    show: this.inputs.show.is(':checked'),
+                    dateTime: this.inputs.dateTime.is(':checked'),
+                    format: this.inputs.format.val() || defaults.format
+                };
+                return Object.assign({}, this.options, _options);
             }, t.prototype.setValue = function (t) {
                 this.options = t;
-                this.content.find("input").val(t.content || "");
-                this.fillStyle.find("input").val(t.fillStyle || "rgba(184, 184, 184, 0.3)");
-                this.fillStyle.find("input").minicolors({ format: "rgb", opacity: true, theme: "bootstrap" });
-                const fontSize = parseInt(t.fontSize || "14");
-                this.fontSize.find("input").val(fontSize);
-                this.rotate.find("input").val(t.rotate || 25);
-                this.width.find("input").val(t.width || 200);
-                this.height.find("input").val(t.height || 200);
-                this.show.find("input").attr("checked", t.show == void 0 ? false : t.show);
-                this.timestamp.find("input").attr("checked", t.timestamp == void 0 ? false : t.timestamp);
-                this.format.find("select").val(t.format || "YYYY-MM-DD HH:mm");
+                Object.keys(this.inputs).forEach(key => {
+                    const $input = this.inputs[key];
+                    const value = t[key];
+                    if (key === 'show' || key === 'dateTime') {
+                        $input.prop('checked', !!value);
+                    } else {
+                        $input.val(value || defaults[key]);
+                    }
+                });
             }, t.prototype.destroy = function () {
                 this.target.remove();
             }, t;

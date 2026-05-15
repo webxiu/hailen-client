@@ -43,6 +43,12 @@ console.log("preload:", process.contextIsolated);
 if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld("electronAPI", electronAPI);
+    contextBridge.exposeInMainWorld("api", {
+      convert: (payload) => ipcRenderer.invoke("convert", payload),
+      selectDir: () => ipcRenderer.invoke("selectDir"),
+      openFolder: (path) => ipcRenderer.invoke("openFolder", path),
+      getPaths: (files) => files.map((f) => f.path)
+    });
   } catch (error) {
     console.error(error);
   }

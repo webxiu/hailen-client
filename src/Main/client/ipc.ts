@@ -2,10 +2,12 @@
 
 // import { User, UserModel } from "../server/database";
 
-import { app, desktopCapturer, ipcMain } from "electron";
+import { app, desktopCapturer, ipcMain, dialog, shell } from "electron";
 import { childExec, childSpawn, openShell } from "./utils/childProcess";
 
 import { EventName } from "./utils/eventName";
+import { runFFmpeg } from "./utils/ffmpeg";
+const path = require("path");
 
 // const userModel = new UserModel();
 // // 创建用户
@@ -61,4 +63,22 @@ ipcMain.handle(EventName.WindowCommand, async (event, { command, method, type })
         reject(error);
       });
   });
+});
+
+// 音视频转换
+ipcMain.handle("convert", async (_, { input, output, options }) => {
+  const args = ["-i", input, ...options, output, "-y"];
+  await runFFmpeg(args);
+  return output;
+});
+
+ipcMain.handle("selectDir", async () => {
+  const res = await dialog.showOpenDialog({
+    properties: ["openDirectory"]
+  });
+  return res.filePaths[0];
+});
+
+ipcMain.handle("openFolder", (_, dir) => {
+  shell.openPath(dir);
 });
