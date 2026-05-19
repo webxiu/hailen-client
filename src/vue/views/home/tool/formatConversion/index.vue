@@ -15,9 +15,9 @@
 
           <el-table :data="fileList">
             <el-table-column prop="name" label="文件名" />
-            <el-table-column label="类型">
+            <el-table-column label="格式">
               <template #default="{ row }">
-                {{ row.type }}
+                {{ row.format }}
               </template>
             </el-table-column>
 
@@ -67,7 +67,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="命名规则">
-              <el-input v-model="formData.suffix" placeholder="_converted" />
+              <el-input v-model="formData.suffix" placeholder="_ok" />
             </el-form-item>
           </el-form>
 
@@ -88,24 +88,17 @@
 defineOptions({ name: "HomeToolFormatConversionIndex", title: "格式转换" });
 import { message } from "@/vue/utils/message";
 import { ref, computed, reactive } from "vue";
-// import path from "path";
 
 const fileList = ref([]);
 const fileInput = ref(null);
 const formData = reactive({
   outputDir: "",
-  format: "",
-  suffix: "_converted",
+  format: "mp3",
+  suffix: "_ok",
   scale: "",
   bitrate: ""
 });
-
-const previewData = reactive({
-  visible: false,
-  isVideo: true,
-  url: ""
-});
-
+const previewData = reactive({ url: "", visible: false, isVideo: true });
 const isVideo = computed(() => formData.format === "mp4");
 const isAudio = computed(() => formData.format === "mp3");
 
@@ -132,26 +125,21 @@ function onDrop(e) {
 }
 
 function addFileList(files) {
-  const paths = window.api.getPaths(files);
-  console.log(666, paths);
-  console.log("files :>> ", files);
-
-  files.forEach((f) => {
+  const paths = window.fileAPI.getPaths(files);
+  paths.forEach((f) => {
     if (fileList.value.some((s) => s.name === f.name)) {
       return message.error(`文件已存在：${f.name}`);
     }
-    fileList.value.push({
-      path: f.path,
-      name: f.name,
-      type: f.type.includes("video") ? "视频" : "音频"
-    });
-    console.log("文件 :>> ", fileList.value);
+    fileList.value.push(f);
   });
+  console.log("文件详细信息 :>> ", fileList.value);
 }
 
-function preview(file) {
-  previewData.url = file.path;
-  previewData.isVideo = file.type === "视频";
+function preview(row) {
+  console.log("row :>> ", row);
+  const url = URL.createObjectURL(row.file);
+  previewData.url = url;
+  previewData.isVideo = row.type === "视频";
   previewData.visible = true;
 }
 
@@ -163,25 +151,35 @@ function remove(file) {
 }
 
 async function selectDir() {
-  formData.outputDir = await window.api.selectDir();
+  formData.outputDir = await window.fileAPI.selectDir();
 }
 
-async function startConvert() {
-  if(!fileList.value.length) return message.error("请选择文件");
-  for (const file of fileList.value) {
-    // const ext = path.extname(file.name);
-    // const base = path.basename(file.name, ext);
-    // const output = path.join(formData.outputDir, `${base}${formData.suffix}.${formData.format}`);
-    const output = `${formData.outputDir}/${file.name}${formData.suffix}.${formData.format}`;
+// 文件名称添加后缀
+function addSuffix(fileName, formData) {
+  const { outputDir, suffix, format } = formData;
+  const dotIndex = fileName.lastIndexOf(".");
+  if (dotIndex === -1) return `${outputDir}\\${fileName}${suffix}.${format}`; // 没有扩展名
+  const name = fileName.slice(0, dotIndex);
+  return `${outputDir}\\${name}${suffix}.${format}`;
+}
 
-    let options = [];
-    if (isVideo.value && formData.scale) options.push("-vf", `scale=${formData.scale}`);
-    if (isAudio.value && formData.bitrate) options.push("-b:a", formData.bitrate);
+// 开始转换
+async function startConvert() {
+  if (!fileList.value.length) return message.error("请选择文件");
+  const { scale, bitrate } = formData;
+  for (const item of fileList.value) {
+    const options = [];
+    const output = addSuffix(item.name, formData);
+    if (isVideo.value && scale) options.push("-vf", `scale=${scale}`);
+    if (isAudio.value && bitrate) options.push("-b:a", bitrate);
+    const params = { input: item.path, output, options };
+    console.log("params :>> ", params);
     try {
-      await window.api.convert({ input: file.path, output, options });
+      const res = await window.fileAPI.convert(params);
+      console.log("转换结果 :>> ", res);
     } catch (err) {
       console.error("转换报错:", err);
-      message.error(`转换失败：${file.name}`);
+      message.error(`转换失败：${item.name}`);
     }
   }
   message.success("全部转换完成");

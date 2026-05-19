@@ -1,7 +1,8 @@
-import { contextBridge, ipcRenderer } from "electron";
+import { contextBridge, ipcRenderer, webUtils } from "electron";
 
 import { EventName } from "./utils/eventName";
 import type { User } from "../server/database";
+import * as fileSystem from "./utils/fileSystem";
 
 // Custom APIs for renderer
 const electronAPI = {
@@ -39,15 +40,26 @@ const electronAPI = {
   }
 };
 
-console.log("preload:", process.contextIsolated);
 if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld("electronAPI", electronAPI);
-    contextBridge.exposeInMainWorld("api", {
+    contextBridge.exposeInMainWorld("fileAPI", {
       convert: (payload) => ipcRenderer.invoke("convert", payload),
       selectDir: () => ipcRenderer.invoke("selectDir"),
       openFolder: (path) => ipcRenderer.invoke("openFolder", path),
-      getPaths: (files) => files.map((f) => f.path)
+      getPaths: (files) =>
+        files.map((file) => {
+          return {
+            file,
+            name: file.name,
+            size: file.size,
+            mimeType: file.type,
+            path: webUtils.getPathForFile(file),
+            format: fileSystem.getFileFormat(file),
+            sizeFormatted: fileSystem.getFileSize(file),
+            lastModified: file.lastModified
+          };
+        })
     });
   } catch (error) {
     console.error(error);

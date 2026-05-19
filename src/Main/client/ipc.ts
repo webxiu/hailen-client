@@ -69,7 +69,7 @@ ipcMain.handle(EventName.WindowCommand, async (event, { command, method, type })
 ipcMain.handle("convert", async (_, { input, output, options }) => {
   const args = ["-i", input, ...options, output, "-y"];
   await runFFmpeg(args);
-  return output;
+  return args.join(" ");
 });
 
 ipcMain.handle("selectDir", async () => {

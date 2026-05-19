@@ -56,6 +56,7 @@ export default (mode: string, env: Record<string, any>): UserConfig => {
       extensions: [".js", ".ts", ".tsx", ".jsx"]
     },
     plugins: getPlugins({ isVue, isReact, modeObj, VITE_COMPRESSION }),
+    assetsInclude: ["**/*.node"],
     build: {
       outDir: modeObj.outDir,
       rollupOptions: {

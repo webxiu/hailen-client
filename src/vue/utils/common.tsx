@@ -1,6 +1,6 @@
 import { Sheet2JSONOpts, read, readFile, utils } from "xlsx";
 
-import { dayjs } from "element-plus";
+import dayjs from "dayjs";
 import { http } from "@/vue/utils/http";
 import { message } from "@/vue/utils/message";
 

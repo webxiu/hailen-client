@@ -46,19 +46,19 @@ function createWindow(param: WindowProp) {
     autoHideMenuBar: true,
     icon: nativeImage.createFromPath(sysConfig.faviconPath),
     webPreferences: {
-      webviewTag: true,
+      webviewTag: true, // 允许在渲染进程中使用webview标签来嵌入外部网页
       webSecurity: false, // 是否启用网页安全(false: 允许跨域请求, 可能暴露用户数据给恶意网站。增加 XSS 和 CSRF 攻击的风险)
       nodeIntegration: true, // 是否启用 Node.js 集成
       contextIsolation: true, // 是否启用上下文隔离
-      allowRunningInsecureContent: true,
+      allowRunningInsecureContent: true, // 是否允许在 HTTPS 页面上运行 HTTP 内容
       preload: path.resolve(__dirname, "./preload.js")
     },
     ...options
   });
- 
+
   protocol.handle("file", (req) => {
     const url = req.url.substr(8);
-    console.log('******************************url :>> ', url);
+    console.log("******************************url :>> ", url);
     return decodeURI(url);
   });
   // mainWindow.on("ready-to-show", () => {

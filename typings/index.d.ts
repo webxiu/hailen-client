@@ -42,6 +42,21 @@ interface ElectronAPI {
   receive: (channel: string, func: (...args: any[]) => void) => void;
   invoke: (channel: EventName, data: any) => Promise<any>;
 }
+interface FileAPI {
+  convert: (payload) => Promise<any>;
+  selectDir: () => Promise<any>;
+  openFolder: (path) => Promise<any>;
+  getPaths: (files) => Array<{
+    file: File;
+    name: string;
+    size: number;
+    mimeType: string;
+    path: string;
+    format: string;
+    sizeFormatted: string;
+    lastModified: number;
+  }>;
+}
 
 interface StartupType {
   vue: string;
@@ -68,6 +83,7 @@ declare global {
     lastBuildTime: string;
   };
   export const electronAPI: ElectronAPI;
+  export const fileAPI: FileAPI;
 
   namespace NodeJS {
     interface Global {
@@ -168,6 +184,7 @@ declare global {
   interface Window {
     $$: $$;
     electronAPI: ElectronAPI;
+    fileAPI: FileAPI;
     // 企业微信
     wxlogin: Function;
     webkitCancelAnimationFrame: (handle: number) => void;
