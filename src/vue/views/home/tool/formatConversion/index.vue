@@ -71,7 +71,7 @@
             </el-form-item>
           </el-form>
 
-          <el-button type="primary" @click="startConvert"> 开始转换 </el-button>
+          <el-button type="primary" @click="startConvert" :loading="sLoading"> 开始转换 </el-button>
         </el-card>
       </el-col>
     </el-row>
@@ -91,6 +91,7 @@ import { ref, computed, reactive } from "vue";
 
 const fileList = ref([]);
 const fileInput = ref(null);
+const sLoading = ref(false);
 const formData = reactive({
   outputDir: "",
   format: "mp3",
@@ -158,31 +159,41 @@ async function selectDir() {
 function addSuffix(fileName, formData) {
   const { outputDir, suffix, format } = formData;
   const dotIndex = fileName.lastIndexOf(".");
-  if (dotIndex === -1) return `${outputDir}\\${fileName}${suffix}.${format}`; // 没有扩展名
+  if (dotIndex === -1) return `${outputDir}/${fileName}${suffix}.${format}`; // 没有扩展名
   const name = fileName.slice(0, dotIndex);
-  return `${outputDir}\\${name}${suffix}.${format}`;
+  return `${outputDir}/${name}${suffix}.${format}`;
 }
 
 // 开始转换
 async function startConvert() {
+  const { scale, bitrate, outputDir } = formData;
   if (!fileList.value.length) return message.error("请选择文件");
-  const { scale, bitrate } = formData;
-  for (const item of fileList.value) {
+  if (!outputDir) return message.error("请选择输出目录");
+  sLoading.value = true;
+
+  const tasks = fileList.value.map(async (item) => {
     const options = [];
     const output = addSuffix(item.name, formData);
     if (isVideo.value && scale) options.push("-vf", `scale=${scale}`);
     if (isAudio.value && bitrate) options.push("-b:a", bitrate);
-    const params = { input: item.path, output, options };
-    console.log("params :>> ", params);
     try {
-      const res = await window.fileAPI.convert(params);
-      console.log("转换结果 :>> ", res);
+      await window.fileAPI.convert({ input: item.path, output, options });
+      return { item, status: "success" };
     } catch (err) {
-      console.error("转换报错:", err);
       message.error(`转换失败：${item.name}`);
+      return { item, status: "fail" };
     }
+  });
+  const results = await Promise.all(tasks);
+  const successCount = results.filter((r) => r.status === "success").length;
+  const failCount = results.length - successCount;
+
+  if (failCount > 0) {
+    message.warning(`完成：${successCount}个成功，${failCount}个失败`);
+  } else {
+    message.success(`全部转换完成（共 ${results.length} 个）`);
   }
-  message.success("全部转换完成");
+  sLoading.value = false;
 }
 </script>
 

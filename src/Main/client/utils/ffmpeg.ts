@@ -1,7 +1,14 @@
-const { spawn } = require("child_process");
-const path = require("path");
+import { spawn } from "child_process";
+import path from "path";
 
-const ffmpegPath = path.join($$.appInfo.rootPath, "./source/ffmpeg/ffmpeg.exe");
+function getFfmpegPath({ rootPath, platform }) {
+  const FFMPEG = {
+    dir: "source/ffmpeg",
+    bin: { win32: "ffmpeg.exe", darwin: "ffmpeg" }
+  };
+  return path.join(rootPath, FFMPEG.dir, FFMPEG.bin[platform]);
+}
+const ffmpegPath = getFfmpegPath($$.appInfo);
 
 function runFFmpeg(args) {
   return new Promise((resolve, reject) => {
