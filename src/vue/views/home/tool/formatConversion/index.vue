@@ -49,6 +49,7 @@
               <el-select v-model="formData.format">
                 <el-option label="mp3" value="mp3" />
                 <el-option label="mp4" value="mp4" />
+                <el-option label="wav" value="wav" />
               </el-select>
             </el-form-item>
 
@@ -60,7 +61,7 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item v-if="isAudio" label="码率">
+            <el-form-item v-if="!isVideo" label="码率">
               <el-select v-model="formData.bitrate">
                 <el-option label="128k" value="128k" />
                 <el-option label="320k" value="320k" />
@@ -81,12 +82,14 @@
       <video v-if="previewData.isVideo" :src="previewData.url" controls />
       <audio v-else :src="previewData.url" controls />
     </el-dialog>
+    <WavePlayer v-if="previewData.path" :filePath="previewData.path" />
   </div>
 </template>
 
 <script lang="ts" setup>
 defineOptions({ name: "HomeToolFormatConversionIndex", title: "格式转换" });
 import { message } from "@/vue/utils/message";
+import WavePlayer from "@/vue/components/WavePlayer/index.vue";
 import { ref, computed, reactive } from "vue";
 
 const fileList = ref([]);
@@ -99,9 +102,8 @@ const formData = reactive({
   scale: "",
   bitrate: ""
 });
-const previewData = reactive({ url: "", visible: false, isVideo: true });
-const isVideo = computed(() => formData.format === "mp4");
-const isAudio = computed(() => formData.format === "mp3");
+const previewData = reactive({ url: "", path: "", visible: false, isVideo: false });
+const isVideo = computed(() => formData.format === "mp4"); 
 
 function onOpenFile(isDirectory) {
   if (isDirectory) {
@@ -140,6 +142,7 @@ function preview(row) {
   console.log("row :>> ", row);
   const url = URL.createObjectURL(row.file);
   previewData.url = url;
+  previewData.path = row.path;
   previewData.isVideo = row.type === "视频";
   previewData.visible = true;
 }
@@ -175,7 +178,7 @@ async function startConvert() {
     const options = [];
     const output = addSuffix(item.name, formData);
     if (isVideo.value && scale) options.push("-vf", `scale=${scale}`);
-    if (isAudio.value && bitrate) options.push("-b:a", bitrate);
+    if (!isVideo.value && bitrate) options.push("-b:a", bitrate);
     try {
       await window.fileAPI.convert({ input: item.path, output, options });
       return { item, status: "success" };

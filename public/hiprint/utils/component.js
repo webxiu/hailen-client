@@ -6,7 +6,7 @@
  * @Description: 布局组件模块
  */
 
-const _Templates = "_templates"; // 模板记录
+const _Templates = "__print_templates"; // 模板记录
 
 function setTemplate(data) {
   localStorage.setItem(_Templates, JSON.stringify(data));
@@ -221,24 +221,101 @@ const MyTool = {
     let mncEditor = null;
     const isMore = ref(null);
     const dialogVisible = ref(false);
-    const tplForm = reactive({ compress: false, disabled: false, autoLine: false, content: "" });
+    const option = JSON.parse(localStorage.getItem("__print_vscode") || "{}");
+    const tplForm = reactive({
+      disabled: option.disabled ?? false,
+      fold: option.fold ?? false,
+      wordWrap: option.wordWrap ?? false,
+      sticky: option.sticky ?? true,
+      theme: option.theme ?? true,
+      language: "javascript",
+      content: "",
+    });
 
-    function createEditor(template) {
+    const monacoLanguages = [
+      { label: "Plain Text", value: "plaintext", desc: "纯文本" },
+      { label: "HTML", value: "html", desc: "网页结构" },
+      { label: "CSS", value: "css", desc: "网页样式" },
+      { label: "SCSS", value: "scss", desc: "CSS预处理器" },
+      { label: "Less", value: "less", desc: "CSS预处理器" },
+      { label: "JavaScript", value: "javascript", desc: "前端脚本" },
+      { label: "TypeScript", value: "typescript", desc: "JS超集" },
+      { label: "JSON", value: "json", desc: "数据格式" },
+      { label: "XML", value: "xml", desc: "标记语言" },
+      { label: "Markdown", value: "markdown", desc: "文档标记语言" },
+      { label: "YAML", value: "yaml", desc: "配置文件格式" },
+      { label: "SQL", value: "sql", desc: "数据库查询" },
+      { label: "MySQL", value: "mysql", desc: "MySQL数据库" },
+      { label: "Redis", value: "redis", desc: "缓存数据库" },
+      { label: "Python", value: "python", desc: "Python语言" },
+      { label: "Java", value: "java", desc: "Java语言" },
+      { label: "C", value: "c", desc: "C语言" },
+      { label: "C++", value: "cpp", desc: "C++语言" },
+      { label: "C#", value: "csharp", desc: "C#语言" },
+      { label: "Go", value: "go", desc: "Go语言" },
+      { label: "Rust", value: "rust", desc: "系统级/高性能" },
+      { label: "Swift", value: "swift", desc: "iOS/macOS开发" },
+      { label: "Kotlin", value: "kotlin", desc: "Android开发" },
+      { label: "Dart", value: "dart", desc: "Flutter开发" },
+      { label: "PHP", value: "php", desc: "Web后端开发" },
+      { label: "Ruby", value: "ruby", desc: "Web后端开发" },
+      { label: "Perl", value: "perl", desc: "文本处理脚本" },
+      { label: "R", value: "r", desc: "统计分析" },
+      { label: "CoffeeScript", value: "coffeescript", desc: "JS简化语法" },
+      { label: "F#", value: "fsharp", desc: ".NET函数式语言" },
+      { label: "Visual Basic", value: "vb", desc: ".NET基础语言" },
+      { label: "Objective-C", value: "objective-c", desc: "苹果早期开发语言" },
+      { label: "Shell", value: "shell", desc: "Linux脚本" },
+      { label: "Batch File", value: "bat", desc: "Windows批处理" },
+      { label: "PowerShell", value: "powershell", desc: "Windows脚本" },
+      { label: "Dockerfile", value: "dockerfile", desc: "Docker镜像配置" },
+    ];
+
+    const itemList = reactive([
+      { label: "禁用拖拽", prop: "disabled", change: onChangeCheckbox },
+      { label: "折叠所有", prop: "fold", change: onChangeCheckbox },
+      { label: "自动换行", prop: "wordWrap", change: onChangeCheckbox },
+      { label: "粘滞布局", prop: "sticky", change: onChangeCheckbox },
+      { label: "暗黑模式", prop: "theme", change: onChangeCheckbox },
+      { label: "选择语言", prop: "language", type: "select", options: monacoLanguages, change: onChangeCheckbox },
+    ]);
+
+    const itemSet = {
+      fold: (checked) => onFold(checked),
+      disabled: (checked) => onDisabled(checked),
+      sticky: (checked) => onSticky(checked),
+      wordWrap: (checked) => onAutoline(checked),
+      theme: (checked) => onTheme(checked),
+      language: (lang) => onLanguage(lang),
+    };
+
+    function createVsCodeEditor(template) {
       if (mncEditor) return setCode(template);
       require.config({
         paths: { vs: "./lib/vs" },
+        "vs/nls": { availableLanguages: { "*": "zh-cn" } },
       });
       require(["vs/editor/editor.main"], function () {
         mncEditor = monaco.editor.create(document.getElementById("container"), {
           value: tplForm.content,
-          language: "javascript",
+          language: tplForm.language ?? "javascript",
           theme: "vs-light",
           readOnly: false, // 确保非只读
           wordWrap: "off", // 禁用自动换行
           automaticLayout: true, // 自动布局
           smoothScrolling: true, // 平滑滚动
+          mouseWheelZoom: true, // 滚轮缩放
         });
         setCode(template);
+        onUpdateVSOption();
+      });
+    }
+
+    // 更新编辑器设置
+    function onUpdateVSOption() {
+      Object.keys(tplForm).forEach((key) => {
+        if ([undefined, null].includes(tplForm[key]) || !itemSet[key]) return;
+        itemSet[key](tplForm[key]);
       });
     }
     // 设置代码
@@ -327,39 +404,19 @@ const MyTool = {
           tplForm.disabled = false;
         }
       }
-      createEditor(template);
+      createVsCodeEditor(template);
     }
 
     // 勾选拖拽及压缩
-    function onChangeCode(type, flag) {
-      const itemSet = {
-        compress: () => onFold(flag),
-        disabled: () => onDisabled(flag),
-        autoLine: () => onAutoline(flag),
-        theme: () => onTheme(flag),
-      };
-      itemSet[type]();
+    function onChangeCheckbox(item, checked) {
+      const type = item.prop;
+      itemSet[type](checked);
+      tplForm[type] = checked;
+      const { content, ...rest } = tplForm;
+      localStorage.setItem("__print_vscode", JSON.stringify(rest));
     }
-    // 折叠代码切换
-    function onFold(flag) {
-      if (flag) {
-        mncEditor.trigger("button", "editor.foldAll", null);
-      } else {
-        mncEditor.trigger("button", "editor.unfoldAll", null);
-      }
-    }
-    // 切换主题
-    function onTheme(flag) {
-      const newTheme = flag ? "vs-dark" : "vs-light";
-      mncEditor.updateOptions({ theme: newTheme });
-    }
-    // 自动换行
-    function onAutoline() {
-      const currentWrap = mncEditor.getOption(monaco.editor.EditorOption.wordWrap);
-      const wordWrap = currentWrap === "on" ? "off" : "on";
-      mncEditor.updateOptions({ wordWrap });
-    }
-    // 禁用拖拽切换
+
+    // 禁用拖拽
     function onDisabled(disabled) {
       const template = getCode();
       template.panels.forEach((f) => {
@@ -367,8 +424,35 @@ const MyTool = {
           el.options.draggable = disabled ? false : true;
         });
       });
-      tplForm.compress = false;
       setCode(template);
+    }
+    // 折叠所有
+    function onFold(checked) {
+      if (checked) {
+        mncEditor.trigger("button", "editor.foldAll", null);
+      } else {
+        mncEditor.trigger("button", "editor.unfoldAll", null);
+      }
+    }
+    // 自动换行
+    function onAutoline(checked) {
+      const currentWrap = mncEditor.getOption(monaco.editor.EditorOption.wordWrap);
+      const isAutoWrap = checked !== undefined ? checked : currentWrap === "off";
+      const wordWrap = isAutoWrap ? "on" : "off";
+      mncEditor.updateOptions({ wordWrap });
+    }
+    // 粘滞布局
+    function onSticky(checked) {
+      mncEditor.updateOptions({ stickyScroll: { enabled: checked } });
+    }
+    // 切换主题
+    function onTheme(checked) {
+      const newTheme = checked ? "vs-dark" : "vs-light";
+      mncEditor.updateOptions({ theme: newTheme });
+    }
+    // 设置语言
+    function onLanguage(lang) {
+      monaco.editor.setModelLanguage(mncEditor.getModel(), lang);
     }
 
     // 保存
@@ -436,16 +520,16 @@ const MyTool = {
       scaleValue,
       drawDef,
       tplForm,
+      itemList,
       printVisible,
       dialogVisible,
       toolButtons,
       formData,
       isMore,
       Design,
-      getType,
       setScale,
+      getType,
       onOperate,
-      onChangeCode,
       onSave,
       onRewirite,
       onCopy,

@@ -40,31 +40,35 @@ const electronAPI = {
   }
 };
 
+const fileAPI = {
+  convert: (payload) => ipcRenderer.invoke("convert", payload),
+  selectDir: () => ipcRenderer.invoke("selectDir"),
+  openFolder: (path) => ipcRenderer.invoke("openFolder", path),
+  getPaths: (files) => {
+    return files.map((file) => {
+      return {
+        file,
+        name: file.name,
+        size: file.size,
+        mimeType: file.type,
+        path: webUtils.getPathForFile(file),
+        format: fileSystem.getFileFormat(file),
+        sizeFormatted: fileSystem.getFileSize(file),
+        lastModified: file.lastModified
+      };
+    });
+  }
+};
+
 if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld("electronAPI", electronAPI);
-    contextBridge.exposeInMainWorld("fileAPI", {
-      convert: (payload) => ipcRenderer.invoke("convert", payload),
-      selectDir: () => ipcRenderer.invoke("selectDir"),
-      openFolder: (path) => ipcRenderer.invoke("openFolder", path),
-      getPaths: (files) =>
-        files.map((file) => {
-          return {
-            file,
-            name: file.name,
-            size: file.size,
-            mimeType: file.type,
-            path: webUtils.getPathForFile(file),
-            format: fileSystem.getFileFormat(file),
-            sizeFormatted: fileSystem.getFileSize(file),
-            lastModified: file.lastModified
-          };
-        })
-    });
+    contextBridge.exposeInMainWorld("fileAPI", fileAPI);
   } catch (error) {
     console.error(error);
   }
 } else {
-  // @ts-ignore (define in dts)
+  // @ts-expect-error 渲染进程API
   window.electronAPI = electronAPI;
+  window.fileAPI = fileAPI;
 }

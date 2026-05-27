@@ -239,17 +239,11 @@
       <!-- 配置弹窗 -->
       <el-dialog v-model="dialogVisible" title="模板配置" draggable width="60%" top="4vh">
         <el-form :model="tplForm" label-width="0px" inline>
-          <el-form-item style="margin: 0 0 0 15px">
-            <el-checkbox v-model="tplForm.compress" @change="(v)=>onChangeCode('compress', v)">折叠配置</el-checkbox>
-          </el-form-item>
-          <el-form-item style="margin: 0 0 0 15px">
-            <el-checkbox v-model="tplForm.disabled" @change="(v)=>onChangeCode('disabled', v)">禁用拖拽</el-checkbox>
-          </el-form-item>
-          <el-form-item style="margin: 0 0 0 15px">
-            <el-checkbox v-model="tplForm.autoLine" @change="(v)=>onChangeCode('autoLine', v)">自动换行</el-checkbox>
-          </el-form-item>
-          <el-form-item style="margin: 0 0 0 15px">
-            <el-checkbox v-model="tplForm.theme" @change="(v)=>onChangeCode('theme', v)">切换主题</el-checkbox>
+          <el-form-item v-for="item in itemList" style="margin: 0 0 0 15px">
+            <el-checkbox v-if="item.type !== 'select'" v-model="tplForm[item.prop]" @change="(v)=>item.change(item,v)">{{ item.label }}</el-checkbox>
+            <el-select v-else v-model="tplForm[item.prop]" @change="(v)=>item.change(item,v)" size="small" placeholder="请选择" style="min-width: 120px">
+              <el-option v-for="option in item.options" :key="option.value" :label="option.label" :value="option.value" :title="option.title" />
+            </el-select>
           </el-form-item>
           <div>
             <el-form-item style="width: 100%">
