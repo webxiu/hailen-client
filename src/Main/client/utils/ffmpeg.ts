@@ -34,7 +34,7 @@ function runFFmpeg(args) {
     ff.on("close", (code) => {
       console.log("🧾 退出码:", code);
       if (code === 0) {
-        resolve();
+        resolve(code);
       } else {
         reject(new Error("ffmpeg执行失败"));
       }

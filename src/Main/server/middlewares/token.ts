@@ -9,9 +9,7 @@ export const verifyToken = async (ctx: Context, next: Next) => {
     const allowMethod = ctx.method.toLowerCase() === "get";
     const isWhite = whiteList.some((path) => ctx.url.startsWith(path));
     let token = ctx.request.headers["authorization"] || (ctx.query.token as string);
-    console.log("token", token);
     if (isWhite || allowMethod) return await next();
-
     // 移除可能的Bearer前缀
     if (token && token.startsWith("Bearer ")) token = token.replace("Bearer ", "").trim();
     if (!token) {

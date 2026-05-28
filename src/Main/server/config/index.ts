@@ -13,5 +13,5 @@ export function responseStatus<T = unknown>(status: StatusCode, data?: T, messag
 
 /** 输出打印颜色 */
 export function printl(s1, s2, ...rest) {
-  console.log(s1.bgYellow, s2.magenta, ...rest, "\n");
+  console.log(s1.bgYellow, s2.magenta, ...rest);
 }

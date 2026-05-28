@@ -33,12 +33,12 @@ class Command extends EventEmitter {
     });
   }
 
-  printl(s1, s2, ...rest) {
-    console.log("\n", s1.bgMagenta, s2.magenta, ...rest);
+  clog(s1, s2, ...rest) {
+    console.log(s1.bgMagenta, s2.magenta, ...rest);
   }
 
   childProcessExec(runPath) {
-    this.printl("[command]", runPath);
+    this.clog("[command]", runPath);
     const _childProcess = exec(runPath);
     _childProcess.stdout.on("data", console.info);
     _childProcess.stderr.on("data", console.error);
@@ -52,6 +52,20 @@ class Command extends EventEmitter {
     cp.on("close", (data) => callback({ type: "cp_close", data }));
     cp.stderr.on("data", console.error);
     return cp;
+  }
+
+  cleanCache() {
+    const viteCacheDir = resolve(process.cwd(), "node_modules/.vite");
+    if (fs.existsSync(viteCacheDir)) {
+      try {
+        fs.removeSync(viteCacheDir);
+        console.log("✅ 已清除 .vite 缓存".green);
+      } catch (err) {
+        console.error("❌ 清除缓存失败:", err.message.red);
+      }
+    } else {
+      console.log("💡 .vite 缓存不存在，跳过清理".yellow);
+    }
   }
   // Vite 开发服务
   startServer(options = {}) {
@@ -82,6 +96,7 @@ class Command extends EventEmitter {
   startProcess() {
     const isPro = Config.isPro();
     const viteConfig = Config.viteConfig();
+    // if (!isPro) this.cleanCache(); // 清除缓存
     Promise.all(viteConfig.map((vc) => (isPro ? this.buildServer(vc) : this.startServer(vc))))
       .then((results) => {
         let resultText = viteConfig.map((c, i) => `✅ ${viteConfig[i].name}启动成功: ${results[i].local}`);
@@ -104,7 +119,7 @@ class Command extends EventEmitter {
     const _isPro = Config.isPro();
     const command = [`tsc --project ${resolve(process.cwd(), "tsconfig.main.json")} --preserveWatchOutput`, _isPro ? "" : "-w"].filter(Boolean).join(" ");
     this.runExec(command, ({ type, data }) => {
-      this.printl("[compile main]", command, type, data);
+      this.clog("[compile main]", command, `stdout:${type.yellow}`, data);
       const proStatus = ["cp_close"].includes(type) || data === 0;
       const devStatus = ["data"].includes(type) && data.includes("Watching");
       if (_isPro) {
@@ -148,7 +163,7 @@ class Command extends EventEmitter {
 
   // 打包平台
   builder() {
-    this.printl("打包平台:", process.platform);
+    this.clog("打包平台:", process.platform);
     switch (process.platform) {
       case "win32":
         shell.exec("electron-builder --win --ia32");

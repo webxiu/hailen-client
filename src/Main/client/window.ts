@@ -1,6 +1,6 @@
 import * as path from "node:path";
 
-import { BrowserWindow, Menu, Tray, app, ipcMain, nativeImage, protocol, screen } from "electron";
+import { BrowserWindow, Menu, Tray, app, ipcMain, nativeImage, net, protocol, screen } from "electron";
 
 import { exec } from "child_process";
 
@@ -28,13 +28,6 @@ function windowSize() {
 function createWindow(param: WindowProp) {
   const { mode, options = {} } = param;
   const sysConfig = $$.startup;
-  console.log("========$$====>:", {
-    isPro: $$.isPro(),
-    env: $$.env,
-    NODE_ENV: $$.NODE_ENV,
-    appInfo: $$.appInfo,
-    startup: $$.startup
-  });
   const { windowWidth, windowHeight, x, y, minWidth, minHeight } = windowSize();
   const mainWindow = new BrowserWindow({
     x: x,
@@ -55,26 +48,6 @@ function createWindow(param: WindowProp) {
     },
     ...options
   });
-
-  // protocol.handle("file", (req) => {
-  //   const url = req.url.substr(8);
-  //   console.log("******************************url :>> ", url);
-  //   return decodeURI(url);
-  // });
-
-    //===========自定义file:///协议的解析=======================
-  protocol.interceptFileProtocol(
-    'file',
-    (req, callback) => {
-      const url = req.url.substr(8);
-      callback(decodeURI(url));
-    },
-    (error) => {
-      if (error) {
-        console.error('Failed to register protocol');
-      }
-    }
-  );
   // mainWindow.on("ready-to-show", () => {
   //   mainWindow.show();
   // });
@@ -114,12 +87,6 @@ function createWindow(param: WindowProp) {
     mainWindow.show();
   });
 
-  //===========自定义file:///协议的解析=======================
-  protocol.interceptFileProtocol("file", (req, callback) => {
-    const url = req.url.substr(8);
-    callback(decodeURI(url));
-  });
-
   $$.clog("主进程process.cwd():", process.cwd());
   $$.clog("主进程__dirname:", __dirname);
 
@@ -139,7 +106,18 @@ function createWindow(param: WindowProp) {
   return mainWindow;
 }
 
+protocol.registerSchemesAsPrivileged([{ scheme: "file", privileges: { secure: true, standard: true } }]);
+
 app.whenReady().then(() => {
+  // ======= 自定义file:///协议的解析 =======
+  protocol.handle("file", (req) => {
+    // const url = req.url.substr(8);
+    // callback(decodeURI(url));
+    const url = new URL(req.url);
+    const filePath = decodeURIComponent(url.pathname);
+    return net.fetch(`file://${filePath}`);
+  });
+
   let parentWin = createWindow({ mode: "vue", options: {} });
   // 窗口加载完成后发送初始化就绪消息
   parentWin.webContents.on("did-finish-load", () => {

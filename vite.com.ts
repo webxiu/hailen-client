@@ -19,7 +19,7 @@ function resolve(dir: string) {
   return path.resolve(__dirname, dir);
 }
 
-const JoinCwd = (...args) => {
+const JoinCwd = (...args: string[]) => {
   if (!args.length) return process.cwd();
   return path.join(process.cwd(), ...args);
 };
@@ -62,6 +62,11 @@ export default (mode: string, env: Record<string, any>): UserConfig => {
       rollupOptions: {
         // input: { [mode]: modeObj.input },
         external: [/\.node$/]
+      }
+    },
+    css: {
+      preprocessorOptions: {
+        scss: { api: "modern" }
       }
     },
     server: {

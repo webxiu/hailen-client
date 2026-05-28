@@ -6,8 +6,7 @@ import { responseStatus } from "../../config/index";
 const dbModel = new DbModel();
 
 const createMenu = async (ctx: Context) => {
-  const { menus } = ctx.request.body;
-  
+  const { menus } = ctx.request.body as { menus: MenuItemType[] };
   try {
     const res = await dbModel.createMenu(menus);
     if (!res) return (ctx.body = responseStatus(400, "创建失败"));
@@ -31,10 +30,10 @@ async function getMenu(ctx: Context) {
 
 async function updateMenu(ctx: Context) {
   try {
-    const res = await dbModel.updateMenu(ctx.request.body);
+    const res = await dbModel.updateMenu(ctx.request.body as any);
     if (!res) return (ctx.body = responseStatus(400, "操作失败"));
     ctx.body = responseStatus(200, res, "操作成功");
-  } catch (error) { 
+  } catch (error) {
     ctx.body = responseStatus(400, error.toString() || "操作失败!");
   }
 }
