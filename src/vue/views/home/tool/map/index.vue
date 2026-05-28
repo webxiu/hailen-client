@@ -6,10 +6,12 @@
  * @Description: 
 -->
 <template>
-  <div class="dashboard">
-    <Path />
+  <div class="map">
     <el-button type="primary" @click="onLoad">地图</el-button>
-    <div id="tmap" style="width: 100%; height: 500px"></div>
+    <div class="flex">
+      <Path />
+      <div id="tmap" class="ml-10" style="width: 100%; height: 80vh"></div>
+    </div>
   </div>
 </template>
 

@@ -99,12 +99,12 @@ class Command extends EventEmitter {
     // if (!isPro) this.cleanCache(); // 清除缓存
     Promise.all(viteConfig.map((vc) => (isPro ? this.buildServer(vc) : this.startServer(vc))))
       .then((results) => {
-        let resultText = viteConfig.map((c, i) => `✅ ${viteConfig[i].name}启动成功: ${results[i].local}`);
+        let resultText = viteConfig.map((c, i) => `✅ ${viteConfig[i].name}启动成功: ` + `${results[i].local}`.green);
         if (isPro) {
           if (!results.includes(0)) throw new Error("构建失败");
           resultText = viteConfig.map((c) => `✅ ${c.name}打包成功`);
         }
-        console.log(`${resultText.join("\n")}`.italic);
+        console.log(resultText.join("\n"));
         this.watchMain();
       })
       .catch((err) => {

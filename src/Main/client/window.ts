@@ -4,6 +4,11 @@ import { BrowserWindow, Menu, Tray, app, ipcMain, nativeImage, net, protocol, sc
 
 import { exec } from "child_process";
 
+// if (process.env.NODE_ENV === "development") {
+//   // 禁用安全警告
+//   process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = "true";
+// }
+
 interface WindowProp {
   mode: "vue" | "react";
   options?: Electron.BrowserWindowConstructorOptions;
