@@ -8,10 +8,9 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-dist/
-dist-vue/
-dist-react/
-dist
+/dist/
+/dist-vue/
+/dist-react/
 output
 dist-ssr
 *.local

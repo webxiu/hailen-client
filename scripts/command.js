@@ -53,26 +53,14 @@ class Command extends EventEmitter {
     cp.stderr.on("data", console.error);
     return cp;
   }
-  cleanCache() {
-    const viteCacheDir = resolve(process.cwd(), "node_modules/.vite");
-    if (fs.existsSync(viteCacheDir)) {
-      try {
-        fs.removeSync(viteCacheDir);
-        console.log("✅ 已清除 .vite 缓存".green);
-      } catch (err) {
-        console.error("❌ 清除缓存失败:", err.message.red);
-      }
-    } else {
-      console.log("💡 .vite 缓存不存在，跳过清理".yellow);
-    }
-  }
-
   // Vite 开发服务
   startServer(options = {}) {
     return new Promise(async (resolve, reject) => {
       try {
         const server = await createServer(options);
-        const { resolvedUrls } = await server.listen();
+        await server.listen();
+        await server.waitForRequestsIdle?.();
+        const { resolvedUrls } = server;
         resolve(resolvedUrls);
       } catch (err) {
         reject(err);
@@ -94,9 +82,7 @@ class Command extends EventEmitter {
   startProcess() {
     const isPro = Config.isPro();
     const viteConfig = Config.viteConfig();
-    if (!isPro) this.cleanCache();
-    const processMethod = isPro ? this.buildServer : this.startServer;
-    Promise.all(viteConfig.map((vc) => processMethod(vc)))
+    Promise.all(viteConfig.map((vc) => (isPro ? this.buildServer(vc) : this.startServer(vc))))
       .then((results) => {
         let resultText = viteConfig.map((c, i) => `✅ ${viteConfig[i].name}启动成功: ${results[i].local}`);
         if (isPro) {

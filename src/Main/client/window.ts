@@ -49,18 +49,32 @@ function createWindow(param: WindowProp) {
       webviewTag: true, // 允许在渲染进程中使用webview标签来嵌入外部网页
       webSecurity: false, // 是否启用网页安全(false: 允许跨域请求, 可能暴露用户数据给恶意网站。增加 XSS 和 CSRF 攻击的风险)
       nodeIntegration: true, // 是否启用 Node.js 集成
-      contextIsolation: true, // 是否启用上下文隔离
+      contextIsolation: false, // 是否启用上下文隔离
       allowRunningInsecureContent: true, // 是否允许在 HTTPS 页面上运行 HTTP 内容
       preload: path.resolve(__dirname, "./preload.js")
     },
     ...options
   });
 
-  protocol.handle("file", (req) => {
-    const url = req.url.substr(8);
-    console.log("******************************url :>> ", url);
-    return decodeURI(url);
-  });
+  // protocol.handle("file", (req) => {
+  //   const url = req.url.substr(8);
+  //   console.log("******************************url :>> ", url);
+  //   return decodeURI(url);
+  // });
+
+    //===========自定义file:///协议的解析=======================
+  protocol.interceptFileProtocol(
+    'file',
+    (req, callback) => {
+      const url = req.url.substr(8);
+      callback(decodeURI(url));
+    },
+    (error) => {
+      if (error) {
+        console.error('Failed to register protocol');
+      }
+    }
+  );
   // mainWindow.on("ready-to-show", () => {
   //   mainWindow.show();
   // });

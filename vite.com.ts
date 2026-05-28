@@ -53,7 +53,7 @@ export default (mode: string, env: Record<string, any>): UserConfig => {
         "~": JoinCwd(),
         "@": resolve("src")
       },
-      extensions: [".js", ".ts", ".tsx", ".jsx"]
+      extensions: [".js", ".ts", ".tsx", ".jsx", ".node"]
     },
     plugins: getPlugins({ isVue, isReact, modeObj, VITE_COMPRESSION }),
     assetsInclude: ["**/*.node"],
@@ -61,6 +61,7 @@ export default (mode: string, env: Record<string, any>): UserConfig => {
       outDir: modeObj.outDir,
       rollupOptions: {
         // input: { [mode]: modeObj.input },
+        external: [/\.node$/]
       }
     },
     server: {

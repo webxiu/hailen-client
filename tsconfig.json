@@ -31,7 +31,8 @@
     "src/**/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue", // 包含 Vue 文件
-    "typings"
+    "typings",
+    "srouce/**/*.node",
     // "src/Main/**/*",
     // "src/react/**/*",
     // "src/vue/**/*",

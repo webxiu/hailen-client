@@ -69,7 +69,7 @@ function logout() {
 </script>
 
 <template>
-  <Star />
+  <!-- <Star /> -->
   <div class="layout">
     <div class="main-side flex-col ui-vh-100 p-4">
       <div>logo <HxIcon icon="Setting" /></div>

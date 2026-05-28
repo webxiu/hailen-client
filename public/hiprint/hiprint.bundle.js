@@ -2865,6 +2865,7 @@ var hiprint = function (t) {
                 content: "",
                 fillStyle: "rgba(110, 110, 110, 0.35)",
                 fontSize: "14",
+                fontFamily: "",
                 rotate: 20,
                 width: 200,
                 height: 200,
@@ -2882,17 +2883,19 @@ var hiprint = function (t) {
                     "YYYY-MM",
                     "YYYY"
                 ];
-                const timeOptions = formatList.map((f,i) => `<option value="${i==0 ? "" : f}">${f}</option>`).join("");
+                const timeOptions = formatList.map((m, i) => `<option value="${i == 0 ? "" : m}">${m}</option>`).join("");
+                const familyOptions = HIPRINT_CONFIG.fontList.map((m) => `<option value="${m.value}">${m.title}</option>`).join("");
                 const elements = [
-                    { key: 'show',     label: '显示水印', type: 'checkbox', default: defaults.show                                   },
-                    { key: 'dateTime', label: '显示时间', type: 'checkbox', default: defaults.dateTime                               },
-                    { key: 'content',  label: '水印内容', type: 'text',     default: '',                 placeholder: '水印内容'      },
-                    { key: 'format',   label: '时间格式', type: 'select',   default: defaults.format,    options: timeOptions        },
-                    { key: 'fillStyle',label: '水印颜色', type: 'color',    default: defaults.fillStyle, format: 'rgb', opacity: 0.3 },
-                    { key: 'fontSize', label: '水印大小', type: 'range',    default: defaults.fontSize,  min: 5, max: 60             },
-                    { key: 'rotate',   label: '旋转角度', type: 'range',    default: defaults.rotate,    min: 0,  max: 180           },
-                    { key: 'width',    label: '水平间距', type: 'range',    default: defaults.width,     min: 1, max: 520            },
-                    { key: 'height',   label: '垂直间距', type: 'range',    default: defaults.height,    min: 1, max: 520            },
+                    { key: "show",      label: "显示水印", type: "checkbox", default: defaults.show                                    },
+                    { key: "dateTime",  label: "显示时间", type: "checkbox", default: defaults.dateTime                                },
+                    { key: "content",   label: "水印内容", type: "text",     default: "",                  placeholder: "水印内容"      },
+                    { key: "format",    label: "时间格式", type: "select",   default: defaults.format,     options: timeOptions        },
+                    { key: "fillStyle", label: "水印颜色", type: "color",    default: defaults.fillStyle,  format: "rgb", opacity: 0.3 },
+                    { key: "fontFamily",label: "水印字体", type: "select",   default: defaults.fontFamily, options: familyOptions      },
+                    { key: "fontSize",  label: "水印大小", type: "range",    default: defaults.fontSize,   min: 5, max: 60             },
+                    { key: "rotate",    label: "旋转角度", type: "range",    default: defaults.rotate,     min: 0,  max: 180           },
+                    { key: "width",     label: "水平间距", type: "range",    default: defaults.width,      min: 1, max: 520            },
+                    { key: "height",    label: "垂直间距", type: "range",    default: defaults.height,     min: 1, max: 520            },
                 ];
                 this.target = $(`<div class="hiprint-option-item hiprint-option-item-row vert">
                                 <div class="hiprint-option-item-label">水印选项</div></div>`);
@@ -2936,6 +2939,7 @@ var hiprint = function (t) {
                     content: this.inputs.content.val(),
                     fillStyle: this.inputs.fillStyle.val() || defaults.fillStyle,
                     fontSize: parseInt(this.inputs.fontSize.val() || defaults.fontSize) + "px",
+                    fontFamily: this.inputs.fontFamily.val() || defaults.fontFamily,
                     rotate: parseInt(this.inputs.rotate.val() || defaults.rotate),
                     width: parseInt(this.inputs.width.val() || defaults.width),
                     height: parseInt(this.inputs.height.val() || defaults.height),

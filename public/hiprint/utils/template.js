@@ -12,6 +12,7 @@ var watermarkOptions = {
   rotate: 25,
   show: false,
   timestamp: true,
+  fontFamily: "",
   format: "YYYY-MM-DD HH:mm",
 };
 

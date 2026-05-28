@@ -22,7 +22,7 @@ export function getPlugins({ isVue, isReact, modeObj, VITE_COMPRESSION }) {
     vue({
       template: {
         // 将 webview 视为原生自定义元素
-        compilerOptions: { isCustomElement: (tag) =>["webview"].includes(tag) }
+        compilerOptions: { isCustomElement: (tag) => ["webview"].includes(tag) }
       }
     }),
     isVue
@@ -47,7 +47,7 @@ export function getPlugins({ isVue, isReact, modeObj, VITE_COMPRESSION }) {
     createSvgIconsPlugin({
       iconDirs: [path.resolve(process.cwd(), "src/vue/assets/icons")], // 你的 SVG 目录
       symbolId: "icon-[name]" // 支持目录层级: icon-[dir]-[name]
-    })
+    }),
 
     // 2.代码压缩
     // configCompressPlugin(VITE_COMPRESSION)
@@ -75,5 +75,19 @@ export function getPlugins({ isVue, isReact, modeObj, VITE_COMPRESSION }) {
     //   targets: ["Chrome 47"],
     //   modernPolyfills: true
     // })
+
+    {
+      // 让 Vite 忽略 .node 文件，交给 Electron 的 Node 环境处理
+      name: "node-loader",
+      transform(code, id) {
+        if (id.endsWith(".node")) {
+          return `
+            import { createRequire } from 'module';
+            const require = createRequire(import.meta.url);
+            export default require(${JSON.stringify(id)});
+          `;
+        }
+      }
+    }
   ];
 }
