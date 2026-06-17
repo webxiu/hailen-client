@@ -1,8 +1,8 @@
 import { RouteRecordRaw, createRouter, createWebHashHistory, createWebHistory } from "vue-router";
 import { getUserInfo, removeUserInfo } from "@/vue/utils/storage";
-import { initRouter } from "@/vue/router/utils";
 
 import NProgress from "@/vue/utils/progress";
+import { initRouter } from "@/vue/router/utils";
 import { useTagStoreHook } from "@/vue/store/modules/tag";
 
 /** 路由白名单 */

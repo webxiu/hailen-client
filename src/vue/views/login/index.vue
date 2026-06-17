@@ -5,6 +5,7 @@
     </div>
     <div class="login-form flex-col just-center align-center flex-1">
       <h3>欢迎使用WORK系统</h3>
+      <NineGridUnlock :size="200" @unlock="onUnlock" />
       <el-form :model="formData" label-width="60px" style="max-width: 300px" class="mt-20">
         <el-form-item label="邮箱">
           <el-input v-model="formData.email" placeholder="请输入密码" />
@@ -56,6 +57,7 @@ import { login, register } from "@/vue/api/user";
 import { message } from "@/vue/utils/message";
 import { useUserStore } from "@/vue/store/modules/user";
 import AuthCode from "./components/AuthCode.vue";
+import NineGridUnlock from "./components/NineGridUnlock.vue";
 
 const authCode = ref("");
 const isLogin = ref(true);
@@ -85,6 +87,14 @@ function onRegister() {
     if (!data) return message.error("注册失败");
     message.success("注册成功");
     isLogin.value = true;
+  });
+}
+
+function onUnlock(path) {
+  console.log("解锁路径:", path);
+  formData.password = path;
+  useStore.userLogin(formData).then(() => {
+    message.success("登录成功");
   });
 }
 </script>

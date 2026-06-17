@@ -74,3 +74,51 @@ export const getSuspendPosition = (key: string): PositionType => {
 export const setSuspendPosition = (key, position: PositionType) => {
   localStorage.setItem(key, JSON.stringify(position));
 };
+
+/**
+ * 操作本地存储
+ * @param key 存储key
+ * @param isArr 是否为数组(数组更新只支持对象数组)
+ */
+export function useLocalStorage<T>(key: string, isArr = true) {
+  /**
+   * 1.获取本地存储数据
+   * @param isStr 是否返回字符串数据
+   */
+  function getItem(isStr = false): T {
+    const emptyStr = isArr ? "[]" : "{}";
+    const data = localStorage.getItem(key) as T;
+    return isStr ? data : toParse(data ?? emptyStr);
+  }
+
+  /** 2.设置本地存储数据 */
+  function setItem(data: T) {
+    localStorage.setItem(key, JSON.stringify(data));
+    return data;
+  }
+  /**
+   * 3.更新本地存储数据(非字符串)
+   * @param item 更新值
+   * @param field 更新唯一字段
+   */
+  function updateItem(item: T, field?: string) {
+    let oldData = getItem();
+    if (Array.isArray(oldData)) {
+      if (!field) throw new Error("updateItem方法缺少更新唯一字段");
+      const idx = oldData.findIndex((f) => f[field] === item[field]);
+      if (idx > -1) {
+        oldData.splice(idx, 1, item);
+      } else {
+        oldData.push(item);
+      }
+    } else {
+      oldData = { ...oldData, ...item };
+    }
+    localStorage.setItem(key, JSON.stringify(oldData));
+  }
+  /** 4.移除本地存储数据 */
+  function removeItem() {
+    localStorage.removeItem(key);
+  }
+  return { getItem, setItem, updateItem, removeItem };
+}

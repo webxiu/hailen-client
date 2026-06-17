@@ -6,17 +6,14 @@ import { message } from "@/vue/utils/message";
 
 export type PrimitiveType = "number" | "string" | "boolean" | "object" | "array" | "undefined" | "null" | "function" | "date";
 
-
 /** JSON字符串转换对象 */
 function toParse(str) {
   try {
-    const parsed = JSON.parse(str || "{}");
-    return parsed;
+    return JSON.parse(str || "{}");
   } catch (e) {
     return {};
   }
 }
-
 
 /** 获取数据类型 */
 function getType(data): PrimitiveType {
@@ -63,7 +60,7 @@ export const resetData = <T, K extends keyof T>(formData: T, prop: K): T => {
   if (dataType === "string") formData[prop] = undefined as T[K];
   if (dataType === "number") formData[prop] = undefined as T[K];
   if (dataType === "boolean") formData[prop] = false as T[K];
-  if (dataType === "function") formData[prop] = (() => { }) as T[K];
+  if (dataType === "function") formData[prop] = (() => {}) as T[K];
   return formData;
 };
 
@@ -444,11 +441,11 @@ function getRandomChar() {
   return str;
 }
 
-
 /** 数组转树结构 */
 function arrayToTree(array, options?) {
   const { idKey = "id", parentKey = "parentId", childrenKey = "children", rootParentValue = 0 } = options || {};
-  const map = new Map(), result = [];
+  const map = new Map(),
+    result = [];
   array.forEach((item) => map.set(item[idKey], { ...item, [childrenKey]: [] }));
   array.forEach((item) => {
     const node = map.get(item[idKey]);
@@ -459,7 +456,7 @@ function arrayToTree(array, options?) {
       const parent = map.get(parentId);
       parent[childrenKey].push(node);
     }
-  }); 
+  });
   return result;
 }
 
@@ -479,4 +476,4 @@ export {
   getRandomColor,
   getRandomChar,
   arrayToTree
-}
+};

@@ -25,8 +25,8 @@ function windowSize() {
   const x = Math.floor((screenWidth - windowWidth) / 2);
   const y = Math.floor((screenHeight - windowHeight) / 2);
   // 窗口最小尺寸
-  const minWidth = Math.floor(screenWidth * 0.3);
-  const minHeight = Math.floor(screenHeight * 0.3);
+  const minWidth = Math.floor(screenWidth * 0.5);
+  const minHeight = Math.floor(screenHeight * 0.5);
   return { windowWidth, windowHeight, x, y, minWidth, minHeight };
 }
 

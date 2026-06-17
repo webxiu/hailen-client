@@ -117,7 +117,7 @@ class PureHttp {
 
         // ================ 状态码判断 start ================
         if (data.status === 200) {
-          data.message && message.success(data.message);
+          // data.message && message.success(data.message);
           return data;
         } else if (response.status === 200 && !data.status) {
           return data; // 处理Excel数据导出没有包装响应格式

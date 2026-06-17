@@ -2,12 +2,17 @@
   <div class="ui-ta-c">
     <div class="tip p-10">{{ tip }}</div>
     <div>
-      <canvas ref="lockCanvasRef" class="border-line"></canvas>
+      <canvas ref="lockCanvasRef" class="border-line" width="200" height="200"></canvas>
     </div>
   </div>
 </template>
 <script setup lang="tsx">
 import { onMounted, ref } from "vue";
+
+interface Props {
+  size?: number;
+  title?: string;
+}
 
 interface PointItemType {
   x: number;
@@ -16,8 +21,14 @@ interface PointItemType {
   selected: boolean;
 }
 
-const tip = ref("9宫格解锁");
+const props = withDefaults(defineProps<Props>(), {
+  size: 300,
+  title: "9宫格解锁"
+});
+
+const tip = ref(props.title);
 const lockCanvasRef = ref<HTMLCanvasElement>();
+const emits = defineEmits(["unlock"]);
 
 onMounted(() => {
   onCreate();
@@ -26,7 +37,7 @@ onMounted(() => {
 function onCreate() {
   const canvas = lockCanvasRef.value as HTMLCanvasElement;
   const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-  canvas.width = canvas.height = window.innerWidth * 0.8;
+  canvas.width = canvas.height = props.size;
   const size = canvas.width;
   const padding = 50;
   const radius = 20;
@@ -173,13 +184,10 @@ function onCreate() {
   function endDrag() {
     if (isDragging) {
       isDragging = false;
-      console.log(
-        "解锁路径:",
-        path.map((p) => p.id)
-      );
+      const result = path.map((m) => m.id).join("");
+      emits("unlock", result);
       draw();
-      // 这里可以校验密码，比如 path.map(p => p.id).join('') === '12369'
-      setTimeout(reset, 1500); // 1.5秒后重置
+      setTimeout(reset, 2000); // 2秒后重置
     }
   }
 
