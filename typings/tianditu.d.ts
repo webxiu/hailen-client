@@ -49,7 +49,12 @@ declare namespace T {
   }
 
   // 控件基类
-  class Control {}
+  class Control {
+    static Scale: (...args: any[]) => void;
+    static Zoom: (...args: any[]) => void;
+    static OverviewMap: (...args: any[]) => void;
+    static MapType: (...args: any[]) => void;
+  }
 
   // 缩放控件
   class Zoom extends Control {

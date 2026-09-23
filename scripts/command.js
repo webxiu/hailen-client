@@ -96,7 +96,7 @@ class Command extends EventEmitter {
   startProcess() {
     const isPro = Config.isPro();
     const viteConfig = Config.viteConfig();
-    // if (!isPro) this.cleanCache(); // 清除缓存
+    if (!isPro) this.cleanCache(); // 清除缓存
     Promise.all(viteConfig.map((vc) => (isPro ? this.buildServer(vc) : this.startServer(vc))))
       .then((results) => {
         let resultText = viteConfig.map((c, i) => `✅ ${viteConfig[i].name}启动成功: ` + `${results[i].local}`.green);

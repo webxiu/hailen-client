@@ -2,7 +2,7 @@
   <div class="ui-ta-c">
     <div class="tip p-10">{{ tip }}</div>
     <div>
-      <canvas ref="lockCanvasRef" class="border-line" width="200" height="200"></canvas>
+      <canvas ref="lockCanvasRef" class="border-line"></canvas>
     </div>
   </div>
 </template>

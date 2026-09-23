@@ -5,7 +5,7 @@
     </div>
     <div class="login-form flex-col just-center align-center flex-1">
       <h3>欢迎使用WORK系统</h3>
-      <NineGridUnlock :size="200" @unlock="onUnlock" />
+      <NineGridUnlock @unlock="onUnlock" />
       <el-form :model="formData" label-width="60px" style="max-width: 300px" class="mt-20">
         <el-form-item label="邮箱">
           <el-input v-model="formData.email" placeholder="请输入密码" />
