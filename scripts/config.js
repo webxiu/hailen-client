@@ -1,46 +1,24 @@
+/**
+ * @Message Electron 主进程启动配置
+ * @Notice 此文件被 dist/client/appInfo.js 以 CommonJS 方式 require, 请勿改成 ESM
+ */
 const path = require("path");
-const dotenv = require("dotenv");
-const diskPath = path.join("hailen", "electron-admin");
 
-// 项目启动配置
-class Config {
-  static startOption = {
-    diskPath: diskPath,
-    host: "http://127.0.0.1:3800",
-    nodemon: true, // 启用nodemon, 修改主进程文件自动重启
-    eslint: false,
-    tslint: true,
-    smp: false
-  };
-  static viteConfig() {
-    const mode = process.env.NODE_ENV;
-    const { VITE_VUE_PORT, VITE_REACT_PORT } = this.getEnvFile();
-    return [
-      {
-        name: "Vue",
-        mode: mode,
-        server: { port: VITE_VUE_PORT },
-        configFile: this.JoinCwd("vite.vue.ts")
-      },
-      {
-        name: "React",
-        mode: mode,
-        server: { port: VITE_REACT_PORT },
-        configFile: this.JoinCwd("vite.react.ts")
-      }
-    ];
-  }
-  static getEnvFile() {
-    const path = `.env.${process.env.NODE_ENV}`;
-    return dotenv.config({ path }).parsed || {};
-  }
-  static JoinCwd(...dir) {
-    if (!dir) return process.cwd();
-    return path.join(process.cwd(), ...dir);
-  }
-  static isPro() {
-    return process.env.NODE_ENV === "production";
-  }
-}
+/** 拼接进程工作目录下的绝对路径 */
+const JoinCwd = (...dir) => path.join(process.cwd(), ...dir);
 
-module.exports = Config;
+/** 主进程启动配置, 展开挂载到 $$.appInfo */
+const startOption = {
+  /** 本地 koa 服务完整地址(主进程内嵌服务监听地址, 渲染端代理目标, 与 .env 的 VITE_BASE_URL 一致) */
+  host: "http://127.0.0.1:3800",
+  /** 软件外部资源目录 */
+  diskPath: JoinCwd("source"),
+  /** 是否监听主进程自动重启 */
+  nodemon: true,
+  /** 启动时是否执行 eslint */
+  eslint: false,
+  tslint: false,
+  smp: false
+};
+
+module.exports = { startOption, JoinCwd };

@@ -5,7 +5,6 @@ import Components from "unplugin-vue-components/vite";
 import ElementPlus from "unplugin-element-plus/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import babel from "@rollup/plugin-babel";
-import { createHtmlPlugin } from "vite-plugin-html";
 import { getPlugins } from "./build/plugins";
 import path from "path";
 import react from "@vitejs/plugin-react";
@@ -48,6 +47,8 @@ export default (mode: string, env: Record<string, any>): UserConfig => {
 
   return {
     base: "./", // 部署在根目录下 , ./vue/  ./react/ 部署在子目录下
+    // vue/react 使用各自独立的预构建缓存目录, 避免两个 dev server 并发写同一缓存导致损坏(偶发启动白屏的根因)
+    cacheDir: resolve(`node_modules/.vite-${mode}`),
     resolve: {
       alias: {
         "~": JoinCwd(),
@@ -72,6 +73,7 @@ export default (mode: string, env: Record<string, any>): UserConfig => {
     server: {
       port: modeObj.port,
       host: "0.0.0.0",
+      // 端口被占用时 vite 自动 +1 换用空闲端口, 实际端口由 scripts/command.js 回写环境变量告知 electron
       // 本地跨域代理 https://cn.vitejs.dev/config/server-options.html#server-proxy
       proxy: {
         [VITE_BASE_API]: {

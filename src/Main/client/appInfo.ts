@@ -12,10 +12,8 @@ const trayIconPath = `/public/favicon/png/favicon_ch@2x.png`;
 
 const getSystemPath = (...dir: string[]) => {
   if (app.isPackaged) {
-    if (process.platform === "darwin") {
-      return $$.JoinCwd("../resources/app.asar.unpacked", ...dir);
-    }
-    return $$.JoinCwd("./resources/app.asar.unpacked", ...dir);
+    // 打包后以 resources 目录为基准(process.resourcesPath 是 Electron 提供的绝对路径, 不受启动方式影响 process.cwd())
+    return path.join(process.resourcesPath, "app.asar.unpacked", ...dir);
   } else {
     return $$.JoinCwd(...dir);
   }

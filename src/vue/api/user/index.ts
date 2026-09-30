@@ -9,9 +9,9 @@ export type { LoginInfoType, UserInfoType, UserItemType };
 export function login(data: Pick<User["user"], "email" | "password">) {
   return http.request<LoginInfoType>("post", "/user/login", { data });
 }
-/** 注册 */
-export function register(data: User["user"]) {
-  return http.request<Boolean>("post", "/user/register", { data });
+/** 注册(服务端自动生成 id, 见 server register 的 Omit 参数) */
+export function register(data: Omit<User["user"], "id">) {
+  return http.request<boolean>("post", "/user/register", { data });
 }
 /** 获取用户 */
 export function userList(params: Partial<UserItemType>) {

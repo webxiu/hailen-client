@@ -96,10 +96,17 @@ function createWindow(param: WindowProp) {
   $$.clog("主进程__dirname:", __dirname);
 
   if (process.env.NODE_ENV === "development") {
-    mainWindow.loadURL(sysConfig[mode]).then(() => {
-      mainWindow.show();
-      mainWindow.webContents.openDevTools();
-    });
+    // dev server 未就绪/加载失败时自动重试, 避免偶发启动白屏
+    const loadDevPage = () => {
+      mainWindow
+        .loadURL(sysConfig[mode])
+        .then(() => {
+          mainWindow.show();
+          mainWindow.webContents.openDevTools();
+        })
+        .catch(() => setTimeout(loadDevPage, 1500));
+    };
+    loadDevPage();
   } else {
     mainWindow.loadFile(sysConfig[mode]);
   }
