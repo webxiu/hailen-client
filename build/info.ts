@@ -29,7 +29,7 @@ export function viteBuildInfo(): Plugin {
       if (config.command === "build") {
         endTime = dayjs(new Date());
         const size = await getPackageSize(outDir);
-        console.log(bold(green(`🎉恭喜打包完成（总用时${dayjs.duration(endTime.diff(startTime)).format("mm分ss秒")}，打包后的大小为${size}）`)));
+        console.log(bold(green(`\n\n\n🎉恭喜打包完成（总用时${dayjs.duration(endTime.diff(startTime)).format("mm分ss秒")}，打包后的大小为${size}）\n\n\n`)));
       }
     }
   };

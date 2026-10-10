@@ -53,6 +53,9 @@ function createWindow(param: WindowProp) {
     },
     ...options
   });
+  // 窗口标题栏附带版本号(如: 海阔天空 · WORK 办公系统 v1.0.1); 阻止页面 <title> 覆盖窗口标题
+  mainWindow.setTitle(`海阔天空 · WORK 办公系统 v${app.getVersion()}`);
+  mainWindow.on("page-title-updated", (event) => event.preventDefault());
   // mainWindow.on("ready-to-show", () => {
   //   mainWindow.show();
   // });
@@ -127,7 +130,8 @@ app.whenReady().then(() => {
     // callback(decodeURI(url));
     const url = new URL(req.url);
     const filePath = decodeURIComponent(url.pathname);
-    return net.fetch(`file://${filePath}`);
+    // bypassCustomProtocolHandlers: 避免 net.fetch 再次命中自定义 file 协议造成无限递归(打包后页面资源全部加载失败白屏)
+    return net.fetch(`file://${filePath}`, { bypassCustomProtocolHandlers: true });
   });
 
   let parentWin = createWindow({ mode: "vue", options: {} });

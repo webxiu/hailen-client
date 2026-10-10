@@ -16,6 +16,8 @@ const route = useRoute();
 const useStore = useUserStore();
 const names = ref<string[]>([]);
 const theme = ref("light");
+/** 侧边栏是否收起（NavMenu 通过 v-model:collapse 同步，用于收缩宽度并隐藏 logo 文字） */
+const isCollapse = ref(false);
 
 /** 侧边栏 logo(hash 路由下相对路径以 index.html 所在目录解析, dev 与打包后均指向 public 产物, 不走编译期资源导入) */
 const logoSrc = "favicon/png/favicon_ch@2x.png";
@@ -68,19 +70,21 @@ function logout() {
 </script>
 
 <template>
-  <!-- <Star /> -->
   <div class="layout">
     <!-- 侧边栏 -->
-    <aside class="main-side flex-col">
+    <aside class="main-side flex-col" :class="{ 'is-collapse': isCollapse }">
       <div class="side-logo flex align-center">
         <img class="logo-img flex-shrink" :src="logoSrc" alt="logo" />
         <div class="logo-info no-wrap">
           <h1 class="logo-name">海阔天空</h1>
           <p class="logo-sub">WORK 办公系统</p>
         </div>
+        <span class="logo-toggle" @click="isCollapse = !isCollapse">
+          <HxIcon :icon="isCollapse ? 'Expand' : 'Fold'" />
+        </span>
       </div>
       <div class="side-menu flex-1 ui-ovy-a">
-        <NavMenu />
+        <NavMenu v-model:collapse="isCollapse" />
       </div>
     </aside>
 
@@ -124,7 +128,7 @@ function logout() {
             <!-- <BackButton /> -->
             <transition name="fade-transform" mode="out-in">
               <KeepAlive :exclude="names">
-                <component :is="Component" :key="route.fullPath" />
+                <component :is="Component" :key="route.fullPath" class="flex-1 ui-h-100" />
               </KeepAlive>
             </transition>
           </template>
@@ -144,13 +148,62 @@ function logout() {
 
 /* ===================== 侧边栏 ===================== */
 .main-side {
+  flex: none;
+  width: 245px;
   gap: 12px;
   padding: 16px 12px;
+  overflow: hidden;
   border-right: 1px solid var(--el-border-color-light);
+  transition: width 0.25s ease;
+
+  /* 收起态：宽度收缩为折叠菜单宽度（64px + 内边距/边框），并隐藏 logo 文字（文字最小宽度会撑住侧边栏） */
+  &.is-collapse {
+    width: 89px;
+
+    .side-logo {
+      padding: 4px 0;
+
+      .logo-info {
+        display: none;
+      }
+    }
+  }
 
   .side-logo {
+    position: relative;
     gap: 10px;
     padding: 4px 8px;
+
+    /* 展开/收起按钮：位于 logo 区右侧垂直居中，鼠标移入 logo 区才显示 */
+    .logo-toggle {
+      position: absolute;
+      top: 50%;
+      right: 0px;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      font-size: 15px;
+      color: var(--el-text-color-secondary);
+      cursor: pointer;
+      border-radius: 6px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-50%);
+      transition: opacity 0.2s, color 0.2s, background-color 0.2s;
+
+      &:hover {
+        color: var(--el-color-primary);
+        background: var(--el-fill-color);
+      }
+    }
+
+    &:hover .logo-toggle {
+      opacity: 1;
+      pointer-events: auto;
+    }
 
     .logo-img {
       width: 36px;

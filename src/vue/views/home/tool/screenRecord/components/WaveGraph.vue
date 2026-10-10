@@ -40,7 +40,7 @@ class Music {
   flag: boolean;
   constructor(option: MusicOption = {}) {
     const { width, height } = option;
-    this.audioUrl = "http://127.0.0.1:3800/static/premeditate.mp3";  
+    this.audioUrl = "http://127.0.0.1:3080/static/premeditate.mp3";  
     this.playBtnDom = document.querySelector("#play-btn");
     this.audioTrack = document.querySelector("#audioTrack");
     if (width && height) {

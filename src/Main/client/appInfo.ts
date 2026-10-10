@@ -15,6 +15,7 @@ const getSystemPath = (...dir: string[]) => {
     // 打包后以 resources 目录为基准(process.resourcesPath 是 Electron 提供的绝对路径, 不受启动方式影响 process.cwd())
     return path.join(process.resourcesPath, "app.asar.unpacked", ...dir);
   } else {
+    // 开发环境直接以进程工作目录为基准(此时不存在 resources/app.asar.unpacked)
     return $$.JoinCwd(...dir);
   }
 };

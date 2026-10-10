@@ -10,7 +10,7 @@ const JoinCwd = (...dir) => path.join(process.cwd(), ...dir);
 /** 主进程启动配置, 展开挂载到 $$.appInfo */
 const startOption = {
   /** 本地 koa 服务完整地址(主进程内嵌服务监听地址, 渲染端代理目标, 与 .env 的 VITE_BASE_URL 一致) */
-  host: "http://127.0.0.1:3800",
+  host: "http://127.0.0.1:3080",
   /** 软件外部资源目录 */
   diskPath: JoinCwd("source"),
   /** 是否监听主进程自动重启 */

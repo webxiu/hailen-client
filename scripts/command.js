@@ -187,7 +187,7 @@ class Command {
     this.launchElectron();
   }
 
-  /** 打包: tsc(主进程) + vite build(vue/react) + electron-builder */
+  /** 打包: tsc(主进程) + vite build(vue/react) + 版本号自动 +1 + electron-builder */
   async build() {
     this.mode = "production";
     process.env.NODE_ENV = "production";
@@ -204,15 +204,47 @@ class Command {
     console.log("✅ 渲染端打包完成".green);
 
     fs.rmSync(path.join(cwd, "output"), { recursive: true, force: true });
-    this.builder();
+    const previous = this.bumpVersion();
+    // 打包失败(如产物被占用)时回滚版本号, 避免失败构建吞掉版本号
+    if (!this.builder()) this.rollbackVersion(previous);
   }
 
-  /** electron-builder 打包安装包(平台与产物格式走 package.json build 配置) */
+  /** 计算下一个版本号: 最后一位 +1, 满 10 进位为次版本 +1(如 1.0.9 -> 1.1.0, 1.2.9 -> 1.3.0) */
+  nextVersion(version) {
+    const [major, minor, patch] = String(version).split(".").map(Number);
+    return patch + 1 >= 10 ? `${major}.${minor + 1}.0` : `${major}.${minor}.${patch + 1}`;
+  }
+
+  /** 打包前自动递增版本号并写回 package.json, 返回旧版本号(供打包失败时回滚) */
+  bumpVersion() {
+    const current = JSON.parse(fs.readFileSync(path.join(cwd, "package.json"), "utf-8")).version;
+    const next = this.nextVersion(current);
+    this.writeVersion(next);
+    console.log(`🔖 版本号自动递增: ${current} -> ${next}`.green);
+    return current;
+  }
+
+  /** 打包失败时回滚 package.json 中的版本号 */
+  rollbackVersion(version) {
+    this.writeVersion(version);
+    console.log(`⚠️  打包未成功, 版本号已回滚: ${version}`.yellow);
+  }
+
+  /** 仅覆写 package.json 的 version 字段值, 保留原文件缩进/换行格式 */
+  writeVersion(version) {
+    const pkgPath = path.join(cwd, "package.json");
+    const raw = fs.readFileSync(pkgPath, "utf-8");
+    fs.writeFileSync(pkgPath, raw.replace(/("version"\s*:\s*")[^"]+"/, (_, prefix) => `${prefix}${version}"`));
+    pkg.version = version;
+  }
+
+  /** electron-builder 打包安装包(平台与产物格式走 package.json build 配置), 返回是否成功 */
   builder() {
     const platformFlag = { win32: "--win", darwin: "--mac", linux: "--linux" }[process.platform] || "--win";
     const extra = [...(argv.publish ? ["-p", "always"] : []), ...electronArgs];
     console.log(`🚚 electron-builder ${platformFlag} ${extra.join(" ")}`.green);
-    shell.exec(`"${this.bin("electron-builder")}" ${platformFlag} ${extra.join(" ")}`.trim(), { cwd });
+    const result = shell.exec(`"${this.bin("electron-builder")}" ${platformFlag} ${extra.join(" ")}`.trim(), { cwd });
+    return result.code === 0;
   }
 
   help() {
@@ -221,7 +253,7 @@ class Command {
 
   命令:
     start   开发模式: vite dev(vue/react) + tsc watch(主进程) + electron
-    build   打包模式: tsc + vite build(vue/react) + electron-builder
+    build   打包模式: 版本号自动 +1(满 10 进位) + tsc + vite build(vue/react) + electron-builder
     kill    结束所有 electron 进程
 
   选项:

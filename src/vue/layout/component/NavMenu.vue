@@ -1,10 +1,7 @@
 <template>
   <div class="flex-co">
-    <el-button @click="isCollapse = !isCollapse" class="collapse-btn">
-      {{ isCollapse ? "展开" : "收起" }}
-    </el-button>
     <div v-if="navMenuList.length" class="menu-wrapper">
-      <el-menu :default-active="activeMenu" class="slide-menu" :collapse="isCollapse" :router="true" @open="handleOpen" @close="handleClose">
+      <el-menu :default-active="activeMenu" class="slide-menu" :collapse="collapse" :router="true" @open="handleOpen" @close="handleClose">
         <MenuItem v-for="item in navMenuList" :item="item" :index="item.path" :key="item.path" />
       </el-menu>
     </div>
@@ -15,12 +12,13 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from "vue";
+import { computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import MenuItem from "./MenuItem";
 import { useAppStoreHook } from "@/vue/store/modules/app";
 
-const isCollapse = ref(false);
+/** 侧边栏收起状态由父级（layout）通过 v-model:collapse 控制，logo 文字需同步隐藏 */
+const collapse = defineModel<boolean>("collapse", { default: false });
 const route = useRoute();
 
 const navMenuList = computed(() => useAppStoreHook().getAsyncRoutes);
@@ -44,12 +42,6 @@ const handleClose = (key: string, keyPath: string[]) => {
 </script>
 
 <style lang="scss" scoped>
- 
-
-.collapse-btn {
-  margin-bottom: 10px;
-}
-
 .menu-wrapper {
   flex: 1;
   overflow-y: auto;
