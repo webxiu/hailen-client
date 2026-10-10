@@ -131,7 +131,16 @@ function getRoutePaths(dir, excludes = [], fileFilterFn) {
       if (fullPath !== "/") {
         const dirId = id++;
         dirPathToId.set(currentPath, dirId);
-        result.push({ id: dirId, path: fullPath, parentId, type: "dirctory" });
+        // 容器目录支持 _dir.json 就近配置(与叶子 defineOptions 对应):
+        // { "title": "工具箱", "icon": "Tools", "sort": 10 }  sort 为同级排序权重, 小者在前, 缺省 0 按扫描顺序
+        const metaPath = path.join(currentPath, "_dir.json");
+        let dirMeta: Record<string, any> = {};
+        if (fs.existsSync(metaPath)) {
+          try {
+            dirMeta = JSON.parse(readFile(metaPath));
+          } catch (e) {}
+        }
+        result.push({ id: dirId, path: fullPath, parentId, type: "dirctory", ...dirMeta });
         parentId = dirId;
       }
       for (const subDir of subDirs) {
@@ -141,7 +150,10 @@ function getRoutePaths(dir, excludes = [], fileFilterFn) {
   }
 
   traverse(dir, 0);
-  result.forEach((item) => (item.name = toCamelCase(item.path)));
+  // name 未显式提供(_dir.json 或 defineOptions)时, 用路径驼峰兜底
+  result.forEach((item) => {
+    if (item.name == null) item.name = toCamelCase(item.path);
+  });
   return result;
 }
 

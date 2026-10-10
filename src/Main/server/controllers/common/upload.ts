@@ -20,7 +20,7 @@ export const uploadController = async (ctx: Context) => {
 const subPath = "uploads";
 
 export const uploadImg = async (ctx: Context) => {
-  const files = ctx.request.files as Files;
+  const files = (ctx.request as unknown as { files: Files }).files;
   const fileArray = Array.isArray(files?.file) ? files.file : [files.file];
   const fileUrls = fileArray.map((file) => {
     const fileName = file.originalFilename || file.newFilename;

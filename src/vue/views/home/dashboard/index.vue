@@ -25,7 +25,7 @@
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
 import { addList, getList } from "@/vue/api/home/dashboard";
-defineOptions({ name: "HomeDashboardIndex", title: "首页" });
+defineOptions({ name: "HomeDashboardIndex", title: "首页", icon: "Odometer", sort: 0 });
 
 
 const count = ref(0);

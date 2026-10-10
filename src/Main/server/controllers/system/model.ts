@@ -37,8 +37,8 @@ export default class DbModel {
 
       // 5. 插入合并后的数据（ID 会从 1 开始重新分配）
       for (const item of mergedData) {
-        const { id, parentId, name, title, path, icon, type } = item;
-        await db.run("INSERT INTO menus (id, parentId, name, title, path, icon, type) VALUES (?, ?, ?, ?, ?, ?, ?)", [id, parentId, name, title, path, icon, type]);
+        const { id, parentId, name, title, path, icon, type, sort } = item;
+        await db.run("INSERT INTO menus (id, parentId, name, title, path, icon, type, sort) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [id, parentId, name, title, path, icon, type, sort ?? 0]);
       }
       await db.run("COMMIT");
       return true;
@@ -51,7 +51,7 @@ export default class DbModel {
 
   async getMenu(params): Promise<MenuItemType[]> {
     const db = this.db;
-    const { sql, values } = SQLGenerator.select("menus", params, { order: "createDate ASC" });
+    const { sql, values } = SQLGenerator.select("menus", params, { order: "sort ASC, createDate ASC, id ASC" });
     console.log("sql", sql, values);
     const result = await db.all(sql, values);
     return result as MenuItemType[];

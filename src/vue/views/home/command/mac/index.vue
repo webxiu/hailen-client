@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts" setup>
-defineOptions({ name: "HomeCommandMacIndex", title: "Mac指令" });
+defineOptions({ name: "HomeCommandMacIndex", title: "Mac指令", icon: "Platform", sort: 0 });
 </script>
 
 <style lang="scss" scoped></style>

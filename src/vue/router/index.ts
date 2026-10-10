@@ -72,7 +72,8 @@ router.beforeEach((to, from, next) => {
       // 刷新
       if (useTagStoreHook().tagList.length === 0 && to.path !== "/login") {
         initRouter().then(() => {
-          next(to.path);
+          // replace 重放当前导航: 动态路由注册完成后重新匹配一次即可, 不产生多余的 history 记录
+          next({ path: to.path, replace: true });
           addTagPath(to);
         });
       } else {

@@ -25,7 +25,7 @@ import { menuList, updateMenu, MenuItemType } from "@/vue/api/system";
 import { arrayToTree } from "@/vue/utils/common";
 import { QueryParamsType, SearchOptionType } from "@/vue/components/BlendedSearch/index.vue";
 
-defineOptions({ name: "SystemMenuIndex", title: "菜单管理" });
+defineOptions({ name: "SystemMenuIndex", title: "菜单管理", icon: "Menu", sort: 0 });
 
 const formData = reactive({
   page: 1,

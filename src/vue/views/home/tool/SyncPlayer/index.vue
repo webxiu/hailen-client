@@ -15,5 +15,5 @@
 import { ref, watch, reactive, computed } from "vue";
 import MovePlayer from "./MovePlayer.vue";
 
-defineOptions({ name: "HomeToolSyncPlayerIndex", title: "同步播放" });
+defineOptions({ name: "HomeToolSyncPlayerIndex", title: "同步播放", icon: "VideoPlay", sort: 0 });
 </script>

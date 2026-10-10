@@ -9,7 +9,7 @@
 import { ref, onMounted } from "vue";
 import { userList, UserItemType } from "@/vue/api/user";
 
-defineOptions({ name: "HomeSystemUserIndex", title: "用户" });
+defineOptions({ name: "HomeSystemUserIndex", title: "用户", icon: "User", sort: 10 });
 
 const columns = ref<TableColumnList[]>([
   { label: "用户名", prop: "username" },

@@ -126,7 +126,7 @@
 </template>
 
 <script lang="ts" setup>
-defineOptions({ name: "HomeToolFormatConversionIndex", title: "格式转换" });
+defineOptions({ name: "HomeToolFormatConversionIndex", title: "格式转换", icon: "Switch", sort: 40 });
 import { message } from "@/vue/utils/message";
 import WavePlayer from "@/vue/components/WavePlayer/index.vue";
 import { ref, computed, reactive } from "vue";

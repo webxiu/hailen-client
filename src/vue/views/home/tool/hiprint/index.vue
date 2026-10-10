@@ -8,7 +8,7 @@
 <script setup lang="ts"> 
 import Iframe from "./Iframe.vue";
 
-defineOptions({ name: "HomeToolHiprintIndex", title: "打印设计", icon: "SetUp" });
+defineOptions({ name: "HomeToolHiprintIndex", title: "打印设计", icon: "SetUp", sort: 50 });
  
 </script>
 

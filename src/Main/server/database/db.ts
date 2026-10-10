@@ -52,6 +52,10 @@ export class Database {
     for (const sql of tables) {
       await this.run(sql);
     }
+    // 旧库兼容迁移: menus 表补 sort 排序列(已存在时 ALTER 报错, 忽略即可)
+    try {
+      await this.run("ALTER TABLE menus ADD COLUMN sort INTEGER DEFAULT 0");
+    } catch (e) {}
   }
 
   /**

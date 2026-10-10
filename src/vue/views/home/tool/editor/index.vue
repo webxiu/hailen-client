@@ -1,6 +1,6 @@
 <script setup lang="ts">  
 
-defineOptions({ name: "HomeToolEditorIndex", title: "编辑器", icon: "SetUp" });
+defineOptions({ name: "HomeToolEditorIndex", title: "编辑器", icon: "SetUp", sort: 30 });
  
 </script>
 

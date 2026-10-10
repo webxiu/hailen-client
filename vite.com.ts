@@ -1,21 +1,14 @@
-import { UserConfig, defineConfig, loadEnv } from "vite";
+import type { UserConfig } from "vite";
 
-import AutoImport from "unplugin-auto-import/vite";
-import Components from "unplugin-vue-components/vite";
-import ElementPlus from "unplugin-element-plus/vite";
-import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
-import babel from "@rollup/plugin-babel";
 import { getPlugins } from "./build/plugins";
 import path from "path";
-import react from "@vitejs/plugin-react";
-import vue from "@vitejs/plugin-vue";
-import vueJsx from "@vitejs/plugin-vue-jsx";
 
 /** 当前执行node命令时文件夹的地址（工作目录） */
 const root: string = process.cwd();
 
 function resolve(dir: string) {
-  return path.resolve(__dirname, dir);
+  // 配置链以 ESM 加载(.mts 入口)后无 __dirname, 且 vite 始终以项目根为工作目录启动, 用 cwd 等价替换
+  return path.resolve(process.cwd(), dir);
 }
 
 const JoinCwd = (...args: string[]) => {
@@ -62,7 +55,12 @@ export default (mode: string, env: Record<string, any>): UserConfig => {
       outDir: modeObj.outDir,
       rollupOptions: {
         // input: { [mode]: modeObj.input },
-        external: [/\.node$/]
+        external: [/\.node$/],
+        // antd 等 ESM 产物携带 React Server Components 的 "use client" 指令, 对纯客户端 Electron 无意义, 过滤此类警告
+        onwarn(warning, warn) {
+          if (warning.code === "MODULE_LEVEL_DIRECTIVE") return;
+          warn(warning);
+        }
       }
     },
     css: {
@@ -73,6 +71,11 @@ export default (mode: string, env: Record<string, any>): UserConfig => {
     server: {
       port: modeObj.port,
       host: "0.0.0.0",
+      // dev 预热: 启动时预转换全部页面模块, 让依赖发现与预构建在启动阶段完成,
+      // 避免首次点击菜单按需编译时触发 "optimized dependencies changed. reloading" 强制整页刷新
+      warmup: {
+        clientFiles: isVue ? ["./src/vue/main.ts", "./src/vue/views/**/*.vue", "./src/vue/views/**/*.tsx"] : ["./src/react/main.tsx"]
+      },
       // 端口被占用时 vite 自动 +1 换用空闲端口, 实际端口由 scripts/command.js 回写环境变量告知 electron
       // 本地跨域代理 https://cn.vitejs.dev/config/server-options.html#server-proxy
       proxy: {

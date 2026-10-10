@@ -8,7 +8,7 @@
 import { ref, onMounted, reactive, computed } from "vue";
 import KeyBit from "./KeyBit.vue";
 
-defineOptions({ name: "HomeToolTransformIndex", title: "模拟钢琴" });
+defineOptions({ name: "HomeToolTransformIndex", title: "模拟钢琴", icon: "MagicStick", sort: 100 });
 
 const audioData = [261.63, 293.66, 329.63, 349.23, 392.0, 440.0, 493.88];
 // ["c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", "b"],

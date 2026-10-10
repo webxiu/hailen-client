@@ -62,7 +62,8 @@ class Command {
       configs.push({
         name: "Vue",
         envKey: "VITE_VUE_PORT",
-        configFile: path.join(cwd, "vite.vue.ts"),
+        // .mts 后缀使 vite 以 ESM 方式加载配置及其插件, 避免 CJS 产物 require("vite") 触发弃用警告
+        configFile: path.join(cwd, "vite.vue.mts"),
         mode: this.mode,
         server: { port: Number(env.VITE_VUE_PORT || process.env.VITE_VUE_PORT || 8500) }
       });
@@ -71,7 +72,7 @@ class Command {
       configs.push({
         name: "React",
         envKey: "VITE_REACT_PORT",
-        configFile: path.join(cwd, "vite.react.ts"),
+        configFile: path.join(cwd, "vite.react.mts"),
         mode: this.mode,
         server: { port: Number(env.VITE_REACT_PORT || process.env.VITE_REACT_PORT || 8600) }
       });

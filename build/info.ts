@@ -1,10 +1,12 @@
-import { blue, bold, green } from "picocolors";
+// 配置链以 ESM 加载(.mts 入口), picocolors 为 CJS 包不支持命名导出互操作, 改为 default 导入后解构
+import picocolors from "picocolors";
 import dayjs, { Dayjs } from "dayjs";
 
 import type { Plugin } from "vite";
 import duration from "dayjs/plugin/duration";
 import { readdir, stat } from "fs/promises";
 import path from "path";
+const { blue, bold, green } = picocolors;
 
 dayjs.extend(duration);
 

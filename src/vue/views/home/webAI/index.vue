@@ -85,7 +85,7 @@ import { EditPen, Plus, Position } from "@element-plus/icons-vue";
 import Webview from "@/vue/components/Webview/index.vue";
 import { weixinUserAgent } from "@/vue/config/constant";
 import { message } from "@/vue/utils/message";
-defineOptions({ name: "HomeWebAIIndex", title: "webAI" });
+defineOptions({ name: "HomeWebAIIndex", title: "webAI", icon: "Cpu", sort: 20 });
 
 const input = ref("");
 const inputRef = ref();

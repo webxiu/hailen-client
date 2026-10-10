@@ -21,7 +21,7 @@ const count = ref(0);
 import { initMap } from "@/lib/map";
 import Path from "./Path.vue";
 
-defineOptions({ name: "HomeToolMapIndex", title: "地图" });
+defineOptions({ name: "HomeToolMapIndex", title: "地图", icon: "MapLocation", sort: 80 });
 
 onMounted(() => {
   initMap("tmap");

@@ -25,6 +25,7 @@ const tables = [
       name varchar(50),
       icon varchar(50),
       type varchar(10),
+      sort INTEGER DEFAULT 0,
       createDate DATETIME DEFAULT CURRENT_TIMESTAMP
     )`,
   /* 权限表 */

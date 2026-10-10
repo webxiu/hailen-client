@@ -6,7 +6,6 @@
  * @Description:
  */
 import { PropType, defineComponent } from "vue";
-import { useRouter } from "vue-router";
 import HxIcon from "@/vue/components/HxIcon";
 
 const props = {
@@ -21,12 +20,9 @@ const MenuItemComponent = defineComponent({
   emits: ["submit", "reset", "change"],
   setup(props, { emit, expose, attrs, slots }) {
     const { index, item } = props;
-    const router = useRouter();
 
-    function onToPath(item) {
-      router.push({ path: item.path });
-    }
-
+    // 菜单导航统一由 el-menu 的 router 模式处理(:router="true" 时点击 el-menu-item 自动 push index),
+    // 此处不再重复 push, 避免同一次点击触发两次导航(后一次取消前一次, 懒加载页面被重复解析)
     return () => {
       const slots = {
         title: () => (
@@ -45,7 +41,7 @@ const MenuItemComponent = defineComponent({
       ) : (
         <el-menu-item index={index}>
           <HxIcon icon={item.meta?.icon} />
-          <span onClick={() => onToPath(item)}>{item.meta?.title || item.name}</span>
+          <span>{item.meta?.title || item.name}</span>
         </el-menu-item>
       );
     };

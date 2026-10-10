@@ -11,7 +11,7 @@
 import { useConfig } from "./utils/hook";
 import Mxgraph from "./mxgraph/Iframe.vue";
 
-defineOptions({ name: "HomeToolDrawToolsIndex", title: "绘图工具" });
+defineOptions({ name: "HomeToolDrawToolsIndex", title: "绘图工具", icon: "EditPen", sort: 20 });
 
 const { tableRef, columns, dataList } = useConfig();
 </script>

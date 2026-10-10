@@ -14,6 +14,8 @@ export interface MenuItemType {
   title: string;
   path: string;
   icon?: string;
+  /** 同级排序权重, 小者在前, 缺省 0 按扫描顺序 */
+  sort?: number;
   type: string;
   component?: RouteComponent;
   createDate?: string;

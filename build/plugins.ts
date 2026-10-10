@@ -3,7 +3,6 @@ import Components from "unplugin-vue-components/vite";
 import ElementPlus from "unplugin-element-plus/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import babel from "@rollup/plugin-babel";
-import createHtmlPlugin from "vite-plugin-html";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import path from "path";
 import react from "@vitejs/plugin-react";
@@ -33,14 +32,23 @@ export function getPlugins({ isVue, isReact, modeObj, VITE_COMPRESSION }) {
         })
       : null,
     isReact ? react() : null,
-    createHtmlPlugin({
-      inject: {
-        tags: [
-          { tag: "div", injectTo: "body", attrs: { id: modeObj.id } },
-          { tag: "script", injectTo: "body", attrs: { type: "module", src: modeObj.src } }
-        ]
+    // 用 vite 原生 transformIndexHtml 注入挂载点与入口脚本(替代 vite-plugin-html:
+    // 其 CJS 产物会 require("vite") 触发 CJS 弃用警告, 本项目仅用到其注入功能)
+    // 必须用对象形式 + order: "pre": 函数形式的钩子一律归入 normalHooks,
+    // 而 build 时 normalHooks 在 generateBundle(入口 script 提取之后)才执行,
+    // 注入的入口脚本不会参与提取, 产物只剩一个空 index.html;
+    // order: "pre" 使注入发生在 transform 阶段提取入口之前(dev 下亦先于 devHtmlHook)
+    {
+      name: "html-inject",
+      transformIndexHtml: {
+        order: "pre",
+        handler: (html: string) =>
+          html.replace(
+            /<\/body>/i,
+            `\n    <div id="${modeObj.id}"></div>\n    <script type="module" src="${modeObj.src}"></script>\n  </body>`
+          )
       }
-    }),
+    },
     viteBuildInfo(),
     // 1.svg组件化支持
     // svgLoader()

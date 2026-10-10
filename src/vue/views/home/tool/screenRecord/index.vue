@@ -11,7 +11,7 @@ import { ref } from "vue";
 import ScreenRecord from "./components/ScreenRecord.vue";
 import WaveGraph from "./components/WaveGraph.vue";
 
-defineOptions({ name: "HomeToolScreenRecordIndex", title: "屏幕录制" });
+defineOptions({ name: "HomeToolScreenRecordIndex", title: "屏幕录制", icon: "VideoCamera", sort: 90 });
 </script>
 
 <style scoped></style>

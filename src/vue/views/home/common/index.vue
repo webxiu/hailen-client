@@ -17,7 +17,7 @@ import List from "@/vue/components/SvgIcon/List.vue";
 import Webview from "@/vue/components/Webview/index.vue";
 import { weixinUserAgent } from "@/vue/config/constant";
 const src = "https://channels.weixin.qq.com/platform";
-defineOptions({ name: "HomeCommonIndex", title: "常用组件" });
+defineOptions({ name: "HomeCommonIndex", title: "常用组件", icon: "Appstore", sort: 10 });
 </script>
 
 <style scoped></style>

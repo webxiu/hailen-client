@@ -19,7 +19,7 @@
 import { onMounted, reactive, ref, toRaw } from "vue";
 import { EventName } from "@/Main/client/utils/eventName";
 
-defineOptions({ name: "HomeCommandWindowsIndex", title: "Windows指令" });
+defineOptions({ name: "HomeCommandWindowsIndex", title: "Windows指令", icon: "Monitor", sort: 10 });
 
 interface Command {
   command: string /** 命令 */;

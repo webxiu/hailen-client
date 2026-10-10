@@ -31,7 +31,7 @@
 import { Json2Ts } from "./hook";
 import { computed, reactive, ref } from "vue";
 
-defineOptions({ name: "HomeToolJson2TsIndex", title: "JSON转TS" });
+defineOptions({ name: "HomeToolJson2TsIndex", title: "JSON转TS", icon: "Document", sort: 60 });
 
 // 接口-请求参数
 const request = {
