@@ -3,18 +3,18 @@
 
 $themeConfig: (
   light: (
-    color: #111,
-    head: #adafff7a,
-    side: #fff6b37a,
-    content: #ffffff8c,
-    background: #889ec579
+    color: #1f2329, // 主文本: 近黑
+    head: #cef1ffc2, // 头部: 与侧边栏同色, 与纯白内容区区分出框架层
+    side: #f7f9fc, // 侧边栏: 极浅冷灰, 与内容区微差出层次
+    content: #ffffff, // 内容区: 纯白
+    background: #eef2f7 // 页面底/缝隙: 浅冷灰
   ),
   dark: (
-    color: #ffffff,
-    head: #54d72c44,
-    side: #3584ff45,
-    content: #2236464b,
-    background: #1b1b1b44
+    color: #e5eaf3, // 主文本: 柔和白(与 element-plus 暗色文本一致)
+    head: #292941, // 头部: 深蓝黑, 与侧边栏同层
+    side: #2a313b, // 侧边栏: 深蓝黑
+    content: #424a53, // 内容区: 稍亮一档(衬托 el 组件的 #141414 底色)
+    background: #101318 // 页面底/缝隙: 最深
   )
 );
 
@@ -49,10 +49,6 @@ body {
   @include delayTime;
 }
 
-.main-header {
-  background: var(--theme-head);
-  @include delayTime;
-}
 .main-header {
   background: var(--theme-head);
   @include delayTime;

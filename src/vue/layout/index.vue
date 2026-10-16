@@ -192,7 +192,10 @@ function logout() {
       opacity: 0;
       pointer-events: none;
       transform: translateY(-50%);
-      transition: opacity 0.2s, color 0.2s, background-color 0.2s;
+      transition:
+        opacity 0.2s,
+        color 0.2s,
+        background-color 0.2s;
 
       &:hover {
         color: var(--el-color-primary);
@@ -287,5 +290,6 @@ function logout() {
 .main-content {
   width: 100%;
   overflow-y: auto;
+  padding: 4px;
 }
 </style>
