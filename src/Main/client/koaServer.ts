@@ -31,11 +31,14 @@ app.whenReady().then(() => {
   };
   const pagePath = $$.JoinCwd(pageObj["vue"]);
 
-  createServer(config).then(() => {
-    if (process.env.NODE_ENV === "development") {
-      const excludes = ["login", "notFound", "component", "components", "utils"]; // 排除目录
-      const result = getRoutePaths(pagePath, excludes, (item) => item.endsWith("index.vue"));
-      post({ menus: result }, config.host); 
-    }
-  });
+  createServer(config)
+    .then(() => {
+      if (process.env.NODE_ENV === "development") {
+        const excludes = ["login", "notFound", "component", "components", "utils"]; // 排除目录
+        const result = getRoutePaths(pagePath, excludes, (item) => item.endsWith("index.vue"));
+        post({ menus: result }, config.host);
+      }
+    })
+    // 服务起不来时前端只会看到接口超时，这里必须把原因打出来
+    .catch((err) => console.error("koa 服务启动失败:", err));
 });

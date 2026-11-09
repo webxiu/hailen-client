@@ -41,6 +41,8 @@ interface ElectronAPI {
   on: (channel: string, func: (...args: any[]) => void) => void;
   receive: (channel: string, func: (...args: any[]) => void) => void;
   invoke: (channel: EventName, data: any) => Promise<any>;
+  /** 清理指定 webview 页面（按 origin 限定，不影响其他页面）的 Cookie 或 Storage */
+  clearSiteData: (payload: { webContentsId: number; scope: "cookie" | "storage" }) => Promise<{ ok: boolean; origin?: string; reason?: string }>;
 }
 interface FileAPI {
   convert: (payload) => Promise<any>;

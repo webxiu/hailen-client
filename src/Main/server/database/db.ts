@@ -13,9 +13,12 @@ export class Database {
   private constructor() {
     // 数据库文件路径
     // const dbPath = path.join(app.getPath("userData"), "database.db");
-    let dbPath = path.join(process.cwd(), global.isDev ? "source" : "../source", "database", "database.db");
+    // 打包后 process.cwd() 不可靠(Finder 启动时是 /), 以可执行文件所在目录为基准
+    // mac: Contents/MacOS/可执行文件 -> ../source; win: 安装目录/xxx.exe -> ./source
+    const baseDir = global.isDev ? process.cwd() : path.dirname(process.execPath);
+    let dbPath = path.join(baseDir, global.isDev ? "source" : "../source", "database", "database.db");
     if (global.platform !== "darwin") {
-      dbPath = path.join(process.cwd(), "source", "database", "database.db");
+      dbPath = path.join(baseDir, "source", "database", "database.db");
     }
 
     // console.log("========是否开发环境:", global);

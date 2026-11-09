@@ -1,6 +1,6 @@
 import * as path from "node:path";
 
-import { BrowserWindow, Menu, Tray, app, ipcMain, nativeImage, net, protocol, screen } from "electron";
+import { BrowserWindow, Menu, Tray, app, ipcMain, nativeImage, protocol, screen } from "electron";
 
 import { exec } from "child_process";
 
@@ -124,16 +124,6 @@ function createWindow(param: WindowProp) {
 protocol.registerSchemesAsPrivileged([{ scheme: "file", privileges: { secure: true, standard: true } }]);
 
 app.whenReady().then(() => {
-  // ======= 自定义file:///协议的解析 =======
-  protocol.handle("file", (req) => {
-    // const url = req.url.substr(8);
-    // callback(decodeURI(url));
-    const url = new URL(req.url);
-    const filePath = decodeURIComponent(url.pathname);
-    // bypassCustomProtocolHandlers: 避免 net.fetch 再次命中自定义 file 协议造成无限递归(打包后页面资源全部加载失败白屏)
-    return net.fetch(`file://${filePath}`, { bypassCustomProtocolHandlers: true });
-  });
-
   let parentWin = createWindow({ mode: "vue", options: {} });
   // 窗口加载完成后发送初始化就绪消息
   parentWin.webContents.on("did-finish-load", () => {

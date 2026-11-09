@@ -72,7 +72,12 @@ async function sendKey(keyCode: string): Promise<void> {
   await el.sendInputEvent({ type: "keyUp", keyCode });
 }
 
-defineExpose({ exec, guestReady, focusGuest, insertText, sendKey });
+/** 当前 guest 页面对应的 webContents id（主进程据此定位该页面自己的 session） */
+function getWebContentsId(): number | undefined {
+  return webviewRef.value?.getWebContentsId?.();
+}
+
+defineExpose({ exec, guestReady, focusGuest, insertText, sendKey, getWebContentsId });
 
 </script>
 

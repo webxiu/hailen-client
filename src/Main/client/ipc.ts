@@ -2,7 +2,7 @@
 
 // import { User, UserModel } from "../server/database";
 
-import { app, desktopCapturer, ipcMain, dialog, shell } from "electron";
+import { app, desktopCapturer, ipcMain, dialog, shell, webContents } from "electron";
 import { childExec, childSpawn, openShell } from "./utils/childProcess";
 
 import { EventName } from "./utils/eventName";
@@ -81,4 +81,35 @@ ipcMain.handle("selectDir", async () => {
 
 ipcMain.handle("openFolder", (_, dir) => {
   shell.openPath(dir);
+});
+
+/**
+ * 清理某个 webview 页面的 Cookie 或 Storage。
+ * 通过 webContentsId 定位到该页面自己的 session，并用 origin 限定清理范围，
+ * 因此不会波及其他 AI 页面（同一个 partition 下的其他 origin 不受影响）
+ */
+ipcMain.handle("webai:clear-site-data", async (_, { webContentsId, scope }: { webContentsId: number; scope: "cookie" | "storage" }) => {
+  const target = webContents.fromId(webContentsId);
+  if (!target || target.isDestroyed()) return { ok: false, reason: "页面不存在" };
+
+  let origin = "";
+  try {
+    origin = new URL(target.getURL()).origin;
+  } catch {
+    return { ok: false, reason: "页面地址无效" };
+  }
+
+  const storages = (scope === "cookie"
+    ? ["cookies"]
+    : ["localstorage", "indexeddb", "websql", "serviceworkers", "cachestorage", "filesystem", "shadercache"]) as Electron.ClearStorageDataOptions["storages"];
+
+  try {
+    await target.session.clearStorageData({ origin, storages });
+  } catch (err) {
+    console.error("[webAI] 清理站点数据失败:", err);
+    return { ok: false, reason: "清理失败" };
+  }
+  // 只刷新这一个页面，让清理结果立即生效
+  target.reload();
+  return { ok: true, origin };
 });

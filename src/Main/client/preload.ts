@@ -37,6 +37,11 @@ const electronAPI = {
       return ipcRenderer.invoke(channel, data);
     }
     return Promise.reject(new Error("EventName事件未定义"));
+  },
+
+  /** 清理指定 webview 页面（按 origin 限定）的 Cookie 或 Storage */
+  clearSiteData: (payload: { webContentsId: number; scope: "cookie" | "storage" }) => {
+    return ipcRenderer.invoke("webai:clear-site-data", payload);
   }
 };
 

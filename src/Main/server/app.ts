@@ -38,8 +38,12 @@ async function createServer({ platform, host, NODE_ENV }) {
   });
   registerRouter(app);
   const prot = host.slice(host.lastIndexOf(":") + 1);
-  app.listen(prot, () => {
+  const server = app.listen(prot, () => {
     printl("服务运行在:", host);
+  });
+  // 端口被占用(残留进程)时必须能看到原因，否则前端只会表现为接口超时
+  server.on("error", (err) => {
+    console.error("koa 服务监听失败:", prot, err);
   });
 }
 
